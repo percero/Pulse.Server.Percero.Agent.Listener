@@ -1,0 +1,20 @@
+To enable Percero repositories for percero projects,
+your ${user.home}/.m2/settings.xml file should have a 'profile' -> 'activation' entry like the one below:
+
+
+...
+         <profile>
+             <id>percero-profile-maven-repos</id>
+
+             <activation>
+                 <activeByDefault>false</activeByDefault>
+
+                 <file>
+                     <exists>active-profiles/use-repo-percero.txt</exists>
+                 </file>
+             </activation>
+
+             <repositories>
+                 <repository>
+                    <id>percero-releases</id>
+...
