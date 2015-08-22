@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.percero.apps</groupId>
+		<groupId>org.activestack.apps</groupId>
 		<artifactId>pom-parent</artifactId>
-		<version>1.0.4</version>
+		<version>1.0.5-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.pulse</groupId>
 	<artifactId>Pulse_Listener</artifactId>
-	<version>0.0.0.2</version>
+	<version>0.0.0.5</version>
 
 
 	<name>Pulse SyncAgentListener</name>
@@ -26,16 +26,32 @@
 	</scm>
 
 	<dependencies>
+		<!-- 
 		<dependency>
 			<groupId>com.pulse</groupId>
 			<artifactId>Pulse_Library</artifactId>
-			<version>0.0.0.2</version>
+			<version>0.0.0.5</version>
 		</dependency>
+		-->
+		<dependency>
+		    <groupId>io.activestack</groupId>
+		    <artifactId>syncengine</artifactId>
+		    <version>1.1.15-SNAPSHOT</version>
+		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>com.percero.agent</groupId>
 			<artifactId>AgentListener</artifactId>
-			<version>1.0.0.11</version>
+			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
+		-->
+		<!-- 
+		<dependency>
+			<groupId>org.activestack.sync</groupId>
+			<artifactId>AgentListener</artifactId>
+			<version>1.1.1.13-SNAPSHOT</version>
+		</dependency>
+		 -->
 <!-- <#macro customDependencies>
 		TODO: Put any required dependencies here.
 </#macro> -->
