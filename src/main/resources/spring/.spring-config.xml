@@ -22,9 +22,8 @@
 
 	<!-- General Bean Definitions -->
 	<!-- Component Packages to scan -->
-	<context:component-scan base-package="com.pulse.auth.helpers" />
+	<context:component-scan base-package="com.pulse.auth" />
 	<context:component-scan base-package="com.pulse.sync.helpers" />
-	<context:component-scan base-package="com.pulse.sync.cw" />
 	<context:component-scan base-package="com.pulse.mo" />
 	<context:component-scan base-package="com.pulse.sync.helpers" />
 
