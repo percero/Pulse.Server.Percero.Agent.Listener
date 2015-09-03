@@ -11,8 +11,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -47,11 +45,9 @@ import com.percero.serial.JsonUtils;
 import com.pulse.mo.*;
 
 @MappedSuperclass
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Inheritance(strategy=InheritanceType.JOINED)
 /*
 */
-public class _Super_Notification extends BaseDataObject implements Serializable
+public class _Super_Agent extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -83,35 +79,46 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private Date date;
-	public Date getDate() {
-		return this.date;
+	private String lastName;
+	public String getLastName() {
+		return this.lastName;
 	}
-	public void setDate(Date value)
+	public void setLastName(String value)
 	{
-		this.date = value;
+		this.lastName = value;
 	}
 
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private String name;
-	public String getName() {
-		return this.name;
+	private String firstName;
+	public String getFirstName() {
+		return this.firstName;
 	}
-	public void setName(String value)
+	public void setFirstName(String value)
 	{
-		this.name = value;
+		this.firstName = value;
 	}
 
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private String type;
-	public String getType() {
-		return this.type;
+	private String employeeId;
+	public String getEmployeeId() {
+		return this.employeeId;
 	}
-	public void setType(String value)
+	public void setEmployeeId(String value)
 	{
-		this.type = value;
+		this.employeeId = value;
+	}
+
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String photoUri;
+	public String getPhotoUri() {
+		return this.photoUri;
+	}
+	public void setPhotoUri(String value)
+	{
+		this.photoUri = value;
 	}
 
 
@@ -122,7 +129,7 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
 	@JoinColumn(name="teamLeader_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_teamLeader_TO_Notification")
+	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_teamLeader_TO_Agent")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	private TeamLeader teamLeader;
 	public TeamLeader getTeamLeader() {
@@ -147,21 +154,14 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-
-		objectJson += ",\"name\":";
-		if (getName() == null)
+		objectJson += ",\"lastName\":";
+		if (getLastName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getLastName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -174,14 +174,54 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 			}
 		}
 
-		objectJson += ",\"type\":";
-		if (getType() == null)
+		objectJson += ",\"firstName\":";
+		if (getFirstName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getFirstName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+
+		objectJson += ",\"employeeId\":";
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+
+		objectJson += ",\"photoUri\":";
+		if (getPhotoUri() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPhotoUri());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -217,9 +257,10 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
+		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 
 		// Source Relationships
         this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
@@ -232,6 +273,7 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(DBConfigurationNotification.class, "agent"));
 	
 		return listSetters;
 	}

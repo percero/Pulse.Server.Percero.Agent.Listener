@@ -1,4 +1,4 @@
-package com.pulse.mo.mo_super;
+package com.pulsev2.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,8 +11,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -37,21 +35,27 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.TeamLeader;
+import com.pulsev2.mo.PulseUser;
+import com.percero.agents.auth.vo.IUserIdentifier;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
 import com.percero.serial.JsonUtils;
 
-import com.pulse.mo.*;
+import com.pulsev2.mo.*;
 
 @MappedSuperclass
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Inheritance(strategy=InheritanceType.JOINED)
+@com.percero.agents.sync.metadata.annotations.EntityInterface(interfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class)
 /*
+@com.percero.agents.auth.vo.IUserIdentifierA(
+						userIdentifierFieldName="value", userIdentifierFieldType="String"
+				            , userIdentifierParadigm="email"
+    					, 
+    	userAnchorFieldName="pulseUser", userAnchorFieldType="com.pulsev2.mo.PulseUser"
+)
 */
-public class _Super_Notification extends BaseDataObject implements Serializable
+public class _Super_Email extends BaseDataObject implements Serializable, com.percero.agents.auth.vo.IUserIdentifier
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -83,55 +87,61 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private Date date;
-	public Date getDate() {
-		return this.date;
+	private String userIdentifier;
+	public String getUserIdentifier() {
+		return this.userIdentifier;
 	}
-	public void setDate(Date value)
+	public void setUserIdentifier(String value)
 	{
-		this.date = value;
+		this.userIdentifier = value;
 	}
 
 	@Column
+    @com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, propertyName="userIdentifier",
+        params={
+                    
+                    @com.percero.agents.sync.metadata.annotations.PropertyInterfaceParam(name="paradigm", value="email")
+        }
+    )
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private String name;
-	public String getName() {
-		return this.name;
+	private String value;
+	public String getValue() {
+		return this.value;
 	}
-	public void setName(String value)
+	public void setValue(String value)
 	{
-		this.name = value;
-	}
-
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private String type;
-	public String getType() {
-		return this.type;
-	}
-	public void setType(String value)
-	{
-		this.type = value;
+		this.value = value;
 	}
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, sourceVarName="userAnchor")
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="teamLeader_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_teamLeader_TO_Notification")
+	@JoinColumn(name="pulseUser_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_PulseUser_pulseUser_TO_Email")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private TeamLeader teamLeader;
-	public TeamLeader getTeamLeader() {
-		return this.teamLeader;
+	private PulseUser pulseUser;
+	public PulseUser getPulseUser() {
+		return this.pulseUser;
 	}
-	public void setTeamLeader(TeamLeader value) {
-		this.teamLeader = value;
+	public void setPulseUser(PulseUser value) {
+		this.pulseUser = value;
 	}
 
+	/*
+	public com.percero.agents.auth.vo.IUserAnchor getUserAnchor()
+	{
+		return (com.percero.agents.auth.vo.IUserAnchor) pulseUser;
+	}
+	public void setUserAnchor(com.percero.agents.auth.vo.IUserAnchor value)
+	{
+		this.pulseUser = (PulseUser)value;
+	}
+	*/
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -147,21 +157,14 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-
-		objectJson += ",\"name\":";
-		if (getName() == null)
+		objectJson += ",\"userIdentifier\":";
+		if (getUserIdentifier() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getUserIdentifier());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -174,14 +177,14 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 			}
 		}
 
-		objectJson += ",\"type\":";
-		if (getType() == null)
+		objectJson += ",\"value\":";
+		if (getValue() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getValue());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -195,12 +198,12 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		}
 
 		// Source Relationships
-		objectJson += ",\"teamLeader\":";
-		if (getTeamLeader() == null)
+		objectJson += ",\"pulseUser\":";
+		if (getPulseUser() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getPulseUser()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -217,12 +220,11 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setUserIdentifier(JsonUtils.getJsonString(jsonObject, "userIdentifier"));
+		setValue(JsonUtils.getJsonString(jsonObject, "value"));
 
 		// Source Relationships
-        this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
+        this.pulseUser = JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
 
 		// Target Relationships
 	}

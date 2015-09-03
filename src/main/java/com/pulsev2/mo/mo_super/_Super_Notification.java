@@ -1,4 +1,4 @@
-package com.pulse.mo.mo_super;
+package com.pulsev2.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,6 +11,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -35,19 +37,21 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.LOB;
+import com.pulsev2.mo.TeamLeader;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
 import com.percero.serial.JsonUtils;
 
-import com.pulse.mo.*;
+import com.pulsev2.mo.*;
 
 @MappedSuperclass
+//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy=InheritanceType.JOINED)
 /*
 */
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_Notification extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -77,6 +81,38 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private Date date;
+	public Date getDate() {
+		return this.date;
+	}
+	public void setDate(Date value)
+	{
+		this.date = value;
+	}
+
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String name;
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String value)
+	{
+		this.name = value;
+	}
+
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String type;
+	public String getType() {
+		return this.type;
+	}
+	public void setType(String value)
+	{
+		this.type = value;
+	}
 
 
 	//////////////////////////////////////////////////////
@@ -85,15 +121,15 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="lob_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_Scorecard")
+	@JoinColumn(name="teamLeader_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_teamLeader_TO_Notification")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOB lob;
-	public LOB getLob() {
-		return this.lob;
+	private TeamLeader teamLeader;
+	public TeamLeader getTeamLeader() {
+		return this.teamLeader;
 	}
-	public void setLob(LOB value) {
-		this.lob = value;
+	public void setTeamLeader(TeamLeader value) {
+		this.teamLeader = value;
 	}
 
 
@@ -111,14 +147,60 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
+		}
+
+		objectJson += ",\"name\":";
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+
+		objectJson += ",\"type\":";
+		if (getType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 		// Source Relationships
-		objectJson += ",\"lob\":";
-		if (getLob() == null)
+		objectJson += ",\"teamLeader\":";
+		if (getTeamLeader() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getLob()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -135,9 +217,12 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
 
 		// Source Relationships
-        this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
+        this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 		// Target Relationships
 	}
@@ -147,7 +232,6 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
 	
 		return listSetters;
 	}

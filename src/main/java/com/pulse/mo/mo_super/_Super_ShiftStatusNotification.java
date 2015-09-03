@@ -11,8 +11,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -37,7 +35,6 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.TeamLeader;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -47,11 +44,10 @@ import com.percero.serial.JsonUtils;
 import com.pulse.mo.*;
 
 @MappedSuperclass
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Inheritance(strategy=InheritanceType.JOINED)
+@SecondaryTable(name="ShiftStatusNotification")
 /*
 */
-public class _Super_Notification extends BaseDataObject implements Serializable
+public class _Super_ShiftStatusNotification extends com.pulse.mo.Notification
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -65,73 +61,70 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// ID
 	//////////////////////////////////////////////////////
-	@Id
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@Column(unique=true,name="ID")
-	private String ID;
-	@JsonProperty(value="ID")
-	public String getID() {
-		return this.ID;
-	}
-	@JsonProperty(value="ID")
-	public void setID(String value) {
-		this.ID = value;
-	}
+	/** Inherits from another Model Object Class, so no ID here. **/
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private Date date;
-	public Date getDate() {
-		return this.date;
+	private Date shiftEndDate;
+	public Date getShiftEndDate() {
+		return this.shiftEndDate;
 	}
-	public void setDate(Date value)
+	public void setShiftEndDate(Date value)
 	{
-		this.date = value;
+		this.shiftEndDate = value;
 	}
 
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private String name;
-	public String getName() {
-		return this.name;
+	private Integer completeStateCount;
+	public Integer getCompleteStateCount() {
+		return this.completeStateCount;
 	}
-	public void setName(String value)
+	public void setCompleteStateCount(Integer value)
 	{
-		this.name = value;
+		this.completeStateCount = value;
 	}
 
 	@Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-	private String type;
-	public String getType() {
-		return this.type;
+	private Integer notYetStartedCount;
+	public Integer getNotYetStartedCount() {
+		return this.notYetStartedCount;
 	}
-	public void setType(String value)
+	public void setNotYetStartedCount(Integer value)
 	{
-		this.type = value;
+		this.notYetStartedCount = value;
+	}
+
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private Integer inProgressStateCount;
+	public Integer getInProgressStateCount() {
+		return this.inProgressStateCount;
+	}
+	public void setInProgressStateCount(Integer value)
+	{
+		this.inProgressStateCount = value;
+	}
+
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private Integer approvedStateCount;
+	public Integer getApprovedStateCount() {
+		return this.approvedStateCount;
+	}
+	public void setApprovedStateCount(Integer value)
+	{
+		this.approvedStateCount = value;
 	}
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="teamLeader_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_teamLeader_TO_Notification")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private TeamLeader teamLeader;
-	public TeamLeader getTeamLeader() {
-		return this.teamLeader;
-	}
-	public void setTeamLeader(TeamLeader value) {
-		this.teamLeader = value;
-	}
-
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -147,66 +140,42 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
-		objectJson += ",\"date\":";
-		if (getDate() == null)
+		objectJson += ",\"shiftEndDate\":";
+		if (getShiftEndDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getDate().getTime();
+			objectJson += getShiftEndDate().getTime();
 		}
 
-		objectJson += ",\"name\":";
-		if (getName() == null)
+		objectJson += ",\"completeStateCount\":";
+		if (getCompleteStateCount() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getCompleteStateCount();
 		}
 
-		objectJson += ",\"type\":";
-		if (getType() == null)
+		objectJson += ",\"notYetStartedCount\":";
+		if (getNotYetStartedCount() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getNotYetStartedCount();
+		}
+
+		objectJson += ",\"inProgressStateCount\":";
+		if (getInProgressStateCount() == null)
+			objectJson += "null";
+		else {
+			objectJson += getInProgressStateCount();
+		}
+
+		objectJson += ",\"approvedStateCount\":";
+		if (getApprovedStateCount() == null)
+			objectJson += "null";
+		else {
+			objectJson += getApprovedStateCount();
 		}
 
 		// Source Relationships
-		objectJson += ",\"teamLeader\":";
-		if (getTeamLeader() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-
 		// Target Relationships
 		
 		return objectJson;
@@ -217,12 +186,13 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
+		setCompleteStateCount(JsonUtils.getJsonInteger(jsonObject, "completeStateCount"));
+		setNotYetStartedCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedCount"));
+		setInProgressStateCount(JsonUtils.getJsonInteger(jsonObject, "inProgressStateCount"));
+		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
 
 		// Source Relationships
-        this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 		// Target Relationships
 	}

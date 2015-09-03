@@ -35,8 +35,12 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
+import com.pulse.mo.Agent;
 import com.pulse.mo.LOB;
 
+import com.percero.agents.sync.metadata.annotations.Externalize;
+import com.percero.agents.sync.metadata.MappedClass;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
@@ -45,9 +49,10 @@ import com.percero.serial.JsonUtils;
 import com.pulse.mo.*;
 
 @MappedSuperclass
+@SecondaryTable(name="DBConfigurationNotification")
 /*
 */
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_DBConfigurationNotification extends com.pulse.mo.Notification
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -61,22 +66,21 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// ID
 	//////////////////////////////////////////////////////
-	@Id
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@Column(unique=true,name="ID")
-	private String ID;
-	@JsonProperty(value="ID")
-	public String getID() {
-		return this.ID;
-	}
-	@JsonProperty(value="ID")
-	public void setID(String value) {
-		this.ID = value;
-	}
+	/** Inherits from another Model Object Class, so no ID here. **/
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String message;
+	public String getMessage() {
+		return this.message;
+	}
+	public void setMessage(String value)
+	{
+		this.message = value;
+	}
 
 
 	//////////////////////////////////////////////////////
@@ -85,9 +89,23 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
+	@JoinColumn(name="agent_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_Agent_agent_TO_DBConfigurationNotification")
+	@OneToOne(fetch=FetchType.LAZY, optional=false)
+	private Agent agent;
+	public Agent getAgent() {
+		return this.agent;
+	}
+	public void setAgent(Agent value) {
+		this.agent = value;
+	}
+
+	@com.percero.agents.sync.metadata.annotations.Externalize(useLazyLoading=false)
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
 	@JoinColumn(name="lob_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_Scorecard")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_DBConfigurationNotification")
+	@OneToOne(fetch=FetchType.LAZY, optional=false)
 	private LOB lob;
 	public LOB getLob() {
 		return this.lob;
@@ -111,8 +129,39 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"message\":";
+		if (getMessage() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getMessage());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 		// Source Relationships
+		objectJson += ",\"agent\":";
+		if (getAgent() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
 		objectJson += ",\"lob\":";
 		if (getLob() == null)
 			objectJson += "null";
@@ -135,8 +184,10 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setMessage(JsonUtils.getJsonString(jsonObject, "message"));
 
 		// Source Relationships
+        this.agent = JsonUtils.getJsonPerceroObject(jsonObject, "agent");
         this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
 
 		// Target Relationships
@@ -147,7 +198,6 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
 	
 		return listSetters;
 	}

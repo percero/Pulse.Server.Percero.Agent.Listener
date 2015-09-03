@@ -1,4 +1,4 @@
-package com.pulse.mo.mo_super;
+package com.pulsev2.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,20 +35,20 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.Scorecard;
+import com.pulsev2.mo.Scorecard;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
 import com.percero.serial.JsonUtils;
 
-import com.pulse.mo.*;
+import com.pulsev2.mo.*;
 
 @MappedSuperclass
 @SecondaryTable(name="CoachingNotification")
 /*
 */
-public class _Super_CoachingNotification extends com.pulse.mo.Notification
+public class _Super_CoachingNotification extends com.pulsev2.mo.Notification
 {
 	//////////////////////////////////////////////////////
 	// VERSION

@@ -1,4 +1,4 @@
-package com.pulse.mo.mo_super;
+package com.pulsev2.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,19 +35,19 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.LOB;
+import com.pulsev2.mo.LOB;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
 import com.percero.serial.JsonUtils;
 
-import com.pulse.mo.*;
+import com.pulsev2.mo.*;
 
 @MappedSuperclass
 /*
 */
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_Client extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -77,29 +77,37 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String name;
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String value)
+	{
+		this.name = value;
+	}
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="lob_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_Scorecard")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOB lob;
-	public LOB getLob() {
-		return this.lob;
-	}
-	public void setLob(LOB value) {
-		this.lob = value;
-	}
-
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=LOB.class, mappedBy="client", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<LOB> lobs;
+	public List<LOB> getLobs() {
+		return this.lobs;
+	}
+	public void setLobs(List<LOB> value) {
+		this.lobs = value;
+	}
+
 
 
 	
@@ -111,21 +119,44 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
-
-		// Source Relationships
-		objectJson += ",\"lob\":";
-		if (getLob() == null)
+		objectJson += ",\"name\":";
+		if (getName() == null)
 			objectJson += "null";
 		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
 			try {
-				objectJson += ((BaseDataObject) getLob()).toEmbeddedJson();
-			} catch(Exception e) {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
 				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
 			}
 		}
-		objectJson += "";
 
+		// Source Relationships
 		// Target Relationships
+		objectJson += ",\"lobs\":[";
+		if (getLobs() != null) {
+			int lobsCounter = 0;
+			for(LOB nextLobs : getLobs()) {
+				if (lobsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextLobs).toEmbeddedJson();
+					lobsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
 		
 		return objectJson;
 	}
@@ -135,11 +166,12 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		// Source Relationships
-        this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
 
 		// Target Relationships
+		this.lobs = (List<LOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "lobs");
 	}
 
 	@Override
@@ -147,7 +179,7 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
+		listSetters.add(MappedClass.getFieldSetters(LOB.class, "client"));
 	
 		return listSetters;
 	}

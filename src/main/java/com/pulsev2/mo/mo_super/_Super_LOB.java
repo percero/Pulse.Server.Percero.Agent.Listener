@@ -1,4 +1,4 @@
-package com.pulse.mo.mo_super;
+package com.pulsev2.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,19 +35,20 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.LOB;
+import com.pulsev2.mo.Client;
+import com.pulsev2.mo.Scorecard;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
 import com.percero.serial.BDOSerializer;
 import com.percero.serial.JsonUtils;
 
-import com.pulse.mo.*;
+import com.pulsev2.mo.*;
 
 @MappedSuperclass
 /*
 */
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_LOB extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -77,6 +78,16 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String name;
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String value)
+	{
+		this.name = value;
+	}
 
 
 	//////////////////////////////////////////////////////
@@ -85,21 +96,33 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="lob_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_Scorecard")
+	@JoinColumn(name="client_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_Client_client_TO_LOB")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOB lob;
-	public LOB getLob() {
-		return this.lob;
+	private Client client;
+	public Client getClient() {
+		return this.client;
 	}
-	public void setLob(LOB value) {
-		this.lob = value;
+	public void setClient(Client value) {
+		this.client = value;
 	}
 
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=Scorecard.class, mappedBy="lob", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<Scorecard> scorecards;
+	public List<Scorecard> getScorecards() {
+		return this.scorecards;
+	}
+	public void setScorecards(List<Scorecard> value) {
+		this.scorecards = value;
+	}
+
 
 
 	
@@ -111,14 +134,33 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"name\":";
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 		// Source Relationships
-		objectJson += ",\"lob\":";
-		if (getLob() == null)
+		objectJson += ",\"client\":";
+		if (getClient() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getLob()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -126,6 +168,22 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		objectJson += "";
 
 		// Target Relationships
+		objectJson += ",\"scorecards\":[";
+		if (getScorecards() != null) {
+			int scorecardsCounter = 0;
+			for(Scorecard nextScorecards : getScorecards()) {
+				if (scorecardsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecards).toEmbeddedJson();
+					scorecardsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
 		
 		return objectJson;
 	}
@@ -135,11 +193,13 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		// Source Relationships
-        this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
+        this.client = JsonUtils.getJsonPerceroObject(jsonObject, "client");
 
 		// Target Relationships
+		this.scorecards = (List<Scorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecards");
 	}
 
 	@Override
@@ -147,7 +207,8 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
+		listSetters.add(MappedClass.getFieldSetters(Scorecard.class, "lob"));
+		listSetters.add(MappedClass.getFieldSetters(DBConfigurationNotification.class, "lob"));
 	
 		return listSetters;
 	}

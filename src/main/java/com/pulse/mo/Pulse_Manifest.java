@@ -17,27 +17,19 @@ public class Pulse_Manifest implements IManifest
 	public List<Class> getClassList() {
 		if (classList == null) {
 			classList = new ArrayList<Class>();
-			classList.add(com.pulse.mo.Person.class);
-			classList.add(com.pulse.mo.PersonRole.class);
+			classList.add(com.pulse.mo.PulseUser.class);
+			classList.add(com.pulse.mo.UserRole.class);
 			classList.add(com.pulse.mo.Email.class);
-			classList.add(com.pulse.mo.Scorecard.class);
-			classList.add(com.pulse.mo.CoachingSession.class);
-			classList.add(com.pulse.mo.CoachingSessionState.class);
-			classList.add(com.pulse.mo.Notification.class);
+			classList.add(com.pulse.mo.TeamLeader.class);
 			classList.add(com.pulse.mo.Alert.class);
-			classList.add(com.pulse.mo.EStartActivityCode.class);
-			classList.add(com.pulse.mo.DiscrepancyDetectedNotification.class);
-			classList.add(com.pulse.mo.AuxEntry.class);
-			classList.add(com.pulse.mo.LOBConfigurationEntry.class);
-			classList.add(com.pulse.mo.NotificationFrequency.class);
-			classList.add(com.pulse.mo.ThresholdExceededNotification.class);
-			classList.add(com.pulse.mo.DurationTolerance.class);
-			classList.add(com.pulse.mo.InvalidActivityCode.class);
-			classList.add(com.pulse.mo.OccurrenceTolerance.class);
-			classList.add(com.pulse.mo.WorkDuration.class);
-			classList.add(com.pulse.mo.WorkModeOccurrence.class);
+			classList.add(com.pulse.mo.Notification.class);
+			classList.add(com.pulse.mo.Agent.class);
+			classList.add(com.pulse.mo.Client.class);
+			classList.add(com.pulse.mo.Scorecard.class);
+			classList.add(com.pulse.mo.LOB.class);
+			classList.add(com.pulse.mo.DBConfigurationNotification.class);
 			classList.add(com.pulse.mo.CoachingNotification.class);
-			classList.add(com.pulse.mo.ChangesNotApproved.class);
+			classList.add(com.pulse.mo.ShiftStatusNotification.class);
 		}
 		return classList;
 	}
@@ -46,27 +38,19 @@ public class Pulse_Manifest implements IManifest
 	public List<Object> getObjectList() {
 		if (objectList == null) {
 			objectList = new ArrayList<Object>();
-			objectList.add(new com.pulse.mo.Person());
-			objectList.add(new com.pulse.mo.PersonRole());
+			objectList.add(new com.pulse.mo.PulseUser());
+			objectList.add(new com.pulse.mo.UserRole());
 			objectList.add(new com.pulse.mo.Email());
-			objectList.add(new com.pulse.mo.Scorecard());
-			objectList.add(new com.pulse.mo.CoachingSession());
-			objectList.add(new com.pulse.mo.CoachingSessionState());
-			objectList.add(new com.pulse.mo.Notification());
+			objectList.add(new com.pulse.mo.TeamLeader());
 			objectList.add(new com.pulse.mo.Alert());
-			objectList.add(new com.pulse.mo.EStartActivityCode());
-			objectList.add(new com.pulse.mo.DiscrepancyDetectedNotification());
-			objectList.add(new com.pulse.mo.AuxEntry());
-			objectList.add(new com.pulse.mo.LOBConfigurationEntry());
-			objectList.add(new com.pulse.mo.NotificationFrequency());
-			objectList.add(new com.pulse.mo.ThresholdExceededNotification());
-			objectList.add(new com.pulse.mo.DurationTolerance());
-			objectList.add(new com.pulse.mo.InvalidActivityCode());
-			objectList.add(new com.pulse.mo.OccurrenceTolerance());
-			objectList.add(new com.pulse.mo.WorkDuration());
-			objectList.add(new com.pulse.mo.WorkModeOccurrence());
+			objectList.add(new com.pulse.mo.Notification());
+			objectList.add(new com.pulse.mo.Agent());
+			objectList.add(new com.pulse.mo.Client());
+			objectList.add(new com.pulse.mo.Scorecard());
+			objectList.add(new com.pulse.mo.LOB());
+			objectList.add(new com.pulse.mo.DBConfigurationNotification());
 			objectList.add(new com.pulse.mo.CoachingNotification());
-			objectList.add(new com.pulse.mo.ChangesNotApproved());
+			objectList.add(new com.pulse.mo.ShiftStatusNotification());
 		}
 		return objectList;
 	}
@@ -75,27 +59,19 @@ public class Pulse_Manifest implements IManifest
 	public Map<String, Class> getUuidMap() {
 		if (uuidMap == null) {
 			uuidMap = new HashMap<String, Class>();
-			uuidMap.put("11a9b850-55c0-41c3-ab3f-7f03238d3d76", com.pulse.mo.Person.class);
-			uuidMap.put("583f23bb-d096-49b4-aa02-c2ad056643ee", com.pulse.mo.PersonRole.class);
-			uuidMap.put("18a07df8-8d6b-41df-8633-dfeda171e7eb", com.pulse.mo.Email.class);
-			uuidMap.put("0e010953-5800-477b-b61e-fda37c3856ea", com.pulse.mo.Scorecard.class);
-			uuidMap.put("95758885-8c9f-4160-9b18-a53b86cfea6d", com.pulse.mo.CoachingSession.class);
-			uuidMap.put("f66b80bc-03aa-4f89-b8e8-cf7ca54fedd9", com.pulse.mo.CoachingSessionState.class);
-			uuidMap.put("3739ad78-72a4-46ad-8098-de6df28fde7a", com.pulse.mo.Notification.class);
-			uuidMap.put("e2a51a7b-6ec5-477a-b60b-9d2eeaf6a4c8", com.pulse.mo.Alert.class);
-			uuidMap.put("ec10a685-7157-406f-9c08-07e271855616", com.pulse.mo.EStartActivityCode.class);
-			uuidMap.put("d1b637f8-ed98-4c08-8abb-b6c0d1183bc2", com.pulse.mo.DiscrepancyDetectedNotification.class);
-			uuidMap.put("cc3dfc59-a171-4777-b955-51bc26b72b93", com.pulse.mo.AuxEntry.class);
-			uuidMap.put("c6049c4f-7e34-4e94-91be-e23e2a107931", com.pulse.mo.LOBConfigurationEntry.class);
-			uuidMap.put("f81cbc7f-8c9a-4f91-9ee6-0353c0701e28", com.pulse.mo.NotificationFrequency.class);
-			uuidMap.put("612d741b-6c50-4028-9e64-a1cd58becfbb", com.pulse.mo.ThresholdExceededNotification.class);
-			uuidMap.put("b428dfa6-96f5-4f1b-8cae-e8dceafa9653", com.pulse.mo.DurationTolerance.class);
-			uuidMap.put("07386706-3fec-4da9-903c-d378a56f3ef3", com.pulse.mo.InvalidActivityCode.class);
-			uuidMap.put("3b12695d-f673-4805-ba1b-615433b552cd", com.pulse.mo.OccurrenceTolerance.class);
-			uuidMap.put("3263b6ed-6620-4d94-a0c1-ecceaa722cda", com.pulse.mo.WorkDuration.class);
-			uuidMap.put("33766023-4724-489f-8ffa-816c6dc2ea64", com.pulse.mo.WorkModeOccurrence.class);
-			uuidMap.put("d4537dd5-6071-4d4e-ac61-92e49be32fe0", com.pulse.mo.CoachingNotification.class);
-			uuidMap.put("8893919f-c8e2-4393-ab5e-5cbfe8a61577", com.pulse.mo.ChangesNotApproved.class);
+			uuidMap.put("f77695ce-300b-464d-ba58-d2c549bee6ce", com.pulse.mo.PulseUser.class);
+			uuidMap.put("526495d6-c607-4ce6-952c-cf247237ae7f", com.pulse.mo.UserRole.class);
+			uuidMap.put("567811af-7da4-43e8-8f3a-d0993ae9ec7d", com.pulse.mo.Email.class);
+			uuidMap.put("9a5088cb-8bee-4ff8-b0c4-2e5e884ad142", com.pulse.mo.TeamLeader.class);
+			uuidMap.put("e07a44d6-107d-4cdc-9ece-c4c6b1d71ccb", com.pulse.mo.Alert.class);
+			uuidMap.put("ba2cabad-174d-4801-a336-49f3911a3d51", com.pulse.mo.Notification.class);
+			uuidMap.put("71ca26d0-c129-484c-b853-c754e4757774", com.pulse.mo.Agent.class);
+			uuidMap.put("4d59c720-db71-43b6-b0e5-610d98426bf9", com.pulse.mo.Client.class);
+			uuidMap.put("26c1ae21-5718-4b3a-b77f-99af4f7e37ba", com.pulse.mo.Scorecard.class);
+			uuidMap.put("15317f71-0e1c-44f6-8dc9-00d90be72139", com.pulse.mo.LOB.class);
+			uuidMap.put("8dce5cf5-3fd5-4023-9993-37b6105c835f", com.pulse.mo.DBConfigurationNotification.class);
+			uuidMap.put("a8fe19a3-774d-4a09-a9e2-1c7c3e5db24f", com.pulse.mo.CoachingNotification.class);
+			uuidMap.put("d1c62f81-354f-483e-b2b1-4eb6617beea5", com.pulse.mo.ShiftStatusNotification.class);
 		}
 		return uuidMap;
 	}

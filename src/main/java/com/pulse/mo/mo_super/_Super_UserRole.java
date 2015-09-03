@@ -35,7 +35,8 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.LOB;
+import com.pulse.mo.PulseUser;
+import com.percero.agents.auth.vo.IUserRole;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -45,9 +46,16 @@ import com.percero.serial.JsonUtils;
 import com.pulse.mo.*;
 
 @MappedSuperclass
+@com.percero.agents.sync.metadata.annotations.EntityInterface(interfaceClass=com.percero.agents.auth.vo.IUserRole.class)
 /*
+@com.percero.agents.auth.vo.IUserRoleA(
+						roleNameFieldName="roleName", roleNameFieldType="String"
+				            
+    					, 
+    	userAnchorFieldName="pulseUser", userAnchorFieldType="com.pulse.mo.PulseUser"
+)
 */
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_UserRole extends BaseDataObject implements Serializable, com.percero.agents.auth.vo.IUserRole
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -77,25 +85,50 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, propertyName="roleName",
+        params={
+        }
+    )
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String roleName;
+	public String getRoleName() {
+		return this.roleName;
+	}
+	public void setRoleName(String value)
+	{
+		this.roleName = value;
+	}
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, sourceVarName="userAnchor")
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="lob_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOB_lob_TO_Scorecard")
+	@JoinColumn(name="pulseUser_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_PulseUser_pulseUser_TO_UserRole")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOB lob;
-	public LOB getLob() {
-		return this.lob;
+	private PulseUser pulseUser;
+	public PulseUser getPulseUser() {
+		return this.pulseUser;
 	}
-	public void setLob(LOB value) {
-		this.lob = value;
+	public void setPulseUser(PulseUser value) {
+		this.pulseUser = value;
 	}
 
+	/*
+	public com.percero.agents.auth.vo.IUserAnchor getUserAnchor()
+	{
+		return (com.percero.agents.auth.vo.IUserAnchor) pulseUser;
+	}
+	public void setUserAnchor(com.percero.agents.auth.vo.IUserAnchor value)
+	{
+		this.pulseUser = (PulseUser)value;
+	}
+	*/
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -111,14 +144,33 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"roleName\":";
+		if (getRoleName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getRoleName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 		// Source Relationships
-		objectJson += ",\"lob\":";
-		if (getLob() == null)
+		objectJson += ",\"pulseUser\":";
+		if (getPulseUser() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getLob()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getPulseUser()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -135,9 +187,10 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setRoleName(JsonUtils.getJsonString(jsonObject, "roleName"));
 
 		// Source Relationships
-        this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
+        this.pulseUser = JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
 
 		// Target Relationships
 	}
@@ -147,7 +200,6 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
 	
 		return listSetters;
 	}

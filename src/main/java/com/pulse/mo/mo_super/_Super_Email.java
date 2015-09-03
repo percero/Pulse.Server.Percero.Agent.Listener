@@ -35,7 +35,7 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.Person;
+import com.pulse.mo.PulseUser;
 import com.percero.agents.auth.vo.IUserIdentifier;
 
 import com.percero.agents.sync.vo.BaseDataObject;
@@ -52,7 +52,7 @@ import com.pulse.mo.*;
 						userIdentifierFieldName="value", userIdentifierFieldType="String"
 				            , userIdentifierParadigm="email"
     					, 
-    	userAnchorFieldName="person", userAnchorFieldType="com.pulse.mo.Person"
+    	userAnchorFieldName="pulseUser", userAnchorFieldType="com.pulse.mo.PulseUser"
 )
 */
 public class _Super_Email extends BaseDataObject implements Serializable, com.percero.agents.auth.vo.IUserIdentifier
@@ -86,6 +86,17 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 	// Properties
 	//////////////////////////////////////////////////////
 	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private String userIdentifier;
+	public String getUserIdentifier() {
+		return this.userIdentifier;
+	}
+	public void setUserIdentifier(String value)
+	{
+		this.userIdentifier = value;
+	}
+
+	@Column
     @com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, propertyName="userIdentifier",
         params={
                     
@@ -110,25 +121,25 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(using=BDOSerializer.class)
 	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="person_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_Person_person_TO_Email")
+	@JoinColumn(name="pulseUser_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_PulseUser_pulseUser_TO_Email")
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private Person person;
-	public Person getPerson() {
-		return this.person;
+	private PulseUser pulseUser;
+	public PulseUser getPulseUser() {
+		return this.pulseUser;
 	}
-	public void setPerson(Person value) {
-		this.person = value;
+	public void setPulseUser(PulseUser value) {
+		this.pulseUser = value;
 	}
 
 	/*
 	public com.percero.agents.auth.vo.IUserAnchor getUserAnchor()
 	{
-		return (com.percero.agents.auth.vo.IUserAnchor) person;
+		return (com.percero.agents.auth.vo.IUserAnchor) pulseUser;
 	}
 	public void setUserAnchor(com.percero.agents.auth.vo.IUserAnchor value)
 	{
-		this.person = (Person)value;
+		this.pulseUser = (PulseUser)value;
 	}
 	*/
 
@@ -146,6 +157,26 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"userIdentifier\":";
+		if (getUserIdentifier() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUserIdentifier());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+
 		objectJson += ",\"value\":";
 		if (getValue() == null)
 			objectJson += "null";
@@ -167,12 +198,12 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 		}
 
 		// Source Relationships
-		objectJson += ",\"person\":";
-		if (getPerson() == null)
+		objectJson += ",\"pulseUser\":";
+		if (getPulseUser() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getPerson()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getPulseUser()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -189,10 +220,11 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setUserIdentifier(JsonUtils.getJsonString(jsonObject, "userIdentifier"));
 		setValue(JsonUtils.getJsonString(jsonObject, "value"));
 
 		// Source Relationships
-        this.person = JsonUtils.getJsonPerceroObject(jsonObject, "person");
+        this.pulseUser = JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
 
 		// Target Relationships
 	}
