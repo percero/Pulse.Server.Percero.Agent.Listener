@@ -1,0 +1,400 @@
+<wsdl:definitions targetNamespace="http://www.cybershift.com/wfm3/mcs10/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wfm="http://www.cybershift.com/wfm3/mcs10/" xmlns:wfm53="http://www.cybershift.com/wfm3/5/3/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <wsdl:types>
+      <xs:schema elementFormDefault="qualified" targetNamespace="http://www.cybershift.com/wfm3/5/3/" xmlns:wfm="http://www.cybershift.com/wfm3/5/3/">
+         <xs:element name="WFM3ValueObject" type="wfm:WFM3ValueObject"/>
+         <xs:complexType name="WFM3ValueObject">
+            <xs:choice maxOccurs="unbounded">
+               <xs:element name="StringAttribute" type="wfm:WFM3String"/>
+               <xs:element name="DoubleAttribute" type="wfm:WFM3Double"/>
+               <xs:element name="IntegerAttribute" type="wfm:WFM3Integer"/>
+               <xs:element name="DecimalAttribute" type="wfm:WFM3Decimal"/>
+               <xs:element name="DateAttribute" type="wfm:WFM3Date"/>
+               <xs:element name="TimeAttribute" type="wfm:WFM3Time"/>
+               <xs:element name="DateTimeAttribute" type="wfm:WFM3DateTime"/>
+               <xs:element name="LongStringAttribute" type="wfm:WFM3LongString"/>
+               <xs:element name="CollectionAttribute" type="wfm:WFM3Collection"/>
+               <xs:element name="MapAttribute" type="wfm:WFM3Map"/>
+               <xs:element name="ObjectAttribute" type="wfm:WFM3Object"/>
+            </xs:choice>
+            <xs:attribute name="action" type="wfm:WFM3Action"/>
+            <xs:attribute name="pageNumber" type="xs:integer"/>
+            <xs:attribute name="pageSize" type="xs:integer"/>
+            <xs:attribute name="payroll" type="xs:string"/>
+            <xs:attribute name="startDate" type="xs:date"/>
+            <xs:attribute name="endDate" type="xs:date"/>
+         </xs:complexType>
+         <xs:simpleType name="WFM3BusinessObjectName">
+            <xs:restriction base="xs:string">
+               <!--About 160 business objects, so no enumerations
+      <xs:enumeration value="..." />-->
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="WFM3Action">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="ADD"/>
+               <xs:enumeration value="UPDATE"/>
+               <xs:enumeration value="ADD_OR_UPDATE"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:complexType abstract="true" name="WFM3Attribute">
+            <xs:attribute name="name" type="wfm:WFM3AttributeName" use="required"/>
+         </xs:complexType>
+         <xs:simpleType name="WFM3AttributeName">
+            <xs:restriction base="xs:string">
+               <!--About 1800 attributes, so no enumerations
+      <xs:enumeration value="..." />-->
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:complexType name="WFM3String">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="string" type="xs:string"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Double">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="double" type="xs:double"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Integer">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="integer" type="xs:integer"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Decimal">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="decimal" type="xs:decimal"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Date">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="date" type="xs:date"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Time">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="time" type="xs:time"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3DateTime">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="dateTime" type="xs:dateTime"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3LongString">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="longString" type="xs:string"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Collection">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element maxOccurs="unbounded" name="valueObject" type="wfm:WFM3ValueObject"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Map">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element maxOccurs="unbounded" name="entry">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="key" type="xs:string"/>
+                              <xs:element name="object" type="xs:hexBinary"/>
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="WFM3Object">
+            <xs:complexContent>
+               <xs:extension base="wfm:WFM3Attribute">
+                  <xs:sequence>
+                     <xs:element name="object" type="xs:hexBinary"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+      </xs:schema>
+      <xs:schema elementFormDefault="qualified" targetNamespace="http://www.cybershift.com/wfm3/mcs10/">
+         <xs:import namespace="http://www.cybershift.com/wfm3/5/3/"/>
+         <xs:element name="RetrieveData">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="businessObjectName" type="wfm53:WFM3BusinessObjectName"/>
+                  <xs:element name="queryValueObject" type="wfm53:WFM3ValueObject"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="UpdateAndRetrieveData">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="businessObjectName" type="wfm53:WFM3BusinessObjectName"/>
+                  <xs:element name="queryValueObject" type="wfm53:WFM3ValueObject"/>
+                  <xs:element name="updateValueObject" type="wfm53:WFM3ValueObject"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="DeleteData">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="businessObjectName" type="wfm53:WFM3BusinessObjectName"/>
+                  <xs:element name="queryValueObject" type="wfm53:WFM3ValueObject"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="DeletedObjectCount" type="xs:integer"/>
+         <xs:element name="ValueObjects">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="valueObject" type="wfm53:WFM3ValueObject"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="OperationResult">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="SUCCESS"/>
+                  <xs:enumeration value="FAIL"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="Fault">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="reason">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                           <xs:enumeration value="MAX_WIDTH_EXCEEDED"/>
+                           <xs:enumeration value="CANNOT_UPDATE_OBJECT_DOES_NOT_EXIST"/>
+                           <xs:enumeration value="CANNOT_ADD_OBJECT_EXISTS"/>
+                           <xs:enumeration value="REQUIRED_ATTRIBUTES_NOT_PROVIDED"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="message" type="xs:string"/>
+                  <xs:element minOccurs="0" name="attributeName" type="wfm53:WFM3AttributeName"/>
+                  <xs:element minOccurs="0" name="businessObjectName" type="wfm53:WFM3BusinessObjectName"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="UsernameToken">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element minOccurs="0" name="clientName" type="xs:string"/>
+                  <xs:element name="user" type="xs:string"/>
+                  <xs:element name="password" type="xs:string"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:schema>
+   </wsdl:types>
+   <wsdl:message name="processRequestMessage">
+      <wsdl:part element="wfm:ValueObjects" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="processRequestResponseMessage">
+      <wsdl:part element="wfm:OperationResult" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="retrieveDataMessage">
+      <wsdl:part element="wfm:RetrieveData" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="retrieveDataResponseMessage">
+      <wsdl:part element="wfm:ValueObjects" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="updateAndRetrieveDataMessage">
+      <wsdl:part element="wfm:UpdateAndRetrieveData" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="updateAndRetrieveDataResponseMessage">
+      <wsdl:part element="wfm:ValueObjects" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="deleteDataMessage">
+      <wsdl:part element="wfm:DeleteData" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="deleteDataResponseMessage">
+      <wsdl:part element="wfm:DeletedObjectCount" name="body"/>
+   </wsdl:message>
+   <wsdl:message name="faultMessage">
+      <wsdl:part element="wfm:Fault" name="fault"/>
+   </wsdl:message>
+   <wsdl:message name="usernameTokenMessage">
+      <wsdl:part element="wfm:UsernameToken" name="header"/>
+   </wsdl:message>
+   <wsdl:portType name="WFM3ServicePortType">
+      <wsdl:operation name="processRequest">
+         <wsdl:input message="wfm:processRequestMessage"/>
+         <wsdl:output message="wfm:processRequestResponseMessage"/>
+         <wsdl:fault message="wfm:faultMessage" name="fault"/>
+      </wsdl:operation>
+      <wsdl:operation name="retrieveData">
+         <wsdl:input message="wfm:retrieveDataMessage"/>
+         <wsdl:output message="wfm:retrieveDataResponseMessage"/>
+         <wsdl:fault message="wfm:faultMessage" name="fault"/>
+      </wsdl:operation>
+      <wsdl:operation name="updateAndRetrieveData">
+         <wsdl:input message="wfm:updateAndRetrieveDataMessage"/>
+         <wsdl:output message="wfm:updateAndRetrieveDataResponseMessage"/>
+         <wsdl:fault message="wfm:faultMessage" name="fault"/>
+      </wsdl:operation>
+      <wsdl:operation name="deleteData">
+         <wsdl:input message="wfm:deleteDataMessage"/>
+         <wsdl:output message="wfm:deleteDataResponseMessage"/>
+         <wsdl:fault message="wfm:faultMessage" name="fault"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="WFM3ServiceSoapBinding" type="wfm:WFM3ServicePortType">
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="processRequest">
+         <soap:operation soapAction="urn:processRequest"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+            <soap:header message="wfm:usernameTokenMessage" part="header" use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="fault">
+            <soap:fault name="fault" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="retrieveData">
+         <soap:operation soapAction="urn:retrieveData"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+            <soap:header message="wfm:usernameTokenMessage" part="header" use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="fault">
+            <soap:fault name="fault" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="updateAndRetrieveData">
+         <soap:operation soapAction="urn:updateAndRetrieveData"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+            <soap:header message="wfm:usernameTokenMessage" part="header" use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="fault">
+            <soap:fault name="fault" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="deleteData">
+         <soap:operation soapAction="urn:deleteData"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+            <soap:header message="wfm:usernameTokenMessage" part="header" use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="fault">
+            <soap:fault name="fault" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="WFM3Service">
+      <wsdl:port binding="wfm:WFM3ServiceSoapBinding" name="WFM3ServiceSoapPort">
+         <soap:address location="http://orlawv513.na.convergys.com:7001/webservice/services/WFM3Service"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>
+
+DeleteData Soap envelope:
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mcs="http://www.cybershift.com/wfm3/mcs10/" xmlns:ns="http://www.cybershift.com/wfm3/5/3/">
+  <soapenv:Header>
+    <mcs:UsernameToken>
+      <!--Optional:-->
+      <mcs:clientName>?</mcs:clientName>
+      <mcs:user>?</mcs:user>
+      <mcs:password>?</mcs:password>
+    </mcs:UsernameToken>
+  </soapenv:Header>
+  <soapenv:Body>
+    <mcs:DeleteData>
+      <mcs:businessObjectName>?</mcs:businessObjectName>
+      <mcs:queryValueObject action="?" pageNumber="?" pageSize="?" payroll="?" startDate="?" endDate="?">
+        <!--You have a CHOICE of the next 11 items at this level-->
+        <ns:StringAttribute name="?">
+          <ns:string>?</ns:string>
+        </ns:StringAttribute>
+        <ns:DoubleAttribute name="?">
+          <ns:double>?</ns:double>
+        </ns:DoubleAttribute>
+        <ns:IntegerAttribute name="?">
+          <ns:integer>?</ns:integer>
+        </ns:IntegerAttribute>
+        <ns:DecimalAttribute name="?">
+          <ns:decimal>?</ns:decimal>
+        </ns:DecimalAttribute>
+        <ns:DateAttribute name="?">
+          <ns:date>?</ns:date>
+        </ns:DateAttribute>
+        <ns:TimeAttribute name="?">
+          <ns:time>?</ns:time>
+        </ns:TimeAttribute>
+        <ns:DateTimeAttribute name="?">
+          <ns:dateTime>?</ns:dateTime>
+        </ns:DateTimeAttribute>
+        <ns:LongStringAttribute name="?">
+          <ns:longString>?</ns:longString>
+        </ns:LongStringAttribute>
+        <ns:CollectionAttribute name="?">
+          <!--1 or more repetitions:-->
+          <ns:valueObject/>
+        </ns:CollectionAttribute>
+        <ns:MapAttribute name="?">
+          <!--1 or more repetitions:-->
+          <ns:entry>
+            <ns:key>?</ns:key>
+            <ns:object>cid:493076100453</ns:object>
+          </ns:entry>
+        </ns:MapAttribute>
+        <ns:ObjectAttribute name="?">
+          <ns:object>cid:85815912017</ns:object>
+        </ns:ObjectAttribute>
+      </mcs:queryValueObject>
+    </mcs:DeleteData>
+  </soapenv:Body>
+</soapenv:Envelope>
+
