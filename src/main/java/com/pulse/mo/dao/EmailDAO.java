@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -30,6 +32,11 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	public EmailDAO() {
 		super();
+	}
+	
+	@PostConstruct
+	protected void init() {
+		daoRegistry.registerDataAccessObject(Email.class.getCanonicalName(), this);
 	}
 
 	

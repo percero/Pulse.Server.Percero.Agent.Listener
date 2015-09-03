@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -34,6 +36,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	public SqlDataAccessObject() {
 		super();
 	}
+	
+	@Autowired
+	DAORegistry daoRegistry;
 	
 	@Autowired
 	PulseDataConnectionRegistry connectionRegistry;
