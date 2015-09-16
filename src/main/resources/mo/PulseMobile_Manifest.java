@@ -1,0 +1,283 @@
+package com.pulsemobile.mo;
+
+import com.percero.framework.bl.IManifest;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+import org.springframework.stereotype.Component;
+
+@SuppressWarnings("rawtypes")
+@Component
+public class PulseMobile_Manifest implements IManifest
+{
+
+	private List<Class> classList = null;
+	public List<Class> getClassList() {
+		if (classList == null) {
+			classList = new ArrayList<Class>();
+			classList.add(com.pulsemobile.mo.ActivityType.class);
+classList.add(com.pulsemobile.mo.Admin.class);
+classList.add(com.pulsemobile.mo.Notification.class);
+classList.add(com.pulsemobile.mo.LOB.class);
+classList.add(com.pulsemobile.mo.LOBConfiguration.class);
+classList.add(com.pulsemobile.mo.Agent.class);
+classList.add(com.pulsemobile.mo.LOBConfigurationNotification.class);
+classList.add(com.pulsemobile.mo.DiscrepancyDetectedNotification.class);
+classList.add(com.pulsemobile.mo.DurationMismatchNotification.class);
+classList.add(com.pulsemobile.mo.ThresholdExceededNotification.class);
+classList.add(com.pulsemobile.mo.DurationToleranceNotification.class);
+classList.add(com.pulsemobile.mo.InvalidActivityCodeNotification.class);
+classList.add(com.pulsemobile.mo.NonBillableActivityNotification.class);
+classList.add(com.pulsemobile.mo.Alert.class);
+classList.add(com.pulsemobile.mo.NotificationAlert.class);
+classList.add(com.pulsemobile.mo.NotificationFrequency.class);
+classList.add(com.pulsemobile.mo.OccurrenceMismatchNotification.class);
+classList.add(com.pulsemobile.mo.OccurrenceToleranceNotification.class);
+classList.add(com.pulsemobile.mo.PayrollDetail.class);
+classList.add(com.pulsemobile.mo.PerformanceSummary.class);
+classList.add(com.pulsemobile.mo.PulseConfiguration.class);
+classList.add(com.pulsemobile.mo.Role.class);
+classList.add(com.pulsemobile.mo.ScorecardState.class);
+classList.add(com.pulsemobile.mo.ServerCall.class);
+classList.add(com.pulsemobile.mo.ThresholdScale.class);
+classList.add(com.pulsemobile.mo.TraceLog.class);
+classList.add(com.pulsemobile.mo.WorkDurationNotification.class);
+classList.add(com.pulsemobile.mo.WorkModeOccurrenceNotification.class);
+classList.add(com.pulsemobile.mo.ActualTime.class);
+classList.add(com.pulsemobile.mo.ActualTimeEntry.class);
+classList.add(com.pulsemobile.mo.AdhocCoachingCategory.class);
+classList.add(com.pulsemobile.mo.AdhocCoachingSession.class);
+classList.add(com.pulsemobile.mo.AdhocTask.class);
+classList.add(com.pulsemobile.mo.AdhocTaskState.class);
+classList.add(com.pulsemobile.mo.AgentTime.class);
+classList.add(com.pulsemobile.mo.AgentTimeEntry.class);
+classList.add(com.pulsemobile.mo.AppAction.class);
+classList.add(com.pulsemobile.mo.Attachment.class);
+classList.add(com.pulsemobile.mo.AuxMode.class);
+classList.add(com.pulsemobile.mo.Behavior.class);
+classList.add(com.pulsemobile.mo.Client.class);
+classList.add(com.pulsemobile.mo.CoachingSession.class);
+classList.add(com.pulsemobile.mo.CoachingSessionMeasure.class);
+classList.add(com.pulsemobile.mo.CoachingSessionState.class);
+classList.add(com.pulsemobile.mo.ConnectedState.class);
+classList.add(com.pulsemobile.mo.EmployeeAcknowledgement.class);
+classList.add(com.pulsemobile.mo.SupervisorAcknowledgement.class);
+classList.add(com.pulsemobile.mo.ManagerApproval.class);
+classList.add(com.pulsemobile.mo.HRApproval.class);
+classList.add(com.pulsemobile.mo.CorrectiveAction.class);
+classList.add(com.pulsemobile.mo.CorrectiveActionState.class);
+classList.add(com.pulsemobile.mo.CorrectiveActionType.class);
+classList.add(com.pulsemobile.mo.Credential.class);
+classList.add(com.pulsemobile.mo.CVGProject.class);
+classList.add(com.pulsemobile.mo.Dashboard.class);
+classList.add(com.pulsemobile.mo.DevelopmentActivity.class);
+classList.add(com.pulsemobile.mo.Email.class);
+classList.add(com.pulsemobile.mo.EStartActivityCode.class);
+classList.add(com.pulsemobile.mo.GeneralComment.class);
+classList.add(com.pulsemobile.mo.LOBConfigurationEntry.class);
+classList.add(com.pulsemobile.mo.Observation.class);
+classList.add(com.pulsemobile.mo.TeamLeader.class);
+classList.add(com.pulsemobile.mo.PulseUser.class);
+classList.add(com.pulsemobile.mo.QualityEvaluation.class);
+classList.add(com.pulsemobile.mo.ScheduledActivityCode.class);
+classList.add(com.pulsemobile.mo.ScheduledTime.class);
+classList.add(com.pulsemobile.mo.ScheduledTimeEntry.class);
+classList.add(com.pulsemobile.mo.Scorecard.class);
+classList.add(com.pulsemobile.mo.Setting.class);
+classList.add(com.pulsemobile.mo.Site.class);
+classList.add(com.pulsemobile.mo.Supervisor.class);
+classList.add(com.pulsemobile.mo.TeamLeaderAction.class);
+classList.add(com.pulsemobile.mo.TeamLeaderImpersonation.class);
+classList.add(com.pulsemobile.mo.ThresholdGradeScale.class);
+classList.add(com.pulsemobile.mo.ThresholdLevel.class);
+classList.add(com.pulsemobile.mo.TraceEntry.class);
+classList.add(com.pulsemobile.mo.UserRole.class);
+classList.add(com.pulsemobile.mo.UserSession.class);
+classList.add(com.pulsemobile.mo.ChangesNotApprovedNotification.class);
+classList.add(com.pulsemobile.mo.CoachingNotification.class);
+
+		}
+		return classList;
+	}
+
+	private List<Object> objectList = null;
+	public List<Object> getObjectList() {
+		if (objectList == null) {
+			objectList = new ArrayList<Object>();
+			objectList.add(new com.pulsemobile.mo.ActivityType());
+objectList.add(new com.pulsemobile.mo.Admin());
+objectList.add(new com.pulsemobile.mo.Notification());
+objectList.add(new com.pulsemobile.mo.LOB());
+objectList.add(new com.pulsemobile.mo.LOBConfiguration());
+objectList.add(new com.pulsemobile.mo.Agent());
+objectList.add(new com.pulsemobile.mo.LOBConfigurationNotification());
+objectList.add(new com.pulsemobile.mo.DiscrepancyDetectedNotification());
+objectList.add(new com.pulsemobile.mo.DurationMismatchNotification());
+objectList.add(new com.pulsemobile.mo.ThresholdExceededNotification());
+objectList.add(new com.pulsemobile.mo.DurationToleranceNotification());
+objectList.add(new com.pulsemobile.mo.InvalidActivityCodeNotification());
+objectList.add(new com.pulsemobile.mo.NonBillableActivityNotification());
+objectList.add(new com.pulsemobile.mo.Alert());
+objectList.add(new com.pulsemobile.mo.NotificationAlert());
+objectList.add(new com.pulsemobile.mo.NotificationFrequency());
+objectList.add(new com.pulsemobile.mo.OccurrenceMismatchNotification());
+objectList.add(new com.pulsemobile.mo.OccurrenceToleranceNotification());
+objectList.add(new com.pulsemobile.mo.PayrollDetail());
+objectList.add(new com.pulsemobile.mo.PerformanceSummary());
+objectList.add(new com.pulsemobile.mo.PulseConfiguration());
+objectList.add(new com.pulsemobile.mo.Role());
+objectList.add(new com.pulsemobile.mo.ScorecardState());
+objectList.add(new com.pulsemobile.mo.ServerCall());
+objectList.add(new com.pulsemobile.mo.ThresholdScale());
+objectList.add(new com.pulsemobile.mo.TraceLog());
+objectList.add(new com.pulsemobile.mo.WorkDurationNotification());
+objectList.add(new com.pulsemobile.mo.WorkModeOccurrenceNotification());
+objectList.add(new com.pulsemobile.mo.ActualTime());
+objectList.add(new com.pulsemobile.mo.ActualTimeEntry());
+objectList.add(new com.pulsemobile.mo.AdhocCoachingCategory());
+objectList.add(new com.pulsemobile.mo.AdhocCoachingSession());
+objectList.add(new com.pulsemobile.mo.AdhocTask());
+objectList.add(new com.pulsemobile.mo.AdhocTaskState());
+objectList.add(new com.pulsemobile.mo.AgentTime());
+objectList.add(new com.pulsemobile.mo.AgentTimeEntry());
+objectList.add(new com.pulsemobile.mo.AppAction());
+objectList.add(new com.pulsemobile.mo.Attachment());
+objectList.add(new com.pulsemobile.mo.AuxMode());
+objectList.add(new com.pulsemobile.mo.Behavior());
+objectList.add(new com.pulsemobile.mo.Client());
+objectList.add(new com.pulsemobile.mo.CoachingSession());
+objectList.add(new com.pulsemobile.mo.CoachingSessionMeasure());
+objectList.add(new com.pulsemobile.mo.CoachingSessionState());
+objectList.add(new com.pulsemobile.mo.ConnectedState());
+objectList.add(new com.pulsemobile.mo.EmployeeAcknowledgement());
+objectList.add(new com.pulsemobile.mo.SupervisorAcknowledgement());
+objectList.add(new com.pulsemobile.mo.ManagerApproval());
+objectList.add(new com.pulsemobile.mo.HRApproval());
+objectList.add(new com.pulsemobile.mo.CorrectiveAction());
+objectList.add(new com.pulsemobile.mo.CorrectiveActionState());
+objectList.add(new com.pulsemobile.mo.CorrectiveActionType());
+objectList.add(new com.pulsemobile.mo.Credential());
+objectList.add(new com.pulsemobile.mo.CVGProject());
+objectList.add(new com.pulsemobile.mo.Dashboard());
+objectList.add(new com.pulsemobile.mo.DevelopmentActivity());
+objectList.add(new com.pulsemobile.mo.Email());
+objectList.add(new com.pulsemobile.mo.EStartActivityCode());
+objectList.add(new com.pulsemobile.mo.GeneralComment());
+objectList.add(new com.pulsemobile.mo.LOBConfigurationEntry());
+objectList.add(new com.pulsemobile.mo.Observation());
+objectList.add(new com.pulsemobile.mo.TeamLeader());
+objectList.add(new com.pulsemobile.mo.PulseUser());
+objectList.add(new com.pulsemobile.mo.QualityEvaluation());
+objectList.add(new com.pulsemobile.mo.ScheduledActivityCode());
+objectList.add(new com.pulsemobile.mo.ScheduledTime());
+objectList.add(new com.pulsemobile.mo.ScheduledTimeEntry());
+objectList.add(new com.pulsemobile.mo.Scorecard());
+objectList.add(new com.pulsemobile.mo.Setting());
+objectList.add(new com.pulsemobile.mo.Site());
+objectList.add(new com.pulsemobile.mo.Supervisor());
+objectList.add(new com.pulsemobile.mo.TeamLeaderAction());
+objectList.add(new com.pulsemobile.mo.TeamLeaderImpersonation());
+objectList.add(new com.pulsemobile.mo.ThresholdGradeScale());
+objectList.add(new com.pulsemobile.mo.ThresholdLevel());
+objectList.add(new com.pulsemobile.mo.TraceEntry());
+objectList.add(new com.pulsemobile.mo.UserRole());
+objectList.add(new com.pulsemobile.mo.UserSession());
+objectList.add(new com.pulsemobile.mo.ChangesNotApprovedNotification());
+objectList.add(new com.pulsemobile.mo.CoachingNotification());
+
+		}
+		return objectList;
+	}
+
+	private Map<String, Class> uuidMap = null;
+	public Map<String, Class> getUuidMap() {
+		if (uuidMap == null) {
+			uuidMap = new HashMap<String, Class>();
+			uuidMap.put("6a0614aa-d05f-4598-9e50-b8e331a147da", com.pulsemobile.mo.ActivityType.class);
+uuidMap.put("9fcc840d-62f5-43e0-98b8-bafa1aa0de79", com.pulsemobile.mo.Admin.class);
+uuidMap.put("c8b765ac-2b02-4c7d-aff8-a22476c795bc", com.pulsemobile.mo.Notification.class);
+uuidMap.put("532b2a4b-19d6-4526-9d71-d34caa689993", com.pulsemobile.mo.LOB.class);
+uuidMap.put("d4001934-863d-4311-9124-9df750cd9b8d", com.pulsemobile.mo.LOBConfiguration.class);
+uuidMap.put("3f5bc06f-c18b-4e4a-8b5a-c692fe4c2446", com.pulsemobile.mo.Agent.class);
+uuidMap.put("db4e5053-14a6-4b91-8681-4da12a1e42d7", com.pulsemobile.mo.LOBConfigurationNotification.class);
+uuidMap.put("c39c1778-f4c1-4ff3-a2fc-f16da0196419", com.pulsemobile.mo.DiscrepancyDetectedNotification.class);
+uuidMap.put("242b2b95-ef07-4b37-8c52-e6e91c6a790b", com.pulsemobile.mo.DurationMismatchNotification.class);
+uuidMap.put("b16ce51b-d540-49c8-9f99-5206a91b8b01", com.pulsemobile.mo.ThresholdExceededNotification.class);
+uuidMap.put("33fdf864-459d-4e74-866b-9bd273992aec", com.pulsemobile.mo.DurationToleranceNotification.class);
+uuidMap.put("bd132293-2484-40ec-995a-60b1efbaf221", com.pulsemobile.mo.InvalidActivityCodeNotification.class);
+uuidMap.put("424c3bff-fa32-4a07-b344-6e74f01abe8a", com.pulsemobile.mo.NonBillableActivityNotification.class);
+uuidMap.put("b202604f-98ff-4841-854e-6054d1fe0749", com.pulsemobile.mo.Alert.class);
+uuidMap.put("f026b85e-d07e-4628-8dd9-a41cf85bf874", com.pulsemobile.mo.NotificationAlert.class);
+uuidMap.put("4e161047-915f-48fe-9b36-153aff8b3b9d", com.pulsemobile.mo.NotificationFrequency.class);
+uuidMap.put("d1a47f86-a637-4ba5-bcb3-13329ad58d78", com.pulsemobile.mo.OccurrenceMismatchNotification.class);
+uuidMap.put("7c5ceae8-6ae3-4150-b191-ca8631d14a42", com.pulsemobile.mo.OccurrenceToleranceNotification.class);
+uuidMap.put("17395dae-c161-4a6f-8cbe-e500470f3161", com.pulsemobile.mo.PayrollDetail.class);
+uuidMap.put("c8b10934-dcf6-4f1b-a46b-134563e4cfa6", com.pulsemobile.mo.PerformanceSummary.class);
+uuidMap.put("2853e05c-8ba2-4b91-984d-da49effbe650", com.pulsemobile.mo.PulseConfiguration.class);
+uuidMap.put("91c39423-489e-49b6-a39c-53e6ace7872c", com.pulsemobile.mo.Role.class);
+uuidMap.put("b24e1b0b-e18d-42eb-bfbb-e691f85a122a", com.pulsemobile.mo.ScorecardState.class);
+uuidMap.put("279939cb-75c2-4aba-9b30-fbe3d3999730", com.pulsemobile.mo.ServerCall.class);
+uuidMap.put("04ccb685-f62e-467a-bf0d-18bdf0885d22", com.pulsemobile.mo.ThresholdScale.class);
+uuidMap.put("d0fd6006-9cde-40b2-8499-44f6dcb37ae3", com.pulsemobile.mo.TraceLog.class);
+uuidMap.put("bdc47093-3095-49ea-94b8-bb08996306a7", com.pulsemobile.mo.WorkDurationNotification.class);
+uuidMap.put("271ea533-6bcf-4fbc-a7ab-3ba9d49bbf7c", com.pulsemobile.mo.WorkModeOccurrenceNotification.class);
+uuidMap.put("e22e3225-6e87-4c5e-9256-2cb3eda4d511", com.pulsemobile.mo.ActualTime.class);
+uuidMap.put("93e56829-e5af-4b4f-a439-f71d935c3666", com.pulsemobile.mo.ActualTimeEntry.class);
+uuidMap.put("a66cca00-3225-450a-b72b-c800f6dab12d", com.pulsemobile.mo.AdhocCoachingCategory.class);
+uuidMap.put("00ca1f4a-417c-43d0-8c22-88d793aeb848", com.pulsemobile.mo.AdhocCoachingSession.class);
+uuidMap.put("d08e525f-6326-412e-84a3-ce82933a7475", com.pulsemobile.mo.AdhocTask.class);
+uuidMap.put("dd0508e7-097e-454f-ad22-ea1348cb2f00", com.pulsemobile.mo.AdhocTaskState.class);
+uuidMap.put("bed56352-725b-4f48-8b22-90cca34e8418", com.pulsemobile.mo.AgentTime.class);
+uuidMap.put("a041d938-f3e4-4d38-96ae-fde0f9ab881c", com.pulsemobile.mo.AgentTimeEntry.class);
+uuidMap.put("9e291909-ec9a-43b2-84f5-32992afe6fdc", com.pulsemobile.mo.AppAction.class);
+uuidMap.put("876138f3-014c-4b97-a90b-599a56b8770f", com.pulsemobile.mo.Attachment.class);
+uuidMap.put("17ce10d1-3139-4cff-95b7-20a61dd561a3", com.pulsemobile.mo.AuxMode.class);
+uuidMap.put("ba949a77-6188-4207-8d0f-7131c789831a", com.pulsemobile.mo.Behavior.class);
+uuidMap.put("9043506f-8f7e-46be-a5e1-9b855aafc90a", com.pulsemobile.mo.Client.class);
+uuidMap.put("8be21e6a-8fbd-4c5d-aeca-fa6a1bf8a764", com.pulsemobile.mo.CoachingSession.class);
+uuidMap.put("9ddc8a14-d164-40ef-b8f3-b92e5189d150", com.pulsemobile.mo.CoachingSessionMeasure.class);
+uuidMap.put("23fa22f5-46ea-4a41-8ed0-48ffe1e6cdbd", com.pulsemobile.mo.CoachingSessionState.class);
+uuidMap.put("95cfc669-8cd3-45b2-8bc1-9f0ccbcb8108", com.pulsemobile.mo.ConnectedState.class);
+uuidMap.put("5cdccb12-94a2-4126-91f9-68f83c32d287", com.pulsemobile.mo.EmployeeAcknowledgement.class);
+uuidMap.put("fb1cf6e5-ee1c-454e-8e21-f15d02ccd43c", com.pulsemobile.mo.SupervisorAcknowledgement.class);
+uuidMap.put("829fe2bb-34bf-4f01-9463-2bf9e0dcea97", com.pulsemobile.mo.ManagerApproval.class);
+uuidMap.put("03c5e853-8d13-4ce8-8991-951c0862a3dd", com.pulsemobile.mo.HRApproval.class);
+uuidMap.put("8f3d6168-04ad-4ba7-81f2-e1bc258e5725", com.pulsemobile.mo.CorrectiveAction.class);
+uuidMap.put("251bd9d1-f900-4988-a3d0-d6ce05f5a5fd", com.pulsemobile.mo.CorrectiveActionState.class);
+uuidMap.put("7a3183f9-9610-42bd-842c-a17b0defee46", com.pulsemobile.mo.CorrectiveActionType.class);
+uuidMap.put("f20d94df-2e9d-4491-9aa8-7df11f21a1b7", com.pulsemobile.mo.Credential.class);
+uuidMap.put("63f64040-074f-4c23-80c0-df6ec6ad2683", com.pulsemobile.mo.CVGProject.class);
+uuidMap.put("de950e62-8fe3-48f3-9a87-bd2084bc36e4", com.pulsemobile.mo.Dashboard.class);
+uuidMap.put("d51b8ed0-dc21-411d-9853-1938d8a2a424", com.pulsemobile.mo.DevelopmentActivity.class);
+uuidMap.put("8440d1c8-405d-4523-a2e5-cdf047c90732", com.pulsemobile.mo.Email.class);
+uuidMap.put("e9e997bb-4186-46a3-b723-c235453bab6c", com.pulsemobile.mo.EStartActivityCode.class);
+uuidMap.put("40155e08-39ac-4d89-b7c9-82037474e48b", com.pulsemobile.mo.GeneralComment.class);
+uuidMap.put("d19648c4-45c8-4126-ac05-1f7acc38b599", com.pulsemobile.mo.LOBConfigurationEntry.class);
+uuidMap.put("fac9802e-0e61-44de-8166-50a78a26c169", com.pulsemobile.mo.Observation.class);
+uuidMap.put("82670cd1-7e69-431a-b644-772cb7dbae61", com.pulsemobile.mo.TeamLeader.class);
+uuidMap.put("2dfcb933-081c-4327-94b7-82ac3a33d9e7", com.pulsemobile.mo.PulseUser.class);
+uuidMap.put("95c7a257-8722-4980-bf34-67fa15f2eabe", com.pulsemobile.mo.QualityEvaluation.class);
+uuidMap.put("57518ce5-2bae-4075-8935-67a261aad34e", com.pulsemobile.mo.ScheduledActivityCode.class);
+uuidMap.put("c6bc5a90-d34c-4ef8-8102-b017919747a1", com.pulsemobile.mo.ScheduledTime.class);
+uuidMap.put("01039387-595a-4023-bd22-99a0e476f100", com.pulsemobile.mo.ScheduledTimeEntry.class);
+uuidMap.put("917c36b8-18c5-4fc6-99da-dea252e9a352", com.pulsemobile.mo.Scorecard.class);
+uuidMap.put("0206b0ea-41f4-4076-a2f1-acdee25a7985", com.pulsemobile.mo.Setting.class);
+uuidMap.put("15ee5bb0-3c89-4c59-b86d-ef9ca4dfed08", com.pulsemobile.mo.Site.class);
+uuidMap.put("2bebf963-8183-411a-8530-e2a4a74eee48", com.pulsemobile.mo.Supervisor.class);
+uuidMap.put("e606464b-794f-4e2e-8751-8426b6abc2b1", com.pulsemobile.mo.TeamLeaderAction.class);
+uuidMap.put("a8a20c6d-05a4-4e08-974a-3fbdcaa362a7", com.pulsemobile.mo.TeamLeaderImpersonation.class);
+uuidMap.put("af06ee74-5cde-47e9-8323-10bca9f50924", com.pulsemobile.mo.ThresholdGradeScale.class);
+uuidMap.put("d25149fb-45e1-49a9-ab71-77e616bd4b6a", com.pulsemobile.mo.ThresholdLevel.class);
+uuidMap.put("75178bd8-248c-4532-9026-ee515ff91078", com.pulsemobile.mo.TraceEntry.class);
+uuidMap.put("fcbe03d7-6131-4cfb-8cbe-484e2b9568b0", com.pulsemobile.mo.UserRole.class);
+uuidMap.put("44071de5-3cc1-46be-ae6b-dff4f4c05306", com.pulsemobile.mo.UserSession.class);
+uuidMap.put("52a4562e-84b7-4ebb-a2fa-48825edc61d2", com.pulsemobile.mo.ChangesNotApprovedNotification.class);
+uuidMap.put("058f0ab9-33aa-4c3b-8ea4-db7f2032df4b", com.pulsemobile.mo.CoachingNotification.class);
+
+		}
+		return uuidMap;
+	}
+
+}

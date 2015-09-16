@@ -1,4 +1,5 @@
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,17 +27,16 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.percero.agents.sync.metadata.MappedClass;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.EStartActivityCode;
-import com.pulse.mo.AuxEntry;
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
+
+/*
+Imports based on semantic requirements
+*/
+
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -45,66 +45,116 @@ import com.percero.serial.JsonUtils;
 
 import com.pulse.mo.*;
 
-@MappedSuperclass
-@SecondaryTable(name="DiscrepancyDetectedNotification")
 /*
+Entity Tags based on semantic requirements
 */
-public class _Super_DiscrepancyDetectedNotification extends com.pulse.mo.Notification
+
+@MappedSuperclass
+public class _Super_DiscrepancyDetectedNotification extends LOBConfigurationNotification implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
 	//////////////////////////////////////////////////////
 	@Override
 	public String classVersion() {
-		return "0.0.0.0";
+		return "1.0.0";
 	}
 
-
+	
+	/*
+	Keys of DiscrepancyDetectedNotification
+	*/
 	//////////////////////////////////////////////////////
-	// ID
-	//////////////////////////////////////////////////////
-	/** Inherits from another Model Object Class, so no ID here. **/
+// ID
+//////////////////////////////////////////////////////
+//@Id
+//@com.percero.agents.sync.metadata.annotations.Externalize
+//@Column(unique=true,name="ID")
+//private String ID;
+//@JsonProperty(value="ID")
+//public String getID() {
+//	return this.ID;
+//}
+//
+//@JsonProperty(value="ID")
+//public void setID(String value) {
+//	this.ID = value;
+//}
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	/*
+AuxCodeEntryName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="eStartActivityCode_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCode_eStartActivityCode_TO_DiscrepancyDetectedNotification")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private EStartActivityCode eStartActivityCode;
-	public EStartActivityCode getEStartActivityCode() {
-		return this.eStartActivityCode;
-	}
-	public void setEStartActivityCode(EStartActivityCode value) {
-		this.eStartActivityCode = value;
-	}
+private String auxCodeEntryName;
 
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="auxEntry_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_AuxEntry_auxEntry_TO_DiscrepancyDetectedNotification")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private AuxEntry auxEntry;
-	public AuxEntry getAuxEntry() {
-		return this.auxEntry;
-	}
-	public void setAuxEntry(AuxEntry value) {
-		this.auxEntry = value;
-	}
+public String getAuxCodeEntryName() 
+{
+	return this.auxCodeEntryName;
+}
 
+public void setAuxCodeEntryName(String auxCodeEntryName)
+{
+	this.auxCodeEntryName = auxCodeEntryName;
+}/*
+EStartActivityCodeName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String eStartActivityCodeName;
+
+public String getEStartActivityCodeName() 
+{
+	return this.eStartActivityCodeName;
+}
+
+public void setEStartActivityCodeName(String eStartActivityCodeName)
+{
+	this.eStartActivityCodeName = eStartActivityCodeName;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+	
 
+	//////////////////////////////////////////////////////
+	// Source Relationships
+	//////////////////////////////////////////////////////
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="EStartActivityCodeId")
+@org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfDiscrepancyDetectedNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private EStartActivityCode eStartActivityCode;
+public EStartActivityCode getEStartActivityCode() {
+	return this.eStartActivityCode;
+}
+
+public void setEStartActivityCode(EStartActivityCode value) {
+	this.eStartActivityCode = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="AuxModeId")
+@org.hibernate.annotations.ForeignKey(name="FK_AuxModeOfDiscrepancyDetectedNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private AuxMode auxMode;
+public AuxMode getAuxMode() {
+	return this.auxMode;
+}
+
+public void setAuxMode(AuxMode value) {
+	this.auxMode = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -114,9 +164,54 @@ public class _Super_DiscrepancyDetectedNotification extends com.pulse.mo.Notific
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties
+		// Properties		
+		//Retrieve value of the Aux Code Entry Name property
+		objectJson += ",\"auxCodeEntryName\":";
+		
+		if (getAuxCodeEntryName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAuxCodeEntryName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the EStart Activity Code Name property
+		objectJson += ",\"eStartActivityCodeName\":";
+		
+		if (getEStartActivityCodeName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEStartActivityCodeName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+
+				
 		// Source Relationships
-		objectJson += ",\"eStartActivityCode\":";
+//Retrieve value of the EStart Activity Code of Discrepancy Detected Notification relationship
+objectJson += ",\"eStartActivityCode\":";
 		if (getEStartActivityCode() == null)
 			objectJson += "null";
 		else {
@@ -127,43 +222,56 @@ public class _Super_DiscrepancyDetectedNotification extends com.pulse.mo.Notific
 			}
 		}
 		objectJson += "";
-
-		objectJson += ",\"auxEntry\":";
-		if (getAuxEntry() == null)
+//Retrieve value of the Aux Mode of Discrepancy Detected Notification relationship
+objectJson += ",\"auxMode\":";
+		if (getAuxMode() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getAuxEntry()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getAuxMode()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
 
+		
 		// Target Relationships
+
 		
 		return objectJson;
 	}
+
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Aux Code Entry Name property
+		setAuxCodeEntryName(JsonUtils.getJsonString(jsonObject, "auxCodeEntryName"));
+		//From value of the EStart Activity Code Name property
+		setEStartActivityCodeName(JsonUtils.getJsonString(jsonObject, "eStartActivityCodeName"));
 
+		
 		// Source Relationships
-        this.eStartActivityCode = JsonUtils.getJsonPerceroObject(jsonObject, "eStartActivityCode");
-        this.auxEntry = JsonUtils.getJsonPerceroObject(jsonObject, "auxEntry");
+		this.eStartActivityCode = (EStartActivityCode) JsonUtils.getJsonPerceroObject(jsonObject, "eStartActivityCode");
+		this.auxMode = (AuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "auxMode");
+
 
 		// Target Relationships
-	}
 
+
+	}
+	
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-	
+
+		
 		return listSetters;
 	}
 }
+

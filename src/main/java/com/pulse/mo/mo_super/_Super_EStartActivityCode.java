@@ -1,4 +1,5 @@
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,17 +27,16 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.percero.agents.sync.metadata.MappedClass;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.DiscrepancyDetectedNotification;
-import com.pulse.mo.LOBConfigurationEntry;
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
+
+/*
+Imports based on semantic requirements
+*/
+
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -45,9 +45,11 @@ import com.percero.serial.JsonUtils;
 
 import com.pulse.mo.*;
 
-@MappedSuperclass
 /*
+Entity Tags based on semantic requirements
 */
+
+@MappedSuperclass
 public class _Super_EStartActivityCode extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
@@ -55,97 +57,199 @@ public class _Super_EStartActivityCode extends BaseDataObject implements Seriali
 	//////////////////////////////////////////////////////
 	@Override
 	public String classVersion() {
-		return "0.0.0.0";
+		return "1.0.0";
 	}
 
+	
+	/*
+	Keys of EStartActivityCode
+	*/
+	//////////////////////////////////////////////////////
+// ID
+//////////////////////////////////////////////////////
+@Id
+@com.percero.agents.sync.metadata.annotations.Externalize
+@Column(unique=true,name="ID")
+private String ID;
+@JsonProperty(value="ID")
+public String getID() {
+	return this.ID;
+}
 
-	//////////////////////////////////////////////////////
-	// ID
-	//////////////////////////////////////////////////////
-	@Id
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@Column(unique=true,name="ID")
-	private String ID;
-	@JsonProperty(value="ID")
-	public String getID() {
-		return this.ID;
-	}
-	@JsonProperty(value="ID")
-	public void setID(String value) {
-		this.ID = value;
-	}
+@JsonProperty(value="ID")
+public void setID(String value) {
+	this.ID = value;
+}
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer eventCount;
-	public Integer getEventCount() {
-		return this.eventCount;
-	}
-	public void setEventCount(Integer value)
-	{
-		this.eventCount = value;
-	}
+	/*
+NonBillable
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Boolean nonBillable;
-	public Boolean getNonBillable() {
-		return this.nonBillable;
-	}
-	public void setNonBillable(Boolean value)
-	{
-		this.nonBillable = value;
-	}
+private Boolean nonBillable;
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private String name;
-	public String getName() {
-		return this.name;
-	}
-	public void setName(String value)
-	{
-		this.name = value;
-	}
+public Boolean getNonBillable() 
+{
+	return this.nonBillable;
+}
+
+public void setNonBillable(Boolean nonBillable)
+{
+	this.nonBillable = nonBillable;
+}/*
+EventCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer eventCount;
+
+public Integer getEventCount() 
+{
+	return this.eventCount;
+}
+
+public void setEventCount(Integer eventCount)
+{
+	this.eventCount = eventCount;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
+}/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
+}/*
+Code
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String code;
+
+public String getCode() 
+{
+	return this.code;
+}
+
+public void setCode(String code)
+{
+	this.code = code;
+}/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
+}
+
+	//////////////////////////////////////////////////////
+	// Target Relationships
+	//////////////////////////////////////////////////////
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=DiscrepancyDetectedNotification.class, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
+private List<DiscrepancyDetectedNotification> discrepancyDetectedNotifications;
+public List<DiscrepancyDetectedNotification> getDiscrepancyDetectedNotifications() {
+	return this.discrepancyDetectedNotifications;
+}
+
+public void setDiscrepancyDetectedNotifications(List<DiscrepancyDetectedNotification> value) {
+	this.discrepancyDetectedNotifications = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentTimeEntry.class, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AgentTimeEntry> agentTimeEntries;
+public List<AgentTimeEntry> getAgentTimeEntries() {
+	return this.agentTimeEntries;
+}
+
+public void setAgentTimeEntries(List<AgentTimeEntry> value) {
+	this.agentTimeEntries = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ChangesNotApprovedNotification.class, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ChangesNotApprovedNotification> changesNotApprovedNotifications;
+public List<ChangesNotApprovedNotification> getChangesNotApprovedNotifications() {
+	return this.changesNotApprovedNotifications;
+}
+
+public void setChangesNotApprovedNotifications(List<ChangesNotApprovedNotification> value) {
+	this.changesNotApprovedNotifications = value;
+}
+
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@com.percero.agents.sync.metadata.annotations.Externalize
+@OneToOne(fetch=FetchType.LAZY, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
+private LOBConfigurationEntry lOBConfigurationEntry;
+public LOBConfigurationEntry getLOBConfigurationEntry() {
+	return this.lOBConfigurationEntry;
+}
+
+public void setLOBConfigurationEntry(LOBConfigurationEntry value) 
+{
+	this.lOBConfigurationEntry = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-
-	//////////////////////////////////////////////////////
-	// Target Relationships
-	//////////////////////////////////////////////////////
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(contentUsing=BDOSerializer.class)
-	@JsonDeserialize(contentUsing=BDODeserializer.class)
-	@OneToMany(fetch=FetchType.LAZY, targetEntity=DiscrepancyDetectedNotification.class, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
-	private List<DiscrepancyDetectedNotification> notifications;
-	public List<DiscrepancyDetectedNotification> getNotifications() {
-		return this.notifications;
-	}
-	public void setNotifications(List<DiscrepancyDetectedNotification> value) {
-		this.notifications = value;
-	}
-
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JoinColumn(name="lobConfigurationEntry_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCode_lobConfigurationEntry_LOBConfigurationEntry")
-	@OneToOne(fetch=FetchType.LAZY, mappedBy="eStartActivityCode", cascade=javax.persistence.CascadeType.REMOVE)
-	private LOBConfigurationEntry lobConfigurationEntry;
-	public LOBConfigurationEntry getLobConfigurationEntry() {
-		return this.lobConfigurationEntry;
-	}
-	public void setLobConfigurationEntry(LOBConfigurationEntry value) {
-		this.lobConfigurationEntry = value;
-	}
-
-
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -155,22 +259,38 @@ public class _Super_EStartActivityCode extends BaseDataObject implements Seriali
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties
-		objectJson += ",\"eventCount\":";
-		if (getEventCount() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEventCount();
-		}
-
+		// Properties		
+		//Retrieve value of the Non Billable property
 		objectJson += ",\"nonBillable\":";
 		if (getNonBillable() == null)
 			objectJson += "null";
 		else {
 			objectJson += getNonBillable();
 		}
-
+		//Retrieve value of the Event Count property
+		objectJson += ",\"eventCount\":";
+		
+		if (getEventCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEventCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
+		
 		if (getName() == null)
 			objectJson += "null";
 		else {
@@ -189,65 +309,176 @@ public class _Super_EStartActivityCode extends BaseDataObject implements Seriali
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Code property
+		objectJson += ",\"code\":";
+		
+		if (getCode() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCode());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
+		
+		if (getDescription() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDescription());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
+				
 		// Source Relationships
+
+		
 		// Target Relationships
-		objectJson += ",\"notifications\":[";
-		if (getNotifications() != null) {
-			int notificationsCounter = 0;
-			for(DiscrepancyDetectedNotification nextNotifications : getNotifications()) {
-				if (notificationsCounter > 0)
+//Retrieve value of the EStart Activity Code of Discrepancy Detected Notification relationship
+objectJson += ",\"discrepancyDetectedNotifications\":[";
+		
+		if (getDiscrepancyDetectedNotifications() != null) {
+			int discrepancyDetectedNotificationsCounter = 0;
+			for(DiscrepancyDetectedNotification nextDiscrepancyDetectedNotifications : getDiscrepancyDetectedNotifications()) {
+				if (discrepancyDetectedNotificationsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextNotifications).toEmbeddedJson();
-					notificationsCounter++;
+					objectJson += ((BaseDataObject) nextDiscrepancyDetectedNotifications).toEmbeddedJson();
+					discrepancyDetectedNotificationsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
 			}
 		}
 		objectJson += "]";
-
-		objectJson += ",\"lobConfigurationEntry\":";
-		if (getLobConfigurationEntry() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getLobConfigurationEntry()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
+//Retrieve value of the EStart Activity Code of Agent Time Entry relationship
+objectJson += ",\"agentTimeEntries\":[";
+		
+		if (getAgentTimeEntries() != null) {
+			int agentTimeEntriesCounter = 0;
+			for(AgentTimeEntry nextAgentTimeEntries : getAgentTimeEntries()) {
+				if (agentTimeEntriesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAgentTimeEntries).toEmbeddedJson();
+					agentTimeEntriesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
 			}
 		}
-		objectJson += "";
+		objectJson += "]";
+//Retrieve value of the EStart Activity Code of Changes Not Approved Notification relationship
+objectJson += ",\"changesNotApprovedNotifications\":[";
+		
+		if (getChangesNotApprovedNotifications() != null) {
+			int changesNotApprovedNotificationsCounter = 0;
+			for(ChangesNotApprovedNotification nextChangesNotApprovedNotifications : getChangesNotApprovedNotifications()) {
+				if (changesNotApprovedNotificationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextChangesNotApprovedNotifications).toEmbeddedJson();
+					changesNotApprovedNotificationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the EStart Activity Code of LOB Configuration Entry relationship
+
 
 		
 		return objectJson;
 	}
+
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setEventCount(JsonUtils.getJsonInteger(jsonObject, "eventCount"));
+		//From value of the Non Billable property
 		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
+		//From value of the Event Count property
+		setEventCount(JsonUtils.getJsonInteger(jsonObject, "eventCount"));
+		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Code property
+		setCode(JsonUtils.getJsonString(jsonObject, "code"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 
+		
 		// Source Relationships
 
-		// Target Relationships
-		this.notifications = (List<DiscrepancyDetectedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
-		this.lobConfigurationEntry = JsonUtils.getJsonPerceroObject(jsonObject, "lobConfigurationEntry");
-	}
 
+		// Target Relationships
+		this.discrepancyDetectedNotifications = (List<DiscrepancyDetectedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "discrepancyDetectedNotifications");
+		this.agentTimeEntries = (List<AgentTimeEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentTimeEntries");
+		this.changesNotApprovedNotifications = (List<ChangesNotApprovedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "changesNotApprovedNotifications");
+		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
+
+
+	}
+	
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(DiscrepancyDetectedNotification.class, "eStartActivityCode"));
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "eStartActivityCode"));
-	
+		listSetters.add(MappedClass.getFieldSetters(DiscrepancyDetectedNotification.class, "estartactivitycode"));
+		listSetters.add(MappedClass.getFieldSetters(AgentTimeEntry.class, "estartactivitycode"));
+		listSetters.add(MappedClass.getFieldSetters(ChangesNotApprovedNotification.class, "estartactivitycode"));
+
+		
 		return listSetters;
 	}
 }
+

@@ -1,4 +1,5 @@
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,16 +27,16 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.percero.agents.sync.metadata.MappedClass;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.LOBConfigurationEntry;
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
+
+/*
+Imports based on semantic requirements
+*/
+
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -44,52 +45,69 @@ import com.percero.serial.JsonUtils;
 
 import com.pulse.mo.*;
 
-@MappedSuperclass
-@SecondaryTable(name="ThresholdExceededNotification")
 /*
+Entity Tags based on semantic requirements
 */
-public class _Super_ThresholdExceededNotification extends com.pulse.mo.Notification
+
+@MappedSuperclass
+public class _Super_ThresholdExceededNotification extends LOBConfigurationNotification implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
 	//////////////////////////////////////////////////////
 	@Override
 	public String classVersion() {
-		return "0.0.0.0";
+		return "1.0.0";
 	}
 
-
+	
+	/*
+	Keys of ThresholdExceededNotification
+	*/
 	//////////////////////////////////////////////////////
-	// ID
-	//////////////////////////////////////////////////////
-	/** Inherits from another Model Object Class, so no ID here. **/
+// ID
+//////////////////////////////////////////////////////
+//@Id
+//@com.percero.agents.sync.metadata.annotations.Externalize
+//@Column(unique=true,name="ID")
+//private String ID;
+//@JsonProperty(value="ID")
+//public String getID() {
+//	return this.ID;
+//}
+//
+//@JsonProperty(value="ID")
+//public void setID(String value) {
+//	this.ID = value;
+//}
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="lobConfigurationEntry_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationEntry_lobConfigurationEntry_TO_ThresholdExceededNotification")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOBConfigurationEntry lobConfigurationEntry;
-	public LOBConfigurationEntry getLobConfigurationEntry() {
-		return this.lobConfigurationEntry;
-	}
-	public void setLobConfigurationEntry(LOBConfigurationEntry value) {
-		this.lobConfigurationEntry = value;
-	}
-
+	
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+	
 
+	//////////////////////////////////////////////////////
+	// Source Relationships
+	//////////////////////////////////////////////////////
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="LOBConfigurationEntryId")
+@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationEntryOfThresholdExceededNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private LOBConfigurationEntry lOBConfigurationEntry;
+public LOBConfigurationEntry getLOBConfigurationEntry() {
+	return this.lOBConfigurationEntry;
+}
+
+public void setLOBConfigurationEntry(LOBConfigurationEntry value) {
+	this.lOBConfigurationEntry = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -99,24 +117,30 @@ public class _Super_ThresholdExceededNotification extends com.pulse.mo.Notificat
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties
+		// Properties		
+
+				
 		// Source Relationships
-		objectJson += ",\"lobConfigurationEntry\":";
-		if (getLobConfigurationEntry() == null)
+//Retrieve value of the LOB Configuration Entry of Threshold Exceeded Notification relationship
+objectJson += ",\"lOBConfigurationEntry\":";
+		if (getLOBConfigurationEntry() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getLobConfigurationEntry()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getLOBConfigurationEntry()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
 
+		
 		// Target Relationships
+
 		
 		return objectJson;
 	}
+
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
@@ -124,18 +148,24 @@ public class _Super_ThresholdExceededNotification extends com.pulse.mo.Notificat
 
 		// Properties
 
+		
 		// Source Relationships
-        this.lobConfigurationEntry = JsonUtils.getJsonPerceroObject(jsonObject, "lobConfigurationEntry");
+		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
+
 
 		// Target Relationships
-	}
 
+
+	}
+	
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-	
+
+		
 		return listSetters;
 	}
 }
+

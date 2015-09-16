@@ -1,4 +1,5 @@
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,14 +27,15 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.percero.agents.sync.metadata.MappedClass;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-
 import org.hibernate.annotations.AccessType;
+
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
+
+/*
+Imports based on semantic requirements
+*/
 
 
 import com.percero.agents.sync.vo.BaseDataObject;
@@ -43,115 +45,189 @@ import com.percero.serial.JsonUtils;
 
 import com.pulse.mo.*;
 
-@MappedSuperclass
-@SecondaryTable(name="CoachingNotification")
 /*
+Entity Tags based on semantic requirements
 */
-public class _Super_CoachingNotification extends com.pulse.mo.Notification
+
+@MappedSuperclass
+public class _Super_CoachingNotification extends Notification implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
 	//////////////////////////////////////////////////////
 	@Override
 	public String classVersion() {
-		return "0.0.0.0";
+		return "1.0.0";
 	}
 
-
+	
+	/*
+	Keys of CoachingNotification
+	*/
 	//////////////////////////////////////////////////////
-	// ID
-	//////////////////////////////////////////////////////
-	/** Inherits from another Model Object Class, so no ID here. **/
+// ID
+//////////////////////////////////////////////////////
+//@Id
+//@com.percero.agents.sync.metadata.annotations.Externalize
+//@Column(unique=true,name="ID")
+//private String ID;
+//@JsonProperty(value="ID")
+//public String getID() {
+//	return this.ID;
+//}
+//
+//@JsonProperty(value="ID")
+//public void setID(String value) {
+//	this.ID = value;
+//}
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer acknowledgementStateCount;
-	public Integer getAcknowledgementStateCount() {
-		return this.acknowledgementStateCount;
-	}
-	public void setAcknowledgementStateCount(Integer value)
-	{
-		this.acknowledgementStateCount = value;
-	}
+	/*
+SkippedStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer pendingCoachStateCount;
-	public Integer getPendingCoachStateCount() {
-		return this.pendingCoachStateCount;
-	}
-	public void setPendingCoachStateCount(Integer value)
-	{
-		this.pendingCoachStateCount = value;
-	}
+private Integer skippedStateCount;
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer pendingEmployeeStateCount;
-	public Integer getPendingEmployeeStateCount() {
-		return this.pendingEmployeeStateCount;
-	}
-	public void setPendingEmployeeStateCount(Integer value)
-	{
-		this.pendingEmployeeStateCount = value;
-	}
+public Integer getSkippedStateCount() 
+{
+	return this.skippedStateCount;
+}
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer pendingStateCount;
-	public Integer getPendingStateCount() {
-		return this.pendingStateCount;
-	}
-	public void setPendingStateCount(Integer value)
-	{
-		this.pendingStateCount = value;
-	}
+public void setSkippedStateCount(Integer skippedStateCount)
+{
+	this.skippedStateCount = skippedStateCount;
+}/*
+AcknowledgementStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer skippedStateCount;
-	public Integer getSkippedStateCount() {
-		return this.skippedStateCount;
-	}
-	public void setSkippedStateCount(Integer value)
-	{
-		this.skippedStateCount = value;
-	}
+private Integer acknowledgementStateCount;
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Integer submittedStateCount;
-	public Integer getSubmittedStateCount() {
-		return this.submittedStateCount;
-	}
-	public void setSubmittedStateCount(Integer value)
-	{
-		this.submittedStateCount = value;
-	}
+public Integer getAcknowledgementStateCount() 
+{
+	return this.acknowledgementStateCount;
+}
 
-	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private Date weekEndDate;
-	public Date getWeekEndDate() {
-		return this.weekEndDate;
-	}
-	public void setWeekEndDate(Date value)
-	{
-		this.weekEndDate = value;
-	}
+public void setAcknowledgementStateCount(Integer acknowledgementStateCount)
+{
+	this.acknowledgementStateCount = acknowledgementStateCount;
+}/*
+SubmittedStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
+private Integer submittedStateCount;
 
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
+public Integer getSubmittedStateCount() 
+{
+	return this.submittedStateCount;
+}
+
+public void setSubmittedStateCount(Integer submittedStateCount)
+{
+	this.submittedStateCount = submittedStateCount;
+}/*
+PendingEmployeeStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer pendingEmployeeStateCount;
+
+public Integer getPendingEmployeeStateCount() 
+{
+	return this.pendingEmployeeStateCount;
+}
+
+public void setPendingEmployeeStateCount(Integer pendingEmployeeStateCount)
+{
+	this.pendingEmployeeStateCount = pendingEmployeeStateCount;
+}/*
+WeekendDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekendDate;
+
+public Date getWeekendDate() 
+{
+	return this.weekendDate;
+}
+
+public void setWeekendDate(Date weekendDate)
+{
+	this.weekendDate = weekendDate;
+}/*
+PendingStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer pendingStateCount;
+
+public Integer getPendingStateCount() 
+{
+	return this.pendingStateCount;
+}
+
+public void setPendingStateCount(Integer pendingStateCount)
+{
+	this.pendingStateCount = pendingStateCount;
+}/*
+PendingCoachStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer pendingCoachStateCount;
+
+public Integer getPendingCoachStateCount() 
+{
+	return this.pendingCoachStateCount;
+}
+
+public void setPendingCoachStateCount(Integer pendingCoachStateCount)
+{
+	this.pendingCoachStateCount = pendingCoachStateCount;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+	
 
+	//////////////////////////////////////////////////////
+	// Source Relationships
+	//////////////////////////////////////////////////////
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="ScorecardId")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfCoachingNotification")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
+}
+
+public void setScorecard(Scorecard value) 
+{
+	this.scorecard = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -161,86 +237,216 @@ public class _Super_CoachingNotification extends com.pulse.mo.Notification
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties
-		objectJson += ",\"acknowledgementStateCount\":";
-		if (getAcknowledgementStateCount() == null)
-			objectJson += "null";
-		else {
-			objectJson += getAcknowledgementStateCount();
-		}
-
-		objectJson += ",\"pendingCoachStateCount\":";
-		if (getPendingCoachStateCount() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPendingCoachStateCount();
-		}
-
-		objectJson += ",\"pendingEmployeeStateCount\":";
-		if (getPendingEmployeeStateCount() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPendingEmployeeStateCount();
-		}
-
-		objectJson += ",\"pendingStateCount\":";
-		if (getPendingStateCount() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPendingStateCount();
-		}
-
+		// Properties		
+		//Retrieve value of the Skipped State Count property
 		objectJson += ",\"skippedStateCount\":";
+		
 		if (getSkippedStateCount() == null)
 			objectJson += "null";
 		else {
-			objectJson += getSkippedStateCount();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSkippedStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
-
+		//Retrieve value of the Acknowledgement State Count property
+		objectJson += ",\"acknowledgementStateCount\":";
+		
+		if (getAcknowledgementStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAcknowledgementStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Submitted State Count property
 		objectJson += ",\"submittedStateCount\":";
+		
 		if (getSubmittedStateCount() == null)
 			objectJson += "null";
 		else {
-			objectJson += getSubmittedStateCount();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSubmittedStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
-
-		objectJson += ",\"weekEndDate\":";
-		if (getWeekEndDate() == null)
+		//Retrieve value of the Pending Employee State Count property
+		objectJson += ",\"pendingEmployeeStateCount\":";
+		
+		if (getPendingEmployeeStateCount() == null)
 			objectJson += "null";
 		else {
-			objectJson += getWeekEndDate().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPendingEmployeeStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Weekend Date property
+		objectJson += ",\"weekendDate\":";
+		
+		if (getWeekendDate() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getWeekendDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Pending State Count property
+		objectJson += ",\"pendingStateCount\":";
+		
+		if (getPendingStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPendingStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Pending Coach State Count property
+		objectJson += ",\"pendingCoachStateCount\":";
+		
+		if (getPendingCoachStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPendingCoachStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
+				
 		// Source Relationships
+//Retrieve value of the Scorecard of Coaching Notification relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
+		
 		// Target Relationships
+
 		
 		return objectJson;
 	}
+
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setAcknowledgementStateCount(JsonUtils.getJsonInteger(jsonObject, "acknowledgementStateCount"));
-		setPendingCoachStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachStateCount"));
-		setPendingEmployeeStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeStateCount"));
-		setPendingStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingStateCount"));
+		//From value of the Skipped State Count property
 		setSkippedStateCount(JsonUtils.getJsonInteger(jsonObject, "skippedStateCount"));
+		//From value of the Acknowledgement State Count property
+		setAcknowledgementStateCount(JsonUtils.getJsonInteger(jsonObject, "acknowledgementStateCount"));
+		//From value of the Submitted State Count property
 		setSubmittedStateCount(JsonUtils.getJsonInteger(jsonObject, "submittedStateCount"));
-		setWeekEndDate(JsonUtils.getJsonDate(jsonObject, "weekEndDate"));
+		//From value of the Pending Employee State Count property
+		setPendingEmployeeStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeStateCount"));
+		//From value of the Weekend Date property
+		setWeekendDate(JsonUtils.getJsonDate(jsonObject, "weekendDate"));
+		//From value of the Pending State Count property
+		setPendingStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingStateCount"));
+		//From value of the Pending Coach State Count property
+		setPendingCoachStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachStateCount"));
 
+		
 		// Source Relationships
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
+
 
 		// Target Relationships
-	}
 
+
+	}
+	
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-	
+
+		
 		return listSetters;
 	}
 }
+
