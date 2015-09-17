@@ -36,6 +36,12 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 import org.hibernate.annotations.AccessType;
 
 import com.pulse.mo.TeamLeader;
+import com.pulse.mo.LOBConfigurationNotification;
+import com.pulse.mo.CorrectiveAction;
+import com.pulse.mo.AgentCoachingSessions;
+import com.pulse.mo.AdhocCoachingSession;
+import com.pulse.mo.AgentTime;
+import com.pulse.mo.AdhocTask;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -143,6 +149,78 @@ public class _Super_Agent extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationNotification.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<LOBConfigurationNotification> lobConfigurationNotifications;
+	public List<LOBConfigurationNotification> getLobConfigurationNotifications() {
+		return this.lobConfigurationNotifications;
+	}
+	public void setLobConfigurationNotifications(List<LOBConfigurationNotification> value) {
+		this.lobConfigurationNotifications = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<CorrectiveAction> correctiveAction;
+	public List<CorrectiveAction> getCorrectiveAction() {
+		return this.correctiveAction;
+	}
+	public void setCorrectiveAction(List<CorrectiveAction> value) {
+		this.correctiveAction = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentCoachingSessions.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<AgentCoachingSessions> agentCoachingSessions;
+	public List<AgentCoachingSessions> getAgentCoachingSessions() {
+		return this.agentCoachingSessions;
+	}
+	public void setAgentCoachingSessions(List<AgentCoachingSessions> value) {
+		this.agentCoachingSessions = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<AdhocCoachingSession> adhocCoachingSessions;
+	public List<AdhocCoachingSession> getAdhocCoachingSessions() {
+		return this.adhocCoachingSessions;
+	}
+	public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
+		this.adhocCoachingSessions = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentTime.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<AgentTime> agentTimes;
+	public List<AgentTime> getAgentTimes() {
+		return this.agentTimes;
+	}
+	public void setAgentTimes(List<AgentTime> value) {
+		this.agentTimes = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<AdhocTask> adhocTasks;
+	public List<AdhocTask> getAdhocTasks() {
+		return this.adhocTasks;
+	}
+	public void setAdhocTasks(List<AdhocTask> value) {
+		this.adhocTasks = value;
+	}
+
 
 
 	
@@ -248,6 +326,102 @@ public class _Super_Agent extends BaseDataObject implements Serializable
 		objectJson += "";
 
 		// Target Relationships
+		objectJson += ",\"lobConfigurationNotifications\":[";
+		if (getLobConfigurationNotifications() != null) {
+			int lobConfigurationNotificationsCounter = 0;
+			for(LOBConfigurationNotification nextLobConfigurationNotifications : getLobConfigurationNotifications()) {
+				if (lobConfigurationNotificationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextLobConfigurationNotifications).toEmbeddedJson();
+					lobConfigurationNotificationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"correctiveAction\":[";
+		if (getCorrectiveAction() != null) {
+			int correctiveActionCounter = 0;
+			for(CorrectiveAction nextCorrectiveAction : getCorrectiveAction()) {
+				if (correctiveActionCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCorrectiveAction).toEmbeddedJson();
+					correctiveActionCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"agentCoachingSessions\":[";
+		if (getAgentCoachingSessions() != null) {
+			int agentCoachingSessionsCounter = 0;
+			for(AgentCoachingSessions nextAgentCoachingSessions : getAgentCoachingSessions()) {
+				if (agentCoachingSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAgentCoachingSessions).toEmbeddedJson();
+					agentCoachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"adhocCoachingSessions\":[";
+		if (getAdhocCoachingSessions() != null) {
+			int adhocCoachingSessionsCounter = 0;
+			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
+				if (adhocCoachingSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
+					adhocCoachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"agentTimes\":[";
+		if (getAgentTimes() != null) {
+			int agentTimesCounter = 0;
+			for(AgentTime nextAgentTimes : getAgentTimes()) {
+				if (agentTimesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAgentTimes).toEmbeddedJson();
+					agentTimesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"adhocTasks\":[";
+		if (getAdhocTasks() != null) {
+			int adhocTasksCounter = 0;
+			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
+				if (adhocTasksCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
+					adhocTasksCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
 		
 		return objectJson;
 	}
@@ -266,6 +440,12 @@ public class _Super_Agent extends BaseDataObject implements Serializable
         this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 		// Target Relationships
+		this.lobConfigurationNotifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "lobConfigurationNotifications");
+		this.correctiveAction = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveAction");
+		this.agentCoachingSessions = (List<AgentCoachingSessions>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentCoachingSessions");
+		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
+		this.agentTimes = (List<AgentTime>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentTimes");
+		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
 	}
 
 	@Override
@@ -273,7 +453,12 @@ public class _Super_Agent extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(DBConfigurationNotification.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(AgentCoachingSessions.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(AgentTime.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
 	
 		return listSetters;
 	}

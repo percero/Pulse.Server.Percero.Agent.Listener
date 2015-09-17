@@ -36,6 +36,8 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 import org.hibernate.annotations.AccessType;
 
 import com.pulse.mo.LOB;
+import com.pulse.mo.ScorecardState;
+import com.pulse.mo.AgentCoachingSessions;
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -77,6 +79,16 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private Date weekEndDate;
+	public Date getWeekEndDate() {
+		return this.weekEndDate;
+	}
+	public void setWeekEndDate(Date value)
+	{
+		this.weekEndDate = value;
+	}
 
 
 	//////////////////////////////////////////////////////
@@ -96,10 +108,36 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		this.lob = value;
 	}
 
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
+	@JoinColumn(name="scorecardState_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_ScorecardState_scorecardState_TO_Scorecard")
+	@OneToOne(fetch=FetchType.LAZY, optional=false)
+	private ScorecardState scorecardState;
+	public ScorecardState getScorecardState() {
+		return this.scorecardState;
+	}
+	public void setScorecardState(ScorecardState value) {
+		this.scorecardState = value;
+	}
+
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentCoachingSessions.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<AgentCoachingSessions> agentCoachingSessions;
+	public List<AgentCoachingSessions> getAgentCoachingSessions() {
+		return this.agentCoachingSessions;
+	}
+	public void setAgentCoachingSessions(List<AgentCoachingSessions> value) {
+		this.agentCoachingSessions = value;
+	}
+
 
 
 	
@@ -111,6 +149,12 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
+		objectJson += ",\"weekEndDate\":";
+		if (getWeekEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekEndDate().getTime();
+		}
 
 		// Source Relationships
 		objectJson += ",\"lob\":";
@@ -125,7 +169,35 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		}
 		objectJson += "";
 
+		objectJson += ",\"scorecardState\":";
+		if (getScorecardState() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardState()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
 		// Target Relationships
+		objectJson += ",\"agentCoachingSessions\":[";
+		if (getAgentCoachingSessions() != null) {
+			int agentCoachingSessionsCounter = 0;
+			for(AgentCoachingSessions nextAgentCoachingSessions : getAgentCoachingSessions()) {
+				if (agentCoachingSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAgentCoachingSessions).toEmbeddedJson();
+					agentCoachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
 		
 		return objectJson;
 	}
@@ -135,11 +207,14 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 	    super.fromJson(jsonObject);
 
 		// Properties
+		setWeekEndDate(JsonUtils.getJsonDate(jsonObject, "weekEndDate"));
 
 		// Source Relationships
         this.lob = JsonUtils.getJsonPerceroObject(jsonObject, "lob");
+        this.scorecardState = JsonUtils.getJsonPerceroObject(jsonObject, "scorecardState");
 
 		// Target Relationships
+		this.agentCoachingSessions = (List<AgentCoachingSessions>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentCoachingSessions");
 	}
 
 	@Override
@@ -147,6 +222,7 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(AgentCoachingSessions.class, "scorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingNotification.class, "scorecard"));
 	
 		return listSetters;

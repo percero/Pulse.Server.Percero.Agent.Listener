@@ -86,17 +86,6 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 	// Properties
 	//////////////////////////////////////////////////////
 	@Column
-    @com.percero.agents.sync.metadata.annotations.Externalize
-	private String userIdentifier;
-	public String getUserIdentifier() {
-		return this.userIdentifier;
-	}
-	public void setUserIdentifier(String value)
-	{
-		this.userIdentifier = value;
-	}
-
-	@Column
     @com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, propertyName="userIdentifier",
         params={
                     
@@ -157,26 +146,6 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties
-		objectJson += ",\"userIdentifier\":";
-		if (getUserIdentifier() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUserIdentifier());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-
 		objectJson += ",\"value\":";
 		if (getValue() == null)
 			objectJson += "null";
@@ -220,7 +189,6 @@ public class _Super_Email extends BaseDataObject implements Serializable, com.pe
 	    super.fromJson(jsonObject);
 
 		// Properties
-		setUserIdentifier(JsonUtils.getJsonString(jsonObject, "userIdentifier"));
 		setValue(JsonUtils.getJsonString(jsonObject, "value"));
 
 		// Source Relationships

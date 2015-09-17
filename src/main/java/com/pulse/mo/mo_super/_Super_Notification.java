@@ -114,6 +114,17 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		this.type = value;
 	}
 
+	@Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	private Boolean complete;
+	public Boolean getComplete() {
+		return this.complete;
+	}
+	public void setComplete(Boolean value)
+	{
+		this.complete = value;
+	}
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -194,6 +205,13 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 			}
 		}
 
+		objectJson += ",\"complete\":";
+		if (getComplete() == null)
+			objectJson += "null";
+		else {
+			objectJson += getComplete();
+		}
+
 		// Source Relationships
 		objectJson += ",\"teamLeader\":";
 		if (getTeamLeader() == null)
@@ -220,6 +238,7 @@ public class _Super_Notification extends BaseDataObject implements Serializable
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setComplete(JsonUtils.getJsonBoolean(jsonObject, "complete"));
 
 		// Source Relationships
         this.teamLeader = JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");

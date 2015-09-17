@@ -35,9 +35,9 @@ import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
 
 import org.hibernate.annotations.AccessType;
 
-import com.pulse.mo.Alert;
-import com.pulse.mo.Agent;
 import com.pulse.mo.PulseUser;
+import com.pulse.mo.Agent;
+import com.pulse.mo.Alert;
 import com.pulse.mo.Notification;
 
 import com.percero.agents.sync.vo.BaseDataObject;
@@ -132,16 +132,18 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
     @com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(contentUsing=BDOSerializer.class)
-	@JsonDeserialize(contentUsing=BDODeserializer.class)
-	@OneToMany(fetch=FetchType.LAZY, targetEntity=Alert.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-	private List<Alert> alerts;
-	public List<Alert> getAlerts() {
-		return this.alerts;
+	@JoinColumn(name="pulseUser_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_pulseUser_PulseUser")
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+	private PulseUser pulseUser;
+	public PulseUser getPulseUser() {
+		return this.pulseUser;
 	}
-	public void setAlerts(List<Alert> value) {
-		this.alerts = value;
+	public void setPulseUser(PulseUser value) {
+		this.pulseUser = value;
 	}
 
     @com.percero.agents.sync.metadata.annotations.Externalize
@@ -156,18 +158,16 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 		this.agents = value;
 	}
 
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
     @com.percero.agents.sync.metadata.annotations.Externalize
-	@JoinColumn(name="pulseUser_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_TeamLeader_pulseUser_PulseUser")
-	@OneToOne(fetch=FetchType.LAZY, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-	private PulseUser pulseUser;
-	public PulseUser getPulseUser() {
-		return this.pulseUser;
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=Alert.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<Alert> alerts;
+	public List<Alert> getAlerts() {
+		return this.alerts;
 	}
-	public void setPulseUser(PulseUser value) {
-		this.pulseUser = value;
+	public void setAlerts(List<Alert> value) {
+		this.alerts = value;
 	}
 
     @com.percero.agents.sync.metadata.annotations.Externalize
@@ -275,21 +275,17 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 
 		// Source Relationships
 		// Target Relationships
-		objectJson += ",\"alerts\":[";
-		if (getAlerts() != null) {
-			int alertsCounter = 0;
-			for(Alert nextAlerts : getAlerts()) {
-				if (alertsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAlerts).toEmbeddedJson();
-					alertsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
+		objectJson += ",\"pulseUser\":";
+		if (getPulseUser() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getPulseUser()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
 			}
 		}
-		objectJson += "]";
+		objectJson += "";
 
 		objectJson += ",\"agents\":[";
 		if (getAgents() != null) {
@@ -307,17 +303,21 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 		}
 		objectJson += "]";
 
-		objectJson += ",\"pulseUser\":";
-		if (getPulseUser() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPulseUser()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
+		objectJson += ",\"alerts\":[";
+		if (getAlerts() != null) {
+			int alertsCounter = 0;
+			for(Alert nextAlerts : getAlerts()) {
+				if (alertsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAlerts).toEmbeddedJson();
+					alertsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
 			}
 		}
-		objectJson += "";
+		objectJson += "]";
 
 		objectJson += ",\"notifications\":[";
 		if (getNotifications() != null) {
@@ -352,9 +352,9 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 		// Source Relationships
 
 		// Target Relationships
-		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
-		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.pulseUser = JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
+		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
+		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
 		this.notifications = (List<Notification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 	}
 
@@ -363,10 +363,12 @@ public class _Super_TeamLeader extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamLeader"));
-		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamLeader"));
 		listSetters.add(MappedClass.getFieldSetters(PulseUser.class, "teamLeader"));
+		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamLeader"));
+		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamLeader"));
+		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamLeader"));
 		listSetters.add(MappedClass.getFieldSetters(Notification.class, "teamLeader"));
+		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamLeader"));
 	
 		return listSetters;
 	}

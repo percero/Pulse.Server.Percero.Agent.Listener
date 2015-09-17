@@ -207,8 +207,8 @@ public class _Super_LOB extends BaseDataObject implements Serializable
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "lob"));
 		listSetters.add(MappedClass.getFieldSetters(Scorecard.class, "lob"));
-		listSetters.add(MappedClass.getFieldSetters(DBConfigurationNotification.class, "lob"));
 	
 		return listSetters;
 	}

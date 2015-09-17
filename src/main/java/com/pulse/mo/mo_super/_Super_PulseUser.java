@@ -37,7 +37,9 @@ import org.hibernate.annotations.AccessType;
 
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Email;
+import com.pulse.mo.UserSession;
 import com.pulse.mo.UserRole;
+import com.pulse.mo.TeamLeaderImpersonation;
 import com.percero.agents.auth.vo.IUserAnchor;
 
 import com.percero.agents.sync.vo.BaseDataObject;
@@ -209,6 +211,18 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
     @com.percero.agents.sync.metadata.annotations.Externalize
 	@JsonSerialize(contentUsing=BDOSerializer.class)
 	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=UserSession.class, mappedBy="pulseUser", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<UserSession> userSessions;
+	public List<UserSession> getUserSessions() {
+		return this.userSessions;
+	}
+	public void setUserSessions(List<UserSession> value) {
+		this.userSessions = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
 	@OneToMany(fetch=FetchType.LAZY, targetEntity=UserRole.class, mappedBy="pulseUser", cascade=javax.persistence.CascadeType.REMOVE)
 	private List<UserRole> roles;
 	public List<UserRole> getRoles() {
@@ -216,6 +230,18 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
 	}
 	public void setRoles(List<UserRole> value) {
 		this.roles = value;
+	}
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+	@JsonDeserialize(contentUsing=BDODeserializer.class)
+	@OneToMany(fetch=FetchType.LAZY, targetEntity=TeamLeaderImpersonation.class, mappedBy="pulseUser", cascade=javax.persistence.CascadeType.REMOVE)
+	private List<TeamLeaderImpersonation> teamLeaderImpersonations;
+	public List<TeamLeaderImpersonation> getTeamLeaderImpersonations() {
+		return this.teamLeaderImpersonations;
+	}
+	public void setTeamLeaderImpersonations(List<TeamLeaderImpersonation> value) {
+		this.teamLeaderImpersonations = value;
 	}
 
 
@@ -359,6 +385,22 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
 		}
 		objectJson += "]";
 
+		objectJson += ",\"userSessions\":[";
+		if (getUserSessions() != null) {
+			int userSessionsCounter = 0;
+			for(UserSession nextUserSessions : getUserSessions()) {
+				if (userSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextUserSessions).toEmbeddedJson();
+					userSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
 		objectJson += ",\"roles\":[";
 		if (getRoles() != null) {
 			int rolesCounter = 0;
@@ -368,6 +410,22 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
 				try {
 					objectJson += ((BaseDataObject) nextRoles).toEmbeddedJson();
 					rolesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+
+		objectJson += ",\"teamLeaderImpersonations\":[";
+		if (getTeamLeaderImpersonations() != null) {
+			int teamLeaderImpersonationsCounter = 0;
+			for(TeamLeaderImpersonation nextTeamLeaderImpersonations : getTeamLeaderImpersonations()) {
+				if (teamLeaderImpersonationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextTeamLeaderImpersonations).toEmbeddedJson();
+					teamLeaderImpersonationsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -395,7 +453,9 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
 
 		// Target Relationships
 		this.emails = (List<Email>) JsonUtils.getJsonListPerceroObject(jsonObject, "emails");
+		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
 		this.roles = (List<UserRole>) JsonUtils.getJsonListPerceroObject(jsonObject, "roles");
+		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
 	}
 
 	@Override
@@ -404,7 +464,9 @@ public class _Super_PulseUser extends BaseDataObject implements Serializable, co
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(Email.class, "pulseUser"));
+		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "pulseUser"));
 		listSetters.add(MappedClass.getFieldSetters(UserRole.class, "pulseUser"));
+		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "pulseUser"));
 	
 		return listSetters;
 	}
