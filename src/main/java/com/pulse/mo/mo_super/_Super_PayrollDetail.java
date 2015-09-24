@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-AssumedOff
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean assumedOff;
-
-public Boolean getAssumedOff() 
-{
-	return this.assumedOff;
-}
-
-public void setAssumedOff(Boolean assumedOff)
-{
-	this.assumedOff = assumedOff;
-}/*
 ExternalID
 Notes:
 */
@@ -118,6 +101,23 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+AssumedOff
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean assumedOff;
+
+public Boolean getAssumedOff() 
+{
+	return this.assumedOff;
+}
+
+public void setAssumedOff(Boolean assumedOff)
+{
+	this.assumedOff = assumedOff;
 }/*
 ShiftStartEndTime
 Notes:
@@ -136,23 +136,6 @@ public void setShiftStartEndTime(Date shiftStartEndTime)
 {
 	this.shiftStartEndTime = shiftStartEndTime;
 }/*
-ShiftStartDateTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date shiftStartDateTime;
-
-public Date getShiftStartDateTime() 
-{
-	return this.shiftStartDateTime;
-}
-
-public void setShiftStartDateTime(Date shiftStartDateTime)
-{
-	this.shiftStartDateTime = shiftStartDateTime;
-}/*
 ShiftRule
 Notes:
 */
@@ -169,13 +152,30 @@ public String getShiftRule()
 public void setShiftRule(String shiftRule)
 {
 	this.shiftRule = shiftRule;
+}/*
+ShiftStartDateTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date shiftStartDateTime;
+
+public Date getShiftStartDateTime() 
+{
+	return this.shiftStartDateTime;
+}
+
+public void setShiftStartDateTime(Date shiftStartDateTime)
+{
+	this.shiftStartDateTime = shiftStartDateTime;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @OneToOne(fetch=FetchType.LAZY, mappedBy="payrollDetail", cascade=javax.persistence.CascadeType.REMOVE)
 private AgentTime agentTime;
@@ -204,13 +204,6 @@ public void setAgentTime(AgentTime value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Assumed Off property
-		objectJson += ",\"assumedOff\":";
-		if (getAssumedOff() == null)
-			objectJson += "null";
-		else {
-			objectJson += getAssumedOff();
-		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -232,19 +225,19 @@ public void setAgentTime(AgentTime value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Assumed Off property
+		objectJson += ",\"assumedOff\":";
+		if (getAssumedOff() == null)
+			objectJson += "null";
+		else {
+			objectJson += getAssumedOff();
+		}
 		//Retrieve value of the Shift Start End Time property
 		objectJson += ",\"shiftStartEndTime\":";
 		if (getShiftStartEndTime() == null)
 			objectJson += "null";
 		else {
 			objectJson += getShiftStartEndTime().getTime();
-		}
-		//Retrieve value of the Shift Start Date Time property
-		objectJson += ",\"shiftStartDateTime\":";
-		if (getShiftStartDateTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getShiftStartDateTime().getTime();
 		}
 		//Retrieve value of the Shift Rule property
 		objectJson += ",\"shiftRule\":";
@@ -267,6 +260,13 @@ public void setAgentTime(AgentTime value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Shift Start Date Time property
+		objectJson += ",\"shiftStartDateTime\":";
+		if (getShiftStartDateTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getShiftStartDateTime().getTime();
+		}
 
 				
 		// Source Relationships
@@ -286,16 +286,16 @@ public void setAgentTime(AgentTime value)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Assumed Off property
-		setAssumedOff(JsonUtils.getJsonBoolean(jsonObject, "assumedOff"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Assumed Off property
+		setAssumedOff(JsonUtils.getJsonBoolean(jsonObject, "assumedOff"));
 		//From value of the Shift Start End Time property
 		setShiftStartEndTime(JsonUtils.getJsonDate(jsonObject, "shiftStartEndTime"));
-		//From value of the Shift Start Date Time property
-		setShiftStartDateTime(JsonUtils.getJsonDate(jsonObject, "shiftStartDateTime"));
 		//From value of the Shift Rule property
 		setShiftRule(JsonUtils.getJsonString(jsonObject, "shiftRule"));
+		//From value of the Shift Start Date Time property
+		setShiftStartDateTime(JsonUtils.getJsonDate(jsonObject, "shiftStartDateTime"));
 
 		
 		// Source Relationships

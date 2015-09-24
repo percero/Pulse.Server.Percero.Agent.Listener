@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Date
+TotalTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String date;
+private Double totalTime;
 
-public String getDate() 
+public Double getTotalTime() 
 {
-	return this.date;
+	return this.totalTime;
 }
 
-public void setDate(String date)
+public void setTotalTime(Double totalTime)
 {
-	this.date = date;
+	this.totalTime = totalTime;
 }/*
 ExternalID
 Notes:
@@ -119,22 +119,22 @@ public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
 }/*
-TotalTime
+Date
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double totalTime;
+private String date;
 
-public Double getTotalTime() 
+public String getDate() 
 {
-	return this.totalTime;
+	return this.date;
 }
 
-public void setTotalTime(Double totalTime)
+public void setDate(String date)
 {
-	this.totalTime = totalTime;
+	this.date = date;
 }/*
 StateName
 Notes:
@@ -158,8 +158,8 @@ public void setStateName(String stateName)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=AgentTimeEntry.class, mappedBy="agentTime", cascade=javax.persistence.CascadeType.REMOVE)
 private List<AgentTimeEntry> agentTimeEntries;
 public List<AgentTimeEntry> getAgentTimeEntries() {
@@ -176,9 +176,9 @@ public void setAgentTimeEntries(List<AgentTimeEntry> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfAgentTime")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -189,9 +189,9 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PayrollDetailId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="payrollDetail_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PayrollDetailOfAgentTime")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private PayrollDetail payrollDetail;
@@ -213,26 +213,12 @@ public void setPayrollDetail(PayrollDetail value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		
-		if (getDate() == null)
+		//Retrieve value of the Total Time property
+		objectJson += ",\"totalTime\":";
+		if (getTotalTime() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getTotalTime();
 		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
@@ -255,12 +241,26 @@ public void setPayrollDetail(PayrollDetail value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		
+		if (getDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getTotalTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
@@ -341,12 +341,12 @@ objectJson += ",\"agentTimeEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Date property
-		setDate(JsonUtils.getJsonString(jsonObject, "date"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Total Time property
 		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonString(jsonObject, "date"));
 		//From value of the State Name property
 		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
 

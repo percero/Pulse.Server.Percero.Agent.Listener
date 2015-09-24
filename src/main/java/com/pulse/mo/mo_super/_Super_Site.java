@@ -124,8 +124,8 @@ public void setName(String name)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Client.class, mappedBy="site", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Client> clients;
 public List<Client> getClients() {

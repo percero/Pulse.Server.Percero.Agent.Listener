@@ -102,22 +102,22 @@ public void setLastName(String lastName)
 {
 	this.lastName = lastName;
 }/*
-EmployeeId
+FirstName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String employeeId;
+private String firstName;
 
-public String getEmployeeId() 
+public String getFirstName() 
 {
-	return this.employeeId;
+	return this.firstName;
 }
 
-public void setEmployeeId(String employeeId)
+public void setFirstName(String firstName)
 {
-	this.employeeId = employeeId;
+	this.firstName = firstName;
 }/*
 PhotoUri
 Notes:
@@ -136,23 +136,6 @@ public void setPhotoUri(String photoUri)
 {
 	this.photoUri = photoUri;
 }/*
-EmailAddress
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String emailAddress;
-
-public String getEmailAddress() 
-{
-	return this.emailAddress;
-}
-
-public void setEmailAddress(String emailAddress)
-{
-	this.emailAddress = emailAddress;
-}/*
 ExternalID
 Notes:
 */
@@ -170,30 +153,47 @@ public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
 }/*
-FirstName
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String firstName;
+private String employeeId;
 
-public String getFirstName() 
+public String getEmployeeId() 
 {
-	return this.firstName;
+	return this.employeeId;
 }
 
-public void setFirstName(String firstName)
+public void setEmployeeId(String employeeId)
 {
-	this.firstName = firstName;
+	this.employeeId = employeeId;
+}/*
+EmailAddress
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String emailAddress;
+
+public String getEmailAddress() 
+{
+	return this.emailAddress;
+}
+
+public void setEmailAddress(String emailAddress)
+{
+	this.emailAddress = emailAddress;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=TeamLeader.class, mappedBy="supervisor", cascade=javax.persistence.CascadeType.REMOVE)
 private List<TeamLeader> teamLeaders;
 public List<TeamLeader> getTeamLeaders() {
@@ -205,8 +205,8 @@ public void setTeamLeaders(List<TeamLeader> value) {
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Supervisor.class, mappedBy="managerSupervisor", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Supervisor> subordinateSupervisors;
 public List<Supervisor> getSubordinateSupervisors() {
@@ -223,9 +223,9 @@ public void setSubordinateSupervisors(List<Supervisor> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ManagerSupervisorId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="managerSupervisor_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ManagerSupervisorOfSubordinateSupervisor")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Supervisor managerSupervisor;
@@ -267,16 +267,16 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
+		//Retrieve value of the First Name property
+		objectJson += ",\"firstName\":";
 		
-		if (getEmployeeId() == null)
+		if (getFirstName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+				objectJson += objectMapper.writeValueAsString(getFirstName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -309,27 +309,6 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
-		
-		if (getEmailAddress() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -351,16 +330,37 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the First Name property
-		objectJson += ",\"firstName\":";
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
 		
-		if (getFirstName() == null)
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getFirstName());
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
+		
+		if (getEmailAddress() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -437,16 +437,16 @@ objectJson += ",\"subordinateSupervisors\":[";
 		// Properties
 		//From value of the Last Name property
 		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the Photo Uri property
-		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
+		//From value of the Photo Uri property
+		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 
 		
 		// Source Relationships

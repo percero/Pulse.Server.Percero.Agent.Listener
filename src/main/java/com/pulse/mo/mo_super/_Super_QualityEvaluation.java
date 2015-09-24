@@ -112,9 +112,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PerformanceSummaryId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="performanceSummary_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PerformanceSummaryOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PerformanceSummary performanceSummary;
@@ -125,9 +125,9 @@ public PerformanceSummary getPerformanceSummary() {
 public void setPerformanceSummary(PerformanceSummary value) {
 	this.performanceSummary = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CoachingSessionId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="coachingSession_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CoachingSession coachingSession;

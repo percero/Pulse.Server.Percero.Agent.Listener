@@ -102,23 +102,6 @@ public void setPassword(String password)
 {
 	this.password = password;
 }/*
-Username
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String username;
-
-public String getUsername() 
-{
-	return this.username;
-}
-
-public void setUsername(String username)
-{
-	this.username = username;
-}/*
 ExternalID
 Notes:
 */
@@ -135,6 +118,23 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+Username
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String username;
+
+public String getUsername() 
+{
+	return this.username;
+}
+
+public void setUsername(String username)
+{
+	this.username = username;
 }
 
 	//////////////////////////////////////////////////////
@@ -146,9 +146,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseUserId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseUser_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfCredential")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;
@@ -190,16 +190,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Username property
-		objectJson += ",\"username\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getUsername() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getUsername());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -211,16 +211,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Username property
+		objectJson += ",\"username\":";
 		
-		if (getExternalID() == null)
+		if (getUsername() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getUsername());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -263,10 +263,10 @@ objectJson += ",\"pulseUser\":";
 		// Properties
 		//From value of the Password property
 		setPassword(JsonUtils.getJsonString(jsonObject, "password"));
-		//From value of the Username property
-		setUsername(JsonUtils.getJsonString(jsonObject, "username"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Username property
+		setUsername(JsonUtils.getJsonString(jsonObject, "username"));
 
 		
 		// Source Relationships

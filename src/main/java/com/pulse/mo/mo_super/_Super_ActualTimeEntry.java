@@ -85,6 +85,74 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+ToTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date toTime;
+
+public Date getToTime() 
+{
+	return this.toTime;
+}
+
+public void setToTime(Date toTime)
+{
+	this.toTime = toTime;
+}/*
+CVGProjectName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String cVGProjectName;
+
+public String getCVGProjectName() 
+{
+	return this.cVGProjectName;
+}
+
+public void setCVGProjectName(String cVGProjectName)
+{
+	this.cVGProjectName = cVGProjectName;
+}/*
+ActionName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String actionName;
+
+public String getActionName() 
+{
+	return this.actionName;
+}
+
+public void setActionName(String actionName)
+{
+	this.actionName = actionName;
+}/*
+AuxModeName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String auxModeName;
+
+public String getAuxModeName() 
+{
+	return this.auxModeName;
+}
+
+public void setAuxModeName(String auxModeName)
+{
+	this.auxModeName = auxModeName;
+}/*
 ExternalID
 Notes:
 */
@@ -135,74 +203,6 @@ public Date getFromTime()
 public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
-}/*
-CVGProjectName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String cVGProjectName;
-
-public String getCVGProjectName() 
-{
-	return this.cVGProjectName;
-}
-
-public void setCVGProjectName(String cVGProjectName)
-{
-	this.cVGProjectName = cVGProjectName;
-}/*
-AuxModeName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String auxModeName;
-
-public String getAuxModeName() 
-{
-	return this.auxModeName;
-}
-
-public void setAuxModeName(String auxModeName)
-{
-	this.auxModeName = auxModeName;
-}/*
-ToTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date toTime;
-
-public Date getToTime() 
-{
-	return this.toTime;
-}
-
-public void setToTime(Date toTime)
-{
-	this.toTime = toTime;
-}/*
-ActionName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String actionName;
-
-public String getActionName() 
-{
-	return this.actionName;
-}
-
-public void setActionName(String actionName)
-{
-	this.actionName = actionName;
 }
 
 	//////////////////////////////////////////////////////
@@ -214,9 +214,9 @@ public void setActionName(String actionName)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ActualTimeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="actualTime_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ActualTimeOfActualTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ActualTime actualTime;
@@ -227,9 +227,9 @@ public ActualTime getActualTime() {
 public void setActualTime(ActualTime value) {
 	this.actualTime = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AuxModeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="auxMode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AuxModeOfActualTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AuxMode auxMode;
@@ -250,6 +250,76 @@ public void setAuxMode(AuxMode value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the To Time property
+		objectJson += ",\"toTime\":";
+		if (getToTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getToTime().getTime();
+		}
+		//Retrieve value of the CVG Project Name property
+		objectJson += ",\"cVGProjectName\":";
+		
+		if (getCVGProjectName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCVGProjectName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Action Name property
+		objectJson += ",\"actionName\":";
+		
+		if (getActionName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getActionName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Aux Mode Name property
+		objectJson += ",\"auxModeName\":";
+		
+		if (getAuxModeName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAuxModeName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -299,76 +369,6 @@ public void setAuxMode(AuxMode value) {
 		else {
 			objectJson += getFromTime().getTime();
 		}
-		//Retrieve value of the CVG Project Name property
-		objectJson += ",\"cVGProjectName\":";
-		
-		if (getCVGProjectName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCVGProjectName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Aux Mode Name property
-		objectJson += ",\"auxModeName\":";
-		
-		if (getAuxModeName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAuxModeName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the To Time property
-		objectJson += ",\"toTime\":";
-		if (getToTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the Action Name property
-		objectJson += ",\"actionName\":";
-		
-		if (getActionName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getActionName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -410,20 +410,20 @@ objectJson += ",\"auxMode\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the To Time property
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		//From value of the CVG Project Name property
+		setCVGProjectName(JsonUtils.getJsonString(jsonObject, "cVGProjectName"));
+		//From value of the Action Name property
+		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
+		//From value of the Aux Mode Name property
+		setAuxModeName(JsonUtils.getJsonString(jsonObject, "auxModeName"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the CVG Project Name property
-		setCVGProjectName(JsonUtils.getJsonString(jsonObject, "cVGProjectName"));
-		//From value of the Aux Mode Name property
-		setAuxModeName(JsonUtils.getJsonString(jsonObject, "auxModeName"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the Action Name property
-		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
 
 		
 		// Source Relationships

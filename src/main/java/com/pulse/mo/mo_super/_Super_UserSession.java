@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
-}/*
 ConnectedStateName
 Notes:
 */
@@ -136,6 +119,23 @@ public void setDate(Date date)
 {
 	this.date = date;
 }/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
+}/*
 IPAddress
 Notes:???
 */
@@ -158,8 +158,8 @@ public void setIPAddress(String iPAddress)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ConnectedState.class, mappedBy="userSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ConnectedState> connectedStates;
 public List<ConnectedState> getConnectedStates() {
@@ -176,9 +176,9 @@ public void setConnectedStates(List<ConnectedState> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CurrentTeamLeaderId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="currentTeamLeader_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CurrentTeamLeaderOfUserSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader currentTeamLeader;
@@ -189,9 +189,9 @@ public TeamLeader getCurrentTeamLeader() {
 public void setCurrentTeamLeader(TeamLeader value) {
 	this.currentTeamLeader = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseUserId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseUser_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfUserSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;
@@ -212,27 +212,6 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Connected State Name property
 		objectJson += ",\"connectedStateName\":";
 		
@@ -260,6 +239,27 @@ public void setPulseUser(PulseUser value) {
 			objectJson += "null";
 		else {
 			objectJson += getDate().getTime();
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the IP Address property
 		objectJson += ",\"iPAddress\":";
@@ -340,12 +340,12 @@ objectJson += ",\"connectedStates\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Connected State Name property
 		setConnectedStateName(JsonUtils.getJsonString(jsonObject, "connectedStateName"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the IP Address property
 		setIPAddress(JsonUtils.getJsonString(jsonObject, "iPAddress"));
 

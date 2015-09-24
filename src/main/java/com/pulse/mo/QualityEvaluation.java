@@ -8,6 +8,10 @@ import com.pulse.mo.mo_super._Super_QualityEvaluation;
 @Entity(name="QualityEvaluation")
 public class QualityEvaluation extends _Super_QualityEvaluation
 {
+	/*
 	
+	
+	
+	*/
 }
 

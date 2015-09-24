@@ -64,22 +64,7 @@ public class _Super_NonBillableActivityNotification extends DiscrepancyDetectedN
 	/*
 	Keys of NonBillableActivityNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties

@@ -85,40 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-DueDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String dueDate;
-
-public String getDueDate() 
-{
-	return this.dueDate;
-}
-
-public void setDueDate(String dueDate)
-{
-	this.dueDate = dueDate;
-}/*
-AdhocTaskStateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String adhocTaskStateName;
-
-public String getAdhocTaskStateName() 
-{
-	return this.adhocTaskStateName;
-}
-
-public void setAdhocTaskStateName(String adhocTaskStateName)
-{
-	this.adhocTaskStateName = adhocTaskStateName;
-}/*
 TaskDetail
 Notes:
 */
@@ -152,6 +118,40 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+DueDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String dueDate;
+
+public String getDueDate() 
+{
+	return this.dueDate;
+}
+
+public void setDueDate(String dueDate)
+{
+	this.dueDate = dueDate;
+}/*
+AdhocTaskStateName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String adhocTaskStateName;
+
+public String getAdhocTaskStateName() 
+{
+	return this.adhocTaskStateName;
+}
+
+public void setAdhocTaskStateName(String adhocTaskStateName)
+{
+	this.adhocTaskStateName = adhocTaskStateName;
 }
 
 	//////////////////////////////////////////////////////
@@ -163,9 +163,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfAdhocTask")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -176,22 +176,9 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TeamLeaderId")
-@org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAdhocTask")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TeamLeader teamLeader;
-public TeamLeader getTeamLeader() {
-	return this.teamLeader;
-}
-
-public void setTeamLeader(TeamLeader value) {
-	this.teamLeader = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AdhocTaskStateId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="adhocTaskState_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AdhocTaskStateOfAdhocTask")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AdhocTaskState adhocTaskState;
@@ -201,6 +188,19 @@ public AdhocTaskState getAdhocTaskState() {
 
 public void setAdhocTaskState(AdhocTaskState value) {
 	this.adhocTaskState = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="teamLeader_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAdhocTask")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private TeamLeader teamLeader;
+public TeamLeader getTeamLeader() {
+	return this.teamLeader;
+}
+
+public void setTeamLeader(TeamLeader value) {
+	this.teamLeader = value;
 }
 
 	
@@ -212,48 +212,6 @@ public void setAdhocTaskState(AdhocTaskState value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Due Date property
-		objectJson += ",\"dueDate\":";
-		
-		if (getDueDate() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDueDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Adhoc Task State Name property
-		objectJson += ",\"adhocTaskStateName\":";
-		
-		if (getAdhocTaskStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAdhocTaskStateName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Task Detail property
 		objectJson += ",\"taskDetail\":";
 		
@@ -296,6 +254,48 @@ public void setAdhocTaskState(AdhocTaskState value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Due Date property
+		objectJson += ",\"dueDate\":";
+		
+		if (getDueDate() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDueDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Adhoc Task State Name property
+		objectJson += ",\"adhocTaskStateName\":";
+		
+		if (getAdhocTaskStateName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAdhocTaskStateName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
@@ -311,18 +311,6 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Team Leader of Adhoc Task relationship
-objectJson += ",\"teamLeader\":";
-		if (getTeamLeader() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Adhoc Task State of Adhoc Task relationship
 objectJson += ",\"adhocTaskState\":";
 		if (getAdhocTaskState() == null)
@@ -330,6 +318,18 @@ objectJson += ",\"adhocTaskState\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAdhocTaskState()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Team Leader of Adhoc Task relationship
+objectJson += ",\"teamLeader\":";
+		if (getTeamLeader() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -349,20 +349,20 @@ objectJson += ",\"adhocTaskState\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Due Date property
-		setDueDate(JsonUtils.getJsonString(jsonObject, "dueDate"));
-		//From value of the Adhoc Task State Name property
-		setAdhocTaskStateName(JsonUtils.getJsonString(jsonObject, "adhocTaskStateName"));
 		//From value of the Task Detail property
 		setTaskDetail(JsonUtils.getJsonString(jsonObject, "taskDetail"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Due Date property
+		setDueDate(JsonUtils.getJsonString(jsonObject, "dueDate"));
+		//From value of the Adhoc Task State Name property
+		setAdhocTaskStateName(JsonUtils.getJsonString(jsonObject, "adhocTaskStateName"));
 
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
-		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 		this.adhocTaskState = (AdhocTaskState) JsonUtils.getJsonPerceroObject(jsonObject, "adhocTaskState");
+		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 
 		// Target Relationships

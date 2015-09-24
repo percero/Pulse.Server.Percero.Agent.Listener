@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 ExternalID
 Notes:
 */
@@ -118,14 +101,31 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfiguration.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
 private List<LOBConfiguration> lOBConfigurations;
 public List<LOBConfiguration> getLOBConfigurations() {
@@ -142,22 +142,9 @@ public void setLOBConfigurations(List<LOBConfiguration> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ClientId")
-@org.hibernate.annotations.ForeignKey(name="FK_ClientOfLOB")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Client client;
-public Client getClient() {
-	return this.client;
-}
-
-public void setClient(Client value) {
-	this.client = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseConfigurationId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseConfiguration_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseConfigurationOfLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseConfiguration pulseConfiguration;
@@ -167,6 +154,19 @@ public PulseConfiguration getPulseConfiguration() {
 
 public void setPulseConfiguration(PulseConfiguration value) {
 	this.pulseConfiguration = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="client_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ClientOfLOB")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Client client;
+public Client getClient() {
+	return this.client;
+}
+
+public void setClient(Client value) {
+	this.client = value;
 }
 
 	
@@ -178,27 +178,6 @@ public void setPulseConfiguration(PulseConfiguration value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -220,21 +199,30 @@ public void setPulseConfiguration(PulseConfiguration value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
+		
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
-//Retrieve value of the Client of LOB relationship
-objectJson += ",\"client\":";
-		if (getClient() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Pulse Configuration of LOB relationship
 objectJson += ",\"pulseConfiguration\":";
 		if (getPulseConfiguration() == null)
@@ -242,6 +230,18 @@ objectJson += ",\"pulseConfiguration\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getPulseConfiguration()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Client of LOB relationship
+objectJson += ",\"client\":";
+		if (getClient() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -278,15 +278,15 @@ objectJson += ",\"lOBConfigurations\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships
-		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
 		this.pulseConfiguration = (PulseConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "pulseConfiguration");
+		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
 
 
 		// Target Relationships

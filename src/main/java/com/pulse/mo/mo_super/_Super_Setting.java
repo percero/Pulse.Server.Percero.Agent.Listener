@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+Value
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String value;
+
+public String getValue() 
+{
+	return this.value;
+}
+
+public void setValue(String value)
+{
+	this.value = value;
+}/*
 ExternalID
 Notes:
 */
@@ -118,23 +135,6 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
-}/*
-Value
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String value;
-
-public String getValue() 
-{
-	return this.value;
-}
-
-public void setValue(String value)
-{
-	this.value = value;
 }
 
 	//////////////////////////////////////////////////////
@@ -146,9 +146,9 @@ public void setValue(String value)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TeamLeaderId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="teamLeader_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfSetting")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader teamLeader;
@@ -169,6 +169,27 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Value property
+		objectJson += ",\"value\":";
+		
+		if (getValue() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getValue());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -211,27 +232,6 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Value property
-		objectJson += ",\"value\":";
-		
-		if (getValue() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getValue());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -261,12 +261,12 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Value property
+		setValue(JsonUtils.getJsonString(jsonObject, "value"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Value property
-		setValue(JsonUtils.getJsonString(jsonObject, "value"));
 
 		
 		// Source Relationships

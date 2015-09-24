@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
+}/*
 EmailAddress
 Notes:
 */
@@ -103,23 +120,6 @@ public String getEmailAddress()
 public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
-}/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
 }
 
 	//////////////////////////////////////////////////////
@@ -130,10 +130,11 @@ public void setExternalID(String externalID)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseUserId")
+	@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, sourceVarName="userAnchor")
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseUser_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfEmail")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;
@@ -154,16 +155,16 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getEmailAddress() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -175,16 +176,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
 		
-		if (getExternalID() == null)
+		if (getEmailAddress() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -225,10 +226,10 @@ objectJson += ",\"pulseUser\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 
 		
 		// Source Relationships

@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ExternalID
+StateName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String externalID;
+private String stateName;
 
-public String getExternalID() 
+public String getStateName() 
 {
-	return this.externalID;
+	return this.stateName;
 }
 
-public void setExternalID(String externalID)
+public void setStateName(String stateName)
 {
-	this.externalID = externalID;
+	this.stateName = stateName;
 }/*
 TotalTime
 Notes:
@@ -119,30 +119,30 @@ public void setTotalTime(Double totalTime)
 {
 	this.totalTime = totalTime;
 }/*
-StateName
+ExternalID
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String stateName;
+private String externalID;
 
-public String getStateName() 
+public String getExternalID() 
 {
-	return this.stateName;
+	return this.externalID;
 }
 
-public void setStateName(String stateName)
+public void setExternalID(String externalID)
 {
-	this.stateName = stateName;
+	this.externalID = externalID;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ActualTimeEntry.class, mappedBy="actualTime", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ActualTimeEntry> actualTimeEntries;
 public List<ActualTimeEntry> getActualTimeEntries() {
@@ -159,9 +159,9 @@ public void setActualTimeEntries(List<ActualTimeEntry> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfActualTime")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -182,16 +182,16 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the State Name property
+		objectJson += ",\"stateName\":";
 		
-		if (getExternalID() == null)
+		if (getStateName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getStateName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -210,16 +210,16 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getTotalTime();
 		}
-		//Retrieve value of the State Name property
-		objectJson += ",\"stateName\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getStateName() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getStateName());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -277,12 +277,12 @@ objectJson += ",\"actualTimeEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
-		//From value of the Total Time property
-		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 		//From value of the State Name property
 		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
+		//From value of the Total Time property
+		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 
 		
 		// Source Relationships

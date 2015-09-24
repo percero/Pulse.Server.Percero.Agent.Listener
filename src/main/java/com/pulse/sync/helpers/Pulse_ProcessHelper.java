@@ -3,9 +3,7 @@ package com.pulse.sync.helpers;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.pulse.mo.*;
 import com.percero.agents.sync.helpers.ProcessHelper;
-import com.percero.agents.sync.vo.Client;
 
 @Component
 public class Pulse_ProcessHelper extends ProcessHelper {

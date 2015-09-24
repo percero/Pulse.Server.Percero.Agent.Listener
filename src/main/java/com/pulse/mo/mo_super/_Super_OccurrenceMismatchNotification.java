@@ -64,44 +64,12 @@ public class _Super_OccurrenceMismatchNotification extends DiscrepancyDetectedNo
 	/*
 	Keys of OccurrenceMismatchNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-EStartActivityCodeEventCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer eStartActivityCodeEventCount;
-
-public Integer getEStartActivityCodeEventCount() 
-{
-	return this.eStartActivityCodeEventCount;
-}
-
-public void setEStartActivityCodeEventCount(Integer eStartActivityCodeEventCount)
-{
-	this.eStartActivityCodeEventCount = eStartActivityCodeEventCount;
-}/*
 AuxModeEventCount
 Notes:
 */
@@ -118,6 +86,23 @@ public Integer getAuxModeEventCount()
 public void setAuxModeEventCount(Integer auxModeEventCount)
 {
 	this.auxModeEventCount = auxModeEventCount;
+}/*
+EStartActivityCodeEventCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer eStartActivityCodeEventCount;
+
+public Integer getEStartActivityCodeEventCount() 
+{
+	return this.eStartActivityCodeEventCount;
+}
+
+public void setEStartActivityCodeEventCount(Integer eStartActivityCodeEventCount)
+{
+	this.eStartActivityCodeEventCount = eStartActivityCodeEventCount;
 }
 
 	//////////////////////////////////////////////////////
@@ -139,16 +124,16 @@ public void setAuxModeEventCount(Integer auxModeEventCount)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the EStart Activity Code Event Count property
-		objectJson += ",\"eStartActivityCodeEventCount\":";
+		//Retrieve value of the Aux Mode Event Count property
+		objectJson += ",\"auxModeEventCount\":";
 		
-		if (getEStartActivityCodeEventCount() == null)
+		if (getAuxModeEventCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEStartActivityCodeEventCount());
+				objectJson += objectMapper.writeValueAsString(getAuxModeEventCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -160,16 +145,16 @@ public void setAuxModeEventCount(Integer auxModeEventCount)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Aux Mode Event Count property
-		objectJson += ",\"auxModeEventCount\":";
+		//Retrieve value of the EStart Activity Code Event Count property
+		objectJson += ",\"eStartActivityCodeEventCount\":";
 		
-		if (getAuxModeEventCount() == null)
+		if (getEStartActivityCodeEventCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getAuxModeEventCount());
+				objectJson += objectMapper.writeValueAsString(getEStartActivityCodeEventCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -198,10 +183,10 @@ public void setAuxModeEventCount(Integer auxModeEventCount)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the EStart Activity Code Event Count property
-		setEStartActivityCodeEventCount(JsonUtils.getJsonInteger(jsonObject, "eStartActivityCodeEventCount"));
 		//From value of the Aux Mode Event Count property
 		setAuxModeEventCount(JsonUtils.getJsonInteger(jsonObject, "auxModeEventCount"));
+		//From value of the EStart Activity Code Event Count property
+		setEStartActivityCodeEventCount(JsonUtils.getJsonInteger(jsonObject, "eStartActivityCodeEventCount"));
 
 		
 		// Source Relationships

@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+CurrentState
+Notes:Used to track state of the record, 'A' for Active 'D' for deleted or 'I' for Inactive
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String currentState;
+
+public String getCurrentState() 
+{
+	return this.currentState;
+}
+
+public void setCurrentState(String currentState)
+{
+	this.currentState = currentState;
+}/*
 RoleName
 Notes:
 */
@@ -120,23 +137,6 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
-}/*
-CurrentState
-Notes:Used to track state of the record, 'A' for Active 'D' for deleted or 'I' for Inactive
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String currentState;
-
-public String getCurrentState() 
-{
-	return this.currentState;
-}
-
-public void setCurrentState(String currentState)
-{
-	this.currentState = currentState;
 }
 
 	//////////////////////////////////////////////////////
@@ -149,9 +149,9 @@ public void setCurrentState(String currentState)
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, sourceVarName="userAnchor")
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseUserId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseUser_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfUserRole")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;
@@ -172,6 +172,27 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Current State property
+		objectJson += ",\"currentState\":";
+		
+		if (getCurrentState() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCurrentState());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Role Name property
 		objectJson += ",\"roleName\":";
 		
@@ -214,27 +235,6 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Current State property
-		objectJson += ",\"currentState\":";
-		
-		if (getCurrentState() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCurrentState());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -264,12 +264,12 @@ objectJson += ",\"pulseUser\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Current State property
+		setCurrentState(JsonUtils.getJsonString(jsonObject, "currentState"));
 		//From value of the Role Name property
 		setRoleName(JsonUtils.getJsonString(jsonObject, "roleName"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
-		//From value of the Current State property
-		setCurrentState(JsonUtils.getJsonString(jsonObject, "currentState"));
 
 		
 		// Source Relationships

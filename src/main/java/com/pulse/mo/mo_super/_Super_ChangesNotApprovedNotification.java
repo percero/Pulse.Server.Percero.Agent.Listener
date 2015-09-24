@@ -64,78 +64,12 @@ public class _Super_ChangesNotApprovedNotification extends Notification implemen
 	/*
 	Keys of ChangesNotApprovedNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-NotYetStartedStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer notYetStartedStateCount;
-
-public Integer getNotYetStartedStateCount() 
-{
-	return this.notYetStartedStateCount;
-}
-
-public void setNotYetStartedStateCount(Integer notYetStartedStateCount)
-{
-	this.notYetStartedStateCount = notYetStartedStateCount;
-}/*
-ApprovedStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer approvedStateCount;
-
-public Integer getApprovedStateCount() 
-{
-	return this.approvedStateCount;
-}
-
-public void setApprovedStateCount(Integer approvedStateCount)
-{
-	this.approvedStateCount = approvedStateCount;
-}/*
-Resolved
-Notes:Flag that determines if the notification has been resolved
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean resolved;
-
-public Boolean getResolved() 
-{
-	return this.resolved;
-}
-
-public void setResolved(Boolean resolved)
-{
-	this.resolved = resolved;
-}/*
 InProgressStateCount
 Notes:
 */
@@ -170,6 +104,57 @@ public void setShiftEndDate(Date shiftEndDate)
 {
 	this.shiftEndDate = shiftEndDate;
 }/*
+NotYetStartedStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer notYetStartedStateCount;
+
+public Integer getNotYetStartedStateCount() 
+{
+	return this.notYetStartedStateCount;
+}
+
+public void setNotYetStartedStateCount(Integer notYetStartedStateCount)
+{
+	this.notYetStartedStateCount = notYetStartedStateCount;
+}/*
+Resolved
+Notes:Flag that determines if the notification has been resolved
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean resolved;
+
+public Boolean getResolved() 
+{
+	return this.resolved;
+}
+
+public void setResolved(Boolean resolved)
+{
+	this.resolved = resolved;
+}/*
+ApprovedStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer approvedStateCount;
+
+public Integer getApprovedStateCount() 
+{
+	return this.approvedStateCount;
+}
+
+public void setApprovedStateCount(Integer approvedStateCount)
+{
+	this.approvedStateCount = approvedStateCount;
+}/*
 CompleteStateCount
 Notes:
 */
@@ -197,9 +182,9 @@ public void setCompleteStateCount(Integer completeStateCount)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CVGProjectId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="cVGProject_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CVGProjectOfChangesNotApprovedNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CVGProject cVGProject;
@@ -210,9 +195,9 @@ public CVGProject getCVGProject() {
 public void setCVGProject(CVGProject value) {
 	this.cVGProject = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EStartActivityCodeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="eStartActivityCode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfChangesNotApprovedNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private EStartActivityCode eStartActivityCode;
@@ -233,55 +218,6 @@ public void setEStartActivityCode(EStartActivityCode value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Not Yet Started State Count property
-		objectJson += ",\"notYetStartedStateCount\":";
-		
-		if (getNotYetStartedStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getNotYetStartedStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Approved State Count property
-		objectJson += ",\"approvedStateCount\":";
-		
-		if (getApprovedStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getApprovedStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Resolved property
-		objectJson += ",\"resolved\":";
-		if (getResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getResolved();
-		}
 		//Retrieve value of the In Progress State Count property
 		objectJson += ",\"inProgressStateCount\":";
 		
@@ -313,6 +249,55 @@ public void setEStartActivityCode(EStartActivityCode value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getShiftEndDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Not Yet Started State Count property
+		objectJson += ",\"notYetStartedStateCount\":";
+		
+		if (getNotYetStartedStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getNotYetStartedStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Resolved property
+		objectJson += ",\"resolved\":";
+		if (getResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getResolved();
+		}
+		//Retrieve value of the Approved State Count property
+		objectJson += ",\"approvedStateCount\":";
+		
+		if (getApprovedStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getApprovedStateCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -386,16 +371,16 @@ objectJson += ",\"eStartActivityCode\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Not Yet Started State Count property
-		setNotYetStartedStateCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedStateCount"));
-		//From value of the Approved State Count property
-		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
-		//From value of the Resolved property
-		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
 		//From value of the In Progress State Count property
 		setInProgressStateCount(JsonUtils.getJsonInteger(jsonObject, "inProgressStateCount"));
 		//From value of the Shift End Date property
 		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
+		//From value of the Not Yet Started State Count property
+		setNotYetStartedStateCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedStateCount"));
+		//From value of the Resolved property
+		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
+		//From value of the Approved State Count property
+		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
 		//From value of the Complete State Count property
 		setCompleteStateCount(JsonUtils.getJsonInteger(jsonObject, "completeStateCount"));
 

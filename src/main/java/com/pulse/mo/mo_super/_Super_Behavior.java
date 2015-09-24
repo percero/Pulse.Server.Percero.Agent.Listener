@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 Description
 Notes:
 */
@@ -118,6 +101,23 @@ public String getDescription()
 public void setDescription(String description)
 {
 	this.description = description;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }/*
 ExternalID
 Notes:
@@ -163,9 +163,9 @@ public void setResponse(String response)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CoachingSessionMeasureId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="coachingSessionMeasure_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionMeasureOfBehavior")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CoachingSessionMeasure coachingSessionMeasure;
@@ -186,16 +186,16 @@ public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
 		
-		if (getName() == null)
+		if (getDescription() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getDescription());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -207,16 +207,16 @@ public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getDescription() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -299,10 +299,10 @@ objectJson += ",\"coachingSessionMeasure\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Response property

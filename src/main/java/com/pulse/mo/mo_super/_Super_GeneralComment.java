@@ -102,23 +102,6 @@ public void setDate(Date date)
 {
 	this.date = date;
 }/*
-Comment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String comment;
-
-public String getComment() 
-{
-	return this.comment;
-}
-
-public void setComment(String comment)
-{
-	this.comment = comment;
-}/*
 ExternalID
 Notes:
 */
@@ -135,6 +118,23 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+Comment
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String comment;
+
+public String getComment() 
+{
+	return this.comment;
+}
+
+public void setComment(String comment)
+{
+	this.comment = comment;
 }
 
 	//////////////////////////////////////////////////////
@@ -146,9 +146,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfGeneralComment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -159,9 +159,9 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TeamLeaderId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="teamLeader_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfGeneralComment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader teamLeader;
@@ -189,16 +189,16 @@ public void setTeamLeader(TeamLeader value) {
 		else {
 			objectJson += getDate().getTime();
 		}
-		//Retrieve value of the Comment property
-		objectJson += ",\"comment\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getComment() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getComment());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -210,16 +210,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Comment property
+		objectJson += ",\"comment\":";
 		
-		if (getExternalID() == null)
+		if (getComment() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getComment());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -274,10 +274,10 @@ objectJson += ",\"teamLeader\":";
 		// Properties
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the Comment property
-		setComment(JsonUtils.getJsonString(jsonObject, "comment"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Comment property
+		setComment(JsonUtils.getJsonString(jsonObject, "comment"));
 
 		
 		// Source Relationships

@@ -8,6 +8,10 @@ import com.pulse.mo.mo_super._Super_ChangesNotApprovedNotification;
 @Entity(name="ChangesNotApprovedNotification")
 public class ChangesNotApprovedNotification extends _Super_ChangesNotApprovedNotification
 {
+	/*
 	
+	
+	
+	*/
 }
 

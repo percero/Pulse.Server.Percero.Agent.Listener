@@ -102,23 +102,6 @@ public void setAdhocCoachingCategoryName(String adhocCoachingCategoryName)
 {
 	this.adhocCoachingCategoryName = adhocCoachingCategoryName;
 }/*
-CoachingComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String coachingComment;
-
-public String getCoachingComment() 
-{
-	return this.coachingComment;
-}
-
-public void setCoachingComment(String coachingComment)
-{
-	this.coachingComment = coachingComment;
-}/*
 ExternalID
 Notes:
 */
@@ -135,14 +118,31 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+CoachingComment
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String coachingComment;
+
+public String getCoachingComment() 
+{
+	return this.coachingComment;
+}
+
+public void setCoachingComment(String coachingComment)
+{
+	this.coachingComment = coachingComment;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Attachment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Attachment> attachments;
 public List<Attachment> getAttachments() {
@@ -159,9 +159,9 @@ public void setAttachments(List<Attachment> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -172,9 +172,9 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AdhocCoachingCategoryId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="adhocCoachingCategory_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingCategoryOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AdhocCoachingCategory adhocCoachingCategory;
@@ -185,9 +185,9 @@ public AdhocCoachingCategory getAdhocCoachingCategory() {
 public void setAdhocCoachingCategory(AdhocCoachingCategory value) {
 	this.adhocCoachingCategory = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TeamLeaderId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="teamLeader_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader teamLeader;
@@ -229,16 +229,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Coaching Comment property
-		objectJson += ",\"coachingComment\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getCoachingComment() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCoachingComment());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -250,16 +250,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Coaching Comment property
+		objectJson += ",\"coachingComment\":";
 		
-		if (getExternalID() == null)
+		if (getCoachingComment() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getCoachingComment());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -343,10 +343,10 @@ objectJson += ",\"attachments\":[";
 		// Properties
 		//From value of the Adhoc Coaching Category Name property
 		setAdhocCoachingCategoryName(JsonUtils.getJsonString(jsonObject, "adhocCoachingCategoryName"));
-		//From value of the Coaching Comment property
-		setCoachingComment(JsonUtils.getJsonString(jsonObject, "coachingComment"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Coaching Comment property
+		setCoachingComment(JsonUtils.getJsonString(jsonObject, "coachingComment"));
 
 		
 		// Source Relationships

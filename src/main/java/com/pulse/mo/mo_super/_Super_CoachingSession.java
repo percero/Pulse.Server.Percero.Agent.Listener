@@ -85,40 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-PreviousMTDThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double previousMTDThresholdGrade;
-
-public Double getPreviousMTDThresholdGrade() 
-{
-	return this.previousMTDThresholdGrade;
-}
-
-public void setPreviousMTDThresholdGrade(Double previousMTDThresholdGrade)
-{
-	this.previousMTDThresholdGrade = previousMTDThresholdGrade;
-}/*
-CurrentMTDThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double currentMTDThresholdGrade;
-
-public Double getCurrentMTDThresholdGrade() 
-{
-	return this.currentMTDThresholdGrade;
-}
-
-public void setCurrentMTDThresholdGrade(Double currentMTDThresholdGrade)
-{
-	this.currentMTDThresholdGrade = currentMTDThresholdGrade;
-}/*
 WeeklyOverallScore
 Notes:
 */
@@ -136,22 +102,39 @@ public void setWeeklyOverallScore(String weeklyOverallScore)
 {
 	this.weeklyOverallScore = weeklyOverallScore;
 }/*
-CurrentMTDOverallScore
+WeeklyOverallScoreStateName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String currentMTDOverallScore;
+private String weeklyOverallScoreStateName;
 
-public String getCurrentMTDOverallScore() 
+public String getWeeklyOverallScoreStateName() 
 {
-	return this.currentMTDOverallScore;
+	return this.weeklyOverallScoreStateName;
 }
 
-public void setCurrentMTDOverallScore(String currentMTDOverallScore)
+public void setWeeklyOverallScoreStateName(String weeklyOverallScoreStateName)
 {
-	this.currentMTDOverallScore = currentMTDOverallScore;
+	this.weeklyOverallScoreStateName = weeklyOverallScoreStateName;
+}/*
+ScorecardName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String scorecardName;
+
+public String getScorecardName() 
+{
+	return this.scorecardName;
+}
+
+public void setScorecardName(String scorecardName)
+{
+	this.scorecardName = scorecardName;
 }/*
 MTDTrend
 Notes:
@@ -204,40 +187,6 @@ public void setWeeklyTrend(String weeklyTrend)
 {
 	this.weeklyTrend = weeklyTrend;
 }/*
-ScorecardName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String scorecardName;
-
-public String getScorecardName() 
-{
-	return this.scorecardName;
-}
-
-public void setScorecardName(String scorecardName)
-{
-	this.scorecardName = scorecardName;
-}/*
-WeeklyOverallScoreStateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyOverallScoreStateName;
-
-public String getWeeklyOverallScoreStateName() 
-{
-	return this.weeklyOverallScoreStateName;
-}
-
-public void setWeeklyOverallScoreStateName(String weeklyOverallScoreStateName)
-{
-	this.weeklyOverallScoreStateName = weeklyOverallScoreStateName;
-}/*
 StateName
 Notes:
 */
@@ -254,6 +203,57 @@ public String getStateName()
 public void setStateName(String stateName)
 {
 	this.stateName = stateName;
+}/*
+CurrentMTDOverallScore
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String currentMTDOverallScore;
+
+public String getCurrentMTDOverallScore() 
+{
+	return this.currentMTDOverallScore;
+}
+
+public void setCurrentMTDOverallScore(String currentMTDOverallScore)
+{
+	this.currentMTDOverallScore = currentMTDOverallScore;
+}/*
+CurrentMTDThresholdGrade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double currentMTDThresholdGrade;
+
+public Double getCurrentMTDThresholdGrade() 
+{
+	return this.currentMTDThresholdGrade;
+}
+
+public void setCurrentMTDThresholdGrade(Double currentMTDThresholdGrade)
+{
+	this.currentMTDThresholdGrade = currentMTDThresholdGrade;
+}/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
 }/*
 PreviousMTDOverallScore
 Notes:
@@ -272,30 +272,30 @@ public void setPreviousMTDOverallScore(String previousMTDOverallScore)
 {
 	this.previousMTDOverallScore = previousMTDOverallScore;
 }/*
-ExternalID
+PreviousMTDThresholdGrade
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String externalID;
+private Double previousMTDThresholdGrade;
 
-public String getExternalID() 
+public Double getPreviousMTDThresholdGrade() 
 {
-	return this.externalID;
+	return this.previousMTDThresholdGrade;
 }
 
-public void setExternalID(String externalID)
+public void setPreviousMTDThresholdGrade(Double previousMTDThresholdGrade)
 {
-	this.externalID = externalID;
+	this.previousMTDThresholdGrade = previousMTDThresholdGrade;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Attachment.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Attachment> attachments;
 public List<Attachment> getAttachments() {
@@ -307,21 +307,8 @@ public void setAttachments(List<Attachment> value) {
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<QualityEvaluation> qualityEvaluations;
-public List<QualityEvaluation> getQualityEvaluations() {
-	return this.qualityEvaluations;
-}
-
-public void setQualityEvaluations(List<QualityEvaluation> value) {
-	this.qualityEvaluations = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSessionMeasure.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CoachingSessionMeasure> coachingSessionMeasures;
 public List<CoachingSessionMeasure> getCoachingSessionMeasures() {
@@ -332,15 +319,28 @@ public void setCoachingSessionMeasures(List<CoachingSessionMeasure> value) {
 	this.coachingSessionMeasures = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<QualityEvaluation> qualityEvaluations;
+public List<QualityEvaluation> getQualityEvaluations() {
+	return this.qualityEvaluations;
+}
+
+public void setQualityEvaluations(List<QualityEvaluation> value) {
+	this.qualityEvaluations = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -351,9 +351,9 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CoachingSessionStateId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="coachingSessionState_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionStateOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CoachingSessionState coachingSessionState;
@@ -364,9 +364,9 @@ public CoachingSessionState getCoachingSessionState() {
 public void setCoachingSessionState(CoachingSessionState value) {
 	this.coachingSessionState = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ScorecardId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="scorecard_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Scorecard scorecard;
@@ -387,20 +387,6 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Previous MTD Threshold Grade property
-		objectJson += ",\"previousMTDThresholdGrade\":";
-		if (getPreviousMTDThresholdGrade() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPreviousMTDThresholdGrade();
-		}
-		//Retrieve value of the Current MTD Threshold Grade property
-		objectJson += ",\"currentMTDThresholdGrade\":";
-		if (getCurrentMTDThresholdGrade() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCurrentMTDThresholdGrade();
-		}
 		//Retrieve value of the Weekly Overall Score property
 		objectJson += ",\"weeklyOverallScore\":";
 		
@@ -422,16 +408,37 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Current MTD Overall Score property
-		objectJson += ",\"currentMTDOverallScore\":";
+		//Retrieve value of the Weekly Overall Score State Name property
+		objectJson += ",\"weeklyOverallScoreStateName\":";
 		
-		if (getCurrentMTDOverallScore() == null)
+		if (getWeeklyOverallScoreStateName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCurrentMTDOverallScore());
+				objectJson += objectMapper.writeValueAsString(getWeeklyOverallScoreStateName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Scorecard Name property
+		objectJson += ",\"scorecardName\":";
+		
+		if (getScorecardName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getScorecardName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -506,48 +513,6 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Scorecard Name property
-		objectJson += ",\"scorecardName\":";
-		
-		if (getScorecardName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getScorecardName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Weekly Overall Score State Name property
-		objectJson += ",\"weeklyOverallScoreStateName\":";
-		
-		if (getWeeklyOverallScoreStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyOverallScoreStateName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
 		
@@ -558,6 +523,55 @@ public void setScorecard(Scorecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getStateName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Current MTD Overall Score property
+		objectJson += ",\"currentMTDOverallScore\":";
+		
+		if (getCurrentMTDOverallScore() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCurrentMTDOverallScore());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Current MTD Threshold Grade property
+		objectJson += ",\"currentMTDThresholdGrade\":";
+		if (getCurrentMTDThresholdGrade() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCurrentMTDThresholdGrade();
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -590,26 +604,12 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
+		//Retrieve value of the Previous MTD Threshold Grade property
+		objectJson += ",\"previousMTDThresholdGrade\":";
+		if (getPreviousMTDThresholdGrade() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getPreviousMTDThresholdGrade();
 		}
 
 				
@@ -670,23 +670,6 @@ objectJson += ",\"attachments\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Coaching Session of Quality Evaluation relationship
-objectJson += ",\"qualityEvaluations\":[";
-		
-		if (getQualityEvaluations() != null) {
-			int qualityEvaluationsCounter = 0;
-			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
-				if (qualityEvaluationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
-					qualityEvaluationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Coaching Session of Coaching Session Measure relationship
 objectJson += ",\"coachingSessionMeasures\":[";
 		
@@ -704,6 +687,23 @@ objectJson += ",\"coachingSessionMeasures\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Coaching Session of Quality Evaluation relationship
+objectJson += ",\"qualityEvaluations\":[";
+		
+		if (getQualityEvaluations() != null) {
+			int qualityEvaluationsCounter = 0;
+			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
+				if (qualityEvaluationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
+					qualityEvaluationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -715,30 +715,30 @@ objectJson += ",\"coachingSessionMeasures\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Previous MTD Threshold Grade property
-		setPreviousMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "previousMTDThresholdGrade"));
-		//From value of the Current MTD Threshold Grade property
-		setCurrentMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "currentMTDThresholdGrade"));
 		//From value of the Weekly Overall Score property
 		setWeeklyOverallScore(JsonUtils.getJsonString(jsonObject, "weeklyOverallScore"));
-		//From value of the Current MTD Overall Score property
-		setCurrentMTDOverallScore(JsonUtils.getJsonString(jsonObject, "currentMTDOverallScore"));
+		//From value of the Weekly Overall Score State Name property
+		setWeeklyOverallScoreStateName(JsonUtils.getJsonString(jsonObject, "weeklyOverallScoreStateName"));
+		//From value of the Scorecard Name property
+		setScorecardName(JsonUtils.getJsonString(jsonObject, "scorecardName"));
 		//From value of the MTD Trend property
 		setMTDTrend(JsonUtils.getJsonString(jsonObject, "mTDTrend"));
 		//From value of the Weekend Date property
 		setWeekendDate(JsonUtils.getJsonString(jsonObject, "weekendDate"));
 		//From value of the Weekly Trend property
 		setWeeklyTrend(JsonUtils.getJsonString(jsonObject, "weeklyTrend"));
-		//From value of the Scorecard Name property
-		setScorecardName(JsonUtils.getJsonString(jsonObject, "scorecardName"));
-		//From value of the Weekly Overall Score State Name property
-		setWeeklyOverallScoreStateName(JsonUtils.getJsonString(jsonObject, "weeklyOverallScoreStateName"));
 		//From value of the State Name property
 		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
-		//From value of the Previous MTD Overall Score property
-		setPreviousMTDOverallScore(JsonUtils.getJsonString(jsonObject, "previousMTDOverallScore"));
+		//From value of the Current MTD Overall Score property
+		setCurrentMTDOverallScore(JsonUtils.getJsonString(jsonObject, "currentMTDOverallScore"));
+		//From value of the Current MTD Threshold Grade property
+		setCurrentMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "currentMTDThresholdGrade"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Previous MTD Overall Score property
+		setPreviousMTDOverallScore(JsonUtils.getJsonString(jsonObject, "previousMTDOverallScore"));
+		//From value of the Previous MTD Threshold Grade property
+		setPreviousMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "previousMTDThresholdGrade"));
 
 		
 		// Source Relationships
@@ -749,8 +749,8 @@ objectJson += ",\"coachingSessionMeasures\":[";
 
 		// Target Relationships
 		this.attachments = (List<Attachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "attachments");
-		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessionMeasures = (List<CoachingSessionMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessionMeasures");
+		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 
 
 	}
@@ -761,8 +761,8 @@ objectJson += ",\"coachingSessionMeasures\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(Attachment.class, "coachingsession"));
-		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "coachingsession"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSessionMeasure.class, "coachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "coachingsession"));
 
 		
 		return listSetters;

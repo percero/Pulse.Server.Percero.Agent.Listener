@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Date
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date date;
+private String name;
 
-public Date getDate() 
+public String getName() 
 {
-	return this.date;
+	return this.name;
 }
 
-public void setDate(Date date)
+public void setName(String name)
 {
-	this.date = date;
+	this.name = name;
 }/*
 HasBeenRead
 Notes:
@@ -119,23 +119,6 @@ public void setHasBeenRead(String hasBeenRead)
 {
 	this.hasBeenRead = hasBeenRead;
 }/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 ExternalID
 Notes:
 */
@@ -152,6 +135,23 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+Date
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date date;
+
+public Date getDate() 
+{
+	return this.date;
+}
+
+public void setDate(Date date)
+{
+	this.date = date;
 }
 
 	//////////////////////////////////////////////////////
@@ -163,9 +163,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TeamLeaderId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="teamLeader_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAlert")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader teamLeader;
@@ -186,23 +186,16 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-		//Retrieve value of the Has Been Read property
-		objectJson += ",\"hasBeenRead\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getHasBeenRead() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getHasBeenRead());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -214,16 +207,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Has Been Read property
+		objectJson += ",\"hasBeenRead\":";
 		
-		if (getName() == null)
+		if (getHasBeenRead() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getHasBeenRead());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -256,6 +249,13 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
+		}
 
 				
 		// Source Relationships
@@ -285,14 +285,14 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the Has Been Read property
-		setHasBeenRead(JsonUtils.getJsonString(jsonObject, "hasBeenRead"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Has Been Read property
+		setHasBeenRead(JsonUtils.getJsonString(jsonObject, "hasBeenRead"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 
 		
 		// Source Relationships

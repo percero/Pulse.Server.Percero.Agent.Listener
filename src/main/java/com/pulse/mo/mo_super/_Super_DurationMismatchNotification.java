@@ -64,44 +64,12 @@ public class _Super_DurationMismatchNotification extends DiscrepancyDetectedNoti
 	/*
 	Keys of DurationMismatchNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-StartTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startTime;
-
-public Date getStartTime() 
-{
-	return this.startTime;
-}
-
-public void setStartTime(Date startTime)
-{
-	this.startTime = startTime;
-}/*
 EndTime
 Notes:
 */
@@ -135,6 +103,23 @@ public Double getDuration()
 public void setDuration(Double duration)
 {
 	this.duration = duration;
+}/*
+StartTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startTime;
+
+public Date getStartTime() 
+{
+	return this.startTime;
+}
+
+public void setStartTime(Date startTime)
+{
+	this.startTime = startTime;
 }
 
 	//////////////////////////////////////////////////////
@@ -156,13 +141,6 @@ public void setDuration(Double duration)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Start Time property
-		objectJson += ",\"startTime\":";
-		if (getStartTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartTime().getTime();
-		}
 		//Retrieve value of the End Time property
 		objectJson += ",\"endTime\":";
 		if (getEndTime() == null)
@@ -176,6 +154,13 @@ public void setDuration(Double duration)
 			objectJson += "null";
 		else {
 			objectJson += getDuration();
+		}
+		//Retrieve value of the Start Time property
+		objectJson += ",\"startTime\":";
+		if (getStartTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartTime().getTime();
 		}
 
 				
@@ -194,12 +179,12 @@ public void setDuration(Double duration)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
 		//From value of the End Time property
 		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+		//From value of the Start Time property
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
 
 		
 		// Source Relationships

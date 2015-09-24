@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-TotalTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double totalTime;
-
-public Double getTotalTime() 
-{
-	return this.totalTime;
-}
-
-public void setTotalTime(Double totalTime)
-{
-	this.totalTime = totalTime;
-}/*
 StateName
 Notes:
 */
@@ -135,14 +118,31 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+TotalTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double totalTime;
+
+public Double getTotalTime() 
+{
+	return this.totalTime;
+}
+
+public void setTotalTime(Double totalTime)
+{
+	this.totalTime = totalTime;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ScheduledTimeEntry.class, mappedBy="scheduledTime", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ScheduledTimeEntry> scheduledTimeEntries;
 public List<ScheduledTimeEntry> getScheduledTimeEntries() {
@@ -159,9 +159,9 @@ public void setScheduledTimeEntries(List<ScheduledTimeEntry> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfScheduledTime")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -182,13 +182,6 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getTotalTime();
-		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
 		
@@ -230,6 +223,13 @@ public void setAgent(Agent value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Total Time property
+		objectJson += ",\"totalTime\":";
+		if (getTotalTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getTotalTime();
 		}
 
 				
@@ -277,12 +277,12 @@ objectJson += ",\"scheduledTimeEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Total Time property
-		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 		//From value of the State Name property
 		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Total Time property
+		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 
 		
 		// Source Relationships

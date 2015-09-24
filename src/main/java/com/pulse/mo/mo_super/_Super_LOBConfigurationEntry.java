@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+DurationToleranceEnabled
+Notes:When there is no tolerance "None" this will be false
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean durationToleranceEnabled;
+
+public Boolean getDurationToleranceEnabled() 
+{
+	return this.durationToleranceEnabled;
+}
+
+public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
+{
+	this.durationToleranceEnabled = durationToleranceEnabled;
+}/*
 ReminderInterval
 Notes:The number of minutes before notification are resent after being dismissed
 */
@@ -101,23 +118,6 @@ public Integer getReminderInterval()
 public void setReminderInterval(Integer reminderInterval)
 {
 	this.reminderInterval = reminderInterval;
-}/*
-DurationTolerance
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer durationTolerance;
-
-public Integer getDurationTolerance() 
-{
-	return this.durationTolerance;
-}
-
-public void setDurationTolerance(Integer durationTolerance)
-{
-	this.durationTolerance = durationTolerance;
 }/*
 OccurrenceToleranceInterval
 Notes:The number of times a event can happen before a notification is sent
@@ -136,40 +136,6 @@ public void setOccurrenceToleranceInterval(Integer occurrenceToleranceInterval)
 {
 	this.occurrenceToleranceInterval = occurrenceToleranceInterval;
 }/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
-}/*
-DurationToleranceEnabled
-Notes:When there is no tolerance "None" this will be false
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean durationToleranceEnabled;
-
-public Boolean getDurationToleranceEnabled() 
-{
-	return this.durationToleranceEnabled;
-}
-
-public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
-{
-	this.durationToleranceEnabled = durationToleranceEnabled;
-}/*
 DurationToleranceInterval
 Notes:
 */
@@ -186,14 +152,48 @@ public Integer getDurationToleranceInterval()
 public void setDurationToleranceInterval(Integer durationToleranceInterval)
 {
 	this.durationToleranceInterval = durationToleranceInterval;
+}/*
+DurationTolerance
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationTolerance;
+
+public Integer getDurationTolerance() 
+{
+	return this.durationTolerance;
+}
+
+public void setDurationTolerance(Integer durationTolerance)
+{
+	this.durationTolerance = durationTolerance;
+}/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdExceededNotification.class, mappedBy="lOBConfigurationEntry", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ThresholdExceededNotification> thresholdExceededNotifications;
 public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
@@ -210,9 +210,9 @@ public void setThresholdExceededNotifications(List<ThresholdExceededNotification
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOBConfigurationId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="lOBConfiguration_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private LOBConfiguration lOBConfiguration;
@@ -223,9 +223,9 @@ public LOBConfiguration getLOBConfiguration() {
 public void setLOBConfiguration(LOBConfiguration value) {
 	this.lOBConfiguration = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="NotificationFrequencyId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="notificationFrequency_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_NotificationFrequencyOfLOBConfigurationEntry")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private NotificationFrequency notificationFrequency;
@@ -237,9 +237,9 @@ public void setNotificationFrequency(NotificationFrequency value)
 {
 	this.notificationFrequency = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AuxModeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="auxMode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AuxModeOfLOBConfigurationEntry")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private AuxMode auxMode;
@@ -251,9 +251,9 @@ public void setAuxMode(AuxMode value)
 {
 	this.auxMode = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EStartActivityCodeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="eStartActivityCode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfLOBConfigurationEntry")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private EStartActivityCode eStartActivityCode;
@@ -275,6 +275,13 @@ public void setEStartActivityCode(EStartActivityCode value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Duration Tolerance Enabled property
+		objectJson += ",\"durationToleranceEnabled\":";
+		if (getDurationToleranceEnabled() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDurationToleranceEnabled();
+		}
 		//Retrieve value of the Reminder Interval property
 		objectJson += ",\"reminderInterval\":";
 		
@@ -285,27 +292,6 @@ public void setEStartActivityCode(EStartActivityCode value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getReminderInterval());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Duration Tolerance property
-		objectJson += ",\"durationTolerance\":";
-		
-		if (getDurationTolerance() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -338,16 +324,16 @@ public void setEStartActivityCode(EStartActivityCode value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Duration Tolerance Interval property
+		objectJson += ",\"durationToleranceInterval\":";
 		
-		if (getExternalID() == null)
+		if (getDurationToleranceInterval() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -359,23 +345,37 @@ public void setEStartActivityCode(EStartActivityCode value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Duration Tolerance Enabled property
-		objectJson += ",\"durationToleranceEnabled\":";
-		if (getDurationToleranceEnabled() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDurationToleranceEnabled();
-		}
-		//Retrieve value of the Duration Tolerance Interval property
-		objectJson += ",\"durationToleranceInterval\":";
+		//Retrieve value of the Duration Tolerance property
+		objectJson += ",\"durationTolerance\":";
 		
-		if (getDurationToleranceInterval() == null)
+		if (getDurationTolerance() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
+				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -469,18 +469,18 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Reminder Interval property
-		setReminderInterval(JsonUtils.getJsonInteger(jsonObject, "reminderInterval"));
-		//From value of the Duration Tolerance property
-		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
-		//From value of the OccurrenceTolerance Interval property
-		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Duration Tolerance Enabled property
 		setDurationToleranceEnabled(JsonUtils.getJsonBoolean(jsonObject, "durationToleranceEnabled"));
+		//From value of the Reminder Interval property
+		setReminderInterval(JsonUtils.getJsonInteger(jsonObject, "reminderInterval"));
+		//From value of the OccurrenceTolerance Interval property
+		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
 		//From value of the Duration Tolerance Interval property
 		setDurationToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "durationToleranceInterval"));
+		//From value of the Duration Tolerance property
+		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 
 		
 		// Source Relationships

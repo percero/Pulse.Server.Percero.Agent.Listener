@@ -107,21 +107,8 @@ public void setExternalID(String externalID)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationEntry.class, mappedBy="lOBConfiguration", cascade=javax.persistence.CascadeType.REMOVE)
-private List<LOBConfigurationEntry> lOBConfigurationEntries;
-public List<LOBConfigurationEntry> getLOBConfigurationEntries() {
-	return this.lOBConfigurationEntries;
-}
-
-public void setLOBConfigurationEntries(List<LOBConfigurationEntry> value) {
-	this.lOBConfigurationEntries = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationNotification.class, mappedBy="lOBConfiguration", cascade=javax.persistence.CascadeType.REMOVE)
 private List<LOBConfigurationNotification> lOBConfigurationNotifications;
 public List<LOBConfigurationNotification> getLOBConfigurationNotifications() {
@@ -132,17 +119,30 @@ public void setLOBConfigurationNotifications(List<LOBConfigurationNotification> 
 	this.lOBConfigurationNotifications = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationEntry.class, mappedBy="lOBConfiguration", cascade=javax.persistence.CascadeType.REMOVE)
+private List<LOBConfigurationEntry> lOBConfigurationEntries;
+public List<LOBConfigurationEntry> getLOBConfigurationEntries() {
+	return this.lOBConfigurationEntries;
+}
+
+public void setLOBConfigurationEntries(List<LOBConfigurationEntry> value) {
+	this.lOBConfigurationEntries = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOBId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="lOB_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBOfLOBConfiguration")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
 private LOB lOB;
 public LOB getLOB() {
 	return this.lOB;
@@ -200,23 +200,6 @@ objectJson += ",\"lOB\":";
 
 		
 		// Target Relationships
-//Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
-objectJson += ",\"lOBConfigurationEntries\":[";
-		
-		if (getLOBConfigurationEntries() != null) {
-			int lOBConfigurationEntriesCounter = 0;
-			for(LOBConfigurationEntry nextLOBConfigurationEntries : getLOBConfigurationEntries()) {
-				if (lOBConfigurationEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextLOBConfigurationEntries).toEmbeddedJson();
-					lOBConfigurationEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the LOB Configuration of LOB Configuration Notification relationship
 objectJson += ",\"lOBConfigurationNotifications\":[";
 		
@@ -228,6 +211,23 @@ objectJson += ",\"lOBConfigurationNotifications\":[";
 				try {
 					objectJson += ((BaseDataObject) nextLOBConfigurationNotifications).toEmbeddedJson();
 					lOBConfigurationNotificationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
+objectJson += ",\"lOBConfigurationEntries\":[";
+		
+		if (getLOBConfigurationEntries() != null) {
+			int lOBConfigurationEntriesCounter = 0;
+			for(LOBConfigurationEntry nextLOBConfigurationEntries : getLOBConfigurationEntries()) {
+				if (lOBConfigurationEntriesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextLOBConfigurationEntries).toEmbeddedJson();
+					lOBConfigurationEntriesCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -254,8 +254,8 @@ objectJson += ",\"lOBConfigurationNotifications\":[";
 
 
 		// Target Relationships
-		this.lOBConfigurationEntries = (List<LOBConfigurationEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationEntries");
 		this.lOBConfigurationNotifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationNotifications");
+		this.lOBConfigurationEntries = (List<LOBConfigurationEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationEntries");
 
 
 	}
@@ -265,8 +265,8 @@ objectJson += ",\"lOBConfigurationNotifications\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lobconfiguration"));
 		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "lobconfiguration"));
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lobconfiguration"));
 
 		
 		return listSetters;

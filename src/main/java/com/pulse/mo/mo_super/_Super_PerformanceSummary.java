@@ -85,6 +85,108 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+WeeklyOverviewScore
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String weeklyOverviewScore;
+
+public String getWeeklyOverviewScore() 
+{
+	return this.weeklyOverviewScore;
+}
+
+public void setWeeklyOverviewScore(String weeklyOverviewScore)
+{
+	this.weeklyOverviewScore = weeklyOverviewScore;
+}/*
+CurrentMTDScore
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String currentMTDScore;
+
+public String getCurrentMTDScore() 
+{
+	return this.currentMTDScore;
+}
+
+public void setCurrentMTDScore(String currentMTDScore)
+{
+	this.currentMTDScore = currentMTDScore;
+}/*
+WeeklyTrend
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String weeklyTrend;
+
+public String getWeeklyTrend() 
+{
+	return this.weeklyTrend;
+}
+
+public void setWeeklyTrend(String weeklyTrend)
+{
+	this.weeklyTrend = weeklyTrend;
+}/*
+WekendDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date wekendDate;
+
+public Date getWekendDate() 
+{
+	return this.wekendDate;
+}
+
+public void setWekendDate(Date wekendDate)
+{
+	this.wekendDate = wekendDate;
+}/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
+}/*
+PreviousMTDTrend
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String previousMTDTrend;
+
+public String getPreviousMTDTrend() 
+{
+	return this.previousMTDTrend;
+}
+
+public void setPreviousMTDTrend(String previousMTDTrend)
+{
+	this.previousMTDTrend = previousMTDTrend;
+}/*
 PreviousMTDScore
 Notes:
 */
@@ -118,116 +220,14 @@ public String getCurrentMTDTrend()
 public void setCurrentMTDTrend(String currentMTDTrend)
 {
 	this.currentMTDTrend = currentMTDTrend;
-}/*
-WeeklyOverviewScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyOverviewScore;
-
-public String getWeeklyOverviewScore() 
-{
-	return this.weeklyOverviewScore;
-}
-
-public void setWeeklyOverviewScore(String weeklyOverviewScore)
-{
-	this.weeklyOverviewScore = weeklyOverviewScore;
-}/*
-WekendDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date wekendDate;
-
-public Date getWekendDate() 
-{
-	return this.wekendDate;
-}
-
-public void setWekendDate(Date wekendDate)
-{
-	this.wekendDate = wekendDate;
-}/*
-WeeklyTrend
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyTrend;
-
-public String getWeeklyTrend() 
-{
-	return this.weeklyTrend;
-}
-
-public void setWeeklyTrend(String weeklyTrend)
-{
-	this.weeklyTrend = weeklyTrend;
-}/*
-CurrentMTDScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String currentMTDScore;
-
-public String getCurrentMTDScore() 
-{
-	return this.currentMTDScore;
-}
-
-public void setCurrentMTDScore(String currentMTDScore)
-{
-	this.currentMTDScore = currentMTDScore;
-}/*
-PreviousMTDTrend
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String previousMTDTrend;
-
-public String getPreviousMTDTrend() 
-{
-	return this.previousMTDTrend;
-}
-
-public void setPreviousMTDTrend(String previousMTDTrend)
-{
-	this.previousMTDTrend = previousMTDTrend;
-}/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Agent.class, mappedBy="performanceSummary", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Agent> agents;
 public List<Agent> getAgents() {
@@ -239,21 +239,8 @@ public void setAgents(List<Agent> value) {
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="performanceSummary", cascade=javax.persistence.CascadeType.REMOVE)
-private List<QualityEvaluation> qualityEvaluations;
-public List<QualityEvaluation> getQualityEvaluations() {
-	return this.qualityEvaluations;
-}
-
-public void setQualityEvaluations(List<QualityEvaluation> value) {
-	this.qualityEvaluations = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Attachment.class, mappedBy="performanceSummary", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Attachment> attachments;
 public List<Attachment> getAttachments() {
@@ -262,6 +249,19 @@ public List<Attachment> getAttachments() {
 
 public void setAttachments(List<Attachment> value) {
 	this.attachments = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="performanceSummary", cascade=javax.persistence.CascadeType.REMOVE)
+private List<QualityEvaluation> qualityEvaluations;
+public List<QualityEvaluation> getQualityEvaluations() {
+	return this.qualityEvaluations;
+}
+
+public void setQualityEvaluations(List<QualityEvaluation> value) {
+	this.qualityEvaluations = value;
 }
 
 
@@ -280,6 +280,118 @@ public void setAttachments(List<Attachment> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Weekly Overview Score property
+		objectJson += ",\"weeklyOverviewScore\":";
+		
+		if (getWeeklyOverviewScore() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getWeeklyOverviewScore());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Current MTD Score property
+		objectJson += ",\"currentMTDScore\":";
+		
+		if (getCurrentMTDScore() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCurrentMTDScore());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Weekly Trend property
+		objectJson += ",\"weeklyTrend\":";
+		
+		if (getWeeklyTrend() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getWeeklyTrend());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Wekend Date property
+		objectJson += ",\"wekendDate\":";
+		if (getWekendDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWekendDate().getTime();
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Previous MTD Trend property
+		objectJson += ",\"previousMTDTrend\":";
+		
+		if (getPreviousMTDTrend() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPreviousMTDTrend());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Previous MTD Score property
 		objectJson += ",\"previousMTDScore\":";
 		
@@ -322,118 +434,6 @@ public void setAttachments(List<Attachment> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Weekly Overview Score property
-		objectJson += ",\"weeklyOverviewScore\":";
-		
-		if (getWeeklyOverviewScore() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyOverviewScore());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Wekend Date property
-		objectJson += ",\"wekendDate\":";
-		if (getWekendDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWekendDate().getTime();
-		}
-		//Retrieve value of the Weekly Trend property
-		objectJson += ",\"weeklyTrend\":";
-		
-		if (getWeeklyTrend() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyTrend());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Current MTD Score property
-		objectJson += ",\"currentMTDScore\":";
-		
-		if (getCurrentMTDScore() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCurrentMTDScore());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Previous MTD Trend property
-		objectJson += ",\"previousMTDTrend\":";
-		
-		if (getPreviousMTDTrend() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPreviousMTDTrend());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -457,23 +457,6 @@ objectJson += ",\"agents\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Performance Summary of Quality Evaluation relationship
-objectJson += ",\"qualityEvaluations\":[";
-		
-		if (getQualityEvaluations() != null) {
-			int qualityEvaluationsCounter = 0;
-			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
-				if (qualityEvaluationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
-					qualityEvaluationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Performance Summary of Attachment relationship
 objectJson += ",\"attachments\":[";
 		
@@ -491,6 +474,23 @@ objectJson += ",\"attachments\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Performance Summary of Quality Evaluation relationship
+objectJson += ",\"qualityEvaluations\":[";
+		
+		if (getQualityEvaluations() != null) {
+			int qualityEvaluationsCounter = 0;
+			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
+				if (qualityEvaluationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
+					qualityEvaluationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -502,22 +502,22 @@ objectJson += ",\"attachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Weekly Overview Score property
+		setWeeklyOverviewScore(JsonUtils.getJsonString(jsonObject, "weeklyOverviewScore"));
+		//From value of the Current MTD Score property
+		setCurrentMTDScore(JsonUtils.getJsonString(jsonObject, "currentMTDScore"));
+		//From value of the Weekly Trend property
+		setWeeklyTrend(JsonUtils.getJsonString(jsonObject, "weeklyTrend"));
+		//From value of the Wekend Date property
+		setWekendDate(JsonUtils.getJsonDate(jsonObject, "wekendDate"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Previous MTD Trend property
+		setPreviousMTDTrend(JsonUtils.getJsonString(jsonObject, "previousMTDTrend"));
 		//From value of the Previous MTD Score property
 		setPreviousMTDScore(JsonUtils.getJsonString(jsonObject, "previousMTDScore"));
 		//From value of the Current MTD Trend property
 		setCurrentMTDTrend(JsonUtils.getJsonString(jsonObject, "currentMTDTrend"));
-		//From value of the Weekly Overview Score property
-		setWeeklyOverviewScore(JsonUtils.getJsonString(jsonObject, "weeklyOverviewScore"));
-		//From value of the Wekend Date property
-		setWekendDate(JsonUtils.getJsonDate(jsonObject, "wekendDate"));
-		//From value of the Weekly Trend property
-		setWeeklyTrend(JsonUtils.getJsonString(jsonObject, "weeklyTrend"));
-		//From value of the Current MTD Score property
-		setCurrentMTDScore(JsonUtils.getJsonString(jsonObject, "currentMTDScore"));
-		//From value of the Previous MTD Trend property
-		setPreviousMTDTrend(JsonUtils.getJsonString(jsonObject, "previousMTDTrend"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 
 		
 		// Source Relationships
@@ -525,8 +525,8 @@ objectJson += ",\"attachments\":[";
 
 		// Target Relationships
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
-		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.attachments = (List<Attachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "attachments");
+		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 
 
 	}
@@ -537,8 +537,8 @@ objectJson += ",\"attachments\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "performancesummary"));
-		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "performancesummary"));
 		listSetters.add(MappedClass.getFieldSetters(Attachment.class, "performancesummary"));
+		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "performancesummary"));
 
 		
 		return listSetters;

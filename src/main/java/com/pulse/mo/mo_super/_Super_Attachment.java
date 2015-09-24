@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 ExternalID
 Notes:
 */
@@ -135,6 +118,23 @@ public String getFileUri()
 public void setFileUri(String fileUri)
 {
 	this.fileUri = fileUri;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }
 
 	//////////////////////////////////////////////////////
@@ -146,9 +146,9 @@ public void setFileUri(String fileUri)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PerformanceSummaryId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="performanceSummary_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PerformanceSummaryOfAttachment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PerformanceSummary performanceSummary;
@@ -159,9 +159,9 @@ public PerformanceSummary getPerformanceSummary() {
 public void setPerformanceSummary(PerformanceSummary value) {
 	this.performanceSummary = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AdhocCoachingSessionId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="adhocCoachingSession_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfAttachment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AdhocCoachingSession adhocCoachingSession;
@@ -172,9 +172,9 @@ public AdhocCoachingSession getAdhocCoachingSession() {
 public void setAdhocCoachingSession(AdhocCoachingSession value) {
 	this.adhocCoachingSession = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CoachingSessionId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="coachingSession_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfAttachment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CoachingSession coachingSession;
@@ -185,9 +185,9 @@ public CoachingSession getCoachingSession() {
 public void setCoachingSession(CoachingSession value) {
 	this.coachingSession = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CorrectiveActionId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="correctiveAction_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CorrectiveActionOfAttachment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CorrectiveAction correctiveAction;
@@ -208,27 +208,6 @@ public void setCorrectiveAction(CorrectiveAction value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the External ID property
 		objectJson += ",\"externalID\":";
 		
@@ -260,6 +239,27 @@ public void setCorrectiveAction(CorrectiveAction value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getFileUri());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
+		
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -336,12 +336,12 @@ objectJson += ",\"correctiveAction\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the File Uri property
 		setFileUri(JsonUtils.getJsonString(jsonObject, "fileUri"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships

@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-DurationTolerance
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer durationTolerance;
-
-public Integer getDurationTolerance() 
-{
-	return this.durationTolerance;
-}
-
-public void setDurationTolerance(Integer durationTolerance)
-{
-	this.durationTolerance = durationTolerance;
-}/*
 ExternalID
 Notes:
 */
@@ -118,14 +101,31 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+DurationTolerance
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationTolerance;
+
+public Integer getDurationTolerance() 
+{
+	return this.durationTolerance;
+}
+
+public void setDurationTolerance(Integer durationTolerance)
+{
+	this.durationTolerance = durationTolerance;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=LOB.class, mappedBy="pulseConfiguration", cascade=javax.persistence.CascadeType.REMOVE)
 private List<LOB> lOBs;
 public List<LOB> getLOBs() {
@@ -152,16 +152,16 @@ public void setLOBs(List<LOB> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration Tolerance property
-		objectJson += ",\"durationTolerance\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getDurationTolerance() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -173,16 +173,16 @@ public void setLOBs(List<LOB> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Duration Tolerance property
+		objectJson += ",\"durationTolerance\":";
 		
-		if (getExternalID() == null)
+		if (getDurationTolerance() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -228,10 +228,10 @@ objectJson += ",\"lOBs\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration Tolerance property
-		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Duration Tolerance property
+		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
 
 		
 		// Source Relationships

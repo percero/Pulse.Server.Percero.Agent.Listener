@@ -102,23 +102,6 @@ public void setToTime(Date toTime)
 {
 	this.toTime = toTime;
 }/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
-}/*
 FromTime
 Notes:
 */
@@ -153,6 +136,23 @@ public void setActivityTypeName(String activityTypeName)
 {
 	this.activityTypeName = activityTypeName;
 }/*
+ExternalID
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String externalID;
+
+public String getExternalID() 
+{
+	return this.externalID;
+}
+
+public void setExternalID(String externalID)
+{
+	this.externalID = externalID;
+}/*
 Duration
 Notes:Number of minutes
 */
@@ -180,9 +180,9 @@ public void setDuration(Integer duration)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ActivityTypeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="activityType_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ActivityTypeOfScheduledTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ActivityType activityType;
@@ -193,9 +193,9 @@ public ActivityType getActivityType() {
 public void setActivityType(ActivityType value) {
 	this.activityType = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ScheduledActivityCodeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="scheduledActivityCode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScheduledActivityCodeOfScheduledTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ScheduledActivityCode scheduledActivityCode;
@@ -206,9 +206,9 @@ public ScheduledActivityCode getScheduledActivityCode() {
 public void setScheduledActivityCode(ScheduledActivityCode value) {
 	this.scheduledActivityCode = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ScheduledTimeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="scheduledTime_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScheduledTimeOfScheduledTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ScheduledTime scheduledTime;
@@ -236,27 +236,6 @@ public void setScheduledTime(ScheduledTime value) {
 		else {
 			objectJson += getToTime().getTime();
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the From Time property
 		objectJson += ",\"fromTime\":";
 		if (getFromTime() == null)
@@ -274,6 +253,27 @@ public void setScheduledTime(ScheduledTime value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getActivityTypeName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -361,12 +361,12 @@ objectJson += ",\"scheduledTime\":";
 		// Properties
 		//From value of the To Time property
 		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
 		//From value of the Activity Type Name property
 		setActivityTypeName(JsonUtils.getJsonString(jsonObject, "activityTypeName"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
 

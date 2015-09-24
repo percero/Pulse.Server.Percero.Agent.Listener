@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-EventCount
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer eventCount;
+private String name;
 
-public Integer getEventCount() 
+public String getName() 
 {
-	return this.eventCount;
+	return this.name;
 }
 
-public void setEventCount(Integer eventCount)
+public void setName(String name)
 {
-	this.eventCount = eventCount;
+	this.name = name;
 }/*
 ExternalID
 Notes:
@@ -119,30 +119,30 @@ public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
 }/*
-Name
+EventCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String name;
+private Integer eventCount;
 
-public String getName() 
+public Integer getEventCount() 
 {
-	return this.name;
+	return this.eventCount;
 }
 
-public void setName(String name)
+public void setEventCount(Integer eventCount)
 {
-	this.name = name;
+	this.eventCount = eventCount;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=DiscrepancyDetectedNotification.class, mappedBy="auxMode", cascade=javax.persistence.CascadeType.REMOVE)
 private List<DiscrepancyDetectedNotification> discrepancyDetectedNotifications;
 public List<DiscrepancyDetectedNotification> getDiscrepancyDetectedNotifications() {
@@ -154,8 +154,8 @@ public void setDiscrepancyDetectedNotifications(List<DiscrepancyDetectedNotifica
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ActualTimeEntry.class, mappedBy="auxMode", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ActualTimeEntry> actualTimeEntries;
 public List<ActualTimeEntry> getActualTimeEntries() {
@@ -166,8 +166,8 @@ public void setActualTimeEntries(List<ActualTimeEntry> value) {
 	this.actualTimeEntries = value;
 }
 
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @OneToOne(fetch=FetchType.LAZY, mappedBy="auxMode", cascade=javax.persistence.CascadeType.REMOVE)
 private LOBConfigurationEntry lOBConfigurationEntry;
@@ -196,16 +196,16 @@ public void setLOBConfigurationEntry(LOBConfigurationEntry value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Event Count property
-		objectJson += ",\"eventCount\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getEventCount() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEventCount());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -238,16 +238,16 @@ public void setLOBConfigurationEntry(LOBConfigurationEntry value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Event Count property
+		objectJson += ",\"eventCount\":";
 		
-		if (getName() == null)
+		if (getEventCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getEventCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -312,12 +312,12 @@ objectJson += ",\"actualTimeEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Event Count property
-		setEventCount(JsonUtils.getJsonInteger(jsonObject, "eventCount"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Event Count property
+		setEventCount(JsonUtils.getJsonInteger(jsonObject, "eventCount"));
 
 		
 		// Source Relationships

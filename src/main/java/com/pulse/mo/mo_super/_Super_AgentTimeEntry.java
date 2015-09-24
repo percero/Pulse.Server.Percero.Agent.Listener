@@ -85,39 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ActionCode
-Notes:
+Duration
+Notes:Number of minutes
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String actionCode;
+private Integer duration;
 
-public String getActionCode() 
+public Integer getDuration() 
 {
-	return this.actionCode;
+	return this.duration;
 }
 
-public void setActionCode(String actionCode)
+public void setDuration(Integer duration)
 {
-	this.actionCode = actionCode;
-}/*
-ToTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date toTime;
-
-public Date getToTime() 
-{
-	return this.toTime;
-}
-
-public void setToTime(Date toTime)
-{
-	this.toTime = toTime;
+	this.duration = duration;
 }/*
 NotificationResolved
 Notes:
@@ -136,57 +119,6 @@ public void setNotificationResolved(Boolean notificationResolved)
 {
 	this.notificationResolved = notificationResolved;
 }/*
-ActionName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String actionName;
-
-public String getActionName() 
-{
-	return this.actionName;
-}
-
-public void setActionName(String actionName)
-{
-	this.actionName = actionName;
-}/*
-CVGProjectName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String cVGProjectName;
-
-public String getCVGProjectName() 
-{
-	return this.cVGProjectName;
-}
-
-public void setCVGProjectName(String cVGProjectName)
-{
-	this.cVGProjectName = cVGProjectName;
-}/*
-Duration
-Notes:Number of minutes
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer duration;
-
-public Integer getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Integer duration)
-{
-	this.duration = duration;
-}/*
 NotificationDetected
 Notes:
 */
@@ -203,23 +135,6 @@ public Boolean getNotificationDetected()
 public void setNotificationDetected(Boolean notificationDetected)
 {
 	this.notificationDetected = notificationDetected;
-}/*
-FromTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date fromTime;
-
-public Date getFromTime() 
-{
-	return this.fromTime;
-}
-
-public void setFromTime(Date fromTime)
-{
-	this.fromTime = fromTime;
 }/*
 ExternalID
 Notes:
@@ -238,6 +153,74 @@ public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
 }/*
+ToTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date toTime;
+
+public Date getToTime() 
+{
+	return this.toTime;
+}
+
+public void setToTime(Date toTime)
+{
+	this.toTime = toTime;
+}/*
+CVGProjectName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String cVGProjectName;
+
+public String getCVGProjectName() 
+{
+	return this.cVGProjectName;
+}
+
+public void setCVGProjectName(String cVGProjectName)
+{
+	this.cVGProjectName = cVGProjectName;
+}/*
+ActionName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String actionName;
+
+public String getActionName() 
+{
+	return this.actionName;
+}
+
+public void setActionName(String actionName)
+{
+	this.actionName = actionName;
+}/*
+ActionCode
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String actionCode;
+
+public String getActionCode() 
+{
+	return this.actionCode;
+}
+
+public void setActionCode(String actionCode)
+{
+	this.actionCode = actionCode;
+}/*
 ActivityName
 Notes:
 */
@@ -254,6 +237,23 @@ public String getActivityName()
 public void setActivityName(String activityName)
 {
 	this.activityName = activityName;
+}/*
+FromTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date fromTime;
+
+public Date getFromTime() 
+{
+	return this.fromTime;
+}
+
+public void setFromTime(Date fromTime)
+{
+	this.fromTime = fromTime;
 }
 
 	//////////////////////////////////////////////////////
@@ -265,9 +265,9 @@ public void setActivityName(String activityName)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentTimeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agentTime_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentTimeOfAgentTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AgentTime agentTime;
@@ -278,9 +278,9 @@ public AgentTime getAgentTime() {
 public void setAgentTime(AgentTime value) {
 	this.agentTime = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EStartActivityCodeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="eStartActivityCode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfAgentTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private EStartActivityCode eStartActivityCode;
@@ -291,9 +291,9 @@ public EStartActivityCode getEStartActivityCode() {
 public void setEStartActivityCode(EStartActivityCode value) {
 	this.eStartActivityCode = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CVGProjectId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="cVGProject_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CVGProjectOfAgentTimeEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CVGProject cVGProject;
@@ -314,16 +314,51 @@ public void setCVGProject(CVGProject value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Action Code property
-		objectJson += ",\"actionCode\":";
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
 		
-		if (getActionCode() == null)
+		if (getDuration() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActionCode());
+				objectJson += objectMapper.writeValueAsString(getDuration());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Notification Resolved property
+		objectJson += ",\"notificationResolved\":";
+		if (getNotificationResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNotificationResolved();
+		}
+		//Retrieve value of the Notification Detected property
+		objectJson += ",\"notificationDetected\":";
+		if (getNotificationDetected() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNotificationDetected();
+		}
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
+		
+		if (getExternalID() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -341,34 +376,6 @@ public void setCVGProject(CVGProject value) {
 			objectJson += "null";
 		else {
 			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the Notification Resolved property
-		objectJson += ",\"notificationResolved\":";
-		if (getNotificationResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationResolved();
-		}
-		//Retrieve value of the Action Name property
-		objectJson += ",\"actionName\":";
-		
-		if (getActionName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getActionName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the CVG Project Name property
 		objectJson += ",\"cVGProjectName\":";
@@ -391,16 +398,16 @@ public void setCVGProject(CVGProject value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
+		//Retrieve value of the Action Name property
+		objectJson += ",\"actionName\":";
 		
-		if (getDuration() == null)
+		if (getActionName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDuration());
+				objectJson += objectMapper.writeValueAsString(getActionName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -412,30 +419,16 @@ public void setCVGProject(CVGProject value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Notification Detected property
-		objectJson += ",\"notificationDetected\":";
-		if (getNotificationDetected() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationDetected();
-		}
-		//Retrieve value of the From Time property
-		objectJson += ",\"fromTime\":";
-		if (getFromTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getFromTime().getTime();
-		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Action Code property
+		objectJson += ",\"actionCode\":";
 		
-		if (getExternalID() == null)
+		if (getActionCode() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getActionCode());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -467,6 +460,13 @@ public void setCVGProject(CVGProject value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the From Time property
+		objectJson += ",\"fromTime\":";
+		if (getFromTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getFromTime().getTime();
 		}
 
 				
@@ -521,26 +521,26 @@ objectJson += ",\"cVGProject\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Action Code property
-		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the Notification Resolved property
-		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
-		//From value of the Action Name property
-		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
-		//From value of the CVG Project Name property
-		setCVGProjectName(JsonUtils.getJsonString(jsonObject, "cVGProjectName"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
+		//From value of the Notification Resolved property
+		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
 		//From value of the Notification Detected property
 		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
-		//From value of the From Time property
-		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the To Time property
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		//From value of the CVG Project Name property
+		setCVGProjectName(JsonUtils.getJsonString(jsonObject, "cVGProjectName"));
+		//From value of the Action Name property
+		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
+		//From value of the Action Code property
+		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
 		//From value of the Activity Name property
 		setActivityName(JsonUtils.getJsonString(jsonObject, "activityName"));
+		//From value of the From Time property
+		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
 
 		
 		// Source Relationships

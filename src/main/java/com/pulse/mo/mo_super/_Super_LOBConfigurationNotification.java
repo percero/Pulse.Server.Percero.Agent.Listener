@@ -64,22 +64,7 @@ public class _Super_LOBConfigurationNotification extends Notification implements
 	/*
 	Keys of LOBConfigurationNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
@@ -112,11 +97,11 @@ public void setMessage(String message)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AgentId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="agent_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfLOBConfigurationNotification")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
 private Agent agent;
 public Agent getAgent() {
 	return this.agent;
@@ -125,11 +110,11 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOBConfigurationId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="lOBConfiguration_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationNotification")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
 private LOBConfiguration lOBConfiguration;
 public LOBConfiguration getLOBConfiguration() {
 	return this.lOBConfiguration;

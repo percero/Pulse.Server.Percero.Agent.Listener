@@ -34,11 +34,11 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	}
 	
 	PulseDataConnectionRegistry connectionRegistry;
-	public void setConnectionRegistry(PulseDataConnectionRegistry value) {
+	public PulseDataConnectionRegistry getConnectionRegistry() {
 		if (connectionRegistry == null) {
 			connectionRegistry = PulseDataConnectionRegistry.getInstance();
 		}
-		connectionRegistry = value;
+		return connectionRegistry;
 	}
 	
 	protected String getConnectionFactoryName() {
@@ -115,6 +115,23 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		}
 	}
 
+	protected String getFindByExampleSelectSql(Boolean shellOnly) {
+		if (shellOnly) {
+			return getFindByExampleSelectShellOnlySQL();
+		}
+		else {
+			return getFindByExampleSelectAllStarSQL();
+		}
+	}
+	
+	protected String getFindByExampleSelectShellOnlySQL() {
+		return null;
+	}
+
+	protected String getFindByExampleSelectAllStarSQL() {
+		return null;
+	}
+
 	protected String getSelectAllStarSQL() {
 		// TODO Auto-generated method stub
 		return null;
@@ -151,14 +168,15 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			String sql = getInsertIntoSQL();
 			pstmt = conn.prepareStatement(sql);
 			
 			setPreparedStatmentInsertParams(perceroObject, pstmt);
+			int result = pstmt.executeUpdate();
 			
-			if (pstmt.execute()) {
+			if (result > 0) {
 				return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
 			}
 			else {
@@ -220,7 +238,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
 
@@ -266,7 +284,6 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	
 	public List<T> findByExample(T theQueryObject,
 			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -285,7 +302,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
 //			String queryString = overlayReadQuery(className, userId,
@@ -323,10 +340,50 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(selectQueryString);
 			pstmt.setString(1, id);
+			
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				results.add(nextResult);
+			}
+		} catch(Exception e) {
+			log.error("Unable to retrieveObjects", e);
+			throw new SyncDataException(e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				log.error("Error closing database statement/connection", e);
+			}
+		}
+		
+		return results;
+	}
+	
+	protected List<T> executeSelectWithParams(String selectQueryString, Object[] paramValues, Boolean shellOnly)
+			throws SyncDataException {
+		List<T> results = new ArrayList<T>();
+		
+		// Open the database session.
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+			conn = connectionFactory.getConnection();
+			pstmt = conn.prepareStatement(selectQueryString);
+			
+			for(int i=0; i<paramValues.length; i++) {
+				pstmt.setObject(i+1, paramValues[i]);
+			}
 			
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -358,18 +415,33 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 
 	public PerceroList<T> getAll(Integer pageNumber, Integer pageSize, Boolean returnTotal, String userId, Boolean shellOnly) throws Exception {
 		
-		String sql = getSelectAllSql(shellOnly);
+		boolean useLimit = pageNumber != null && pageSize != null && pageSize > 0;
+		String sql = null;
+		if (useLimit) {
+			if (shellOnly) {
+				sql = getSelectAllShellOnlyWithLimitAndOffsetSQL();
+			}
+			else {
+				sql = getSelectAllStarWithLimitAndOffsetSQL();
+			}
+		}
+		else {
+			sql = getSelectAllSql(shellOnly);
+		}
 		List<T> objects = new ArrayList<T>();
 		
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, pageSize);
-			pstmt.setInt(2, pageNumber);
+			
+			if (useLimit) {
+				pstmt.setInt(1, pageSize);
+				pstmt.setInt(2, pageNumber);
+			}
 			
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -412,7 +484,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
 //			String queryString = overlayReadQuery(className, userId,
@@ -420,7 +492,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			
 	        ResultSet rs = stmt.executeQuery(sql);
 	        if (rs.next()) {
-	        	return rs.getInt(0);
+	        	return rs.getInt(1);
 	        }
 	        else {
 	        	return null;
@@ -458,14 +530,15 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			String sql = getUpdateSet();
 			pstmt = conn.prepareStatement(sql);
 			
 			setPreparedStatmentUpdateParams(perceroObject, pstmt);
+			int result = pstmt.executeUpdate();
 			
-			if (pstmt.execute()) {
+			if (result > 0) {
 				return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
 			}
 			else {
@@ -492,7 +565,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
 			
@@ -608,7 +681,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			IConnectionFactory connectionFactory = connectionRegistry.getConnectionFactory(getConnectionFactoryName());
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			String sql = getDeleteFromSQL();
 			pstmt = conn.prepareStatement(sql);
@@ -633,7 +706,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		}
 	}
 
-	protected String getDeleteFromSQL() {
+	protected String getDeleteFromSQL() throws SyncDataException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -663,12 +736,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	}
 
 
-	protected String getInsertIntoSQL() {
+	protected String getInsertIntoSQL() throws SyncDataException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	protected String getUpdateSet() {
+	protected String getUpdateSet() throws SyncDataException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -8,6 +8,10 @@ import com.pulse.mo.mo_super._Super_ActivityType;
 @Entity(name="ActivityType")
 public class ActivityType extends _Super_ActivityType
 {
+	/*
 	
+	
+	
+	*/
 }
 

@@ -64,22 +64,7 @@ public class _Super_DiscrepancyDetectedNotification extends LOBConfigurationNoti
 	/*
 	Keys of DiscrepancyDetectedNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
@@ -129,22 +114,9 @@ public void setEStartActivityCodeName(String eStartActivityCodeName)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EStartActivityCodeId")
-@org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfDiscrepancyDetectedNotification")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private EStartActivityCode eStartActivityCode;
-public EStartActivityCode getEStartActivityCode() {
-	return this.eStartActivityCode;
-}
-
-public void setEStartActivityCode(EStartActivityCode value) {
-	this.eStartActivityCode = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AuxModeId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="auxMode_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AuxModeOfDiscrepancyDetectedNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AuxMode auxMode;
@@ -154,6 +126,19 @@ public AuxMode getAuxMode() {
 
 public void setAuxMode(AuxMode value) {
 	this.auxMode = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="eStartActivityCode_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_EStartActivityCodeOfDiscrepancyDetectedNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private EStartActivityCode eStartActivityCode;
+public EStartActivityCode getEStartActivityCode() {
+	return this.eStartActivityCode;
+}
+
+public void setEStartActivityCode(EStartActivityCode value) {
+	this.eStartActivityCode = value;
 }
 
 	
@@ -210,18 +195,6 @@ public void setAuxMode(AuxMode value) {
 
 				
 		// Source Relationships
-//Retrieve value of the EStart Activity Code of Discrepancy Detected Notification relationship
-objectJson += ",\"eStartActivityCode\":";
-		if (getEStartActivityCode() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getEStartActivityCode()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Aux Mode of Discrepancy Detected Notification relationship
 objectJson += ",\"auxMode\":";
 		if (getAuxMode() == null)
@@ -229,6 +202,18 @@ objectJson += ",\"auxMode\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAuxMode()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the EStart Activity Code of Discrepancy Detected Notification relationship
+objectJson += ",\"eStartActivityCode\":";
+		if (getEStartActivityCode() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getEStartActivityCode()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -255,8 +240,8 @@ objectJson += ",\"auxMode\":";
 
 		
 		// Source Relationships
-		this.eStartActivityCode = (EStartActivityCode) JsonUtils.getJsonPerceroObject(jsonObject, "eStartActivityCode");
 		this.auxMode = (AuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "auxMode");
+		this.eStartActivityCode = (EStartActivityCode) JsonUtils.getJsonPerceroObject(jsonObject, "eStartActivityCode");
 
 
 		// Target Relationships

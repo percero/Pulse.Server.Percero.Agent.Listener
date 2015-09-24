@@ -112,9 +112,9 @@ public void setExternalID(String externalID)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CoachingSessionMeasureId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="coachingSessionMeasure_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionMeasureOfObservation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CoachingSessionMeasure coachingSessionMeasure;

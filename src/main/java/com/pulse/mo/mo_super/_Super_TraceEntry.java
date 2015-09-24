@@ -102,22 +102,22 @@ public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
 }/*
-TraceType
+LogMessage
 Notes:
 */
-@Column
+@Column(columnDefinition="TEXT")
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String traceType;
+private String logMessage;
 
-public String getTraceType() 
+public String getLogMessage() 
 {
-	return this.traceType;
+	return this.logMessage;
 }
 
-public void setTraceType(String traceType)
+public void setLogMessage(String logMessage)
 {
-	this.traceType = traceType;
+	this.logMessage = logMessage;
 }/*
 Timestamp
 Notes:
@@ -136,22 +136,22 @@ public void setTimestamp(Date timestamp)
 {
 	this.timestamp = timestamp;
 }/*
-LogMessage
+TraceType
 Notes:
 */
-@Column(columnDefinition="TEXT")
+@Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String logMessage;
+private String traceType;
 
-public String getLogMessage() 
+public String getTraceType() 
 {
-	return this.logMessage;
+	return this.traceType;
 }
 
-public void setLogMessage(String logMessage)
+public void setTraceType(String traceType)
 {
-	this.logMessage = logMessage;
+	this.traceType = traceType;
 }
 
 	//////////////////////////////////////////////////////
@@ -163,9 +163,9 @@ public void setLogMessage(String logMessage)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TraceLogId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="traceLog_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TraceLogOfTraceEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TraceLog traceLog;
@@ -176,9 +176,9 @@ public TraceLog getTraceLog() {
 public void setTraceLog(TraceLog value) {
 	this.traceLog = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PulseUserId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="pulseUser_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfTraceEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;
@@ -220,16 +220,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Trace Type property
-		objectJson += ",\"traceType\":";
+		//Retrieve value of the Log Message property
+		objectJson += ",\"logMessage\":";
 		
-		if (getTraceType() == null)
+		if (getLogMessage() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTraceType());
+				objectJson += objectMapper.writeValueAsString(getLogMessage());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -248,16 +248,16 @@ public void setPulseUser(PulseUser value) {
 		else {
 			objectJson += getTimestamp().getTime();
 		}
-		//Retrieve value of the Log Message property
-		objectJson += ",\"logMessage\":";
+		//Retrieve value of the Trace Type property
+		objectJson += ",\"traceType\":";
 		
-		if (getLogMessage() == null)
+		if (getTraceType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLogMessage());
+				objectJson += objectMapper.writeValueAsString(getTraceType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -312,12 +312,12 @@ objectJson += ",\"pulseUser\":";
 		// Properties
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
-		//From value of the Trace Type property
-		setTraceType(JsonUtils.getJsonString(jsonObject, "traceType"));
-		//From value of the Timestamp property
-		setTimestamp(JsonUtils.getJsonDate(jsonObject, "timestamp"));
 		//From value of the Log Message property
 		setLogMessage(JsonUtils.getJsonString(jsonObject, "logMessage"));
+		//From value of the Timestamp property
+		setTimestamp(JsonUtils.getJsonDate(jsonObject, "timestamp"));
+		//From value of the Trace Type property
+		setTraceType(JsonUtils.getJsonString(jsonObject, "traceType"));
 
 		
 		// Source Relationships

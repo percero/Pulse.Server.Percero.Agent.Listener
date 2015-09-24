@@ -141,8 +141,8 @@ public void setDate(Date date)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdLevel.class, mappedBy="thresholdScale", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ThresholdLevel> thresholdLevels;
 public List<ThresholdLevel> getThresholdLevels() {

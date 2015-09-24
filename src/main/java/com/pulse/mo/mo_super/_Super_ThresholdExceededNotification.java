@@ -64,22 +64,7 @@ public class _Super_ThresholdExceededNotification extends LOBConfigurationNotifi
 	/*
 	Keys of ThresholdExceededNotification
 	*/
-	//////////////////////////////////////////////////////
-// ID
-//////////////////////////////////////////////////////
-//@Id
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@Column(unique=true,name="ID")
-//private String ID;
-//@JsonProperty(value="ID")
-//public String getID() {
-//	return this.ID;
-//}
-//
-//@JsonProperty(value="ID")
-//public void setID(String value) {
-//	this.ID = value;
-//}
+	
 	
 	//////////////////////////////////////////////////////
 	// Properties
@@ -95,9 +80,9 @@ public class _Super_ThresholdExceededNotification extends LOBConfigurationNotifi
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOBConfigurationEntryId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="lOBConfigurationEntry_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationEntryOfThresholdExceededNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private LOBConfigurationEntry lOBConfigurationEntry;

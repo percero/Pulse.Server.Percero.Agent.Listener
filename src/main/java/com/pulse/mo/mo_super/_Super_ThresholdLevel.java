@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-StartExpression
+EndValue
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String startExpression;
+private String endValue;
 
-public String getStartExpression() 
+public String getEndValue() 
 {
-	return this.startExpression;
+	return this.endValue;
 }
 
-public void setStartExpression(String startExpression)
+public void setEndValue(String endValue)
 {
-	this.startExpression = startExpression;
+	this.endValue = endValue;
 }/*
 StartValue
 Notes:
@@ -119,23 +119,6 @@ public void setStartValue(String startValue)
 {
 	this.startValue = startValue;
 }/*
-EndExpression
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String endExpression;
-
-public String getEndExpression() 
-{
-	return this.endExpression;
-}
-
-public void setEndExpression(String endExpression)
-{
-	this.endExpression = endExpression;
-}/*
 ExternalID
 Notes:
 */
@@ -152,6 +135,23 @@ public String getExternalID()
 public void setExternalID(String externalID)
 {
 	this.externalID = externalID;
+}/*
+EndExpression
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String endExpression;
+
+public String getEndExpression() 
+{
+	return this.endExpression;
+}
+
+public void setEndExpression(String endExpression)
+{
+	this.endExpression = endExpression;
 }/*
 ExpressionOperator
 Notes:
@@ -187,22 +187,22 @@ public void setColor(String color)
 {
 	this.color = color;
 }/*
-EndValue
+StartExpression
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String endValue;
+private String startExpression;
 
-public String getEndValue() 
+public String getStartExpression() 
 {
-	return this.endValue;
+	return this.startExpression;
 }
 
-public void setEndValue(String endValue)
+public void setStartExpression(String startExpression)
 {
-	this.endValue = endValue;
+	this.startExpression = startExpression;
 }
 
 	//////////////////////////////////////////////////////
@@ -214,9 +214,9 @@ public void setEndValue(String endValue)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ThresholdScaleId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="thresholdScale_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ThresholdScaleOfThresholdLevel")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ThresholdScale thresholdScale;
@@ -237,16 +237,16 @@ public void setThresholdScale(ThresholdScale value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Start Expression property
-		objectJson += ",\"startExpression\":";
+		//Retrieve value of the End Value property
+		objectJson += ",\"endValue\":";
 		
-		if (getStartExpression() == null)
+		if (getEndValue() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getStartExpression());
+				objectJson += objectMapper.writeValueAsString(getEndValue());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -279,16 +279,16 @@ public void setThresholdScale(ThresholdScale value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the End Expression property
-		objectJson += ",\"endExpression\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getEndExpression() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEndExpression());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -300,16 +300,16 @@ public void setThresholdScale(ThresholdScale value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the End Expression property
+		objectJson += ",\"endExpression\":";
 		
-		if (getExternalID() == null)
+		if (getEndExpression() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getEndExpression());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -363,16 +363,16 @@ public void setThresholdScale(ThresholdScale value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the End Value property
-		objectJson += ",\"endValue\":";
+		//Retrieve value of the Start Expression property
+		objectJson += ",\"startExpression\":";
 		
-		if (getEndValue() == null)
+		if (getStartExpression() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEndValue());
+				objectJson += objectMapper.writeValueAsString(getStartExpression());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -413,20 +413,20 @@ objectJson += ",\"thresholdScale\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Start Expression property
-		setStartExpression(JsonUtils.getJsonString(jsonObject, "startExpression"));
+		//From value of the End Value property
+		setEndValue(JsonUtils.getJsonString(jsonObject, "endValue"));
 		//From value of the Start Value property
 		setStartValue(JsonUtils.getJsonString(jsonObject, "startValue"));
-		//From value of the End Expression property
-		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
 		//From value of the External ID property
 		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the End Expression property
+		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
 		//From value of the Expression Operator property
 		setExpressionOperator(JsonUtils.getJsonString(jsonObject, "expressionOperator"));
 		//From value of the Color property
 		setColor(JsonUtils.getJsonString(jsonObject, "color"));
-		//From value of the End Value property
-		setEndValue(JsonUtils.getJsonString(jsonObject, "endValue"));
+		//From value of the Start Expression property
+		setStartExpression(JsonUtils.getJsonString(jsonObject, "startExpression"));
 
 		
 		// Source Relationships

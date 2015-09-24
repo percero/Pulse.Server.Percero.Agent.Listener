@@ -85,39 +85,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-PendingCoachCoachingSessionCount
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer pendingCoachCoachingSessionCount;
+private String name;
 
-public Integer getPendingCoachCoachingSessionCount() 
+public String getName() 
 {
-	return this.pendingCoachCoachingSessionCount;
+	return this.name;
 }
 
-public void setPendingCoachCoachingSessionCount(Integer pendingCoachCoachingSessionCount)
+public void setName(String name)
 {
-	this.pendingCoachCoachingSessionCount = pendingCoachCoachingSessionCount;
+	this.name = name;
 }/*
-SkippedCoachingSessionCount
+SubmittedCoachingSessionCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer skippedCoachingSessionCount;
+private Integer submittedCoachingSessionCount;
 
-public Integer getSkippedCoachingSessionCount() 
+public Integer getSubmittedCoachingSessionCount() 
 {
-	return this.skippedCoachingSessionCount;
+	return this.submittedCoachingSessionCount;
 }
 
-public void setSkippedCoachingSessionCount(Integer skippedCoachingSessionCount)
+public void setSubmittedCoachingSessionCount(Integer submittedCoachingSessionCount)
 {
-	this.skippedCoachingSessionCount = skippedCoachingSessionCount;
+	this.submittedCoachingSessionCount = submittedCoachingSessionCount;
 }/*
 AcknowledgedCoachingSessionCount
 Notes:
@@ -153,40 +153,6 @@ public void setScorecardName(String scorecardName)
 {
 	this.scorecardName = scorecardName;
 }/*
-SubmittedCoachingSessionCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer submittedCoachingSessionCount;
-
-public Integer getSubmittedCoachingSessionCount() 
-{
-	return this.submittedCoachingSessionCount;
-}
-
-public void setSubmittedCoachingSessionCount(Integer submittedCoachingSessionCount)
-{
-	this.submittedCoachingSessionCount = submittedCoachingSessionCount;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 PendingEmployeeCoachingSessionCount
 Notes:
 */
@@ -204,22 +170,39 @@ public void setPendingEmployeeCoachingSessionCount(Integer pendingEmployeeCoachi
 {
 	this.pendingEmployeeCoachingSessionCount = pendingEmployeeCoachingSessionCount;
 }/*
-ExternalID
+SkippedCoachingSessionCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String externalID;
+private Integer skippedCoachingSessionCount;
 
-public String getExternalID() 
+public Integer getSkippedCoachingSessionCount() 
 {
-	return this.externalID;
+	return this.skippedCoachingSessionCount;
 }
 
-public void setExternalID(String externalID)
+public void setSkippedCoachingSessionCount(Integer skippedCoachingSessionCount)
 {
-	this.externalID = externalID;
+	this.skippedCoachingSessionCount = skippedCoachingSessionCount;
+}/*
+TotalCoachingSessionCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer totalCoachingSessionCount;
+
+public Integer getTotalCoachingSessionCount() 
+{
+	return this.totalCoachingSessionCount;
+}
+
+public void setTotalCoachingSessionCount(Integer totalCoachingSessionCount)
+{
+	this.totalCoachingSessionCount = totalCoachingSessionCount;
 }/*
 PendingCoachingSessionCount
 Notes:
@@ -238,30 +221,47 @@ public void setPendingCoachingSessionCount(Integer pendingCoachingSessionCount)
 {
 	this.pendingCoachingSessionCount = pendingCoachingSessionCount;
 }/*
-TotalCoachingSessionCount
+ExternalID
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer totalCoachingSessionCount;
+private String externalID;
 
-public Integer getTotalCoachingSessionCount() 
+public String getExternalID() 
 {
-	return this.totalCoachingSessionCount;
+	return this.externalID;
 }
 
-public void setTotalCoachingSessionCount(Integer totalCoachingSessionCount)
+public void setExternalID(String externalID)
 {
-	this.totalCoachingSessionCount = totalCoachingSessionCount;
+	this.externalID = externalID;
+}/*
+PendingCoachCoachingSessionCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer pendingCoachCoachingSessionCount;
+
+public Integer getPendingCoachCoachingSessionCount() 
+{
+	return this.pendingCoachCoachingSessionCount;
+}
+
+public void setPendingCoachCoachingSessionCount(Integer pendingCoachCoachingSessionCount)
+{
+	this.pendingCoachCoachingSessionCount = pendingCoachCoachingSessionCount;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Agent.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Agent> agents;
 public List<Agent> getAgents() {
@@ -273,8 +273,8 @@ public void setAgents(List<Agent> value) {
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CoachingSession> coachingSessions;
 public List<CoachingSession> getCoachingSessions() {
@@ -285,8 +285,8 @@ public void setCoachingSessions(List<CoachingSession> value) {
 	this.coachingSessions = value;
 }
 
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @OneToOne(fetch=FetchType.LAZY, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private CoachingNotification coachingNotification;
@@ -305,9 +305,9 @@ public void setCoachingNotification(CoachingNotification value)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ScorecardStateId")
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="scorecardState_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardStateOfScorecard")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardState scorecardState;
@@ -328,16 +328,16 @@ public void setScorecardState(ScorecardState value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Pending Coach Coaching Session Count property
-		objectJson += ",\"pendingCoachCoachingSessionCount\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getPendingCoachCoachingSessionCount() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getPendingCoachCoachingSessionCount());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -349,16 +349,16 @@ public void setScorecardState(ScorecardState value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Skipped Coaching Session Count property
-		objectJson += ",\"skippedCoachingSessionCount\":";
+		//Retrieve value of the Submitted Coaching Session Count property
+		objectJson += ",\"submittedCoachingSessionCount\":";
 		
-		if (getSkippedCoachingSessionCount() == null)
+		if (getSubmittedCoachingSessionCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getSkippedCoachingSessionCount());
+				objectJson += objectMapper.writeValueAsString(getSubmittedCoachingSessionCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -412,48 +412,6 @@ public void setScorecardState(ScorecardState value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Submitted Coaching Session Count property
-		objectJson += ",\"submittedCoachingSessionCount\":";
-		
-		if (getSubmittedCoachingSessionCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSubmittedCoachingSessionCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Pending Employee Coaching Session Count property
 		objectJson += ",\"pendingEmployeeCoachingSessionCount\":";
 		
@@ -475,16 +433,37 @@ public void setScorecardState(ScorecardState value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
+		//Retrieve value of the Skipped Coaching Session Count property
+		objectJson += ",\"skippedCoachingSessionCount\":";
 		
-		if (getExternalID() == null)
+		if (getSkippedCoachingSessionCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
+				objectJson += objectMapper.writeValueAsString(getSkippedCoachingSessionCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Total Coaching Session Count property
+		objectJson += ",\"totalCoachingSessionCount\":";
+		
+		if (getTotalCoachingSessionCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTotalCoachingSessionCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -517,16 +496,37 @@ public void setScorecardState(ScorecardState value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Total Coaching Session Count property
-		objectJson += ",\"totalCoachingSessionCount\":";
+		//Retrieve value of the External ID property
+		objectJson += ",\"externalID\":";
 		
-		if (getTotalCoachingSessionCount() == null)
+		if (getExternalID() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTotalCoachingSessionCount());
+				objectJson += objectMapper.writeValueAsString(getExternalID());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Pending Coach Coaching Session Count property
+		objectJson += ",\"pendingCoachCoachingSessionCount\":";
+		
+		if (getPendingCoachCoachingSessionCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPendingCoachCoachingSessionCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -603,26 +603,26 @@ objectJson += ",\"coachingSessions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Pending Coach Coaching Session Count property
-		setPendingCoachCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachCoachingSessionCount"));
-		//From value of the Skipped Coaching Session Count property
-		setSkippedCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "skippedCoachingSessionCount"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Submitted Coaching Session Count property
+		setSubmittedCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "submittedCoachingSessionCount"));
 		//From value of the Acknowledged Coaching Session Count property
 		setAcknowledgedCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "acknowledgedCoachingSessionCount"));
 		//From value of the Scorecard Name property
 		setScorecardName(JsonUtils.getJsonString(jsonObject, "scorecardName"));
-		//From value of the Submitted Coaching Session Count property
-		setSubmittedCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "submittedCoachingSessionCount"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Pending Employee Coaching Session Count property
 		setPendingEmployeeCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeCoachingSessionCount"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
-		//From value of the Pending Coaching Session Count property
-		setPendingCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachingSessionCount"));
+		//From value of the Skipped Coaching Session Count property
+		setSkippedCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "skippedCoachingSessionCount"));
 		//From value of the Total Coaching Session Count property
 		setTotalCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "totalCoachingSessionCount"));
+		//From value of the Pending Coaching Session Count property
+		setPendingCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachingSessionCount"));
+		//From value of the External ID property
+		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
+		//From value of the Pending Coach Coaching Session Count property
+		setPendingCoachCoachingSessionCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachCoachingSessionCount"));
 
 		
 		// Source Relationships

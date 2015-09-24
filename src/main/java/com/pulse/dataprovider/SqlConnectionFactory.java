@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.percero.agents.sync.services.DAODataProvider;
+import com.percero.agents.sync.services.DataProviderManager;
 
 /**
  * Created by jonnysamps on 9/2/15.
@@ -22,20 +24,34 @@ public class SqlConnectionFactory implements IConnectionFactory {
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
 
     @Autowired
-    @Value("pf{updateTable.driverClassName:com.mysql.jdbc.Driver")
+    @Value("$pf{databaseProject.driverClassName:com.mysql.jdbc.Driver}")
     private String driverClassName;
 
     @Autowired
-    @Value("pf{updateTable.username")
+    @Value("$pf{databaseProject.username}")
     private String username;
 
     @Autowired
-    @Value("pf{updateTable.username")
+    @Value("$pf{databaseProject.password}")
     private String password;
 
     @Autowired
-    @Value("pf{updateTable.jdbcUrl:jdbc:mysql://localhost/db")
-    private String jdbcUrl;
+    @Value("$pf{databaseProject.host:3306}")
+    private String host;
+    
+    @Autowired
+    @Value("$pf{databaseProject.port}")
+    private String port;
+    
+    @Autowired
+    @Value("$pf{databaseProject.dbname}")
+    private String dbname;
+    
+//    @Autowired
+//    @Value("pf{updateTable.jdbcUrl:jdbc:mysql://localhost/db")
+    private String getJdbcUrl() {
+    	return "jdbc:mysql://" + host + ":" + port + "/" + dbname;
+    }
 
     private ComboPooledDataSource cpds;
     @PostConstruct
@@ -43,7 +59,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
         try {
             cpds = new ComboPooledDataSource();
             cpds.setDriverClass(driverClassName); //loads the jdbc driver
-            cpds.setJdbcUrl(jdbcUrl);
+            cpds.setJdbcUrl(getJdbcUrl());
             cpds.setUser(username);
             cpds.setPassword(password);
 
@@ -51,6 +67,10 @@ public class SqlConnectionFactory implements IConnectionFactory {
             cpds.setMinPoolSize(5);
             cpds.setAcquireIncrement(5);
             cpds.setMaxPoolSize(20);
+            
+            PulseDataConnectionRegistry.getInstance().registerConnectionFactory("default", this);
+
+            DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());
 
         }catch(PropertyVetoException pve){
             logger.error(pve.getMessage(), pve);
