@@ -9,7 +9,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.percero.agents.auth.vo.AuthenticationRequest;
 import com.percero.agents.sync.services.SyncAgentService;
 import com.percero.amqp.PerceroAgentListener;
+import com.percero.framework.vo.IPerceroObject;
+import com.percero.framework.vo.PerceroList;
 import com.pulse.auth.service.PulseHttpAuthProvider;
+import com.pulse.mo.PulseUser;
 /**
  * This class supplies the main method that creates the spring context
  * and then all processing is invoked asynchronously by messaging.
@@ -71,6 +74,13 @@ public class Main{
 //		SyncAgentService syncAgentService = context.getBean(SyncAgentService.class);
 		try {
 			System.out.println(syncAgentService.runProcess("SQL_PROC:PULSE.MYTESTPROC", storedProcParams, null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			PerceroList<IPerceroObject> allPulseUsers = syncAgentService.getAllByName(PulseUser.class.getCanonicalName(), true, null);
+			System.out.println(allPulseUsers.getTotalLength());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

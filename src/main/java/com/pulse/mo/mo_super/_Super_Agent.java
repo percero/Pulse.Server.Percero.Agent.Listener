@@ -208,122 +208,6 @@ public void setEmailAddress(String emailAddress)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScheduledTime.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScheduledTime> scheduledTimes;
-public List<ScheduledTime> getScheduledTimes() {
-	return this.scheduledTimes;
-}
-
-public void setScheduledTimes(List<ScheduledTime> value) {
-	this.scheduledTimes = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocTask> adhocTasks;
-public List<AdhocTask> getAdhocTasks() {
-	return this.adhocTasks;
-}
-
-public void setAdhocTasks(List<AdhocTask> value) {
-	this.adhocTasks = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationNotification.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<LOBConfigurationNotification> lOBConfigurationNotifications;
-public List<LOBConfigurationNotification> getLOBConfigurationNotifications() {
-	return this.lOBConfigurationNotifications;
-}
-
-public void setLOBConfigurationNotifications(List<LOBConfigurationNotification> value) {
-	this.lOBConfigurationNotifications = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentTime.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AgentTime> agentTimes;
-public List<AgentTime> getAgentTimes() {
-	return this.agentTimes;
-}
-
-public void setAgentTimes(List<AgentTime> value) {
-	this.agentTimes = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> correctiveActions;
-public List<CorrectiveAction> getCorrectiveActions() {
-	return this.correctiveActions;
-}
-
-public void setCorrectiveActions(List<CorrectiveAction> value) {
-	this.correctiveActions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CoachingSession> coachingSessions;
-public List<CoachingSession> getCoachingSessions() {
-	return this.coachingSessions;
-}
-
-public void setCoachingSessions(List<CoachingSession> value) {
-	this.coachingSessions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=GeneralComment.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<GeneralComment> generalComments;
-public List<GeneralComment> getGeneralComments() {
-	return this.generalComments;
-}
-
-public void setGeneralComments(List<GeneralComment> value) {
-	this.generalComments = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ActualTime.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ActualTime> actualTimes;
-public List<ActualTime> getActualTimes() {
-	return this.actualTimes;
-}
-
-public void setActualTimes(List<ActualTime> value) {
-	this.actualTimes = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocCoachingSession> adhocCoachingSessions;
-public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-	return this.adhocCoachingSessions;
-}
-
-public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-	this.adhocCoachingSessions = value;
-}
 
 
 
@@ -331,45 +215,6 @@ public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="scorecard_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfAgent")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Scorecard scorecard;
-public Scorecard getScorecard() {
-	return this.scorecard;
-}
-
-public void setScorecard(Scorecard value) {
-	this.scorecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="performanceSummary_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_PerformanceSummaryOfAgent")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private PerformanceSummary performanceSummary;
-public PerformanceSummary getPerformanceSummary() {
-	return this.performanceSummary;
-}
-
-public void setPerformanceSummary(PerformanceSummary value) {
-	this.performanceSummary = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="developmentActivity_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_DevelopmentActivityOfAgent")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private DevelopmentActivity developmentActivity;
-public DevelopmentActivity getDevelopmentActivity() {
-	return this.developmentActivity;
-}
-
-public void setDevelopmentActivity(DevelopmentActivity value) {
-	this.developmentActivity = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="teamLeader_ID")
@@ -543,42 +388,6 @@ public void setTeamLeader(TeamLeader value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Scorecard of Agent relationship
-objectJson += ",\"scorecard\":";
-		if (getScorecard() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Performance Summary of Agent relationship
-objectJson += ",\"performanceSummary\":";
-		if (getPerformanceSummary() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPerformanceSummary()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Development Activity of Agent relationship
-objectJson += ",\"developmentActivity\":";
-		if (getDevelopmentActivity() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getDevelopmentActivity()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Team Leader of Agent relationship
 objectJson += ",\"teamLeader\":";
 		if (getTeamLeader() == null)
@@ -594,160 +403,6 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Agent of Scheduled Time relationship
-objectJson += ",\"scheduledTimes\":[";
-		
-		if (getScheduledTimes() != null) {
-			int scheduledTimesCounter = 0;
-			for(ScheduledTime nextScheduledTimes : getScheduledTimes()) {
-				if (scheduledTimesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScheduledTimes).toEmbeddedJson();
-					scheduledTimesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Adhoc Task relationship
-objectJson += ",\"adhocTasks\":[";
-		
-		if (getAdhocTasks() != null) {
-			int adhocTasksCounter = 0;
-			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
-				if (adhocTasksCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
-					adhocTasksCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of LOB Configuration Notification relationship
-objectJson += ",\"lOBConfigurationNotifications\":[";
-		
-		if (getLOBConfigurationNotifications() != null) {
-			int lOBConfigurationNotificationsCounter = 0;
-			for(LOBConfigurationNotification nextLOBConfigurationNotifications : getLOBConfigurationNotifications()) {
-				if (lOBConfigurationNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextLOBConfigurationNotifications).toEmbeddedJson();
-					lOBConfigurationNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Agent Time relationship
-objectJson += ",\"agentTimes\":[";
-		
-		if (getAgentTimes() != null) {
-			int agentTimesCounter = 0;
-			for(AgentTime nextAgentTimes : getAgentTimes()) {
-				if (agentTimesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAgentTimes).toEmbeddedJson();
-					agentTimesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Corrective Action relationship
-objectJson += ",\"correctiveActions\":[";
-		
-		if (getCorrectiveActions() != null) {
-			int correctiveActionsCounter = 0;
-			for(CorrectiveAction nextCorrectiveActions : getCorrectiveActions()) {
-				if (correctiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCorrectiveActions).toEmbeddedJson();
-					correctiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Coaching Session relationship
-objectJson += ",\"coachingSessions\":[";
-		
-		if (getCoachingSessions() != null) {
-			int coachingSessionsCounter = 0;
-			for(CoachingSession nextCoachingSessions : getCoachingSessions()) {
-				if (coachingSessionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCoachingSessions).toEmbeddedJson();
-					coachingSessionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of General Comment relationship
-objectJson += ",\"generalComments\":[";
-		
-		if (getGeneralComments() != null) {
-			int generalCommentsCounter = 0;
-			for(GeneralComment nextGeneralComments : getGeneralComments()) {
-				if (generalCommentsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextGeneralComments).toEmbeddedJson();
-					generalCommentsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Actual Time relationship
-objectJson += ",\"actualTimes\":[";
-		
-		if (getActualTimes() != null) {
-			int actualTimesCounter = 0;
-			for(ActualTime nextActualTimes : getActualTimes()) {
-				if (actualTimesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextActualTimes).toEmbeddedJson();
-					actualTimesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Adhoc Coaching Session relationship
-objectJson += ",\"adhocCoachingSessions\":[";
-		
-		if (getAdhocCoachingSessions() != null) {
-			int adhocCoachingSessionsCounter = 0;
-			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-				if (adhocCoachingSessionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-					adhocCoachingSessionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-
 		
 		return objectJson;
 	}
@@ -775,24 +430,10 @@ objectJson += ",\"adhocCoachingSessions\":[";
 
 		
 		// Source Relationships
-		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
-		this.performanceSummary = (PerformanceSummary) JsonUtils.getJsonPerceroObject(jsonObject, "performanceSummary");
-		this.developmentActivity = (DevelopmentActivity) JsonUtils.getJsonPerceroObject(jsonObject, "developmentActivity");
 		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 
 		// Target Relationships
-		this.scheduledTimes = (List<ScheduledTime>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduledTimes");
-		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
-
-		this.lOBConfigurationNotifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationNotifications");
-		this.agentTimes = (List<AgentTime>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentTimes");
-		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
-		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
-		this.generalComments = (List<GeneralComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "generalComments");
-		this.actualTimes = (List<ActualTime>) JsonUtils.getJsonListPerceroObject(jsonObject, "actualTimes");
-		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
-
 
 	}
 	
@@ -801,15 +442,6 @@ objectJson += ",\"adhocCoachingSessions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScheduledTime.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(AgentTime.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(GeneralComment.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(ActualTime.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agent"));
 
 		
 		return listSetters;

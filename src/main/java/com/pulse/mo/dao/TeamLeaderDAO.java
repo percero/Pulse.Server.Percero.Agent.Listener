@@ -64,7 +64,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader WHERE teamleader.ID=?";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader WHERE teamleader.ID=?";
 	}
 	
 	@Override
@@ -79,12 +79,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader ORDER BY teamleader.ID";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader ORDER BY teamleader.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader ORDER BY teamleader.ID LIMIT ? OFFSET ?";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader ORDER BY teamleader.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader WHERE teamleader.ID IN (?)";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader WHERE teamleader.ID IN (?)";
 	}
 	
 	@Override
@@ -104,7 +104,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader WHERE teamleader." + joinColumnName + "=?";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader WHERE teamleader." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -119,17 +119,17 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri,teamleader.supervisor_ID FROM TeamLeader teamleader ";
+		return "SELECT teamleader.ID,teamleader.lastName,teamleader.emailAddress,teamleader.externalID,teamleader.firstName,teamleader.employeeId,teamleader.notificationCount,teamleader.photoUri FROM TeamLeader teamleader ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TeamLeader (ID,lastName,emailAddress,externalID,firstName,employeeId,notificationCount,photoUri,supervisor_ID) VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TeamLeader (ID,lastName,emailAddress,externalID,firstName,employeeId,notificationCount,photoUri) VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TeamLeader SET lastName=?,emailAddress=?,externalID=?,firstName=?,employeeId=?,notificationCount=?,photoUri=?,supervisor_ID=? WHERE ID=?";
+		return "UPDATE TeamLeader SET lastName=?,emailAddress=?,externalID=?,firstName=?,employeeId=?,notificationCount=?,photoUri=? WHERE ID=?";
 	}
 	
 	@Override
@@ -160,10 +160,6 @@ nextResult.setNotificationCount(rs.getInt("notificationCount"));
 
 nextResult.setPhotoUri(rs.getString("photoUri"));
 
-Supervisor supervisor = new Supervisor();
-supervisor.setID(rs.getString("supervisor_ID"));
-nextResult.setSupervisor(supervisor);
-
 
 			
     	}
@@ -183,16 +179,6 @@ pstmt.setString(6, perceroObject.getEmployeeId());
 pstmt.setInt(7, perceroObject.getNotificationCount());
 pstmt.setString(8, perceroObject.getPhotoUri());
 
-if (perceroObject.getSupervisor() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getSupervisor().getID());
-}
-
-
 		
 	}
 	
@@ -206,15 +192,6 @@ pstmt.setString(4, perceroObject.getFirstName());
 pstmt.setString(5, perceroObject.getEmployeeId());
 pstmt.setInt(6, perceroObject.getNotificationCount());
 pstmt.setString(7, perceroObject.getPhotoUri());
-
-if (perceroObject.getSupervisor() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getSupervisor().getID());
-}
 
 pstmt.setString(9, perceroObject.getID());
 
@@ -341,23 +318,6 @@ sql += " WHERE ";
 }
 sql += " photoUri=? ";
 paramValues.add(theQueryObject.getPhotoUri());
-propertyCounter++;
-}
-
-boolean useSupervisorID = theQueryObject.getSupervisor() != null && (excludeProperties == null || !excludeProperties.contains("supervisor"));
-
-if (useSupervisorID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " supervisorID=? ";
-paramValues.add(theQueryObject.getSupervisor().getID());
 propertyCounter++;
 }
 

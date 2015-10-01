@@ -65,7 +65,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID=?";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID=?";
 	}
 	
 	@Override
@@ -80,12 +80,12 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID LIMIT ? OFFSET ?";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID IN (?)";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID IN (?)";
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent." + joinColumnName + "=?";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -120,7 +120,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ";
+		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ";
 	}
 	
 	@Override
@@ -161,21 +161,9 @@ nextResult.setEmployeeId(rs.getString("employeeId"));
 
 nextResult.setPhotoUri(rs.getString("photoUri"));
 
-Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("scorecard_ID"));
-nextResult.setScorecard(scorecard);
-
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("teamleader_ID"));
 nextResult.setTeamLeader(teamleader);
-
-PerformanceSummary performancesummary = new PerformanceSummary();
-performancesummary.setID(rs.getString("performancesummary_ID"));
-nextResult.setPerformanceSummary(performancesummary);
-
-DevelopmentActivity developmentactivity = new DevelopmentActivity();
-developmentactivity.setID(rs.getString("developmentactivity_ID"));
-nextResult.setDevelopmentActivity(developmentactivity);
 
 
 			
@@ -196,16 +184,6 @@ pstmt.setString(6, perceroObject.getFullName());
 pstmt.setString(7, perceroObject.getEmployeeId());
 pstmt.setString(8, perceroObject.getPhotoUri());
 
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getScorecard().getID());
-}
-
-
 if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(10, null);
@@ -216,27 +194,6 @@ else
 }
 
 
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getPerformanceSummary().getID());
-}
-
-
-if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getDevelopmentActivity().getID());
-}
-
-
-		
 	}
 	
 	@Override
@@ -250,16 +207,6 @@ pstmt.setString(5, perceroObject.getFullName());
 pstmt.setString(6, perceroObject.getEmployeeId());
 pstmt.setString(7, perceroObject.getPhotoUri());
 
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getScorecard().getID());
-}
-
-
 if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(9, null);
@@ -269,25 +216,6 @@ else
 		pstmt.setString(9, perceroObject.getTeamLeader().getID());
 }
 
-
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getPerformanceSummary().getID());
-}
-
-
-if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getDevelopmentActivity().getID());
-}
 
 pstmt.setString(12, perceroObject.getID());
 
@@ -417,23 +345,6 @@ paramValues.add(theQueryObject.getPhotoUri());
 propertyCounter++;
 }
 
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
-
-if (useScorecardID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " scorecardID=? ";
-paramValues.add(theQueryObject.getScorecard().getID());
-propertyCounter++;
-}
-
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
 if (useTeamLeaderID)
@@ -450,41 +361,6 @@ sql += " teamLeaderID=? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
-
-boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
-
-if (usePerformanceSummaryID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " performanceSummaryID=? ";
-paramValues.add(theQueryObject.getPerformanceSummary().getID());
-propertyCounter++;
-}
-
-boolean useDevelopmentActivityID = theQueryObject.getDevelopmentActivity() != null && (excludeProperties == null || !excludeProperties.contains("developmentActivity"));
-
-if (useDevelopmentActivityID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " developmentActivityID=? ";
-paramValues.add(theQueryObject.getDevelopmentActivity().getID());
-propertyCounter++;
-}
-
 
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
