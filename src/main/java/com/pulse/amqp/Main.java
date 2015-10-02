@@ -12,6 +12,7 @@ import com.percero.amqp.PerceroAgentListener;
 import com.percero.framework.vo.IPerceroObject;
 import com.percero.framework.vo.PerceroList;
 import com.pulse.auth.service.PulseHttpAuthProvider;
+import com.pulse.dataprovider.PulseDataConnectionRegistry;
 import com.pulse.mo.PulseUser;
 /**
  * This class supplies the main method that creates the spring context
@@ -54,35 +55,38 @@ public class Main{
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-
-		// Test HTTP Connectors
-		Map<String, Object> root = new HashMap<String, Object>();
-		root.put("query", "hello siri");
-
-		SyncAgentService syncAgentService = context.getBean(SyncAgentService.class);
-		try {
-			System.out.println(syncAgentService.runProcess("HTTP:AskGoogle", root, null));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
-		// Test StoredProc's Connectors
-		Map<String, Object> storedProcParams = new HashMap<String, Object>();
-		storedProcParams.put("lock_id", 12345);
-		storedProcParams.put("lock_date", "2015-09-23 23:12:01");
+		PulseDataConnectionRegistry.getInstance();
 
+//		// Test HTTP Connectors
+//		Map<String, Object> root = new HashMap<String, Object>();
+//		root.put("query", "hello siri");
+//
 //		SyncAgentService syncAgentService = context.getBean(SyncAgentService.class);
-		try {
-			System.out.println(syncAgentService.runProcess("SQL_PROC:PULSE.MYTESTPROC", storedProcParams, null));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			PerceroList<IPerceroObject> allPulseUsers = syncAgentService.getAllByName(PulseUser.class.getCanonicalName(), true, null);
-			System.out.println(allPulseUsers.getTotalLength());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println(syncAgentService.runProcess("HTTP:AskGoogle", root, null));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		// Test StoredProc's Connectors
+//		Map<String, Object> storedProcParams = new HashMap<String, Object>();
+//		storedProcParams.put("lock_id", 12345);
+//		storedProcParams.put("lock_date", "2015-09-23 23:12:01");
+//
+////		SyncAgentService syncAgentService = context.getBean(SyncAgentService.class);
+//		try {
+//			System.out.println(syncAgentService.runProcess("SQL_PROC:PULSE.MYTESTPROC", storedProcParams, null));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			PerceroList<IPerceroObject> allPulseUsers = syncAgentService.getAllByName(PulseUser.class.getCanonicalName(), true, null);
+//			System.out.println(allPulseUsers.getTotalLength());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 }
