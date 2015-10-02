@@ -1,19 +1,17 @@
 package com.pulse.dataprovider;
 
-import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.annotation.PostConstruct;
-
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.percero.agents.sync.services.DAODataProvider;
+import com.percero.agents.sync.services.DataProviderManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.percero.agents.sync.services.DAODataProvider;
-import com.percero.agents.sync.services.DataProviderManager;
+import javax.annotation.PostConstruct;
+import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Created by jonnysamps on 9/2/15.
@@ -46,11 +44,18 @@ public class SqlConnectionFactory implements IConnectionFactory {
     @Autowired
     @Value("$pf{databaseProject.dbname}")
     private String dbname;
+
+    @Autowired
+    @Value("$pf{databaseProject.jdbcUrl}")
+    private String jdbcUrl;
     
 //    @Autowired
 //    @Value("pf{updateTable.jdbcUrl:jdbc:mysql://localhost/db")
     private String getJdbcUrl() {
-    	return "jdbc:mysql://" + host + ":" + port + "/" + dbname;
+        if(jdbcUrl == null)
+            return "jdbc:mysql://" + host + ":" + port + "/" + dbname;
+
+        return jdbcUrl;
     }
 
     private ComboPooledDataSource cpds;

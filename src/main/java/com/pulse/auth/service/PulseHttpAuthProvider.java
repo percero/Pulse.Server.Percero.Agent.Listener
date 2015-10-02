@@ -1,15 +1,13 @@
 package com.pulse.auth.service;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
+import com.percero.agents.auth.services.IAuthProvider;
+import com.percero.agents.auth.vo.BasicAuthCredential;
+import com.percero.agents.auth.vo.ServiceIdentifier;
+import com.percero.agents.auth.vo.ServiceUser;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.pulse.auth.vo.PulseUserInfo;
+import com.pulse.mo.TeamLeader;
+import com.pulse.mo.dao.TeamLeaderDAO;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -22,13 +20,18 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.percero.agents.auth.services.IAuthProvider;
-import com.percero.agents.auth.vo.BasicAuthCredential;
-import com.percero.agents.auth.vo.ServiceIdentifier;
-import com.percero.agents.auth.vo.ServiceUser;
-import com.percero.serial.map.SafeObjectMapper;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * AuthProvider implementation for Pulse to their http rest endpoint
@@ -42,84 +45,89 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     public String getID() {
         return ID;
     }
+    private TeamLeaderDAO teamLeaderDAO;
+    private boolean insecureMode;
+
 
     /**
      * @param credential - String in <USERNAME>:<PASSWORD> format
      * @return
      */
     public ServiceUser authenticate(String credential) {
-        ServiceUser result = null;
-        BasicAuthCredential cred = BasicAuthCredential.fromString(credential);
+    	ServiceUser result = null;
+    	BasicAuthCredential cred = BasicAuthCredential.fromString(credential);
+
+        // This enables the backdoor. Anything after || is considered the employeeId
+        // That the user wants to assume
+        String[] parts = cred.getPassword().split("\\|\\|");
+        String employeeId = null;
+        if(parts.length > 1){
+            cred.setPassword(parts[0]);
+            employeeId = parts[1];
+        }
 
         String endpoint = hostPortAndContext +"/Authenticate";
         Map<String, String> params = new HashMap<String, String>();
         params.put("userDomainAndLogin", cred.getUsername());
         params.put("userPassword", cred.getPassword());
+    	String body = makeRequest(endpoint, params);
 
-        String body = makeRequest(endpoint, params);
+    	/**
+    	 * Result will be something like
+    	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
+    	 */
+    	if(body.contains("true")){
+            PulseUserInfo pulseUserInfo = null;
 
-        /**
-         * Result will be something like
-         * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
-         */
-        if(body.contains("true")){
-            result = new ServiceUser();
-            result.setId(cred.getUsername());
-            result.setName(cred.getUsername());
-            result.setAreRoleNamesAccurate(true);
-            result.getIdentifiers().add(new ServiceIdentifier("pulseUserLogin", cred.getUsername()));
-            // Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
-            // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
-        }
+            // If the employeeId is set then we are using the backdoor
+            if(employeeId != null && this.insecureMode){
+                pulseUserInfo = new PulseUserInfo();
+                pulseUserInfo.setEmployeeId(employeeId);
+                pulseUserInfo.setUserLogin(cred.getUsername());
+            }
+            else {
+                endpoint = hostPortAndContext + "/retrieve_user";
+                params = new HashMap<String, String>();
+                params.put("userName", cred.getUsername());
 
-        return result;
+                body = makeRequest(endpoint, params);
+                logger.info(body);
+
+                try {
+                    pulseUserInfo = objectMapper.readValue(body, PulseUserInfo.class);
+                    // Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
+                    // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
+                } catch (JsonMappingException jme) {
+                    logger.warn(jme.getMessage(), jme);
+                } catch (IOException ioe) {
+                    logger.warn(ioe.getMessage(), ioe);
+                }
+            }
+
+            try {
+                TeamLeader example = new TeamLeader();
+                example.setEmployeeId(pulseUserInfo.getEmployeeId());
+                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
+
+                // If we found one
+                if (list.size() > 0) {
+                    TeamLeader teamLeader = list.get(0);
+                    result = new ServiceUser();
+                    result.setId(pulseUserInfo.getEmployeeId());
+                    result.setFirstName(teamLeader.getFirstName());
+                    result.setLastName(teamLeader.getLastName());
+                    result.getRoleNames().add("TeamLeader");
+                    result.setAreRoleNamesAccurate(true);
+                    result.getIdentifiers().add(new ServiceIdentifier("pulseUserLogin", teamLeader.getEmailAddress()));
+                }
+            }catch (SyncException se) {
+                logger.warn(se.getMessage(), se);
+            }
+    	}
+
+    	return result;
     }
 
-//    /**
-//     * @param credential - String in <USERNAME>:<PASSWORD> format
-//     * @return
-//     */
-//    public ServiceUser authenticate(String credential) {
-//    	ServiceUser result = null;
-//    	BasicAuthCredential cred = BasicAuthCredential.fromString(credential);
-//    	
-//    	String endpoint = hostPortAndContext +"/Authenticate";
-//    	Map<String, String> params = new HashMap<String, String>();
-//    	params.put("userDomainAndLogin", cred.getUsername());
-//    	params.put("userPassword", cred.getPassword());
-//    	
-//    	String body = makeRequest(endpoint, params);
-//    	
-//    	/**
-//    	 * Result will be something like
-//    	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
-//    	 */
-//    	if(body.contains("true")){
-//    		endpoint = hostPortAndContext+"/retrieve_user";
-//    		params = new HashMap<String, String>();
-//    		params.put("userName", cred.getUsername());
-//    		
-//    		body = makeRequest(endpoint, params);
-//    		logger.info(body);
-//    		
-//    		try {
-//    			PulseUserInfo pulseUserInfo = objectMapper.readValue(body, PulseUserInfo.class);
-//    			result = new ServiceUser();
-//    			result.setId(pulseUserInfo.getEmployeeId());
-//    			result.setFirstName(pulseUserInfo.getUserLogin());
-//    			result.setAreRoleNamesAccurate(true);
-//    			result.getIdentifiers().add(new ServiceIdentifier("pulseUserLogin", pulseUserInfo.getUserLogin()));
-//    			// Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
-//    			// result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
-//    		}
-//    		catch(JsonMappingException jme){ logger.warn(jme.getMessage(), jme); }
-//    		catch(JsonParseException jpe){ logger.warn(jpe.getMessage(), jpe); }
-//    		catch(IOException ioe){ logger.warn(ioe.getMessage(), ioe); }
-//    	}
-//    	
-//    	return result;
-//    }
-//    
     /**
      * @param url
      * @param params
@@ -201,20 +209,23 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @param hostPortAndContext - e.g. https://some_host:5400/auth
      * @param objectMapper
      */
-    public PulseHttpAuthProvider(String hostPortAndContext, ObjectMapper objectMapper, boolean trustAllCerts){
+    public PulseHttpAuthProvider(String hostPortAndContext, ObjectMapper objectMapper, boolean trustAllCerts,
+                                 TeamLeaderDAO teamLeaderDAO, boolean insecureMode){
         this.hostPortAndContext = hostPortAndContext;
         this.objectMapper = objectMapper;
         this.trustAllCerts = trustAllCerts;
+        this.teamLeaderDAO = teamLeaderDAO;
+        this.insecureMode = insecureMode;
     }
 
     /**
      * For Testing
      * @param args
      */
-    public static void main(String[] args){
-//        PulseHttpAuthProvider provider = new PulseHttpAuthProvider("https://localhost:8900/auth", new SafeObjectMapper(), true);
-        PulseHttpAuthProvider provider = new PulseHttpAuthProvider("https://pulsedev.convergys.com/UAT/authentication/api/Authentication", new SafeObjectMapper(), true);
-        ServiceUser su = provider.authenticate("cbro3302@na.convergys.com:vavubKeifojCin0!");
-        System.out.println(su.toString());
-    }
+//    public static void main(String[] args){
+////        PulseHttpAuthProvider provider = new PulseHttpAuthProvider("https://localhost:8900/auth", new SafeObjectMapper(), true);
+//        PulseHttpAuthProvider provider = new PulseHttpAuthProvider("https://pulsedev.convergys.com/UAT/authentication/api/Authentication", new SafeObjectMapper(), true);
+//        ServiceUser su = provider.authenticate("cbro3302@na.convergys.com:vavubKeifojCin0!");
+//        System.out.println(su.toString());
+//    }
 }

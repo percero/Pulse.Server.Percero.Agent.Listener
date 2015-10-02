@@ -1,6 +1,7 @@
 package com.pulse.auth.service;
 
 import com.percero.agents.auth.services.AuthProviderRegistry;
+import com.pulse.mo.dao.TeamLeaderDAO;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,24 @@ public class PulseHttpAuthProviderFactory {
     @Autowired @Value("$pf{pulseHttpAuth.trustAllCerts:false}")
     Boolean trustAllCerts = false;
 
+    @Autowired @Value("$pf{pulseHttpAuth.insecureMode:true}")
+    Boolean insecureMode = false;
+
     @Autowired
     AuthProviderRegistry authProviderRegistry;
 
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    TeamLeaderDAO teamLeaderDAO;
+
     @PostConstruct
     public void init(){
         if(hostPortAndContext != null){
             logger.info("Using PulseHttpAuthProvider with endpoint: "+hostPortAndContext);
-            PulseHttpAuthProvider provider = new PulseHttpAuthProvider(hostPortAndContext, objectMapper, trustAllCerts);
+            PulseHttpAuthProvider provider = new PulseHttpAuthProvider(hostPortAndContext, objectMapper,
+                    trustAllCerts, teamLeaderDAO, insecureMode);
             authProviderRegistry.addProvider(provider);
         }
     }

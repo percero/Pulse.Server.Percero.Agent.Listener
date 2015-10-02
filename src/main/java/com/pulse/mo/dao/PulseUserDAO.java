@@ -1,21 +1,21 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.pulse.mo.PulseUser;
+import com.pulse.mo.TeamLeader;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-
-import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.PulseUser;
@@ -59,7 +59,8 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT pulseuser.ID,pulseuser.externalID,pulseuser.userId,pulseuser.employeeId,pulseuser.firstName,pulseuser.fullName,pulseuser.lastName,pulseuser.photoUri,pulseuser.teamLeader_ID FROM PulseUser pulseuser WHERE pulseuser.ID=?";
+//		return "SELECT pulseuser.ID,pulseuser.externalID,pulseuser.userId,pulseuser.employeeId,pulseuser.firstName,pulseuser.fullName,pulseuser.lastName,pulseuser.photoUri,pulseuser.teamLeader_ID FROM PulseUser pulseuser WHERE pulseuser.ID=?";
+		return "SELECT pulseuser.ID,pulseuser.employeeId,pulseuser.\"TeamLeader_ID\" FROM \"PulseUser\" pulseuser WHERE pulseuser.ID=?";
 	}
 	
 	@Override
@@ -386,4 +387,4 @@ propertyCounter++;
 	}
 	
 }
-
+
