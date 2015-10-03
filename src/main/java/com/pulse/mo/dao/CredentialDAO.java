@@ -1,21 +1,21 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.pulse.mo.Credential;
+import com.pulse.mo.PulseUser;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-
-import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Credential;
@@ -47,82 +47,82 @@ public class CredentialDAO extends SqlDataAccessObject<Credential> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT credential.ID FROM Credential credential WHERE credential.ID=?";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential WHERE credential.\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential WHERE credential.ID=?";
+		return "SELECT credential.\"ID\",credential.external\"ID\",credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential WHERE credential.\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT credential.ID FROM Credential credential ORDER BY ID";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT credential.ID FROM Credential credential ORDER BY credential.ID LIMIT ? OFFSET ?";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential ORDER BY credential.\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential ORDER BY credential.ID";
+		return "SELECT credential.\"ID\",credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential ORDER BY credential.\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential ORDER BY credential.ID LIMIT ? OFFSET ?";
+		return "SELECT credential.\"ID\",credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential ORDER BY credential.\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM Credential credential";
+		return "SELECT COUNT(\"ID\") FROM \"Credential\" credential";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential WHERE credential.ID IN (?)";
+		return "SELECT credential.\"ID\",credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential WHERE credential.\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT credential.ID FROM Credential credential WHERE credential.ID IN (?)";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential WHERE credential.\"ID\" IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential WHERE credential." + joinColumnName + "=?";
+		return "SELECT credential.\"ID\",credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential WHERE credential." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT credential.ID FROM Credential credential WHERE credential." + joinColumnName + "=?";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential WHERE credential." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT credential.ID FROM Credential credential ";
+		return "SELECT credential.\"ID\" FROM \"Credential\" credential ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT credential.ID,credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM Credential credential ";
+		return "SELECT credential.\"ID\",credential.externalID,credential.username,credential.password,credential.pulseUser_ID FROM \"Credential\" credential ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO Credential (ID,externalID,username,password,pulseUser_ID) VALUES (?,?,?,?,?)";
+		return "INSERT INTO \"Credential\" (\"ID\",externalID,username,password,pulseUser_ID) VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE Credential SET externalID=?,username=?,password=?,pulseUser_ID=? WHERE ID=?";
+		return "UPDATE \"Credential\" SET externalID=?,username=?,password=?,pulseUser_ID=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM Credential WHERE ID=?";
+		return "DELETE FROM \"Credential\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -295,4 +295,4 @@ propertyCounter++;
 	}
 	
 }
-
+

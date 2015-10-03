@@ -1,22 +1,21 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncDataException;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.pulse.mo.*;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.agents.sync.exceptions.SyncException;
-
-import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Agent;
@@ -39,451 +38,292 @@ import com.pulse.mo.TeamLeader;
 @Component
 public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessObject<Agent> {
 
-	static final Logger log = Logger.getLogger(AgentDAO.class);
+    static final Logger log = Logger.getLogger(AgentDAO.class);
 
-	
-	public AgentDAO() {
-		super();
-		
-		DAORegistry.getInstance().registerDataAccessObject(Agent.class.getCanonicalName(), this);
-	}
 
-	
-	// This is the name of the Data Source that is registered to handle this class type.
-	// For example, this might be "ECoaching" or "Default".
+    public AgentDAO() {
+        super();
+
+        DAORegistry.getInstance().registerDataAccessObject(Agent.class.getCanonicalName(), this);
+    }
+
+
+    // This is the name of the Data Source that is registered to handle this class type.
+    // For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "default";
-	@Override
-	protected String getConnectionFactoryName() {
-		return AgentDAO.CONNECTION_FACTORY_NAME;
-	}
+    public static final String CONNECTION_FACTORY_NAME = "default";
+    @Override
+    protected String getConnectionFactoryName() {
+        return AgentDAO.CONNECTION_FACTORY_NAME;
+    }
 
-	@Override
-	protected String getSelectShellOnlySQL() {
-		return "SELECT agent.ID FROM Agent agent WHERE agent.ID=?";
-	}
-	
-	@Override
-	protected String getSelectStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID=?";
-	}
-	
-	@Override
-	protected String getSelectAllShellOnlySQL() {
-		return "SELECT agent.ID FROM Agent agent ORDER BY ID";
-	}
-	
-	@Override
-	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT agent.ID FROM Agent agent ORDER BY agent.ID LIMIT ? OFFSET ?";
-	}
-	
-	@Override
-	protected String getSelectAllStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID";
-	}
-	
-	@Override
-	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ORDER BY agent.ID LIMIT ? OFFSET ?";
-	}
-	
-	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM Agent agent";
-	}
-	
-	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent.ID IN (?)";
-	}
-	
-	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT agent.ID FROM Agent agent WHERE agent.ID IN (?)";
-	}
+    @Override
+    protected String getSelectShellOnlySQL() {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent.\"ID\"=?";
+    }
 
-	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent WHERE agent." + joinColumnName + "=?";
-	}
-	
-	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT agent.ID FROM Agent agent WHERE agent." + joinColumnName + "=?";
-	}
+    @Override
+    protected String getSelectStarSQL() {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent.\"ID\"=?";
+    }
 
-	@Override
-	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT agent.ID FROM Agent agent ";
-	}
+    @Override
+    protected String getSelectAllShellOnlySQL() {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent ORDER BY ID";
+    }
 
-	@Override
-	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT agent.ID,agent.lastName,agent.emailAddress,agent.externalID,agent.firstName,agent.fullName,agent.employeeId,agent.photoUri,agent.scorecard_ID,agent.teamLeader_ID,agent.performanceSummary_ID,agent.developmentActivity_ID FROM Agent agent ";
-	}
-	
-	@Override
-	protected String getInsertIntoSQL() throws SyncDataException {
-		throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
-	}
-	
-	@Override
-	protected String getUpdateSet() throws SyncDataException {
-		throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
-	}
-	
-	@Override
-	protected String getDeleteFromSQL() throws SyncDataException {
-		throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
-	}
-	
-	@Override
-	protected Agent extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Agent nextResult = new Agent();
-    	
-    	// ID
-    	nextResult.setID(rs.getString("ID"));
-    	
-    	if (!shellOnly) 
-		{
-			nextResult.setLastName(rs.getString("lastName"));
+    @Override
+    protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent ORDER BY agent.\"ID\" LIMIT ? OFFSET ?";
+    }
 
-nextResult.setEmailAddress(rs.getString("emailAddress"));
+    @Override
+    protected String getSelectAllStarSQL() {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ORDER BY agent.\"ID\"";
+    }
 
-nextResult.setExternalID(rs.getString("externalID"));
+    @Override
+    protected String getSelectAllStarWithLimitAndOffsetSQL() {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ORDER BY agent.\"ID\" LIMIT ? OFFSET ?";
+    }
 
-nextResult.setFirstName(rs.getString("firstName"));
+    @Override
+    protected String getCountAllSQL() {
+        return "SELECT COUNT(ID) FROM \"Agent\" agent";
+    }
 
-nextResult.setFullName(rs.getString("fullName"));
+    @Override
+    protected String getSelectInStarSQL() {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent.\"ID\" IN (?)";
+    }
 
-nextResult.setEmployeeId(rs.getString("employeeId"));
+    @Override
+    protected String getSelectInShellOnlySQL() {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent.\"ID\" IN (?)";
+    }
 
-nextResult.setPhotoUri(rs.getString("photoUri"));
+    @Override
+    protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent." + joinColumnName + "=?";
+    }
 
-Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("scorecard_ID"));
-nextResult.setScorecard(scorecard);
+    @Override
+    protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent." + joinColumnName + "=?";
+    }
 
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("teamleader_ID"));
-nextResult.setTeamLeader(teamleader);
+    @Override
+    protected String getFindByExampleSelectShellOnlySQL() {
+        return "SELECT agent.\"ID\" FROM \"Agent\" agent ";
+    }
 
-PerformanceSummary performancesummary = new PerformanceSummary();
-performancesummary.setID(rs.getString("performancesummary_ID"));
-nextResult.setPerformanceSummary(performancesummary);
+    @Override
+    protected String getFindByExampleSelectAllStarSQL() {
+        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ";
+    }
 
-DevelopmentActivity developmentactivity = new DevelopmentActivity();
-developmentactivity.setID(rs.getString("developmentactivity_ID"));
-nextResult.setDevelopmentActivity(developmentactivity);
+    @Override
+    protected String getInsertIntoSQL() throws SyncDataException {
+        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    }
+
+    @Override
+    protected String getUpdateSet() throws SyncDataException {
+        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    }
+
+    @Override
+    protected String getDeleteFromSQL() throws SyncDataException {
+        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    }
+
+    @Override
+    protected Agent extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
+        Agent nextResult = new Agent();
+
+        // ID
+        nextResult.setID(rs.getString("ID"));
+
+        if (!shellOnly)
+        {
+            nextResult.setLastName(rs.getString("LastName"));
+
+            nextResult.setEmailAddress(rs.getString("EmailAddress"));
+
+            nextResult.setFirstName(rs.getString("FirstName"));
+
+            nextResult.setFullName(rs.getString("FullName"));
+
+            nextResult.setEmployeeId(rs.getString("EmployeeId"));
 
 
-			
-    	}
-    	
-    	return nextResult;
-	}
-	
-	@Override
-	protected void setPreparedStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getLastName());
-pstmt.setString(3, perceroObject.getEmailAddress());
-pstmt.setString(4, perceroObject.getExternalID());
-pstmt.setString(5, perceroObject.getFirstName());
-pstmt.setString(6, perceroObject.getFullName());
-pstmt.setString(7, perceroObject.getEmployeeId());
-pstmt.setString(8, perceroObject.getPhotoUri());
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getScorecard().getID());
-}
+            TeamLeader teamleader = new TeamLeader();
+            teamleader.setID(rs.getString("TeamLeaderId"));
+            nextResult.setTeamLeader(teamleader);
 
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getTeamLeader().getID());
-}
+
+        }
+
+        return nextResult;
+    }
+
+    @Override
+    protected void setPreparedStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
+
+        pstmt.setString(1, perceroObject.getID());
+        pstmt.setString(2, perceroObject.getLastName());
+        pstmt.setString(3, perceroObject.getEmailAddress());
+        pstmt.setString(4, perceroObject.getFirstName());
+        pstmt.setString(5, perceroObject.getFullName());
+        pstmt.setString(6, perceroObject.getEmployeeId());
 
 
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getPerformanceSummary().getID());
-}
+        if (perceroObject.getTeamLeader() == null)
+        {
+            pstmt.setString(7, null);
+        }
+        else
+        {
+            pstmt.setString(7, perceroObject.getTeamLeader().getID());
+        }
 
 
-if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getDevelopmentActivity().getID());
-}
+
+    }
+
+    @Override
+    protected void setPreparedStatmentUpdateParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
+
+        pstmt.setString(1, perceroObject.getLastName());
+        pstmt.setString(2, perceroObject.getEmailAddress());
+        pstmt.setString(3, perceroObject.getFirstName());
+        pstmt.setString(4, perceroObject.getFullName());
+        pstmt.setString(5, perceroObject.getEmployeeId());
+        pstmt.setString(6, perceroObject.getPhotoUri());
+
+        if (perceroObject.getTeamLeader() == null)
+        {
+            pstmt.setString(7, null);
+        }
+        else
+        {
+            pstmt.setString(7, perceroObject.getTeamLeader().getID());
+        }
+
+        pstmt.setString(8, perceroObject.getID());
 
 
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getLastName());
-pstmt.setString(2, perceroObject.getEmailAddress());
-pstmt.setString(3, perceroObject.getExternalID());
-pstmt.setString(4, perceroObject.getFirstName());
-pstmt.setString(5, perceroObject.getFullName());
-pstmt.setString(6, perceroObject.getEmployeeId());
-pstmt.setString(7, perceroObject.getPhotoUri());
+    }
 
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getScorecard().getID());
-}
+    @Override
+    public List<Agent> findByExample(Agent theQueryObject,
+                                     List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
+    {
 
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getTeamLeader().getID());
-}
+
+        String sql = getFindByExampleSelectSql(shellOnly);
+
+        int propertyCounter = 0;
+        List<Object> paramValues = new ArrayList<Object>();
+
+        boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+
+        if (useLastName)
+        {
+            sql += " WHERE ";
+            sql += " \"LastName\"=? ";
+            paramValues.add(theQueryObject.getLastName());
+            propertyCounter++;
+        }
+
+        boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
+
+        if (useEmailAddress)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " \"EmailAddress\"=? ";
+            paramValues.add(theQueryObject.getEmailAddress());
+            propertyCounter++;
+        }
 
 
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getPerformanceSummary().getID());
-}
+        boolean useFirstName = StringUtils.hasText(theQueryObject.getFirstName()) && (excludeProperties == null || !excludeProperties.contains("firstName"));
+
+        if (useFirstName)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " \"FirstName\"=? ";
+            paramValues.add(theQueryObject.getFirstName());
+            propertyCounter++;
+        }
+
+        boolean useFullName = StringUtils.hasText(theQueryObject.getFullName()) && (excludeProperties == null || !excludeProperties.contains("fullName"));
+
+        if (useFullName)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " \"FullName\"=? ";
+            paramValues.add(theQueryObject.getFullName());
+            propertyCounter++;
+        }
+
+        boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+        if (useEmployeeId)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " \"EmployeeId\"=? ";
+            paramValues.add(theQueryObject.getEmployeeId());
+            propertyCounter++;
+        }
 
 
-if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getDevelopmentActivity().getID());
-}
+        boolean useTeamLeaderId = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
-pstmt.setString(12, perceroObject.getID());
-
-		
-	}
-
-	@Override
-	public List<Agent> findByExample(Agent theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
-		{
-			
-			
-			
-		String sql = getFindByExampleSelectSql(shellOnly);
-		
-		int propertyCounter = 0;
-		List<Object> paramValues = new ArrayList<Object>();
-		
-		boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
-
-if (useLastName)
-{
-sql += " WHERE ";
-paramValues.add(theQueryObject.getLastName());
-propertyCounter++;
-}
-
-boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
-
-if (useEmailAddress)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " emailAddress=? ";
-paramValues.add(theQueryObject.getEmailAddress());
-propertyCounter++;
-}
-
-boolean useExternalID = StringUtils.hasText(theQueryObject.getExternalID()) && (excludeProperties == null || !excludeProperties.contains("externalID"));
-
-if (useExternalID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " externalID=? ";
-paramValues.add(theQueryObject.getExternalID());
-propertyCounter++;
-}
-
-boolean useFirstName = StringUtils.hasText(theQueryObject.getFirstName()) && (excludeProperties == null || !excludeProperties.contains("firstName"));
-
-if (useFirstName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " firstName=? ";
-paramValues.add(theQueryObject.getFirstName());
-propertyCounter++;
-}
-
-boolean useFullName = StringUtils.hasText(theQueryObject.getFullName()) && (excludeProperties == null || !excludeProperties.contains("fullName"));
-
-if (useFullName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " fullName=? ";
-paramValues.add(theQueryObject.getFullName());
-propertyCounter++;
-}
-
-boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
-
-if (useEmployeeId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " employeeId=? ";
-paramValues.add(theQueryObject.getEmployeeId());
-propertyCounter++;
-}
-
-boolean usePhotoUri = StringUtils.hasText(theQueryObject.getPhotoUri()) && (excludeProperties == null || !excludeProperties.contains("photoUri"));
-
-if (usePhotoUri)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " photoUri=? ";
-paramValues.add(theQueryObject.getPhotoUri());
-propertyCounter++;
-}
-
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
-
-if (useScorecardID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " scorecardID=? ";
-paramValues.add(theQueryObject.getScorecard().getID());
-propertyCounter++;
-}
-
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-if (useTeamLeaderID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " teamLeaderID=? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
-propertyCounter++;
-}
-
-boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
-
-if (usePerformanceSummaryID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " performanceSummaryID=? ";
-paramValues.add(theQueryObject.getPerformanceSummary().getID());
-propertyCounter++;
-}
-
-boolean useDevelopmentActivityID = theQueryObject.getDevelopmentActivity() != null && (excludeProperties == null || !excludeProperties.contains("developmentActivity"));
-
-if (useDevelopmentActivityID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " developmentActivityID=? ";
-paramValues.add(theQueryObject.getDevelopmentActivity().getID());
-propertyCounter++;
-}
+        if (useTeamLeaderId)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " \"TeamLeaderId\"=? ";
+            paramValues.add(theQueryObject.getTeamLeader().getID());
+            propertyCounter++;
+        }
 
 
 		/*
@@ -510,9 +350,9 @@ propertyCounter++;
 		}
 		
 		*/
-		
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
-	}
-	
+
+        return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+    }
+
 }
-
+
