@@ -44,7 +44,7 @@ public class Main{
 //			e.printStackTrace();
 //		}
 
-		// Test HTTP Connectors
+//		// Test HTTP Connectors
 //		Map<String, Object> root = new HashMap<String, Object>();
 //		root.put("query", "hello siri");
 //
@@ -55,6 +55,7 @@ public class Main{
 //			e.printStackTrace();
 //		}
 //
+//		
 //		// Test StoredProc's Connectors
 //		Map<String, Object> storedProcParams = new HashMap<String, Object>();
 //		storedProcParams.put("lock_id", 12345);
@@ -63,6 +64,13 @@ public class Main{
 ////		SyncAgentService syncAgentService = context.getBean(SyncAgentService.class);
 //		try {
 //			System.out.println(syncAgentService.runProcess("SQL_PROC:PULSE.MYTESTPROC", storedProcParams, null));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			PerceroList<IPerceroObject> allPulseUsers = syncAgentService.getAllByName(PulseUser.class.getCanonicalName(), true, null);
+//			System.out.println(allPulseUsers.getTotalLength());
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}

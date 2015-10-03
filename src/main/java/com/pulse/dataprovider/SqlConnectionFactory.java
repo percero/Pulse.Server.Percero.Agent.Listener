@@ -1,86 +1,125 @@
 package com.pulse.dataprovider;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.percero.agents.sync.services.DAODataProvider;
-import com.percero.agents.sync.services.DataProviderManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * Created by jonnysamps on 9/2/15.
- */
-@Component
+import org.apache.log4j.Logger;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.percero.agents.sync.services.DAODataProvider;
+import com.percero.agents.sync.services.DataProviderManager;
+
 public class SqlConnectionFactory implements IConnectionFactory {
 
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
-
-    @Autowired
-    @Value("$pf{databaseProject.driverClassName:com.mysql.jdbc.Driver}")
-    private String driverClassName;
-
-    @Autowired
-    @Value("$pf{databaseProject.username}")
-    private String username;
-
-    @Autowired
-    @Value("$pf{databaseProject.password}")
-    private String password;
-
-    @Autowired
-    @Value("$pf{databaseProject.host:3306}")
-    private String host;
     
-    @Autowired
-    @Value("$pf{databaseProject.port}")
-    private String port;
-    
-    @Autowired
-    @Value("$pf{databaseProject.dbname}")
-    private String dbname;
-
-    @Autowired
-    @Value("$pf{databaseProject.jdbcUrl}")
-    private String jdbcUrl;
-    
-//    @Autowired
-//    @Value("pf{updateTable.jdbcUrl:jdbc:mysql://localhost/db")
-    private String getJdbcUrl() {
-        if(jdbcUrl == null)
-            return "jdbc:mysql://" + host + ":" + port + "/" + dbname;
-
-        return jdbcUrl;
+    public SqlConnectionFactory() {
+    	
     }
 
+    private String name;
+    private String driverClassName;
+    private String username;
+    private String password;
+    private String jdbcUrl;
+    private Integer acquireIncrement = 5;
+    private Integer minPoolSize = 5;
+    private Integer maxPoolSize = 50;
+    
+    public String getName() {
+    	return name;
+    }
+    
+    public void setName(String name) {
+    	this.name = name;
+    }
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getJdbcUrl() {
+		return jdbcUrl;
+	}
+
+	public void setJdbcUrl(String jdbcUrl) {
+		this.jdbcUrl = jdbcUrl;
+	}
+
+	public Integer getAcquireIncrement() {
+		return acquireIncrement;
+	}
+
+	public void setAcquireIncrement(Integer acquireIncrement) {
+		this.acquireIncrement = acquireIncrement;
+	}
+
+	public Integer getMinPoolSize() {
+		return minPoolSize;
+	}
+
+	public void setMinPoolSize(Integer minPoolSize) {
+		this.minPoolSize = minPoolSize;
+	}
+
+	public Integer getMaxPoolSize() {
+		return maxPoolSize;
+	}
+
+	public void setMaxPoolSize(Integer maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
+	}
+    
     private ComboPooledDataSource cpds;
-    @PostConstruct
-    public void init() throws PropertyVetoException{
+
+    
+    private boolean initialized = false;
+    public void init() throws Exception {
+    	if (initialized) {
+    		return;
+    	}
         try {
             cpds = new ComboPooledDataSource();
             cpds.setDriverClass(driverClassName); //loads the jdbc driver
-            cpds.setJdbcUrl(getJdbcUrl());
+            cpds.setJdbcUrl(jdbcUrl);
             cpds.setUser(username);
             cpds.setPassword(password);
 
 // the settings below are optional -- c3p0 can work with defaults
-            cpds.setMinPoolSize(5);
-            cpds.setAcquireIncrement(5);
-            cpds.setMaxPoolSize(20);
+            cpds.setMinPoolSize(minPoolSize);
+            cpds.setAcquireIncrement(acquireIncrement);
+            cpds.setMaxPoolSize(maxPoolSize);
             
-            PulseDataConnectionRegistry.getInstance().registerConnectionFactory("default", this);
+            PulseDataConnectionRegistry.getInstance().registerConnectionFactory(getName(), this);
 
             DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());
 
+            initialized = true;
         }catch(PropertyVetoException pve){
             logger.error(pve.getMessage(), pve);
             throw pve;
-        }
+		}
     }
 
     /* (non-Javadoc)
@@ -89,6 +128,13 @@ public class SqlConnectionFactory implements IConnectionFactory {
     @Override
 	public Connection getConnection() throws SQLException{
         try{
+        	if (!initialized) {
+        		try {
+        			init();
+        		} catch(Exception e) {
+        			logger.error("Error initializing SqlConnectionFactory: " + this.getName(), e);
+        		}
+        	}
             return cpds.getConnection();
         }catch(SQLException e){
             logger.error(e.getMessage(), e);

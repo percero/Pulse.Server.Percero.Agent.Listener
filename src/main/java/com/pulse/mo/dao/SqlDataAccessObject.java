@@ -99,10 +99,10 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	
 	protected String getSelectByRelationship(String joinColumnName, Boolean shellOnly) {
 		if (shellOnly) {
-			return getSelectByRelationshipShellOnlySQL(joinColumnName);
+			return getSelectByRelationshipShellOnlySQL("\""+joinColumnName+"\"");
 		}
 		else {
-			return getSelectByRelationshipStarSQL(joinColumnName);
+			return getSelectByRelationshipStarSQL("\""+joinColumnName+"\"");
 		}
 	}
 	

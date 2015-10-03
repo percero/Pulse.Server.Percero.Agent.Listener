@@ -133,7 +133,7 @@ public void setExternalID(String externalID)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="pulseUser_ID")
+@JoinColumn(name="PulseUserID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfUserRole")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private PulseUser pulseUser;

@@ -52,7 +52,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\"=?";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\"=?";
 	}
 
 	@Override
@@ -67,12 +67,12 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\"";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\"";
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\" LIMIT ? OFFSET ?";
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\" IN (?)";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\" IN (?)";
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole." + joinColumnName + "=?";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -107,17 +107,17 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"CurrentState\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ";
+		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ";
 	}
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO \"UserRole\" (ID,\"CurrentState\",\"RoleName\",\"PulseUserID\") VALUES (?,?,?,?)";
+		return "INSERT INTO \"UserRole\" (ID,\"RoleName\",\"PulseUserID\") VALUES (?,?,?)";
 	}
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"UserRole\" SET \"CurrentState\"=?,\"RoleName\"=?,\"PulseUserID\"=? WHERE ID=?";
+		return "UPDATE \"UserRole\" SET \"RoleName\"=?,\"PulseUserID\"=? WHERE ID=?";
 	}
 
 	@Override
@@ -134,16 +134,11 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 		if (!shellOnly)
 		{
-			nextResult.setCurrentState(rs.getString("CurrentState"));
-
 			nextResult.setRoleName(rs.getString("RoleName"));
 
 			PulseUser pulseuser = new PulseUser();
 			pulseuser.setID(rs.getString("PulseUserID"));
 			nextResult.setPulseUser(pulseuser);
-
-
-
 		}
 
 		return nextResult;
@@ -153,26 +148,6 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	protected void setPreparedStatmentInsertParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
 
 		pstmt.setString(1, perceroObject.getID());
-		pstmt.setString(2, perceroObject.getCurrentState());
-		pstmt.setString(3, perceroObject.getRoleName());
-
-		if (perceroObject.getPulseUser() == null)
-		{
-			pstmt.setString(4, null);
-		}
-		else
-		{
-			pstmt.setString(4, perceroObject.getPulseUser().getID());
-		}
-
-
-
-	}
-
-	@Override
-	protected void setPreparedStatmentUpdateParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
-
-		pstmt.setString(1, perceroObject.getCurrentState());
 		pstmt.setString(2, perceroObject.getRoleName());
 
 		if (perceroObject.getPulseUser() == null)
@@ -183,10 +158,20 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 		{
 			pstmt.setString(3, perceroObject.getPulseUser().getID());
 		}
+	}
 
-		pstmt.setString(4, perceroObject.getID());
-
-
+	@Override
+	protected void setPreparedStatmentUpdateParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
+		pstmt.setString(1, perceroObject.getRoleName());
+		if (perceroObject.getPulseUser() == null)
+		{
+			pstmt.setString(2, null);
+		}
+		else
+		{
+			pstmt.setString(2, perceroObject.getPulseUser().getID());
+		}
+		pstmt.setString(3, perceroObject.getID());
 	}
 
 	@Override
@@ -200,16 +185,6 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
-
-		boolean useCurrentState = StringUtils.hasText(theQueryObject.getCurrentState()) && (excludeProperties == null || !excludeProperties.contains("currentState"));
-
-		if (useCurrentState)
-		{
-			sql += " WHERE ";
-			sql += " \"CurrentState\"=?";
-			paramValues.add(theQueryObject.getCurrentState());
-			propertyCounter++;
-		}
 
 		boolean useRoleName = StringUtils.hasText(theQueryObject.getRoleName()) && (excludeProperties == null || !excludeProperties.contains("\"RoleName\""));
 

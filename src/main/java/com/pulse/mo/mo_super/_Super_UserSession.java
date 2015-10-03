@@ -157,18 +157,6 @@ public void setIPAddress(String iPAddress)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ConnectedState.class, mappedBy="userSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ConnectedState> connectedStates;
-public List<ConnectedState> getConnectedStates() {
-	return this.connectedStates;
-}
-
-public void setConnectedStates(List<ConnectedState> value) {
-	this.connectedStates = value;
-}
 
 
 
@@ -312,23 +300,6 @@ objectJson += ",\"pulseUser\":";
 
 		
 		// Target Relationships
-//Retrieve value of the User Session of Connected State relationship
-objectJson += ",\"connectedStates\":[";
-		
-		if (getConnectedStates() != null) {
-			int connectedStatesCounter = 0;
-			for(ConnectedState nextConnectedStates : getConnectedStates()) {
-				if (connectedStatesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextConnectedStates).toEmbeddedJson();
-					connectedStatesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -356,7 +327,6 @@ objectJson += ",\"connectedStates\":[";
 
 
 		// Target Relationships
-		this.connectedStates = (List<ConnectedState>) JsonUtils.getJsonListPerceroObject(jsonObject, "connectedStates");
 
 
 	}
@@ -366,7 +336,6 @@ objectJson += ",\"connectedStates\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ConnectedState.class, "usersession"));
 
 		
 		return listSetters;

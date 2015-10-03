@@ -59,7 +59,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser.\"ID\"=?";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser.\"ID\"=?";
 	}
 
 	@Override
@@ -74,12 +74,12 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ORDER BY pulseuser.\"ID\"";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ORDER BY pulseuser.\"ID\"";
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ORDER BY pulseuser.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ORDER BY pulseuser.\"ID\" LIMIT ? OFFSET ?";
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser.\"ID\" IN (?)";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser.\"ID\" IN (?)";
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser." + joinColumnName + "=?";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser WHERE pulseuser." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -114,17 +114,17 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT pulseuser.\"ID\",pulseuser.\"userId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ";
+		return "SELECT pulseuser.\"ID\",pulseuser.\"UserId\",pulseuser.\"EmployeeId\",pulseuser.\"TeamLeaderID\" FROM \"PulseUser\" pulseuser ";
 	}
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO \"PulseUser\" (\"ID\", \"userId\",\"EmployeeId\",\"TeamLeaderID\") VALUES (?,?,?,?)";
+		return "INSERT INTO \"PulseUser\" (\"ID\", \"UserId\",\"EmployeeId\",\"TeamLeaderID\") VALUES (?,?,?,?)";
 	}
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PulseUser\" SET \"userId\"=?,\"EmployeeId\"=?,\"TeamLeaderID\"=? WHERE ID=?";
+		return "UPDATE \"PulseUser\" SET \"UserId\"=?,\"EmployeeId\"=?,\"TeamLeaderID\"=? WHERE ID=?";
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 		{
 //			nextResult.setExternalID(rs.getString("externalID"));
 
-			nextResult.setUserId(rs.getString("userId"));
+			nextResult.setUserId(rs.getString("UserId"));
 
 			nextResult.setEmployeeId(rs.getString("EmployeeId"));
 
@@ -240,7 +240,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 			{
 				sql += " WHERE ";
 			}
-			sql += " \"userId\"=? ";
+			sql += " \"UserId\"=? ";
 			paramValues.add(theQueryObject.getUserId());
 			propertyCounter++;
 		}

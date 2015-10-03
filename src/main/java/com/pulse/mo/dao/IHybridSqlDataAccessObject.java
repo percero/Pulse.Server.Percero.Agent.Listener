@@ -8,7 +8,6 @@ import java.util.Set;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.framework.vo.IPerceroObject;
-import com.pulse.mo.ScorecardState;
 
 public interface IHybridSqlDataAccessObject<T extends IPerceroObject> extends IDataAccessObject<T> {
 	
