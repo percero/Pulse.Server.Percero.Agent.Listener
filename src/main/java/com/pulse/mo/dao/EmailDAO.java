@@ -1,21 +1,21 @@
 
-
-package com.pulse.mo.dao;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.Email;
-import com.pulse.mo.PulseUser;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.util.DateUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+
+import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Email;
@@ -28,14 +28,14 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 
 	static final Logger log = Logger.getLogger(EmailDAO.class);
 
-
+	
 	public EmailDAO() {
 		super();
-
+		
 		DAORegistry.getInstance().registerDataAccessObject(Email.class.getCanonicalName(), this);
 	}
 
-
+	
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
@@ -47,198 +47,182 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT email.\"ID\" FROM \"Email\" email WHERE email.\"ID\"?";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL.ID=?";
 	}
-
+	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email WHERE email.\"ID\"=?";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL.ID=?";
 	}
-
+	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT email.\"ID\" FROM \"Email\" email ORDER BY \"ID\"";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL ORDER BY ID";
 	}
-
+	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT email.\"ID\" FROM \"Email\" email ORDER BY email.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL ORDER BY EMAIL.ID LIMIT ? OFFSET ?";
 	}
-
+	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email ORDER BY email.\"ID\"";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ORDER BY EMAIL.ID";
 	}
-
+	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email ORDER BY email.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ORDER BY EMAIL.ID LIMIT ? OFFSET ?";
 	}
-
+	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(\"ID\") FROM \"Email\" email";
+		return "SELECT COUNT(ID) FROM EMAIL EMAIL";
 	}
-
+	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email WHERE email.\"ID\" IN (?)";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL.ID IN (?)";
 	}
-
+	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT email.\"ID\" FROM \"Email\" email WHERE email.\"ID\" IN (?)";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL.ID IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email WHERE email." + joinColumnName + "=?";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL." + joinColumnName + "=?";
 	}
-
+	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT email.\"ID\" FROM \"Email\" email WHERE email." + joinColumnName + "=?";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT email.\"ID\" FROM \"Email\" email ";
+		return "SELECT EMAIL.ID FROM EMAIL EMAIL ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT email.\"ID\",email.\"EmailAddress\",email.\"PulseUserID\" FROM \"Email\" email ";
+		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ";
 	}
-
+	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO \"Email\" (\"ID\",\"EmailAddress\",\"PulseUserID\") VALUES (?,?,?)";
+		return "INSERT INTO EMAIL (ID,EMAIL_ADDRESS,PULSE_USER_ID) VALUES (?,?,?)";
 	}
-
+	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"Email\" SET \"EmailAddress\"=?,\"PulseUserID\"=? WHERE \"ID\"=?";
+		return "UPDATE EMAIL SET EMAIL_ADDRESS=?,PULSE_USER_ID WHERE ID=?";
 	}
-
+	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"Email\" WHERE \"ID\"=?";
+		return "DELETE FROM EMAIL WHERE ID=?";
 	}
-
+	
 	@Override
 	protected Email extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-		Email nextResult = new Email();
-
-		// ID
-		nextResult.setID(rs.getString("ID"));
-
-		if (!shellOnly)
+    	Email nextResult = new Email();
+    	
+    	// ID
+    	nextResult.setID(rs.getString("ID"));
+    	
+    	if (!shellOnly) 
 		{
-			nextResult.setEmailAddress(rs.getString("EmailAddress"));
+			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
-			PulseUser pulseuser = new PulseUser();
-			pulseuser.setID(rs.getString("PulseUserID"));
-			nextResult.setPulseUser(pulseuser);
-		}
+PulseUser pulseuser = new PulseUser();
+pulseuser.setID(rs.getString("PULSE_USER_ID"));
+nextResult.setPulseUser(pulseuser);
 
-		return nextResult;
+
+			
+    	}
+    	
+    	return nextResult;
 	}
-
+	
 	@Override
 	protected void setPreparedStatmentInsertParams(Email perceroObject, PreparedStatement pstmt) throws SQLException {
-
+		
 		pstmt.setString(1, perceroObject.getID());
-		pstmt.setString(2, perceroObject.getEmailAddress());
-//		pstmt.setString(3, perceroObject.getExternalID());
+pstmt.setString(2, perceroObject.getEmailAddress());
 
-		if (perceroObject.getPulseUser() == null)
-		{
-			pstmt.setString(3, null);
-		}
-		else
-		{
-			pstmt.setString(3, perceroObject.getPulseUser().getID());
-		}
-
+if (perceroObject.getPulseUser() == null)
+{
+pstmt.setString(3, null);
+}
+else
+{
+		pstmt.setString(3, perceroObject.getPulseUser().getID());
+}
 
 
+		
 	}
-
+	
 	@Override
 	protected void setPreparedStatmentUpdateParams(Email perceroObject, PreparedStatement pstmt) throws SQLException {
-
+		
 		pstmt.setString(1, perceroObject.getEmailAddress());
-//		pstmt.setString(2, perceroObject.getExternalID());
 
-		if (perceroObject.getPulseUser() == null)
-		{
-			pstmt.setString(2, null);
-		}
-		else
-		{
-			pstmt.setString(2, perceroObject.getPulseUser().getID());
-		}
+if (perceroObject.getPulseUser() == null)
+{
+pstmt.setString(2, null);
+}
+else
+{
+		pstmt.setString(2, perceroObject.getPulseUser().getID());
+}
 
-		pstmt.setString(3, perceroObject.getID());
+pstmt.setString(3, perceroObject.getID());
 
-
+		
 	}
 
 	@Override
 	public List<Email> findByExample(Email theQueryObject,
-									 List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
-	{
-
-
-
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
+		{
+			
+			
+			
 		String sql = getFindByExampleSelectSql(shellOnly);
-
+		
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
-
+		
 		boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
 
-		if (useEmailAddress)
-		{
-			sql += " WHERE ";
-			sql += " \"EmailAddress\"=? ";
-			paramValues.add(theQueryObject.getEmailAddress());
-			propertyCounter++;
-		}
+if (useEmailAddress)
+{
+sql += " WHERE ";
+sql += " EMAIL_ADDRESS=? ";
+paramValues.add(theQueryObject.getEmailAddress());
+propertyCounter++;
+}
 
-//		boolean useExternalID = StringUtils.hasText(theQueryObject.getExternalID()) && (excludeProperties == null || !excludeProperties.contains("externalID"));
-//
-//		if (useExternalID)
-//		{
-//			if (propertyCounter > 0)
-//			{
-//				sql += " AND ";
-//			}
-//			else
-//			{
-//				sql += " WHERE ";
-//			}
-//			sql += " externalID=? ";
-//			paramValues.add(theQueryObject.getExternalID());
-//			propertyCounter++;
-//		}
+boolean usePulseUserID = theQueryObject.getPulseUser() != null && (excludeProperties == null || !excludeProperties.contains("pulseUser"));
 
-		boolean usePulseUserID = theQueryObject.getPulseUser() != null && (excludeProperties == null || !excludeProperties.contains("pulseUser"));
-
-		if (usePulseUserID)
-		{
-			if (propertyCounter > 0)
-			{
-				sql += " AND ";
-			}
-			else
-			{
-				sql += " WHERE ";
-			}
-			sql += " \"PulseUserID\"=? ";
-			paramValues.add(theQueryObject.getPulseUser().getID());
-			propertyCounter++;
-		}
+if (usePulseUserID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " PULSE_USER_ID=? ";
+paramValues.add(theQueryObject.getPulseUser().getID());
+propertyCounter++;
+}
 
 
 		/*
@@ -265,9 +249,9 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 		}
 		
 		*/
-
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+		
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
-
+	
 }
-
+

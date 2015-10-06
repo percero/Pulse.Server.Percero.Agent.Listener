@@ -1,21 +1,21 @@
 
-
-package com.pulse.mo.dao;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.PulseUser;
-import com.pulse.mo.UserRole;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.util.DateUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+
+import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.UserRole;
@@ -28,14 +28,14 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	static final Logger log = Logger.getLogger(UserRoleDAO.class);
 
-
+	
 	public UserRoleDAO() {
 		super();
-
+		
 		DAORegistry.getInstance().registerDataAccessObject(UserRole.class.getCanonicalName(), this);
 	}
 
-
+	
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
@@ -47,178 +47,182 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\"=?";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID=?";
 	}
-
+	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\"=?";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID=?";
 	}
-
+	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole ORDER BY ID";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ORDER BY ID";
 	}
-
+	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID LIMIT ? OFFSET ?";
 	}
-
+	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\"";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID";
 	}
-
+	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ORDER BY userrole.\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID LIMIT ? OFFSET ?";
 	}
-
+	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"UserRole\" userrole";
+		return "SELECT COUNT(ID) FROM USER_ROLE USER_ROLE";
 	}
-
+	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\" IN (?)";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID IN (?)";
 	}
-
+	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole WHERE userrole.\"ID\" IN (?)";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole WHERE userrole." + joinColumnName + "=?";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE." + joinColumnName + "=?";
 	}
-
+	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole WHERE userrole." + joinColumnName + "=?";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT userrole.\"ID\" FROM \"UserRole\" userrole ";
+		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT userrole.\"ID\",userrole.\"RoleName\",userrole.\"PulseUserID\" FROM \"UserRole\" userrole ";
+		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ";
 	}
-
+	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO \"UserRole\" (ID,\"RoleName\",\"PulseUserID\") VALUES (?,?,?)";
+		return "INSERT INTO USER_ROLE (ID,ROLE_NAME,PULSE_USER_ID) VALUES (?,?,?)";
 	}
-
+	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"UserRole\" SET \"RoleName\"=?,\"PulseUserID\"=? WHERE ID=?";
+		return "UPDATE USER_ROLE SET ROLE_NAME=?,PULSE_USER_ID WHERE ID=?";
 	}
-
+	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"UserRole\" WHERE ID=?";
+		return "DELETE FROM USER_ROLE WHERE ID=?";
 	}
-
+	
 	@Override
 	protected UserRole extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-		UserRole nextResult = new UserRole();
-
-		// ID
-		nextResult.setID(rs.getString("ID"));
-
-		if (!shellOnly)
+    	UserRole nextResult = new UserRole();
+    	
+    	// ID
+    	nextResult.setID(rs.getString("ID"));
+    	
+    	if (!shellOnly) 
 		{
-			nextResult.setRoleName(rs.getString("RoleName"));
+			nextResult.setRoleName(rs.getString("ROLE_NAME"));
 
-			PulseUser pulseuser = new PulseUser();
-			pulseuser.setID(rs.getString("PulseUserID"));
-			nextResult.setPulseUser(pulseuser);
-		}
+PulseUser pulseuser = new PulseUser();
+pulseuser.setID(rs.getString("PULSE_USER_ID"));
+nextResult.setPulseUser(pulseuser);
 
-		return nextResult;
+
+			
+    	}
+    	
+    	return nextResult;
 	}
-
+	
 	@Override
 	protected void setPreparedStatmentInsertParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
-
+		
 		pstmt.setString(1, perceroObject.getID());
-		pstmt.setString(2, perceroObject.getRoleName());
+pstmt.setString(2, perceroObject.getRoleName());
 
-		if (perceroObject.getPulseUser() == null)
-		{
-			pstmt.setString(3, null);
-		}
-		else
-		{
-			pstmt.setString(3, perceroObject.getPulseUser().getID());
-		}
+if (perceroObject.getPulseUser() == null)
+{
+pstmt.setString(3, null);
+}
+else
+{
+		pstmt.setString(3, perceroObject.getPulseUser().getID());
+}
+
+
+		
 	}
-
+	
 	@Override
 	protected void setPreparedStatmentUpdateParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
+		
 		pstmt.setString(1, perceroObject.getRoleName());
-		if (perceroObject.getPulseUser() == null)
-		{
-			pstmt.setString(2, null);
-		}
-		else
-		{
-			pstmt.setString(2, perceroObject.getPulseUser().getID());
-		}
-		pstmt.setString(3, perceroObject.getID());
+
+if (perceroObject.getPulseUser() == null)
+{
+pstmt.setString(2, null);
+}
+else
+{
+		pstmt.setString(2, perceroObject.getPulseUser().getID());
+}
+
+pstmt.setString(3, perceroObject.getID());
+
+		
 	}
 
 	@Override
 	public List<UserRole> findByExample(UserRole theQueryObject,
-										List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
-	{
-
-
-
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
+		{
+			
+			
+			
 		String sql = getFindByExampleSelectSql(shellOnly);
-
+		
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
+		
+		boolean useRoleName = StringUtils.hasText(theQueryObject.getRoleName()) && (excludeProperties == null || !excludeProperties.contains("roleName"));
 
-		boolean useRoleName = StringUtils.hasText(theQueryObject.getRoleName()) && (excludeProperties == null || !excludeProperties.contains("\"RoleName\""));
+if (useRoleName)
+{
+sql += " WHERE ";
+sql += " ROLE_NAME=? ";
+paramValues.add(theQueryObject.getRoleName());
+propertyCounter++;
+}
 
-		if (useRoleName)
-		{
-			if (propertyCounter > 0)
-			{
-				sql += " AND ";
-			}
-			else
-			{
-				sql += " WHERE ";
-			}
-			sql += " \"RoleName\"=? ";
-			paramValues.add(theQueryObject.getRoleName());
-			propertyCounter++;
-		}
+boolean usePulseUserID = theQueryObject.getPulseUser() != null && (excludeProperties == null || !excludeProperties.contains("pulseUser"));
 
-		boolean usePulseUserID = theQueryObject.getPulseUser() != null && (excludeProperties == null || !excludeProperties.contains("pulseUser"));
-
-		if (usePulseUserID)
-		{
-			if (propertyCounter > 0)
-			{
-				sql += " AND ";
-			}
-			else
-			{
-				sql += " WHERE ";
-			}
-			sql += " \"PulseUserID\"=? ";
-			paramValues.add(theQueryObject.getPulseUser().getID());
-			propertyCounter++;
-		}
+if (usePulseUserID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " PULSE_USER_ID=? ";
+paramValues.add(theQueryObject.getPulseUser().getID());
+propertyCounter++;
+}
 
 
 		/*
@@ -245,9 +249,9 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 		}
 		
 		*/
-
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+		
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
-
+	
 }
-
+

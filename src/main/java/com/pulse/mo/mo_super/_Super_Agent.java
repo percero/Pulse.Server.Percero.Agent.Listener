@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -85,6 +86,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+EmailAddress
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String emailAddress;
+
+public String getEmailAddress() 
+{
+	return this.emailAddress;
+}
+
+public void setEmailAddress(String emailAddress)
+{
+	this.emailAddress = emailAddress;
+}/*
 FullName
 Notes:
 */
@@ -118,40 +136,6 @@ public String getLastName()
 public void setLastName(String lastName)
 {
 	this.lastName = lastName;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeId;
-
-public String getEmployeeId() 
-{
-	return this.employeeId;
-}
-
-public void setEmployeeId(String employeeId)
-{
-	this.employeeId = employeeId;
-}/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
 }/*
 PhotoUri
 Notes:
@@ -187,34 +171,33 @@ public void setFirstName(String firstName)
 {
 	this.firstName = firstName;
 }/*
-EmailAddress
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String emailAddress;
+private String employeeId;
 
-public String getEmailAddress() 
+public String getEmployeeId() 
 {
-	return this.emailAddress;
+	return this.employeeId;
 }
 
-public void setEmailAddress(String emailAddress)
+public void setEmployeeId(String employeeId)
 {
-	this.emailAddress = emailAddress;
+	this.employeeId = employeeId;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 
-
-
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="teamLeader_ID")
@@ -229,7 +212,7 @@ public void setTeamLeader(TeamLeader value) {
 	this.teamLeader = value;
 }
 
-	
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -238,6 +221,27 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
+		
+		if (getEmailAddress() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Full Name property
 		objectJson += ",\"fullName\":";
 		
@@ -269,48 +273,6 @@ public void setTeamLeader(TeamLeader value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getLastName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
-		
-		if (getEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -364,16 +326,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
 		
-		if (getEmailAddress() == null)
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -403,7 +365,7 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Target Relationships
-		
+
 		return objectJson;
 	}
 
@@ -413,20 +375,18 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the Full Name property
 		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
 		//From value of the Last Name property
 		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 
 		
 		// Source Relationships
@@ -443,8 +403,7 @@ objectJson += ",\"teamLeader\":";
 
 		// Target Relationships
 
-		
 		return listSetters;
 	}
 }
-
+

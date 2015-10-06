@@ -1,49 +1,31 @@
 
-package com.pulse.mo.mo_super;
 
-import java.io.IOException;
-import java.io.Serializable;
+package com.pulse.mo.mo_super;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SecondaryTable;
-
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.serial.BDODeserializer;
+import com.percero.serial.BDOSerializer;
+import com.percero.serial.JsonUtils;
+import com.pulse.mo.Agent;
+import com.pulse.mo.UserSession;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.AccessType;
 
-import com.google.gson.JsonObject;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-import com.percero.agents.sync.metadata.MappedClass;
+import javax.persistence.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
 
 /*
 Imports based on semantic requirements
 */
-
-
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.serial.BDODeserializer;
-import com.percero.serial.BDOSerializer;
-import com.percero.serial.JsonUtils;
-
-import com.pulse.mo.*;
 
 /*
 Entity Tags based on semantic requirements
@@ -85,6 +67,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+EmailAddress
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String emailAddress;
+
+public String getEmailAddress() 
+{
+	return this.emailAddress;
+}
+
+public void setEmailAddress(String emailAddress)
+{
+	this.emailAddress = emailAddress;
+}/*
 NotificationCount
 Notes:
 */
@@ -118,23 +117,6 @@ public String getFirstName()
 public void setFirstName(String firstName)
 {
 	this.firstName = firstName;
-}/*
-EmailAddress
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String emailAddress;
-
-public String getEmailAddress() 
-{
-	return this.emailAddress;
-}
-
-public void setEmailAddress(String emailAddress)
-{
-	this.emailAddress = emailAddress;
 }/*
 PhotoUri
 Notes:
@@ -186,28 +168,12 @@ public String getEmployeeId()
 public void setEmployeeId(String employeeId)
 {
 	this.employeeId = employeeId;
-}/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
+
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -220,6 +186,7 @@ public List<Agent> getAgents() {
 public void setAgents(List<Agent> value) {
 	this.agents = value;
 }
+
 
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
@@ -235,11 +202,11 @@ public void setUserSessions(List<UserSession> value) {
 }
 
 
-
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-		
+	
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -248,6 +215,27 @@ public void setUserSessions(List<UserSession> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
+		
+		if (getEmailAddress() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Notification Count property
 		objectJson += ",\"notificationCount\":";
 		
@@ -279,27 +267,6 @@ public void setUserSessions(List<UserSession> value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getFirstName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
-		
-		if (getEmailAddress() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -374,33 +341,9 @@ public void setUserSessions(List<UserSession> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
-
-		
-		// Target Relationships
 //Retrieve value of the Team Leader of Agent relationship
 objectJson += ",\"agents\":[";
 		
@@ -436,7 +379,6 @@ objectJson += ",\"userSessions\":[";
 		}
 		objectJson += "]";
 
-		
 		return objectJson;
 	}
 
@@ -446,20 +388,18 @@ objectJson += ",\"userSessions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the Notification Count property
 		setNotificationCount(JsonUtils.getJsonInteger(jsonObject, "notificationCount"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the Last Name property
 		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 
 		
 		// Source Relationships
@@ -468,7 +408,6 @@ objectJson += ",\"userSessions\":[";
 		// Target Relationships
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
-
 
 	}
 	
@@ -480,8 +419,7 @@ objectJson += ",\"userSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamleader"));
 
-		
 		return listSetters;
 	}
 }
-
+

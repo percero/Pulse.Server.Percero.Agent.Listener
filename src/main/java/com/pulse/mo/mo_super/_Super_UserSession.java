@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -102,40 +103,6 @@ public void setConnectedStateName(String connectedStateName)
 {
 	this.connectedStateName = connectedStateName;
 }/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date date;
-
-public Date getDate() 
-{
-	return this.date;
-}
-
-public void setDate(Date date)
-{
-	this.date = date;
-}/*
-ExternalID
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String externalID;
-
-public String getExternalID() 
-{
-	return this.externalID;
-}
-
-public void setExternalID(String externalID)
-{
-	this.externalID = externalID;
-}/*
 IPAddress
 Notes:???
 */
@@ -152,18 +119,35 @@ public String getIPAddress()
 public void setIPAddress(String iPAddress)
 {
 	this.iPAddress = iPAddress;
+}/*
+Date
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date date;
+
+public Date getDate() 
+{
+	return this.date;
+}
+
+public void setDate(Date date)
+{
+	this.date = date;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="currentTeamLeader_ID")
@@ -176,7 +160,8 @@ public TeamLeader getCurrentTeamLeader() {
 
 public void setCurrentTeamLeader(TeamLeader value) {
 	this.currentTeamLeader = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="pulseUser_ID")
@@ -221,34 +206,6 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-		//Retrieve value of the External ID property
-		objectJson += ",\"externalID\":";
-		
-		if (getExternalID() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExternalID());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the IP Address property
 		objectJson += ",\"iPAddress\":";
 		
@@ -269,6 +226,13 @@ public void setPulseUser(PulseUser value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
 		}
 
 				
@@ -313,12 +277,10 @@ objectJson += ",\"pulseUser\":";
 		// Properties
 		//From value of the Connected State Name property
 		setConnectedStateName(JsonUtils.getJsonString(jsonObject, "connectedStateName"));
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the External ID property
-		setExternalID(JsonUtils.getJsonString(jsonObject, "externalID"));
 		//From value of the IP Address property
 		setIPAddress(JsonUtils.getJsonString(jsonObject, "iPAddress"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 
 		
 		// Source Relationships
@@ -341,4 +303,4 @@ objectJson += ",\"pulseUser\":";
 		return listSetters;
 	}
 }
-
+

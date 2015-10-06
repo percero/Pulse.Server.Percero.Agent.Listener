@@ -4,9 +4,9 @@ package com.pulse.mo.dao;
 
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.*;
+import com.pulse.mo.Agent;
+import com.pulse.mo.TeamLeader;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,18 +20,18 @@ import java.util.List;
 /*
 import com.pulse.mo.Agent;
 import com.pulse.mo.ScheduledTime;
-import com.pulse.mo.AdhocTask;
-import com.pulse.mo.LOBConfigurationNotification;
-import com.pulse.mo.AgentTime;
-import com.pulse.mo.CorrectiveAction;
-import com.pulse.mo.CoachingSession;
-import com.pulse.mo.GeneralComment;
-import com.pulse.mo.ActualTime;
+import com.pulse.mo.TimecardEntry;
+import com.pulse.mo.DiscrepancyDetectedNotification;
 import com.pulse.mo.AdhocCoachingSession;
-import com.pulse.mo.Scorecard;
-import com.pulse.mo.PerformanceSummary;
+import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.CoachingSession;
+import com.pulse.mo.LOBConfigurationNotification;
+import com.pulse.mo.CorrectiveAction;
+import com.pulse.mo.AdhocTask;
+import com.pulse.mo.GeneralComment;
 import com.pulse.mo.DevelopmentActivity;
 import com.pulse.mo.TeamLeader;
+import com.pulse.mo.PerformanceSummary;
 
 */
 
@@ -59,82 +59,82 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 
     @Override
     protected String getSelectShellOnlySQL() {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent.\"ID\"=?";
+        return "SELECT AGENT.ID FROM AGENT AGENT WHERE AGENT.ID=?";
     }
 
     @Override
     protected String getSelectStarSQL() {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent.\"ID\"=?";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID FROM AGENT AGENT WHERE AGENT.ID=?";
     }
 
     @Override
     protected String getSelectAllShellOnlySQL() {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent ORDER BY ID";
+        return "SELECT AGENT.ID FROM AGENT AGENT ORDER BY ID";
     }
 
     @Override
     protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent ORDER BY agent.\"ID\" LIMIT ? OFFSET ?";
+        return "SELECT AGENT.ID FROM AGENT AGENT ORDER BY AGENT.ID LIMIT ? OFFSET ?";
     }
 
     @Override
     protected String getSelectAllStarSQL() {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ORDER BY agent.\"ID\"";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID_ID FROM AGENT AGENT ORDER BY AGENT.ID";
     }
 
     @Override
     protected String getSelectAllStarWithLimitAndOffsetSQL() {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ORDER BY agent.\"ID\" LIMIT ? OFFSET ?";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID_ID FROM AGENT AGENT ORDER BY AGENT.ID LIMIT ? OFFSET ?";
     }
 
     @Override
     protected String getCountAllSQL() {
-        return "SELECT COUNT(ID) FROM \"Agent\" agent";
+        return "SELECT COUNT(ID) FROM AGENT AGENT";
     }
 
     @Override
     protected String getSelectInStarSQL() {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent.\"ID\" IN (?)";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID_ID FROM AGENT AGENT WHERE AGENT.ID IN (?)";
     }
 
     @Override
     protected String getSelectInShellOnlySQL() {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent.\"ID\" IN (?)";
+        return "SELECT AGENT.ID FROM AGENT AGENT WHERE AGENT.ID IN (?)";
     }
 
     @Override
     protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent WHERE agent." + joinColumnName + "=?";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID_ID FROM AGENT AGENT WHERE AGENT." + joinColumnName + "=?";
     }
 
     @Override
     protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent WHERE agent." + joinColumnName + "=?";
+        return "SELECT AGENT.ID FROM AGENT AGENT WHERE AGENT." + joinColumnName + "=?";
     }
 
     @Override
     protected String getFindByExampleSelectShellOnlySQL() {
-        return "SELECT agent.\"ID\" FROM \"Agent\" agent ";
+        return "SELECT AGENT.ID FROM AGENT AGENT ";
     }
 
     @Override
     protected String getFindByExampleSelectAllStarSQL() {
-        return "SELECT agent.\"ID\",agent.\"LastName\" ,agent.\"EmailAddress\" ,agent.\"FirstName\" ,agent.\"FullName\" ,agent.\"EmployeeId\" ,agent.\"TeamLeaderId\" FROM \"Agent\" agent ";
+        return "SELECT AGENT.ID,AGENT.LAST_NAME,AGENT.EMAIL_ADDRESS,AGENT.EMPLOYEE_ID,AGENT.FIRST_NAME,AGENT.FULL_NAME,AGENT.PHOTO_URI,AGENT.TEAM_LEADER_ID_ID FROM AGENT AGENT ";
     }
 
     @Override
-    protected String getInsertIntoSQL() throws SyncDataException {
-        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    protected String getInsertIntoSQL() {
+        return "INSERT INTO AGENT (ID,LAST_NAME,EMAIL_ADDRESS,EMPLOYEE_ID,FIRST_NAME,FULL_NAME,PHOTO_URI,TEAM_LEADER_ID) VALUES (?,?,?,?,?,?,?,?)";
     }
 
     @Override
-    protected String getUpdateSet() throws SyncDataException {
-        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    protected String getUpdateSet() {
+        return "UPDATE AGENT SET LAST_NAME=?,EMAIL_ADDRESS=?,EMPLOYEE_ID=?,FIRST_NAME=?,FULL_NAME=?,PHOTO_URI=?,TEAM_LEADER_ID WHERE ID=?";
     }
 
     @Override
-    protected String getDeleteFromSQL() throws SyncDataException {
-        throw new SyncDataException(SyncDataException.READ_ONLY_ERROR, SyncDataException.READ_ONLY_ERROR_CODE);
+    protected String getDeleteFromSQL() {
+        return "DELETE FROM AGENT WHERE ID=?";
     }
 
     @Override
@@ -146,22 +146,21 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 
         if (!shellOnly)
         {
-            nextResult.setLastName(rs.getString("LastName"));
+            nextResult.setLastName(rs.getString("LAST_NAME"));
 
-            nextResult.setEmailAddress(rs.getString("EmailAddress"));
+            nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
-            nextResult.setFirstName(rs.getString("FirstName"));
+            nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
-            nextResult.setFullName(rs.getString("FullName"));
+            nextResult.setFirstName(rs.getString("FIRST_NAME"));
 
-            nextResult.setEmployeeId(rs.getString("EmployeeId"));
+            nextResult.setFullName(rs.getString("FULL_NAME"));
 
+            nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
             TeamLeader teamleader = new TeamLeader();
-            teamleader.setID(rs.getString("TeamLeaderId"));
+            teamleader.setID(rs.getString("TEAM_LEADER_ID"));
             nextResult.setTeamLeader(teamleader);
-
-
 
         }
 
@@ -174,22 +173,19 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
         pstmt.setString(1, perceroObject.getID());
         pstmt.setString(2, perceroObject.getLastName());
         pstmt.setString(3, perceroObject.getEmailAddress());
-        pstmt.setString(4, perceroObject.getFirstName());
-        pstmt.setString(5, perceroObject.getFullName());
-        pstmt.setString(6, perceroObject.getEmployeeId());
-
+        pstmt.setString(4, perceroObject.getEmployeeId());
+        pstmt.setString(5, perceroObject.getFirstName());
+        pstmt.setString(6, perceroObject.getFullName());
+        pstmt.setString(7, perceroObject.getPhotoUri());
 
         if (perceroObject.getTeamLeader() == null)
         {
-            pstmt.setString(7, null);
+            pstmt.setString(8, null);
         }
         else
         {
-            pstmt.setString(7, perceroObject.getTeamLeader().getID());
+            pstmt.setString(8, perceroObject.getTeamLeader().getID());
         }
-
-
-
     }
 
     @Override
@@ -197,9 +193,9 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 
         pstmt.setString(1, perceroObject.getLastName());
         pstmt.setString(2, perceroObject.getEmailAddress());
-        pstmt.setString(3, perceroObject.getFirstName());
-        pstmt.setString(4, perceroObject.getFullName());
-        pstmt.setString(5, perceroObject.getEmployeeId());
+        pstmt.setString(3, perceroObject.getEmployeeId());
+        pstmt.setString(4, perceroObject.getFirstName());
+        pstmt.setString(5, perceroObject.getFullName());
         pstmt.setString(6, perceroObject.getPhotoUri());
 
         if (perceroObject.getTeamLeader() == null)
@@ -233,7 +229,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
         if (useLastName)
         {
             sql += " WHERE ";
-            sql += " \"LastName\"=? ";
+            sql += " LAST_NAME=? ";
             paramValues.add(theQueryObject.getLastName());
             propertyCounter++;
         }
@@ -250,11 +246,27 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
             {
                 sql += " WHERE ";
             }
-            sql += " \"EmailAddress\"=? ";
+            sql += " EMAIL_ADDRESS=? ";
             paramValues.add(theQueryObject.getEmailAddress());
             propertyCounter++;
         }
 
+        boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+        if (useEmployeeId)
+        {
+            if (propertyCounter > 0)
+            {
+                sql += " AND ";
+            }
+            else
+            {
+                sql += " WHERE ";
+            }
+            sql += " EMPLOYEE_ID=? ";
+            paramValues.add(theQueryObject.getEmployeeId());
+            propertyCounter++;
+        }
 
         boolean useFirstName = StringUtils.hasText(theQueryObject.getFirstName()) && (excludeProperties == null || !excludeProperties.contains("firstName"));
 
@@ -268,7 +280,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
             {
                 sql += " WHERE ";
             }
-            sql += " \"FirstName\"=? ";
+            sql += " FIRST_NAME=? ";
             paramValues.add(theQueryObject.getFirstName());
             propertyCounter++;
         }
@@ -285,14 +297,14 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
             {
                 sql += " WHERE ";
             }
-            sql += " \"FullName\"=? ";
+            sql += " FULL_NAME=? ";
             paramValues.add(theQueryObject.getFullName());
             propertyCounter++;
         }
 
-        boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+        boolean usePhotoUri = StringUtils.hasText(theQueryObject.getPhotoUri()) && (excludeProperties == null || !excludeProperties.contains("photoUri"));
 
-        if (useEmployeeId)
+        if (usePhotoUri)
         {
             if (propertyCounter > 0)
             {
@@ -302,15 +314,14 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
             {
                 sql += " WHERE ";
             }
-            sql += " \"EmployeeId\"=? ";
-            paramValues.add(theQueryObject.getEmployeeId());
+            sql += " PHOTO_URI=? ";
+            paramValues.add(theQueryObject.getPhotoUri());
             propertyCounter++;
         }
 
+        boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
-        boolean useTeamLeaderId = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-        if (useTeamLeaderId)
+        if (useTeamLeaderID)
         {
             if (propertyCounter > 0)
             {
@@ -320,11 +331,10 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
             {
                 sql += " WHERE ";
             }
-            sql += " \"TeamLeaderId\"=? ";
+            sql += " TEAM_LEADER_ID=? ";
             paramValues.add(theQueryObject.getTeamLeader().getID());
             propertyCounter++;
         }
-
 
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
