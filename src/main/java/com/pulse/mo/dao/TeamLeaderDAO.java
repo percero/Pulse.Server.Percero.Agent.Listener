@@ -63,7 +63,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
     @Override
     protected String getSelectStarSQL() {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID=?";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID=?";
     }
 
     @Override
@@ -78,12 +78,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
     @Override
     protected String getSelectAllStarSQL() {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID";
     }
 
     @Override
     protected String getSelectAllStarWithLimitAndOffsetSQL() {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID LIMIT ? OFFSET ?";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID LIMIT ? OFFSET ?";
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
     @Override
     protected String getSelectInStarSQL() {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID IN (?)";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID IN (?)";
     }
 
     @Override
@@ -103,7 +103,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
     @Override
     protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER." + joinColumnName + "=?";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER." + joinColumnName + "=?";
     }
 
     @Override
@@ -118,17 +118,17 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
     @Override
     protected String getFindByExampleSelectAllStarSQL() {
-        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.NOTIFICATION_COUNT,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ";
+        return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI FROM TEAM_LEADER TEAM_LEADER ";
     }
 
     @Override
     protected String getInsertIntoSQL() {
-        return "INSERT INTO TEAM_LEADER (ID,LAST_NAME,EMAIL_ADDRESS,FIRST_NAME,EMPLOYEE_ID,NOTIFICATION_COUNT,PHOTO_URI) VALUES (?,?,?,?,?,?,?)";
+        return "INSERT INTO TEAM_LEADER (ID,LAST_NAME,EMAIL_ADDRESS,FIRST_NAME,EMPLOYEE_ID,PHOTO_URI) VALUES (?,?,?,?,?,?)";
     }
 
     @Override
     protected String getUpdateSet() {
-        return "UPDATE TEAM_LEADER SET LAST_NAME=?,EMAIL_ADDRESS=?,FIRST_NAME=?,EMPLOYEE_ID=?,NOTIFICATION_COUNT=?,PHOTO_URI=? WHERE ID=?";
+        return "UPDATE TEAM_LEADER SET LAST_NAME=?,EMAIL_ADDRESS=?,FIRST_NAME=?,EMPLOYEE_ID=?=?,PHOTO_URI=? WHERE ID=?";
     }
 
     @Override
@@ -153,8 +153,6 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
             nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
-            nextResult.setNotificationCount(rs.getInt("NOTIFICATION_COUNT"));
-
             nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
         }
@@ -170,8 +168,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
         pstmt.setString(3, perceroObject.getEmailAddress());
         pstmt.setString(4, perceroObject.getFirstName());
         pstmt.setString(5, perceroObject.getEmployeeId());
-        pstmt.setInt(6, perceroObject.getNotificationCount());
-        pstmt.setString(7, perceroObject.getPhotoUri());
+        pstmt.setString(6, perceroObject.getPhotoUri());
 
     }
 
@@ -182,10 +179,9 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
         pstmt.setString(2, perceroObject.getEmailAddress());
         pstmt.setString(3, perceroObject.getFirstName());
         pstmt.setString(4, perceroObject.getEmployeeId());
-        pstmt.setInt(5, perceroObject.getNotificationCount());
-        pstmt.setString(6, perceroObject.getPhotoUri());
+        pstmt.setString(5, perceroObject.getPhotoUri());
 
-        pstmt.setString(7, perceroObject.getID());
+        pstmt.setString(6, perceroObject.getID());
 
 
     }
@@ -260,23 +256,6 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
             }
             sql += " EMPLOYEE_ID=? ";
             paramValues.add(theQueryObject.getEmployeeId());
-            propertyCounter++;
-        }
-
-        boolean useNotificationCount = theQueryObject.getNotificationCount() != null && (excludeProperties == null || !excludeProperties.contains("notificationCount"));
-
-        if (useNotificationCount)
-        {
-            if (propertyCounter > 0)
-            {
-                sql += " AND ";
-            }
-            else
-            {
-                sql += " WHERE ";
-            }
-            sql += " NOTIFICATION_COUNT=? ";
-            paramValues.add(theQueryObject.getNotificationCount());
             propertyCounter++;
         }
 

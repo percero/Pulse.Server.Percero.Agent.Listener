@@ -84,23 +84,7 @@ public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
 }/*
-NotificationCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer notificationCount;
-
-public Integer getNotificationCount() 
-{
-	return this.notificationCount;
-}
-
-public void setNotificationCount(Integer notificationCount)
-{
-	this.notificationCount = notificationCount;
-}/*
+/*
 FirstName
 Notes:
 */
@@ -225,27 +209,6 @@ public void setUserSessions(List<UserSession> value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEmailAddress());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Notification Count property
-		objectJson += ",\"notificationCount\":";
-		
-		if (getNotificationCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getNotificationCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -390,8 +353,6 @@ objectJson += ",\"userSessions\":[";
 		// Properties
 		//From value of the Email Address property
 		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the Notification Count property
-		setNotificationCount(JsonUtils.getJsonInteger(jsonObject, "notificationCount"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 		//From value of the Photo Uri property
