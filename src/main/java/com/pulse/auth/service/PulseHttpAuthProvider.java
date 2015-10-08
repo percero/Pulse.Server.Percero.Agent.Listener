@@ -118,7 +118,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     result.setLastName(teamLeader.getLastName());
                     result.getRoleNames().add("TeamLeader");
                     result.setAreRoleNamesAccurate(true);
-                    result.getIdentifiers().add(new ServiceIdentifier("pulseUserLogin", teamLeader.getEmailAddress()));
+                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
                 }
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);

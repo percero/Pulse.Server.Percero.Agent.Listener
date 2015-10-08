@@ -1,31 +1,49 @@
 
+package com.pulse.mo.mo_super;
 
-package com.pulse.mo.mo_super;
+import java.io.IOException;
+import java.io.Serializable;
 
-import com.google.gson.JsonObject;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.serial.BDODeserializer;
-import com.percero.serial.BDOSerializer;
-import com.percero.serial.JsonUtils;
-import com.pulse.mo.PulseUser;
-import com.pulse.mo.TeamLeader;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SecondaryTable;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.AccessType;
 
-import javax.persistence.*;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
 
 /*
 Imports based on semantic requirements
 */
+
+
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.serial.BDODeserializer;
+import com.percero.serial.BDOSerializer;
+import com.percero.serial.JsonUtils;
+
+import com.pulse.mo.*;
 
 /*
 Entity Tags based on semantic requirements
@@ -127,11 +145,23 @@ public void setDate(Date date)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="currentTeamLeader_ID")
+@JoinColumn(name="CONNECTED_STATE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ConnectedStateOfUserSession")
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
+private ConnectedState connectedState;
+public ConnectedState getConnectedState() {
+	return this.connectedState;
+}
+
+public void setConnectedState(ConnectedState value) {
+	this.connectedState = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="CURRENT_TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CurrentTeamLeaderOfUserSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TeamLeader currentTeamLeader;
@@ -141,8 +171,7 @@ public TeamLeader getCurrentTeamLeader() {
 
 public void setCurrentTeamLeader(TeamLeader value) {
 	this.currentTeamLeader = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="PULSE_USER_ID")
@@ -218,6 +247,18 @@ public void setPulseUser(PulseUser value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Connected State of User Session relationship
+objectJson += ",\"connectedState\":";
+		if (getConnectedState() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getConnectedState()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Current Team Leader of User Session relationship
 objectJson += ",\"currentTeamLeader\":";
 		if (getCurrentTeamLeader() == null)
@@ -265,6 +306,7 @@ objectJson += ",\"pulseUser\":";
 
 		
 		// Source Relationships
+		this.connectedState = (ConnectedState) JsonUtils.getJsonPerceroObject(jsonObject, "connectedState");
 		this.currentTeamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "currentTeamLeader");
 		this.pulseUser = (PulseUser) JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
 
@@ -284,4 +326,4 @@ objectJson += ",\"pulseUser\":";
 		return listSetters;
 	}
 }
-
+
