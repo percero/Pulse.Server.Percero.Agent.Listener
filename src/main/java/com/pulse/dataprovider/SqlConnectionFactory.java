@@ -1,14 +1,13 @@
 package com.pulse.dataprovider;
 
-import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.percero.agents.sync.services.DAODataProvider;
 import com.percero.agents.sync.services.DataProviderManager;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class SqlConnectionFactory implements IConnectionFactory {
 
@@ -100,6 +99,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
     		return;
     	}
         try {
+            logger.info("Initializing connection factory: "+getName());
             cpds = new ComboPooledDataSource();
             cpds.setDriverClass(driverClassName); //loads the jdbc driver
             cpds.setJdbcUrl(jdbcUrl);
@@ -110,9 +110,9 @@ public class SqlConnectionFactory implements IConnectionFactory {
             cpds.setMinPoolSize(minPoolSize);
             cpds.setAcquireIncrement(acquireIncrement);
             cpds.setMaxPoolSize(maxPoolSize);
+			cpds.setNumHelperThreads(30);
             
             PulseDataConnectionRegistry.getInstance().registerConnectionFactory(getName(), this);
-
             DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());
 
             initialized = true;

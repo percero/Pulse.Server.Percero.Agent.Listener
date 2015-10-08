@@ -22,5 +22,5 @@ password: V2PULSEUSER
 name: estart
 driverClassName: oracle.jdbc.OracleDriver
 jdbcUrl:  jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1524/cybtim.cmg.convergys.com
-username: PULSEUSER
-password: V2PULSEUSER
+username: pulse
+password: pulse
