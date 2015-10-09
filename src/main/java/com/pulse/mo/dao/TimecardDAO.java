@@ -40,10 +40,10 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "convergys.agent--time--vw";
+	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"AGENT\".\"PAYROLL\" as \"AGENT_ID\" FROM \"PAYROLL\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -52,7 +52,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" WHERE \"TIMECARD\".\"ID\"=?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\".\"ID\"=?";
 	}
 	
 	@Override
@@ -62,12 +62,12 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" ORDER BY ID";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" ORDER BY \"TIMECARD\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ORDER BY \"TIMECARD\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"PAYROLL\" \"TIMECARD\"";
+		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" WHERE \"TIMECARD\".ID IN (?)";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\".ID IN (?)";
 	}
 
 	@Override
@@ -102,12 +102,12 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" WHERE \"TIMECARD\"." + joinColumnName + "=?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"PAYROLL\" \"TIMECARD\" ";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ";
 	}
 
 	@Override
@@ -140,21 +140,21 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setIsHoliday(rs.getString("IS_HOLIDAY"));
-
-nextResult.setLocalTimeCode(rs.getString("LOCAL_TIME_CODE"));
-
-nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
+			nextResult.setEndDate(rs.getDate("END_DATE"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
-
-nextResult.setTimecardState(rs.getString("TIMECARD_STATE"));
 
 nextResult.setAssumedOff(rs.getString("ASSUMED_OFF"));
 
 nextResult.setDate(rs.getString("DATE"));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setIsHoliday(rs.getString("IS_HOLIDAY"));
+
+nextResult.setLocalTimeCode(rs.getString("LOCAL_TIME_CODE"));
+
+nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
+
+nextResult.setTimecardState(rs.getString("TIMECARD_STATE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -193,11 +193,79 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useIsHoliday = StringUtils.hasText(theQueryObject.getIsHoliday()) && (excludeProperties == null || !excludeProperties.contains("isHoliday"));
+		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+
+if (useEndDate)
+{
+sql += " WHERE ";
+sql += " END_DATE=? ";
+paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
+
+if (useStartDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_DATE=? ";
+paramValues.add(theQueryObject.getStartDate());
+propertyCounter++;
+}
+
+boolean useAssumedOff = StringUtils.hasText(theQueryObject.getAssumedOff()) && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
+
+if (useAssumedOff)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " ASSUMED_OFF=? ";
+paramValues.add(theQueryObject.getAssumedOff());
+propertyCounter++;
+}
+
+boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+
+if (useDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DATE=? ";
+paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useIsHoliday = StringUtils.hasText(theQueryObject.getIsHoliday()) && (excludeProperties == null || !excludeProperties.contains("isHoliday"));
 
 if (useIsHoliday)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " IS_HOLIDAY=? ";
 paramValues.add(theQueryObject.getIsHoliday());
 propertyCounter++;
@@ -237,23 +305,6 @@ paramValues.add(theQueryObject.getLockLevel());
 propertyCounter++;
 }
 
-boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
-
-if (useStartDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_DATE=? ";
-paramValues.add(theQueryObject.getStartDate());
-propertyCounter++;
-}
-
 boolean useTimecardState = StringUtils.hasText(theQueryObject.getTimecardState()) && (excludeProperties == null || !excludeProperties.contains("timecardState"));
 
 if (useTimecardState)
@@ -268,57 +319,6 @@ sql += " WHERE ";
 }
 sql += " TIMECARD_STATE=? ";
 paramValues.add(theQueryObject.getTimecardState());
-propertyCounter++;
-}
-
-boolean useAssumedOff = StringUtils.hasText(theQueryObject.getAssumedOff()) && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
-
-if (useAssumedOff)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " ASSUMED_OFF=? ";
-paramValues.add(theQueryObject.getAssumedOff());
-propertyCounter++;
-}
-
-boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
-
-if (useDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DATE=? ";
-paramValues.add(theQueryObject.getDate());
-propertyCounter++;
-}
-
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
-
-if (useEndDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
 }
 

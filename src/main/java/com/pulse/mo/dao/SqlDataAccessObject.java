@@ -335,7 +335,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	protected List<T> executeSelectById(String selectQueryString, String id, Boolean shellOnly)
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
-		
+		log.debug("running selectById query: \n"+selectQueryString+"\nID: "+id);
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
