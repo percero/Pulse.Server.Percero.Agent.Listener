@@ -52,7 +52,7 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT.ID=?";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ORDER BY EMPLOYEE_ACKNOWLEDGEMENT.ID";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ORDER BY EMPLOYEE_ACKNOWLEDGEMENT.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ORDER BY EMPLOYEE_ACKNOWLEDGEMENT.ID LIMIT ? OFFSET ?";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ORDER BY EMPLOYEE_ACKNOWLEDGEMENT.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT.ID IN (?)";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT." + joinColumnName + "=?";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT WHERE EMPLOYEE_ACKNOWLEDGEMENT." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.DATE,EMPLOYEE_ACKNOWLEDGEMENT.NAME FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ";
+		return "SELECT EMPLOYEE_ACKNOWLEDGEMENT.ID,EMPLOYEE_ACKNOWLEDGEMENT.NAME,EMPLOYEE_ACKNOWLEDGEMENT.DATE FROM EMPLOYEE_ACKNOWLEDGEMENT EMPLOYEE_ACKNOWLEDGEMENT ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EMPLOYEE_ACKNOWLEDGEMENT (ID,DATE,NAME) VALUES (?,?,?)";
+		return "INSERT INTO EMPLOYEE_ACKNOWLEDGEMENT (ID,NAME,DATE) VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EMPLOYEE_ACKNOWLEDGEMENT SET DATE=?,NAME=? WHERE ID=?";
+		return "UPDATE EMPLOYEE_ACKNOWLEDGEMENT SET NAME=?,DATE=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,9 +134,9 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDate(rs.getDate("DATE"));
 
 
 			
@@ -149,8 +149,8 @@ nextResult.setName(rs.getString("NAME"));
 	protected void setPreparedStatmentInsertParams(EmployeeAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 
 		
 	}
@@ -158,8 +158,8 @@ pstmt.setString(3, perceroObject.getName());
 	@Override
 	protected void setPreparedStatmentUpdateParams(EmployeeAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getID());
 
 		
@@ -177,19 +177,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 sql += " WHERE ";
-sql += " DATE=? ";
-paramValues.add(theQueryObject.getDate());
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 if (propertyCounter > 0)
 {
@@ -199,8 +199,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
+sql += " DATE=? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 

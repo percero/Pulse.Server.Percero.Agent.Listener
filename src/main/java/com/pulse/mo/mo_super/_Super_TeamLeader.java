@@ -1,30 +1,49 @@
 
+package com.pulse.mo.mo_super;
 
-package com.pulse.mo.mo_super;
+import java.io.IOException;
+import java.io.Serializable;
 
-import com.google.gson.JsonObject;
-import com.percero.agents.sync.metadata.MappedClass;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.serial.BDODeserializer;
-import com.percero.serial.BDOSerializer;
-import com.percero.serial.JsonUtils;
-import com.pulse.mo.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SecondaryTable;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.AccessType;
 
-import javax.persistence.*;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.metadata.MappedClass;
 
 /*
 Imports based on semantic requirements
 */
+
+
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.serial.BDODeserializer;
+import com.percero.serial.BDOSerializer;
+import com.percero.serial.JsonUtils;
+
+import com.pulse.mo.*;
 
 /*
 Entity Tags based on semantic requirements
@@ -211,44 +230,44 @@ public void setAlerts(List<Alert> value) {
 	this.alerts = value;
 }
 
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@JsonSerialize(contentUsing=BDOSerializer.class)
-//@JsonDeserialize(contentUsing=BDODeserializer.class)
-//@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-//private List<AdhocCoachingSession> adhocCoachingSessions;
-//public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-//	return this.adhocCoachingSessions;
-//}
-//
-//public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-//	this.adhocCoachingSessions = value;
-//}
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AdhocCoachingSession> adhocCoachingSessions;
+public List<AdhocCoachingSession> getAdhocCoachingSessions() {
+	return this.adhocCoachingSessions;
+}
 
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@JsonSerialize(contentUsing=BDOSerializer.class)
-//@JsonDeserialize(contentUsing=BDODeserializer.class)
-//@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-//private List<AdhocTask> adhocTasks;
-//public List<AdhocTask> getAdhocTasks() {
-//	return this.adhocTasks;
-//}
-//
-//public void setAdhocTasks(List<AdhocTask> value) {
-//	this.adhocTasks = value;
-//}
+public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
+	this.adhocCoachingSessions = value;
+}
 
-//@com.percero.agents.sync.metadata.annotations.Externalize
-//@JsonSerialize(contentUsing=BDOSerializer.class)
-//@JsonDeserialize(contentUsing=BDODeserializer.class)
-//@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentActivity.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-//private List<DevelopmentActivity> developmentActivities;
-//public List<DevelopmentActivity> getDevelopmentActivities() {
-//	return this.developmentActivities;
-//}
-//
-//public void setDevelopmentActivities(List<DevelopmentActivity> value) {
-//	this.developmentActivities = value;
-//}
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AdhocTask> adhocTasks;
+public List<AdhocTask> getAdhocTasks() {
+	return this.adhocTasks;
+}
+
+public void setAdhocTasks(List<AdhocTask> value) {
+	this.adhocTasks = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentActivity.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+private List<DevelopmentActivity> developmentActivities;
+public List<DevelopmentActivity> getDevelopmentActivities() {
+	return this.developmentActivities;
+}
+
+public void setDevelopmentActivities(List<DevelopmentActivity> value) {
+	this.developmentActivities = value;
+}
 
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
@@ -320,8 +339,7 @@ public void setSettings(List<Setting> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_ID")
@@ -541,56 +559,56 @@ objectJson += ",\"alerts\":[";
 		}
 		objectJson += "]";
 //Retrieve value of the Team Leader of Adhoc Coaching Session relationship
-//objectJson += ",\"adhocCoachingSessions\":[";
-//
-//		if (getAdhocCoachingSessions() != null) {
-//			int adhocCoachingSessionsCounter = 0;
-//			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-//				if (adhocCoachingSessionsCounter > 0)
-//					objectJson += ",";
-//				try {
-//					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-//					adhocCoachingSessionsCounter++;
-//				} catch(Exception e) {
-//					// Do nothing.
-//				}
-//			}
-//		}
-//		objectJson += "]";
+objectJson += ",\"adhocCoachingSessions\":[";
+		
+		if (getAdhocCoachingSessions() != null) {
+			int adhocCoachingSessionsCounter = 0;
+			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
+				if (adhocCoachingSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
+					adhocCoachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Team Leader of Adhoc Task relationship
-//objectJson += ",\"adhocTasks\":[";
-//
-//		if (getAdhocTasks() != null) {
-//			int adhocTasksCounter = 0;
-//			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
-//				if (adhocTasksCounter > 0)
-//					objectJson += ",";
-//				try {
-//					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
-//					adhocTasksCounter++;
-//				} catch(Exception e) {
-//					// Do nothing.
-//				}
-//			}
-//		}
-//		objectJson += "]";
+objectJson += ",\"adhocTasks\":[";
+		
+		if (getAdhocTasks() != null) {
+			int adhocTasksCounter = 0;
+			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
+				if (adhocTasksCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
+					adhocTasksCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Team Leader of Development Activity relationship
-//objectJson += ",\"developmentActivities\":[";
-//
-//		if (getDevelopmentActivities() != null) {
-//			int developmentActivitiesCounter = 0;
-//			for(DevelopmentActivity nextDevelopmentActivities : getDevelopmentActivities()) {
-//				if (developmentActivitiesCounter > 0)
-//					objectJson += ",";
-//				try {
-//					objectJson += ((BaseDataObject) nextDevelopmentActivities).toEmbeddedJson();
-//					developmentActivitiesCounter++;
-//				} catch(Exception e) {
-//					// Do nothing.
-//				}
-//			}
-//		}
-//		objectJson += "]";
+objectJson += ",\"developmentActivities\":[";
+		
+		if (getDevelopmentActivities() != null) {
+			int developmentActivitiesCounter = 0;
+			for(DevelopmentActivity nextDevelopmentActivities : getDevelopmentActivities()) {
+				if (developmentActivitiesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextDevelopmentActivities).toEmbeddedJson();
+					developmentActivitiesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Team Leader of General Comment relationship
 objectJson += ",\"generalComments\":[";
 		
@@ -709,9 +727,9 @@ objectJson += ",\"settings\":[";
 		this.notifications = (List<Notification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
-//		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
-//		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
-//		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
+		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
+		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
+		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.generalComments = (List<GeneralComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "generalComments");
 		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
 		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
@@ -729,9 +747,9 @@ objectJson += ",\"settings\":[";
 		listSetters.add(MappedClass.getFieldSetters(Notification.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamleader"));
-//		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "teamleader"));
-//		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "teamleader"));
-//		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "teamleader"));
+		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "teamleader"));
+		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "teamleader"));
+		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(GeneralComment.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamleader"));
@@ -742,4 +760,4 @@ objectJson += ",\"settings\":[";
 		return listSetters;
 	}
 }
-
+

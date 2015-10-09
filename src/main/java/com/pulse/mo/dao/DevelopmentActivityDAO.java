@@ -52,7 +52,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY.ID=?";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ORDER BY DEVELOPMENT_ACTIVITY.ID";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ORDER BY DEVELOPMENT_ACTIVITY.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ORDER BY DEVELOPMENT_ACTIVITY.ID LIMIT ? OFFSET ?";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ORDER BY DEVELOPMENT_ACTIVITY.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY.ID IN (?)";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY." + joinColumnName + "=?";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY WHERE DEVELOPMENT_ACTIVITY." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ";
+		return "SELECT DEVELOPMENT_ACTIVITY.ID,DEVELOPMENT_ACTIVITY.NAME,DEVELOPMENT_ACTIVITY.DUE_DATE,DEVELOPMENT_ACTIVITY.TEAM_LEADER_ID FROM DEVELOPMENT_ACTIVITY DEVELOPMENT_ACTIVITY ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DEVELOPMENT_ACTIVITY (ID,DUE_DATE,NAME,TEAM_LEADER_ID) VALUES (?,?,?,?)";
+		return "INSERT INTO DEVELOPMENT_ACTIVITY (ID,NAME,DUE_DATE,TEAM_LEADER_ID) VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE DEVELOPMENT_ACTIVITY SET DUE_DATE=?,NAME=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE DEVELOPMENT_ACTIVITY SET NAME=?,DUE_DATE=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,9 +134,9 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDueDate(rs.getDate("DUE_DATE"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDueDate(rs.getDate("DUE_DATE"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -153,8 +153,8 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -172,8 +172,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -201,19 +201,19 @@ pstmt.setString(4, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDueDate = theQueryObject.getDueDate() != null && (excludeProperties == null || !excludeProperties.contains("dueDate"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDueDate)
+if (useName)
 {
 sql += " WHERE ";
-sql += " DUE_DATE=? ";
-paramValues.add(theQueryObject.getDueDate());
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDueDate = theQueryObject.getDueDate() != null && (excludeProperties == null || !excludeProperties.contains("dueDate"));
 
-if (useName)
+if (useDueDate)
 {
 if (propertyCounter > 0)
 {
@@ -223,8 +223,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
+sql += " DUE_DATE=? ";
+paramValues.add(theQueryObject.getDueDate());
 propertyCounter++;
 }
 

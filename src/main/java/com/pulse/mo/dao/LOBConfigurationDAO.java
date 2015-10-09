@@ -119,7 +119,7 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE LOB_CONFIGURATION SET LOB_ID WHERE ID=?";
+		return "UPDATE LOB_CONFIGURATION SET LOB_ID=? WHERE ID=?";
 	}
 	
 	@Override

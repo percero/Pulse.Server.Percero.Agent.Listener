@@ -165,7 +165,7 @@ public void setFromTime(Date fromTime)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CMS_AUX_MODE_ID")
+@JoinColumn(name="AUXREASON")
 @org.hibernate.annotations.ForeignKey(name="FK_CMSAuxModeOfCMSEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CMSAuxMode cMSAuxMode;

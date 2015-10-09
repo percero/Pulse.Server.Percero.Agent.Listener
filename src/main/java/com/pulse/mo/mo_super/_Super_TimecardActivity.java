@@ -218,7 +218,7 @@ public void setChangesNotApprovedNotifications(List<ChangesNotApprovedNotificati
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CVG_PROJECT_ID")
+@JoinColumn(name="CENTRE")
 @org.hibernate.annotations.ForeignKey(name="FK_CVGProjectOfTimecardActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private CVGProject cVGProject;

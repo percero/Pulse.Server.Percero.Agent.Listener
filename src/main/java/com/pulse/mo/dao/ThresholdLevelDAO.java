@@ -52,7 +52,7 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL.ID=?";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ORDER BY THRESHOLD_LEVEL.ID";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ORDER BY THRESHOLD_LEVEL.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ORDER BY THRESHOLD_LEVEL.ID LIMIT ? OFFSET ?";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ORDER BY THRESHOLD_LEVEL.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL.ID IN (?)";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL." + joinColumnName + "=?";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL WHERE THRESHOLD_LEVEL." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ";
+		return "SELECT THRESHOLD_LEVEL.ID,THRESHOLD_LEVEL.START_EXPRESSION,THRESHOLD_LEVEL.START_VALUE,THRESHOLD_LEVEL.COLOR,THRESHOLD_LEVEL.END_EXPRESSION,THRESHOLD_LEVEL.END_VALUE,THRESHOLD_LEVEL.EXPRESSION_OPERATOR,THRESHOLD_LEVEL.THRESHOLD_SCALE_ID FROM THRESHOLD_LEVEL THRESHOLD_LEVEL ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO THRESHOLD_LEVEL (ID,COLOR,END_EXPRESSION,END_VALUE,EXPRESSION_OPERATOR,START_EXPRESSION,START_VALUE,THRESHOLD_SCALE_ID) VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO THRESHOLD_LEVEL (ID,START_EXPRESSION,START_VALUE,COLOR,END_EXPRESSION,END_VALUE,EXPRESSION_OPERATOR,THRESHOLD_SCALE_ID) VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE THRESHOLD_LEVEL SET COLOR=?,END_EXPRESSION=?,END_VALUE=?,EXPRESSION_OPERATOR=?,START_EXPRESSION=?,START_VALUE=?,THRESHOLD_SCALE_ID WHERE ID=?";
+		return "UPDATE THRESHOLD_LEVEL SET START_EXPRESSION=?,START_VALUE=?,COLOR=?,END_EXPRESSION=?,END_VALUE=?,EXPRESSION_OPERATOR=?,THRESHOLD_SCALE_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,17 +134,17 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
     	
     	if (!shellOnly) 
 		{
-			nextResult.setColor(rs.getString("COLOR"));
+			nextResult.setStartExpression(rs.getString("START_EXPRESSION"));
+
+nextResult.setStartValue(rs.getString("START_VALUE"));
+
+nextResult.setColor(rs.getString("COLOR"));
 
 nextResult.setEndExpression(rs.getString("END_EXPRESSION"));
 
 nextResult.setEndValue(rs.getString("END_VALUE"));
 
 nextResult.setExpressionOperator(rs.getString("EXPRESSION_OPERATOR"));
-
-nextResult.setStartExpression(rs.getString("START_EXPRESSION"));
-
-nextResult.setStartValue(rs.getString("START_VALUE"));
 
 ThresholdScale thresholdscale = new ThresholdScale();
 thresholdscale.setID(rs.getString("THRESHOLD_SCALE_ID"));
@@ -161,12 +161,12 @@ nextResult.setThresholdScale(thresholdscale);
 	protected void setPreparedStatmentInsertParams(ThresholdLevel perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getColor());
-pstmt.setString(3, perceroObject.getEndExpression());
-pstmt.setString(4, perceroObject.getEndValue());
-pstmt.setString(5, perceroObject.getExpressionOperator());
-pstmt.setString(6, perceroObject.getStartExpression());
-pstmt.setString(7, perceroObject.getStartValue());
+pstmt.setString(2, perceroObject.getStartExpression());
+pstmt.setString(3, perceroObject.getStartValue());
+pstmt.setString(4, perceroObject.getColor());
+pstmt.setString(5, perceroObject.getEndExpression());
+pstmt.setString(6, perceroObject.getEndValue());
+pstmt.setString(7, perceroObject.getExpressionOperator());
 
 if (perceroObject.getThresholdScale() == null)
 {
@@ -184,12 +184,12 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ThresholdLevel perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getColor());
-pstmt.setString(2, perceroObject.getEndExpression());
-pstmt.setString(3, perceroObject.getEndValue());
-pstmt.setString(4, perceroObject.getExpressionOperator());
-pstmt.setString(5, perceroObject.getStartExpression());
-pstmt.setString(6, perceroObject.getStartValue());
+		pstmt.setString(1, perceroObject.getStartExpression());
+pstmt.setString(2, perceroObject.getStartValue());
+pstmt.setString(3, perceroObject.getColor());
+pstmt.setString(4, perceroObject.getEndExpression());
+pstmt.setString(5, perceroObject.getEndValue());
+pstmt.setString(6, perceroObject.getExpressionOperator());
 
 if (perceroObject.getThresholdScale() == null)
 {
@@ -217,11 +217,45 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useColor = StringUtils.hasText(theQueryObject.getColor()) && (excludeProperties == null || !excludeProperties.contains("color"));
+		boolean useStartExpression = StringUtils.hasText(theQueryObject.getStartExpression()) && (excludeProperties == null || !excludeProperties.contains("startExpression"));
+
+if (useStartExpression)
+{
+sql += " WHERE ";
+sql += " START_EXPRESSION=? ";
+paramValues.add(theQueryObject.getStartExpression());
+propertyCounter++;
+}
+
+boolean useStartValue = StringUtils.hasText(theQueryObject.getStartValue()) && (excludeProperties == null || !excludeProperties.contains("startValue"));
+
+if (useStartValue)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_VALUE=? ";
+paramValues.add(theQueryObject.getStartValue());
+propertyCounter++;
+}
+
+boolean useColor = StringUtils.hasText(theQueryObject.getColor()) && (excludeProperties == null || !excludeProperties.contains("color"));
 
 if (useColor)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " COLOR=? ";
 paramValues.add(theQueryObject.getColor());
 propertyCounter++;
@@ -275,40 +309,6 @@ sql += " WHERE ";
 }
 sql += " EXPRESSION_OPERATOR=? ";
 paramValues.add(theQueryObject.getExpressionOperator());
-propertyCounter++;
-}
-
-boolean useStartExpression = StringUtils.hasText(theQueryObject.getStartExpression()) && (excludeProperties == null || !excludeProperties.contains("startExpression"));
-
-if (useStartExpression)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_EXPRESSION=? ";
-paramValues.add(theQueryObject.getStartExpression());
-propertyCounter++;
-}
-
-boolean useStartValue = StringUtils.hasText(theQueryObject.getStartValue()) && (excludeProperties == null || !excludeProperties.contains("startValue"));
-
-if (useStartValue)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_VALUE=? ";
-paramValues.add(theQueryObject.getStartValue());
 propertyCounter++;
 }
 

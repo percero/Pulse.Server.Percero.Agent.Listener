@@ -118,7 +118,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessObject<LOBConf
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE LOB_CONFIGURATION_NOTIFICATION SET DATE=?,MESSAGE=?,NAME=?,TYPE=?,AGENT_ID,LOB_CONFIGURATION_ID,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE LOB_CONFIGURATION_NOTIFICATION SET DATE=?,MESSAGE=?,NAME=?,TYPE=?,AGENT_ID=?,LOB_CONFIGURATION_ID=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override

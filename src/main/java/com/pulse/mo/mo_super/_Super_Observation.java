@@ -97,16 +97,16 @@ public void setID(String value) {
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="COACHING_SESSION_MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionMeasureOfObservation")
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfObservation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private CoachingSessionMeasure coachingSessionMeasure;
-public CoachingSessionMeasure getCoachingSessionMeasure() {
-	return this.coachingSessionMeasure;
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
 }
 
-public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
-	this.coachingSessionMeasure = value;
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
 }
 
 	
@@ -121,13 +121,13 @@ public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Coaching Session Measure of Observation relationship
-objectJson += ",\"coachingSessionMeasure\":";
-		if (getCoachingSessionMeasure() == null)
+//Retrieve value of the Scorecard Measure of Observation relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getCoachingSessionMeasure()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -150,7 +150,7 @@ objectJson += ",\"coachingSessionMeasure\":";
 
 		
 		// Source Relationships
-		this.coachingSessionMeasure = (CoachingSessionMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSessionMeasure");
+		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 
 		// Target Relationships

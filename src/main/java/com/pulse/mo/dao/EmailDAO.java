@@ -117,7 +117,7 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EMAIL SET EMAIL_ADDRESS=?,PULSE_USER_ID WHERE ID=?";
+		return "UPDATE EMAIL SET EMAIL_ADDRESS=?,PULSE_USER_ID=? WHERE ID=?";
 	}
 	
 	@Override

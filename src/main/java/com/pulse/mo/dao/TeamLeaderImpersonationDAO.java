@@ -118,7 +118,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TEAM_LEADER_IMPERSONATION SET LAST_IMPERSONATED_ON=?,PULSE_USER_ID,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE TEAM_LEADER_IMPERSONATION SET LAST_IMPERSONATED_ON=?,PULSE_USER_ID=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override

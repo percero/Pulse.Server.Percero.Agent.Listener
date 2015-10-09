@@ -43,7 +43,11 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "default";
+	public static final String CONNECTION_FACTORY_NAME = "convergys.estart--activity--code--vw";
+	
+	//TODO:For use refactoring, so we set it once
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"CVG_PROJECT\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ";
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return TimecardActivityDAO.CONNECTION_FACTORY_NAME;
@@ -51,82 +55,83 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY.ID=?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY.ID=?";
+		return SQL_VIEW + " where \"TIMECARD_ACTIVITY\".ID=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ORDER BY ID";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ORDER BY TIMECARD_ACTIVITY.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ORDER BY \"TIMECARD_ACTIVITY\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ORDER BY TIMECARD_ACTIVITY.ID";
+		return SQL_VIEW + " ORDER BY \"TIMECARD_ACTIVITY\".ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ORDER BY TIMECARD_ACTIVITY.ID LIMIT ? OFFSET ?";
+		return SQL_VIEW + " ORDER BY \"TIMECARD_ACTIVITY\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY";
+		return "SELECT COUNT(ID) FROM \"CENTRE\" \"TIMECARD_ACTIVITY\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY.ID IN (?)";
+		return SQL_VIEW + " where \"TIMECARD_ACTIVITY\".ID IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY.ID IN (?)";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".ID IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY." + joinColumnName + "=?";
+		return SQL_VIEW + "  \"TIMECARD_ACTIVITY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY WHERE TIMECARD_ACTIVITY." + joinColumnName + "=?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT TIMECARD_ACTIVITY.ID,TIMECARD_ACTIVITY.NON_BILLABLE,TIMECARD_ACTIVITY.CODE,TIMECARD_ACTIVITY.DESCRIPTION,TIMECARD_ACTIVITY.NAME,TIMECARD_ACTIVITY.CVG_PROJECT_ID FROM TIMECARD_ACTIVITY TIMECARD_ACTIVITY ";
+		return SQL_VIEW;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TIMECARD_ACTIVITY (ID,NON_BILLABLE,CODE,DESCRIPTION,NAME,CVG_PROJECT_ID) VALUES (?,?,?,?,?,?)";
+		return "";//"INSERT INTO TIMECARD_ACTIVITY (ID) VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TIMECARD_ACTIVITY SET NON_BILLABLE=?,CODE=?,DESCRIPTION=?,NAME=?,CVG_PROJECT_ID WHERE ID=?";
+		return "";//"UPDATE TIMECARD_ACTIVITY SET  WHERE ID=?";
 	}
 	
 	@Override
-	protected String getDeleteFromSQL() {
-		return "DELETE FROM TIMECARD_ACTIVITY WHERE ID=?";
+	protected String getDeleteFromSQL() 
+	{
+		return "";//"DELETE FROM TIMECARD_ACTIVITY WHERE ID=?";
 	}
 	
 	@Override
@@ -138,13 +143,13 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
+			nextResult.setName(rs.getString("NAME"));
+
+nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
 
 nextResult.setCode(rs.getString("CODE"));
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
-
-nextResult.setName(rs.getString("NAME"));
 
 CVGProject cvgproject = new CVGProject();
 cvgproject.setID(rs.getString("CVG_PROJECT_ID"));
@@ -160,44 +165,14 @@ nextResult.setCVGProject(cvgproject);
 	@Override
 	protected void setPreparedStatmentInsertParams(TimecardActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setBoolean(2, perceroObject.getNonBillable());
-pstmt.setString(3, perceroObject.getCode());
-pstmt.setString(4, perceroObject.getDescription());
-pstmt.setString(5, perceroObject.getName());
-
-if (perceroObject.getCVGProject() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getCVGProject().getID());
-}
-
-
+		
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(TimecardActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setBoolean(1, perceroObject.getNonBillable());
-pstmt.setString(2, perceroObject.getCode());
-pstmt.setString(3, perceroObject.getDescription());
-pstmt.setString(4, perceroObject.getName());
-
-if (perceroObject.getCVGProject() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getCVGProject().getID());
-}
-
-pstmt.setString(6, perceroObject.getID());
-
+	
 		
 	}
 
@@ -213,11 +188,28 @@ pstmt.setString(6, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+sql += " WHERE ";
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
 
 if (useNonBillable)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " NON_BILLABLE=? ";
 paramValues.add(theQueryObject.getNonBillable());
 propertyCounter++;
@@ -257,23 +249,6 @@ paramValues.add(theQueryObject.getDescription());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
 boolean useCVGProjectID = theQueryObject.getCVGProject() != null && (excludeProperties == null || !excludeProperties.contains("cVGProject"));
 
 if (useCVGProjectID)
@@ -292,30 +267,7 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
 		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
-		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

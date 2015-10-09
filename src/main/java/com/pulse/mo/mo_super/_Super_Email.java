@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -90,7 +91,8 @@ Notes:
 */
 @Column
 
-@com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, propertyName="userIdentifier",params={@com.percero.agents.sync.metadata.annotations.PropertyInterfaceParam(name="paradigm", value="email")})
+
+@com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, propertyName="userIdentifier",params={@com.percero.agents.sync.metadata.annotations.PropertyInterfaceParam(name="paradigm", value="email")})
 @com.percero.agents.sync.metadata.annotations.Externalize
 
 private String emailAddress;
@@ -113,7 +115,8 @@ public void setEmailAddress(String emailAddress)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, sourceVarName="userAnchor")
+	
+@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, sourceVarName="userAnchor")
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -211,4 +214,4 @@ objectJson += ",\"pulseUser\":";
 		return listSetters;
 	}
 }
-
+

@@ -53,7 +53,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION.ID=?";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION.ID=?";
 	}
 	
 	@Override
@@ -68,12 +68,12 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ORDER BY QUALITY_EVALUATION.ID";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ORDER BY QUALITY_EVALUATION.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ORDER BY QUALITY_EVALUATION.ID LIMIT ? OFFSET ?";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ORDER BY QUALITY_EVALUATION.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION.ID IN (?)";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION.ID IN (?)";
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION." + joinColumnName + "=?";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION WHERE QUALITY_EVALUATION." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -108,17 +108,17 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.COACHING_SESSION_ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ";
+		return "SELECT QUALITY_EVALUATION.ID,QUALITY_EVALUATION.PERFORMANCE_SUMMARY_ID,QUALITY_EVALUATION.COACHING_SESSION_ID FROM QUALITY_EVALUATION QUALITY_EVALUATION ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO QUALITY_EVALUATION (ID,COACHING_SESSION_ID,PERFORMANCE_SUMMARY_ID) VALUES (?,?,?)";
+		return "INSERT INTO QUALITY_EVALUATION (ID,PERFORMANCE_SUMMARY_ID,COACHING_SESSION_ID) VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE QUALITY_EVALUATION SET COACHING_SESSION_ID,PERFORMANCE_SUMMARY_ID WHERE ID=?";
+		return "UPDATE QUALITY_EVALUATION SET PERFORMANCE_SUMMARY_ID=?,COACHING_SESSION_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -135,13 +135,13 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
     	
     	if (!shellOnly) 
 		{
-			CoachingSession coachingsession = new CoachingSession();
-coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
-nextResult.setCoachingSession(coachingsession);
-
-PerformanceSummary performancesummary = new PerformanceSummary();
+			PerformanceSummary performancesummary = new PerformanceSummary();
 performancesummary.setID(rs.getString("PERFORMANCE_SUMMARY_ID"));
 nextResult.setPerformanceSummary(performancesummary);
+
+CoachingSession coachingsession = new CoachingSession();
+coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
+nextResult.setCoachingSession(coachingsession);
 
 
 			
@@ -155,23 +155,23 @@ nextResult.setPerformanceSummary(performancesummary);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getCoachingSession() == null)
+if (perceroObject.getPerformanceSummary() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getCoachingSession().getID());
+		pstmt.setString(2, perceroObject.getPerformanceSummary().getID());
 }
 
 
-if (perceroObject.getPerformanceSummary() == null)
+if (perceroObject.getCoachingSession() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getPerformanceSummary().getID());
+		pstmt.setString(3, perceroObject.getCoachingSession().getID());
 }
 
 
@@ -182,23 +182,23 @@ else
 	protected void setPreparedStatmentUpdateParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		
-if (perceroObject.getCoachingSession() == null)
+if (perceroObject.getPerformanceSummary() == null)
 {
 pstmt.setString(1, null);
 }
 else
 {
-		pstmt.setString(1, perceroObject.getCoachingSession().getID());
+		pstmt.setString(1, perceroObject.getPerformanceSummary().getID());
 }
 
 
-if (perceroObject.getPerformanceSummary() == null)
+if (perceroObject.getCoachingSession() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getPerformanceSummary().getID());
+		pstmt.setString(2, perceroObject.getCoachingSession().getID());
 }
 
 pstmt.setString(3, perceroObject.getID());
@@ -218,19 +218,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCoachingSessionID = theQueryObject.getCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("coachingSession"));
+		boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
 
-if (useCoachingSessionID)
+if (usePerformanceSummaryID)
 {
 sql += " WHERE ";
-sql += " COACHING_SESSION_ID=? ";
-paramValues.add(theQueryObject.getCoachingSession().getID());
+sql += " PERFORMANCE_SUMMARY_ID=? ";
+paramValues.add(theQueryObject.getPerformanceSummary().getID());
 propertyCounter++;
 }
 
-boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
+boolean useCoachingSessionID = theQueryObject.getCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("coachingSession"));
 
-if (usePerformanceSummaryID)
+if (useCoachingSessionID)
 {
 if (propertyCounter > 0)
 {
@@ -240,8 +240,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PERFORMANCE_SUMMARY_ID=? ";
-paramValues.add(theQueryObject.getPerformanceSummary().getID());
+sql += " COACHING_SESSION_ID=? ";
+paramValues.add(theQueryObject.getCoachingSession().getID());
 propertyCounter++;
 }
 

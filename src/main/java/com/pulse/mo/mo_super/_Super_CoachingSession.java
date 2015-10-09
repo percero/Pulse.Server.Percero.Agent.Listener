@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
+}/*
 CurrentMTDOverallScore
 Notes:
 */
@@ -102,6 +119,23 @@ public void setCurrentMTDOverallScore(String currentMTDOverallScore)
 {
 	this.currentMTDOverallScore = currentMTDOverallScore;
 }/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
 WeeklyOverallScore
 Notes:
 */
@@ -118,23 +152,6 @@ public String getWeeklyOverallScore()
 public void setWeeklyOverallScore(String weeklyOverallScore)
 {
 	this.weeklyOverallScore = weeklyOverallScore;
-}/*
-StateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String stateName;
-
-public String getStateName() 
-{
-	return this.stateName;
-}
-
-public void setStateName(String stateName)
-{
-	this.stateName = stateName;
 }/*
 PreviousMTDOverallScore
 Notes:
@@ -187,23 +204,6 @@ public void setMTDTrend(String mTDTrend)
 {
 	this.mTDTrend = mTDTrend;
 }/*
-ScorecardName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String scorecardName;
-
-public String getScorecardName() 
-{
-	return this.scorecardName;
-}
-
-public void setScorecardName(String scorecardName)
-{
-	this.scorecardName = scorecardName;
-}/*
 PreviousMTDThresholdGrade
 Notes:
 */
@@ -220,6 +220,40 @@ public Double getPreviousMTDThresholdGrade()
 public void setPreviousMTDThresholdGrade(Double previousMTDThresholdGrade)
 {
 	this.previousMTDThresholdGrade = previousMTDThresholdGrade;
+}/*
+IsRequired
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isRequired;
+
+public Boolean getIsRequired() 
+{
+	return this.isRequired;
+}
+
+public void setIsRequired(Boolean isRequired)
+{
+	this.isRequired = isRequired;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }/*
 WeekendDate
 Notes:
@@ -238,6 +272,23 @@ public void setWeekendDate(String weekendDate)
 {
 	this.weekendDate = weekendDate;
 }/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String type;
+
+public String getType() 
+{
+	return this.type;
+}
+
+public void setType(String type)
+{
+	this.type = type;
+}/*
 WeeklyOverallScoreStateName
 Notes:
 */
@@ -255,6 +306,23 @@ public void setWeeklyOverallScoreStateName(String weeklyOverallScoreStateName)
 {
 	this.weeklyOverallScoreStateName = weeklyOverallScoreStateName;
 }/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
 WeeklyTrend
 Notes:
 */
@@ -271,6 +339,23 @@ public String getWeeklyTrend()
 public void setWeeklyTrend(String weeklyTrend)
 {
 	this.weeklyTrend = weeklyTrend;
+}/*
+ClosedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date closedOn;
+
+public Date getClosedOn() 
+{
+	return this.closedOn;
+}
+
+public void setClosedOn(Date closedOn)
+{
+	this.closedOn = closedOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -292,6 +377,19 @@ public void setAttachments(List<Attachment> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=BehaviorResponse.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<BehaviorResponse> behaviorResponses;
+public List<BehaviorResponse> getBehaviorResponses() {
+	return this.behaviorResponses;
+}
+
+public void setBehaviorResponses(List<BehaviorResponse> value) {
+	this.behaviorResponses = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<QualityEvaluation> qualityEvaluations;
 public List<QualityEvaluation> getQualityEvaluations() {
@@ -300,19 +398,6 @@ public List<QualityEvaluation> getQualityEvaluations() {
 
 public void setQualityEvaluations(List<QualityEvaluation> value) {
 	this.qualityEvaluations = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSessionMeasure.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CoachingSessionMeasure> coachingSessionMeasures;
-public List<CoachingSessionMeasure> getCoachingSessionMeasures() {
-	return this.coachingSessionMeasures;
-}
-
-public void setCoachingSessionMeasures(List<CoachingSessionMeasure> value) {
-	this.coachingSessionMeasures = value;
 }
 
 
@@ -370,6 +455,27 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Current MTD Overall Score property
 		objectJson += ",\"currentMTDOverallScore\":";
 		
@@ -391,6 +497,13 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
 		//Retrieve value of the Weekly Overall Score property
 		objectJson += ",\"weeklyOverallScore\":";
 		
@@ -401,27 +514,6 @@ public void setScorecard(Scorecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getWeeklyOverallScore());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the State Name property
-		objectJson += ",\"stateName\":";
-		
-		if (getStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStateName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -482,33 +574,26 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Scorecard Name property
-		objectJson += ",\"scorecardName\":";
-		
-		if (getScorecardName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getScorecardName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Previous MTD Threshold Grade property
 		objectJson += ",\"previousMTDThresholdGrade\":";
 		if (getPreviousMTDThresholdGrade() == null)
 			objectJson += "null";
 		else {
 			objectJson += getPreviousMTDThresholdGrade();
+		}
+		//Retrieve value of the Is Required property
+		objectJson += ",\"isRequired\":";
+		if (getIsRequired() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRequired();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Weekend Date property
 		objectJson += ",\"weekendDate\":";
@@ -520,6 +605,27 @@ public void setScorecard(Scorecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getWeekendDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
+		
+		if (getType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -552,6 +658,27 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Weekly Trend property
 		objectJson += ",\"weeklyTrend\":";
 		
@@ -572,6 +699,13 @@ public void setScorecard(Scorecard value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Closed On property
+		objectJson += ",\"closedOn\":";
+		if (getClosedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getClosedOn().getTime();
 		}
 
 				
@@ -632,6 +766,23 @@ objectJson += ",\"attachments\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Coaching Session of Behavior Response relationship
+objectJson += ",\"behaviorResponses\":[";
+		
+		if (getBehaviorResponses() != null) {
+			int behaviorResponsesCounter = 0;
+			for(BehaviorResponse nextBehaviorResponses : getBehaviorResponses()) {
+				if (behaviorResponsesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextBehaviorResponses).toEmbeddedJson();
+					behaviorResponsesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Coaching Session of Quality Evaluation relationship
 objectJson += ",\"qualityEvaluations\":[";
 		
@@ -649,23 +800,6 @@ objectJson += ",\"qualityEvaluations\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Coaching Session of Coaching Session Measure relationship
-objectJson += ",\"coachingSessionMeasures\":[";
-		
-		if (getCoachingSessionMeasures() != null) {
-			int coachingSessionMeasuresCounter = 0;
-			for(CoachingSessionMeasure nextCoachingSessionMeasures : getCoachingSessionMeasures()) {
-				if (coachingSessionMeasuresCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCoachingSessionMeasures).toEmbeddedJson();
-					coachingSessionMeasuresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -677,28 +811,38 @@ objectJson += ",\"coachingSessionMeasures\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Current MTD Overall Score property
 		setCurrentMTDOverallScore(JsonUtils.getJsonString(jsonObject, "currentMTDOverallScore"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Weekly Overall Score property
 		setWeeklyOverallScore(JsonUtils.getJsonString(jsonObject, "weeklyOverallScore"));
-		//From value of the State Name property
-		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
 		//From value of the Previous MTD Overall Score property
 		setPreviousMTDOverallScore(JsonUtils.getJsonString(jsonObject, "previousMTDOverallScore"));
 		//From value of the Current MTD Threshold Grade property
 		setCurrentMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "currentMTDThresholdGrade"));
 		//From value of the MTD Trend property
 		setMTDTrend(JsonUtils.getJsonString(jsonObject, "mTDTrend"));
-		//From value of the Scorecard Name property
-		setScorecardName(JsonUtils.getJsonString(jsonObject, "scorecardName"));
 		//From value of the Previous MTD Threshold Grade property
 		setPreviousMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "previousMTDThresholdGrade"));
+		//From value of the Is Required property
+		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Weekend Date property
 		setWeekendDate(JsonUtils.getJsonString(jsonObject, "weekendDate"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Weekly Overall Score State Name property
 		setWeeklyOverallScoreStateName(JsonUtils.getJsonString(jsonObject, "weeklyOverallScoreStateName"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Weekly Trend property
 		setWeeklyTrend(JsonUtils.getJsonString(jsonObject, "weeklyTrend"));
+		//From value of the Closed On property
+		setClosedOn(JsonUtils.getJsonDate(jsonObject, "closedOn"));
 
 		
 		// Source Relationships
@@ -709,8 +853,8 @@ objectJson += ",\"coachingSessionMeasures\":[";
 
 		// Target Relationships
 		this.attachments = (List<Attachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "attachments");
+		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
-		this.coachingSessionMeasures = (List<CoachingSessionMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessionMeasures");
 
 
 	}
@@ -721,8 +865,8 @@ objectJson += ",\"coachingSessionMeasures\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(Attachment.class, "coachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "coachingsession"));
 		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "coachingsession"));
-		listSetters.add(MappedClass.getFieldSetters(CoachingSessionMeasure.class, "coachingsession"));
 
 		
 		return listSetters;

@@ -102,23 +102,6 @@ public void setDescription(String description)
 {
 	this.description = description;
 }/*
-Response
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String response;
-
-public String getResponse() 
-{
-	return this.response;
-}
-
-public void setResponse(String response)
-{
-	this.response = response;
-}/*
 Name
 Notes:
 */
@@ -140,7 +123,20 @@ public void setName(String name)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=BehaviorResponse.class, mappedBy="behavior", cascade=javax.persistence.CascadeType.REMOVE)
+private List<BehaviorResponse> behaviorResponses;
+public List<BehaviorResponse> getBehaviorResponses() {
+	return this.behaviorResponses;
+}
+
+public void setBehaviorResponses(List<BehaviorResponse> value) {
+	this.behaviorResponses = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -148,16 +144,16 @@ public void setName(String name)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="COACHING_SESSION_MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionMeasureOfBehavior")
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehavior")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private CoachingSessionMeasure coachingSessionMeasure;
-public CoachingSessionMeasure getCoachingSessionMeasure() {
-	return this.coachingSessionMeasure;
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
 }
 
-public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
-	this.coachingSessionMeasure = value;
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
 }
 
 	
@@ -179,27 +175,6 @@ public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Response property
-		objectJson += ",\"response\":";
-		
-		if (getResponse() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getResponse());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -235,13 +210,13 @@ public void setCoachingSessionMeasure(CoachingSessionMeasure value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Coaching Session Measure of Behavior relationship
-objectJson += ",\"coachingSessionMeasure\":";
-		if (getCoachingSessionMeasure() == null)
+//Retrieve value of the Scorecard Measure of Behavior relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getCoachingSessionMeasure()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -250,6 +225,23 @@ objectJson += ",\"coachingSessionMeasure\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Behavior of Behavior Response relationship
+objectJson += ",\"behaviorResponses\":[";
+		
+		if (getBehaviorResponses() != null) {
+			int behaviorResponsesCounter = 0;
+			for(BehaviorResponse nextBehaviorResponses : getBehaviorResponses()) {
+				if (behaviorResponsesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextBehaviorResponses).toEmbeddedJson();
+					behaviorResponsesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -263,17 +255,16 @@ objectJson += ",\"coachingSessionMeasure\":";
 		// Properties
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Response property
-		setResponse(JsonUtils.getJsonString(jsonObject, "response"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships
-		this.coachingSessionMeasure = (CoachingSessionMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSessionMeasure");
+		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 
 		// Target Relationships
+		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 
 
 	}
@@ -283,6 +274,7 @@ objectJson += ",\"coachingSessionMeasure\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "behavior"));
 
 		
 		return listSetters;

@@ -117,7 +117,7 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SETTING SET VALUE=?,NAME=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE SETTING SET VALUE=?,NAME=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override

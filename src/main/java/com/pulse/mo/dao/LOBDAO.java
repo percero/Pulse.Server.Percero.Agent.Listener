@@ -54,7 +54,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB WHERE LOB.ID=?";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB WHERE LOB.ID=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB ORDER BY LOB.ID";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB ORDER BY LOB.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB ORDER BY LOB.ID LIMIT ? OFFSET ?";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB ORDER BY LOB.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB WHERE LOB.ID IN (?)";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB WHERE LOB.ID IN (?)";
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB WHERE LOB." + joinColumnName + "=?";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB WHERE LOB." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -109,17 +109,17 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT LOB.ID,LOB.NAME,LOB.CLIENT_ID,LOB.PULSE_CONFIGURATION_ID FROM LOB LOB ";
+		return "SELECT LOB.ID,LOB.NAME,LOB.PULSE_CONFIGURATION_ID,LOB.CLIENT_ID FROM LOB LOB ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO LOB (ID,NAME,CLIENT_ID,PULSE_CONFIGURATION_ID) VALUES (?,?,?,?)";
+		return "INSERT INTO LOB (ID,NAME,PULSE_CONFIGURATION_ID,CLIENT_ID) VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE LOB SET NAME=?,CLIENT_ID,PULSE_CONFIGURATION_ID WHERE ID=?";
+		return "UPDATE LOB SET NAME=?,PULSE_CONFIGURATION_ID=?,CLIENT_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -138,13 +138,13 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 		{
 			nextResult.setName(rs.getString("NAME"));
 
-Client client = new Client();
-client.setID(rs.getString("CLIENT_ID"));
-nextResult.setClient(client);
-
 PulseConfiguration pulseconfiguration = new PulseConfiguration();
 pulseconfiguration.setID(rs.getString("PULSE_CONFIGURATION_ID"));
 nextResult.setPulseConfiguration(pulseconfiguration);
+
+Client client = new Client();
+client.setID(rs.getString("CLIENT_ID"));
+nextResult.setClient(client);
 
 
 			
@@ -159,23 +159,23 @@ nextResult.setPulseConfiguration(pulseconfiguration);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
 
-if (perceroObject.getClient() == null)
+if (perceroObject.getPulseConfiguration() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getClient().getID());
+		pstmt.setString(3, perceroObject.getPulseConfiguration().getID());
 }
 
 
-if (perceroObject.getPulseConfiguration() == null)
+if (perceroObject.getClient() == null)
 {
 pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getPulseConfiguration().getID());
+		pstmt.setString(4, perceroObject.getClient().getID());
 }
 
 
@@ -187,23 +187,23 @@ else
 		
 		pstmt.setString(1, perceroObject.getName());
 
-if (perceroObject.getClient() == null)
+if (perceroObject.getPulseConfiguration() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getClient().getID());
+		pstmt.setString(2, perceroObject.getPulseConfiguration().getID());
 }
 
 
-if (perceroObject.getPulseConfiguration() == null)
+if (perceroObject.getClient() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getPulseConfiguration().getID());
+		pstmt.setString(3, perceroObject.getClient().getID());
 }
 
 pstmt.setString(4, perceroObject.getID());
@@ -233,23 +233,6 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useClientID = theQueryObject.getClient() != null && (excludeProperties == null || !excludeProperties.contains("client"));
-
-if (useClientID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CLIENT_ID=? ";
-paramValues.add(theQueryObject.getClient().getID());
-propertyCounter++;
-}
-
 boolean usePulseConfigurationID = theQueryObject.getPulseConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("pulseConfiguration"));
 
 if (usePulseConfigurationID)
@@ -264,6 +247,23 @@ sql += " WHERE ";
 }
 sql += " PULSE_CONFIGURATION_ID=? ";
 paramValues.add(theQueryObject.getPulseConfiguration().getID());
+propertyCounter++;
+}
+
+boolean useClientID = theQueryObject.getClient() != null && (excludeProperties == null || !excludeProperties.contains("client"));
+
+if (useClientID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CLIENT_ID=? ";
+paramValues.add(theQueryObject.getClient().getID());
 propertyCounter++;
 }
 

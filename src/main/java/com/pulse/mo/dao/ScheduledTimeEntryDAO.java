@@ -54,7 +54,7 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY.ID=?";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY.ID=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ORDER BY SCHEDULED_TIME_ENTRY.ID";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ORDER BY SCHEDULED_TIME_ENTRY.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ORDER BY SCHEDULED_TIME_ENTRY.ID LIMIT ? OFFSET ?";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ORDER BY SCHEDULED_TIME_ENTRY.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY.ID IN (?)";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY.ID IN (?)";
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY." + joinColumnName + "=?";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY WHERE SCHEDULED_TIME_ENTRY." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -109,17 +109,17 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ";
+		return "SELECT SCHEDULED_TIME_ENTRY.ID,SCHEDULED_TIME_ENTRY.ACTIVITY_TYPE_NAME,SCHEDULED_TIME_ENTRY.DURATION,SCHEDULED_TIME_ENTRY.FROM_TIME,SCHEDULED_TIME_ENTRY.TO_TIME,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ENTRY.SCHEDULED_TIME_ID FROM SCHEDULED_TIME_ENTRY SCHEDULED_TIME_ENTRY ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCHEDULED_TIME_ENTRY (ID,FROM_TIME,TO_TIME,DURATION,ACTIVITY_TYPE_NAME,SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ID) VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO SCHEDULED_TIME_ENTRY (ID,ACTIVITY_TYPE_NAME,DURATION,FROM_TIME,TO_TIME,SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ID) VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SCHEDULED_TIME_ENTRY SET FROM_TIME=?,TO_TIME=?,DURATION=?,ACTIVITY_TYPE_NAME=?,SCHEDULED_ACTIVITY_CODE_ID,SCHEDULED_ACTIVITY_TYPE_ID,SCHEDULED_TIME_ID WHERE ID=?";
+		return "UPDATE SCHEDULED_TIME_ENTRY SET ACTIVITY_TYPE_NAME=?,DURATION=?,FROM_TIME=?,TO_TIME=?,SCHEDULED_ACTIVITY_CODE_ID=?,SCHEDULED_ACTIVITY_TYPE_ID=?,SCHEDULED_TIME_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -136,13 +136,13 @@ public class ScheduledTimeEntryDAO extends SqlDataAccessObject<ScheduledTimeEntr
     	
     	if (!shellOnly) 
 		{
-			nextResult.setFromTime(rs.getDate("FROM_TIME"));
-
-nextResult.setToTime(rs.getDate("TO_TIME"));
+			nextResult.setActivityTypeName(rs.getString("ACTIVITY_TYPE_NAME"));
 
 nextResult.setDuration(rs.getInt("DURATION"));
 
-nextResult.setActivityTypeName(rs.getString("ACTIVITY_TYPE_NAME"));
+nextResult.setFromTime(rs.getDate("FROM_TIME"));
+
+nextResult.setToTime(rs.getDate("TO_TIME"));
 
 ScheduledActivityCode scheduledactivitycode = new ScheduledActivityCode();
 scheduledactivitycode.setID(rs.getString("SCHEDULED_ACTIVITY_CODE_ID"));
@@ -167,10 +167,10 @@ nextResult.setScheduledTime(scheduledtime);
 	protected void setPreparedStatmentInsertParams(ScheduledTimeEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getFromTime()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getToTime()));
-pstmt.setInt(4, perceroObject.getDuration());
-pstmt.setString(5, perceroObject.getActivityTypeName());
+pstmt.setString(2, perceroObject.getActivityTypeName());
+pstmt.setInt(3, perceroObject.getDuration());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getFromTime()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getToTime()));
 
 if (perceroObject.getScheduledActivityCode() == null)
 {
@@ -208,10 +208,10 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScheduledTimeEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getFromTime()));
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getToTime()));
-pstmt.setInt(3, perceroObject.getDuration());
-pstmt.setString(4, perceroObject.getActivityTypeName());
+		pstmt.setString(1, perceroObject.getActivityTypeName());
+pstmt.setInt(2, perceroObject.getDuration());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getFromTime()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getToTime()));
 
 if (perceroObject.getScheduledActivityCode() == null)
 {
@@ -259,30 +259,13 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
+		boolean useActivityTypeName = StringUtils.hasText(theQueryObject.getActivityTypeName()) && (excludeProperties == null || !excludeProperties.contains("activityTypeName"));
 
-if (useFromTime)
+if (useActivityTypeName)
 {
 sql += " WHERE ";
-sql += " FROM_TIME=? ";
-paramValues.add(theQueryObject.getFromTime());
-propertyCounter++;
-}
-
-boolean useToTime = theQueryObject.getToTime() != null && (excludeProperties == null || !excludeProperties.contains("toTime"));
-
-if (useToTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " TO_TIME=? ";
-paramValues.add(theQueryObject.getToTime());
+sql += " ACTIVITY_TYPE_NAME=? ";
+paramValues.add(theQueryObject.getActivityTypeName());
 propertyCounter++;
 }
 
@@ -303,9 +286,9 @@ paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 
-boolean useActivityTypeName = StringUtils.hasText(theQueryObject.getActivityTypeName()) && (excludeProperties == null || !excludeProperties.contains("activityTypeName"));
+boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
 
-if (useActivityTypeName)
+if (useFromTime)
 {
 if (propertyCounter > 0)
 {
@@ -315,8 +298,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " ACTIVITY_TYPE_NAME=? ";
-paramValues.add(theQueryObject.getActivityTypeName());
+sql += " FROM_TIME=? ";
+paramValues.add(theQueryObject.getFromTime());
+propertyCounter++;
+}
+
+boolean useToTime = theQueryObject.getToTime() != null && (excludeProperties == null || !excludeProperties.contains("toTime"));
+
+if (useToTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " TO_TIME=? ";
+paramValues.add(theQueryObject.getToTime());
 propertyCounter++;
 }
 

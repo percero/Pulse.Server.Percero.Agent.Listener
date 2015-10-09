@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_TimecardEntry extends BaseDataObject implements Serializable
+public class _Super_BehaviorResponse extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_TimecardEntry extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of TimecardEntry
+	Keys of BehaviorResponse
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,158 +85,107 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Duration
-Notes:Number of minutes
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer duration;
-
-public Integer getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Integer duration)
-{
-	this.duration = duration;
-}/*
-ActionCode
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String actionCode;
+private Date createdOn;
 
-public String getActionCode() 
+public Date getCreatedOn() 
 {
-	return this.actionCode;
+	return this.createdOn;
 }
 
-public void setActionCode(String actionCode)
+public void setCreatedOn(Date createdOn)
 {
-	this.actionCode = actionCode;
+	this.createdOn = createdOn;
 }/*
-ActionName
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String actionName;
+private Date weekDate;
 
-public String getActionName() 
+public Date getWeekDate() 
 {
-	return this.actionName;
+	return this.weekDate;
 }
 
-public void setActionName(String actionName)
+public void setWeekDate(Date weekDate)
 {
-	this.actionName = actionName;
+	this.weekDate = weekDate;
 }/*
-FromTime
+Response
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date fromTime;
+private Integer response;
 
-public Date getFromTime() 
+public Integer getResponse() 
 {
-	return this.fromTime;
+	return this.response;
 }
 
-public void setFromTime(Date fromTime)
+public void setResponse(Integer response)
 {
-	this.fromTime = fromTime;
+	this.response = response;
 }/*
-NotificationDetected
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean notificationDetected;
+private String updatedBy;
 
-public Boolean getNotificationDetected() 
+public String getUpdatedBy() 
 {
-	return this.notificationDetected;
+	return this.updatedBy;
 }
 
-public void setNotificationDetected(Boolean notificationDetected)
+public void setUpdatedBy(String updatedBy)
 {
-	this.notificationDetected = notificationDetected;
+	this.updatedBy = updatedBy;
 }/*
-ToTime
+CreatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date toTime;
+private String createdBy;
 
-public Date getToTime() 
+public String getCreatedBy() 
 {
-	return this.toTime;
+	return this.createdBy;
 }
 
-public void setToTime(Date toTime)
+public void setCreatedBy(String createdBy)
 {
-	this.toTime = toTime;
+	this.createdBy = createdBy;
 }/*
-EStartProjectName
+UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String eStartProjectName;
+private Date updatedOn;
 
-public String getEStartProjectName() 
+public Date getUpdatedOn() 
 {
-	return this.eStartProjectName;
+	return this.updatedOn;
 }
 
-public void setEStartProjectName(String eStartProjectName)
+public void setUpdatedOn(Date updatedOn)
 {
-	this.eStartProjectName = eStartProjectName;
-}/*
-NotificationResolved
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean notificationResolved;
-
-public Boolean getNotificationResolved() 
-{
-	return this.notificationResolved;
-}
-
-public void setNotificationResolved(Boolean notificationResolved)
-{
-	this.notificationResolved = notificationResolved;
-}/*
-ActivityName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String activityName;
-
-public String getActivityName() 
-{
-	return this.activityName;
-}
-
-public void setActivityName(String activityName)
-{
-	this.activityName = activityName;
+	this.updatedOn = updatedOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -250,8 +199,8 @@ public void setActivityName(String activityName)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="PAYROLL")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfTimecardEntry")
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
 public Agent getAgent() {
@@ -263,29 +212,42 @@ public void setAgent(Agent value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="WORKED--ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardOfTimecardEntry")
+@JoinColumn(name="BEHAVIOR_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_BehaviorOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Timecard timecard;
-public Timecard getTimecard() {
-	return this.timecard;
+private Behavior behavior;
+public Behavior getBehavior() {
+	return this.behavior;
 }
 
-public void setTimecard(Timecard value) {
-	this.timecard = value;
+public void setBehavior(Behavior value) {
+	this.behavior = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="TIMECARD_ACTIVITY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfTimecardEntry")
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TimecardActivity timecardActivity;
-public TimecardActivity getTimecardActivity() {
-	return this.timecardActivity;
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
 }
 
-public void setTimecardActivity(TimecardActivity value) {
-	this.timecardActivity = value;
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfBehaviorResponse")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private CoachingSession coachingSession;
+public CoachingSession getCoachingSession() {
+	return this.coachingSession;
+}
+
+public void setCoachingSession(CoachingSession value) {
+	this.coachingSession = value;
 }
 
 	
@@ -297,16 +259,23 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
 		
-		if (getDuration() == null)
+		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDuration());
+				objectJson += objectMapper.writeValueAsString(getWeekDate());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -318,16 +287,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Action Code property
-		objectJson += ",\"actionCode\":";
+		//Retrieve value of the Response property
+		objectJson += ",\"response\":";
 		
-		if (getActionCode() == null)
+		if (getResponse() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActionCode());
+				objectJson += objectMapper.writeValueAsString(getResponse());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -339,16 +308,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Action Name property
-		objectJson += ",\"actionName\":";
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
 		
-		if (getActionName() == null)
+		if (getUpdatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActionName());
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -360,37 +329,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the From Time property
-		objectJson += ",\"fromTime\":";
-		if (getFromTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getFromTime().getTime();
-		}
-		//Retrieve value of the Notification Detected property
-		objectJson += ",\"notificationDetected\":";
-		if (getNotificationDetected() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationDetected();
-		}
-		//Retrieve value of the To Time property
-		objectJson += ",\"toTime\":";
-		if (getToTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the EStart Project Name property
-		objectJson += ",\"eStartProjectName\":";
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
 		
-		if (getEStartProjectName() == null)
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEStartProjectName());
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -402,38 +350,17 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Notification Resolved property
-		objectJson += ",\"notificationResolved\":";
-		if (getNotificationResolved() == null)
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getNotificationResolved();
-		}
-		//Retrieve value of the Activity Name property
-		objectJson += ",\"activityName\":";
-		
-		if (getActivityName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getActivityName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getUpdatedOn().getTime();
 		}
 
 				
 		// Source Relationships
-//Retrieve value of the Agent of Timecard Entry relationship
+//Retrieve value of the Agent of Behavior Response relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
 			objectJson += "null";
@@ -445,25 +372,37 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Timecard of Timecard Entry relationship
-objectJson += ",\"timecard\":";
-		if (getTimecard() == null)
+//Retrieve value of the Behavior of Behavior Response relationship
+objectJson += ",\"behavior\":";
+		if (getBehavior() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getTimecard()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getBehavior()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Timecard Activity of Timecard Entry relationship
-objectJson += ",\"timecardActivity\":";
-		if (getTimecardActivity() == null)
+//Retrieve value of the Scorecard Measure of Behavior Response relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getTimecardActivity()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Coaching Session of Behavior Response relationship
+objectJson += ",\"coachingSession\":";
+		if (getCoachingSession() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getCoachingSession()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -483,30 +422,25 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
-		//From value of the Action Code property
-		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
-		//From value of the Action Name property
-		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
-		//From value of the From Time property
-		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the Notification Detected property
-		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the EStart Project Name property
-		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
-		//From value of the Notification Resolved property
-		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
-		//From value of the Activity Name property
-		setActivityName(JsonUtils.getJsonString(jsonObject, "activityName"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Response property
+		setResponse(JsonUtils.getJsonInteger(jsonObject, "response"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
-		this.timecard = (Timecard) JsonUtils.getJsonPerceroObject(jsonObject, "timecard");
-		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
+		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
+		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
+		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 
 
 		// Target Relationships

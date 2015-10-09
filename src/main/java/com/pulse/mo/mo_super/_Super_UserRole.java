@@ -1,49 +1,29 @@
 
-package com.pulse.mo.mo_super;
 
-import java.io.IOException;
-import java.io.Serializable;
+package com.pulse.mo.mo_super;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SecondaryTable;
-
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.serial.BDODeserializer;
+import com.percero.serial.BDOSerializer;
+import com.percero.serial.JsonUtils;
+import com.pulse.mo.PulseUser;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.AccessType;
 
-import com.google.gson.JsonObject;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-import com.percero.agents.sync.metadata.MappedClass;
+import javax.persistence.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
 
 /*
 Imports based on semantic requirements
 */
-import com.percero.agents.auth.vo.IUserRole;
-
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.serial.BDODeserializer;
-import com.percero.serial.BDOSerializer;
-import com.percero.serial.JsonUtils;
-
-import com.pulse.mo.*;
 
 /*
 Entity Tags based on semantic requirements
@@ -90,7 +70,8 @@ Notes:
 */
 @Column
 
-@com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, propertyName="roleName",params={})
+
+@com.percero.agents.sync.metadata.annotations.PropertyInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, propertyName="roleName",params={})
 @com.percero.agents.sync.metadata.annotations.Externalize
 
 private String roleName;
@@ -113,7 +94,8 @@ public void setRoleName(String roleName)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, sourceVarName="userAnchor")
+	
+@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserRole.class, sourceVarName="userAnchor")
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -211,4 +193,4 @@ objectJson += ",\"pulseUser\":";
 		return listSetters;
 	}
 }
-
+

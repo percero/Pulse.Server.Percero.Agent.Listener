@@ -118,7 +118,7 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE CLIENT SET NAME=?,SITE_ID WHERE ID=?";
+		return "UPDATE CLIENT SET NAME=?,SITE_ID=? WHERE ID=?";
 	}
 	
 	@Override

@@ -55,7 +55,7 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT.ID=?";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT.ID=?";
 	}
 	
 	@Override
@@ -70,12 +70,12 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT ORDER BY ATTACHMENT.ID";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT ORDER BY ATTACHMENT.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT ORDER BY ATTACHMENT.ID LIMIT ? OFFSET ?";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT ORDER BY ATTACHMENT.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT.ID IN (?)";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT.ID IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT." + joinColumnName + "=?";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT WHERE ATTACHMENT." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ATTACHMENT.ID,ATTACHMENT.FILE_URI,ATTACHMENT.NAME,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID,ATTACHMENT.PERFORMANCE_SUMMARY_ID FROM ATTACHMENT ATTACHMENT ";
+		return "SELECT ATTACHMENT.ID,ATTACHMENT.NAME,ATTACHMENT.FILE_URI,ATTACHMENT.PERFORMANCE_SUMMARY_ID,ATTACHMENT.ADHOC_COACHING_SESSION_ID,ATTACHMENT.COACHING_SESSION_ID,ATTACHMENT.CORRECTIVE_ACTION_ID FROM ATTACHMENT ATTACHMENT ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ATTACHMENT (ID,FILE_URI,NAME,ADHOC_COACHING_SESSION_ID,COACHING_SESSION_ID,CORRECTIVE_ACTION_ID,PERFORMANCE_SUMMARY_ID) VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO ATTACHMENT (ID,NAME,FILE_URI,PERFORMANCE_SUMMARY_ID,ADHOC_COACHING_SESSION_ID,COACHING_SESSION_ID,CORRECTIVE_ACTION_ID) VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ATTACHMENT SET FILE_URI=?,NAME=?,ADHOC_COACHING_SESSION_ID,COACHING_SESSION_ID,CORRECTIVE_ACTION_ID,PERFORMANCE_SUMMARY_ID WHERE ID=?";
+		return "UPDATE ATTACHMENT SET NAME=?,FILE_URI=?,PERFORMANCE_SUMMARY_ID=?,ADHOC_COACHING_SESSION_ID=?,COACHING_SESSION_ID=?,CORRECTIVE_ACTION_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -137,9 +137,13 @@ public class AttachmentDAO extends SqlDataAccessObject<Attachment> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setFileUri(rs.getString("FILE_URI"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setFileUri(rs.getString("FILE_URI"));
+
+PerformanceSummary performancesummary = new PerformanceSummary();
+performancesummary.setID(rs.getString("PERFORMANCE_SUMMARY_ID"));
+nextResult.setPerformanceSummary(performancesummary);
 
 AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
 adhoccoachingsession.setID(rs.getString("ADHOC_COACHING_SESSION_ID"));
@@ -153,10 +157,6 @@ CorrectiveAction correctiveaction = new CorrectiveAction();
 correctiveaction.setID(rs.getString("CORRECTIVE_ACTION_ID"));
 nextResult.setCorrectiveAction(correctiveaction);
 
-PerformanceSummary performancesummary = new PerformanceSummary();
-performancesummary.setID(rs.getString("PERFORMANCE_SUMMARY_ID"));
-nextResult.setPerformanceSummary(performancesummary);
-
 
 			
     	}
@@ -168,8 +168,67 @@ nextResult.setPerformanceSummary(performancesummary);
 	protected void setPreparedStatmentInsertParams(Attachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getFileUri());
+
+if (perceroObject.getPerformanceSummary() == null)
+{
+pstmt.setString(4, null);
+}
+else
+{
+		pstmt.setString(4, perceroObject.getPerformanceSummary().getID());
+}
+
+
+if (perceroObject.getAdhocCoachingSession() == null)
+{
+pstmt.setString(5, null);
+}
+else
+{
+		pstmt.setString(5, perceroObject.getAdhocCoachingSession().getID());
+}
+
+
+if (perceroObject.getCoachingSession() == null)
+{
+pstmt.setString(6, null);
+}
+else
+{
+		pstmt.setString(6, perceroObject.getCoachingSession().getID());
+}
+
+
+if (perceroObject.getCorrectiveAction() == null)
+{
+pstmt.setString(7, null);
+}
+else
+{
+		pstmt.setString(7, perceroObject.getCorrectiveAction().getID());
+}
+
+
+		
+	}
+	
+	@Override
+	protected void setPreparedStatmentUpdateParams(Attachment perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getName());
 pstmt.setString(2, perceroObject.getFileUri());
-pstmt.setString(3, perceroObject.getName());
+
+if (perceroObject.getPerformanceSummary() == null)
+{
+pstmt.setString(3, null);
+}
+else
+{
+		pstmt.setString(3, perceroObject.getPerformanceSummary().getID());
+}
+
 
 if (perceroObject.getAdhocCoachingSession() == null)
 {
@@ -200,65 +259,6 @@ else
 		pstmt.setString(6, perceroObject.getCorrectiveAction().getID());
 }
 
-
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getPerformanceSummary().getID());
-}
-
-
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(Attachment perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getFileUri());
-pstmt.setString(2, perceroObject.getName());
-
-if (perceroObject.getAdhocCoachingSession() == null)
-{
-pstmt.setString(3, null);
-}
-else
-{
-		pstmt.setString(3, perceroObject.getAdhocCoachingSession().getID());
-}
-
-
-if (perceroObject.getCoachingSession() == null)
-{
-pstmt.setString(4, null);
-}
-else
-{
-		pstmt.setString(4, perceroObject.getCoachingSession().getID());
-}
-
-
-if (perceroObject.getCorrectiveAction() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getCorrectiveAction().getID());
-}
-
-
-if (perceroObject.getPerformanceSummary() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getPerformanceSummary().getID());
-}
-
 pstmt.setString(7, perceroObject.getID());
 
 		
@@ -276,19 +276,19 @@ pstmt.setString(7, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useFileUri = StringUtils.hasText(theQueryObject.getFileUri()) && (excludeProperties == null || !excludeProperties.contains("fileUri"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useFileUri)
+if (useName)
 {
 sql += " WHERE ";
-sql += " FILE_URI=? ";
-paramValues.add(theQueryObject.getFileUri());
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useFileUri = StringUtils.hasText(theQueryObject.getFileUri()) && (excludeProperties == null || !excludeProperties.contains("fileUri"));
 
-if (useName)
+if (useFileUri)
 {
 if (propertyCounter > 0)
 {
@@ -298,8 +298,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
+sql += " FILE_URI=? ";
+paramValues.add(theQueryObject.getFileUri());
+propertyCounter++;
+}
+
+boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
+
+if (usePerformanceSummaryID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " PERFORMANCE_SUMMARY_ID=? ";
+paramValues.add(theQueryObject.getPerformanceSummary().getID());
 propertyCounter++;
 }
 
@@ -351,23 +368,6 @@ sql += " WHERE ";
 }
 sql += " CORRECTIVE_ACTION_ID=? ";
 paramValues.add(theQueryObject.getCorrectiveAction().getID());
-propertyCounter++;
-}
-
-boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
-
-if (usePerformanceSummaryID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " PERFORMANCE_SUMMARY_ID=? ";
-paramValues.add(theQueryObject.getPerformanceSummary().getID());
 propertyCounter++;
 }
 

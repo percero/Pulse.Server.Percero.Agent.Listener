@@ -52,7 +52,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION.ID=?";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ORDER BY NOTIFICATION.ID";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ORDER BY NOTIFICATION.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ORDER BY NOTIFICATION.ID LIMIT ? OFFSET ?";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ORDER BY NOTIFICATION.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION.ID IN (?)";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION." + joinColumnName + "=?";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION WHERE NOTIFICATION." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT NOTIFICATION.ID,NOTIFICATION.DATE,NOTIFICATION.NAME,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ";
+		return "SELECT NOTIFICATION.ID,NOTIFICATION.NAME,NOTIFICATION.DATE,NOTIFICATION.TYPE,NOTIFICATION.TEAM_LEADER_ID FROM NOTIFICATION NOTIFICATION ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO NOTIFICATION (ID,DATE,NAME,TYPE,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
+		return "INSERT INTO NOTIFICATION (ID,NAME,DATE,TYPE,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE NOTIFICATION SET DATE=?,NAME=?,TYPE=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE NOTIFICATION SET NAME=?,DATE=?,TYPE=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,9 +134,9 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getString("DATE"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDate(rs.getString("DATE"));
 
 nextResult.setType(rs.getString("TYPE"));
 
@@ -155,8 +155,8 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDate());
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getDate());
 pstmt.setString(4, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
@@ -175,8 +175,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getDate());
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setString(2, perceroObject.getDate());
 pstmt.setString(3, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
@@ -205,19 +205,19 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 sql += " WHERE ";
-sql += " DATE=? ";
-paramValues.add(theQueryObject.getDate());
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 if (propertyCounter > 0)
 {
@@ -227,8 +227,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
+sql += " DATE=? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 

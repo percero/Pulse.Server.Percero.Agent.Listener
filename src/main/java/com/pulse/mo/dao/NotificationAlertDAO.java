@@ -51,7 +51,7 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT.ID=?";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT.ID=?";
 	}
 	
 	@Override
@@ -66,12 +66,12 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ORDER BY NOTIFICATION_ALERT.ID";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ORDER BY NOTIFICATION_ALERT.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ORDER BY NOTIFICATION_ALERT.ID LIMIT ? OFFSET ?";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ORDER BY NOTIFICATION_ALERT.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT.ID IN (?)";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT.ID IN (?)";
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT." + joinColumnName + "=?";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT WHERE NOTIFICATION_ALERT." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -106,17 +106,17 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ";
+		return "SELECT NOTIFICATION_ALERT.ID,NOTIFICATION_ALERT.NAME,NOTIFICATION_ALERT.DATE,NOTIFICATION_ALERT.HAS_BEEN_READ,NOTIFICATION_ALERT.TEAM_LEADER_ID FROM NOTIFICATION_ALERT NOTIFICATION_ALERT ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO NOTIFICATION_ALERT (ID,DATE,HAS_BEEN_READ,NAME,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
+		return "INSERT INTO NOTIFICATION_ALERT (ID,NAME,DATE,HAS_BEEN_READ,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE NOTIFICATION_ALERT SET DATE=?,HAS_BEEN_READ=?,NAME=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE NOTIFICATION_ALERT SET NAME=?,DATE=?,HAS_BEEN_READ=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -133,11 +133,11 @@ public class NotificationAlertDAO extends SqlDataAccessObject<NotificationAlert>
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setName(rs.getString("NAME"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setHasBeenRead(rs.getString("HAS_BEEN_READ"));
-
-nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -154,9 +154,9 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(NotificationAlert perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getHasBeenRead());
-pstmt.setString(4, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(4, perceroObject.getHasBeenRead());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -174,9 +174,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(NotificationAlert perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getHasBeenRead());
-pstmt.setString(3, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getHasBeenRead());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -204,11 +204,28 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+sql += " WHERE ";
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " DATE=? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -228,23 +245,6 @@ sql += " WHERE ";
 }
 sql += " HAS_BEEN_READ=? ";
 paramValues.add(theQueryObject.getHasBeenRead());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

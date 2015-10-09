@@ -117,7 +117,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE USER_ROLE SET ROLE_NAME=?,PULSE_USER_ID WHERE ID=?";
+		return "UPDATE USER_ROLE SET ROLE_NAME=?,PULSE_USER_ID=? WHERE ID=?";
 	}
 	
 	@Override

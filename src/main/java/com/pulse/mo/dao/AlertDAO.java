@@ -52,7 +52,7 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID=?";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID LIMIT ? OFFSET ?";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID IN (?)";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT." + joinColumnName + "=?";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ALERT.ID,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.NAME,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ";
+		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ALERT (ID,DATE,HAS_BEEN_READ,NAME,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
+		return "INSERT INTO ALERT (ID,NAME,DATE,HAS_BEEN_READ,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ALERT SET DATE=?,HAS_BEEN_READ=?,NAME=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE ALERT SET NAME=?,DATE=?,HAS_BEEN_READ=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,11 +134,11 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setName(rs.getString("NAME"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setHasBeenRead(rs.getString("HAS_BEEN_READ"));
-
-nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -155,9 +155,9 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(Alert perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getHasBeenRead());
-pstmt.setString(4, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(4, perceroObject.getHasBeenRead());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -175,9 +175,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Alert perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getHasBeenRead());
-pstmt.setString(3, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getHasBeenRead());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -205,11 +205,28 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+sql += " WHERE ";
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " DATE=? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -229,23 +246,6 @@ sql += " WHERE ";
 }
 sql += " HAS_BEEN_READ=? ";
 paramValues.add(theQueryObject.getHasBeenRead());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

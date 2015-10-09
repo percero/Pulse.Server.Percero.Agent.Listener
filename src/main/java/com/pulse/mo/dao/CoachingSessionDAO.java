@@ -20,8 +20,8 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Attachment;
+import com.pulse.mo.BehaviorResponse;
 import com.pulse.mo.QualityEvaluation;
-import com.pulse.mo.CoachingSessionMeasure;
 import com.pulse.mo.CoachingSessionState;
 import com.pulse.mo.Agent;
 import com.pulse.mo.Scorecard;
@@ -57,7 +57,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION.ID=?";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION.ID=?";
 	}
 	
 	@Override
@@ -72,12 +72,12 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ORDER BY COACHING_SESSION.ID";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ORDER BY COACHING_SESSION.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ORDER BY COACHING_SESSION.ID LIMIT ? OFFSET ?";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ORDER BY COACHING_SESSION.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION.ID IN (?)";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION.ID IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION." + joinColumnName + "=?";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION WHERE COACHING_SESSION." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.SCORECARD_NAME,COACHING_SESSION.STATE_NAME,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.AGENT_ID,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ";
+		return "SELECT COACHING_SESSION.ID,COACHING_SESSION.IS_REQUIRED,COACHING_SESSION.MTD_TREND,COACHING_SESSION.PREVIOUS_MTD_OVERALL_SCORE,COACHING_SESSION.PREVIOUS_MTD_THRESHOLD_GRADE,COACHING_SESSION.CREATED_BY,COACHING_SESSION.CREATED_ON,COACHING_SESSION.CURRENT_MTD_OVERALL_SCORE,COACHING_SESSION.CURRENT_MTD_THRESHOLD_GRADE,COACHING_SESSION.TYPE,COACHING_SESSION.UPDATED_BY,COACHING_SESSION.UPDATED_ON,COACHING_SESSION.WEEKEND_DATE,COACHING_SESSION.WEEKLY_OVERALL_SCORE,COACHING_SESSION.WEEKLY_OVERALL_SCORE_STATE_NAME,COACHING_SESSION.WEEKLY_TREND,COACHING_SESSION.CLOSED_ON,COACHING_SESSION.COACHING_SESSION_STATE_ID,COACHING_SESSION.AGENT_ID,COACHING_SESSION.SCORECARD_ID FROM COACHING_SESSION COACHING_SESSION ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_SESSION (ID,CURRENT_MTD_THRESHOLD_GRADE,PREVIOUS_MTD_THRESHOLD_GRADE,CURRENT_MTD_OVERALL_SCORE,MTD_TREND,PREVIOUS_MTD_OVERALL_SCORE,SCORECARD_NAME,STATE_NAME,WEEKEND_DATE,WEEKLY_OVERALL_SCORE,WEEKLY_OVERALL_SCORE_STATE_NAME,WEEKLY_TREND,AGENT_ID,COACHING_SESSION_STATE_ID,SCORECARD_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO COACHING_SESSION (ID,IS_REQUIRED,MTD_TREND,PREVIOUS_MTD_OVERALL_SCORE,PREVIOUS_MTD_THRESHOLD_GRADE,CREATED_BY,CREATED_ON,CURRENT_MTD_OVERALL_SCORE,CURRENT_MTD_THRESHOLD_GRADE,TYPE,UPDATED_BY,UPDATED_ON,WEEKEND_DATE,WEEKLY_OVERALL_SCORE,WEEKLY_OVERALL_SCORE_STATE_NAME,WEEKLY_TREND,CLOSED_ON,COACHING_SESSION_STATE_ID,AGENT_ID,SCORECARD_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE COACHING_SESSION SET CURRENT_MTD_THRESHOLD_GRADE=?,PREVIOUS_MTD_THRESHOLD_GRADE=?,CURRENT_MTD_OVERALL_SCORE=?,MTD_TREND=?,PREVIOUS_MTD_OVERALL_SCORE=?,SCORECARD_NAME=?,STATE_NAME=?,WEEKEND_DATE=?,WEEKLY_OVERALL_SCORE=?,WEEKLY_OVERALL_SCORE_STATE_NAME=?,WEEKLY_TREND=?,AGENT_ID,COACHING_SESSION_STATE_ID,SCORECARD_ID WHERE ID=?";
+		return "UPDATE COACHING_SESSION SET IS_REQUIRED=?,MTD_TREND=?,PREVIOUS_MTD_OVERALL_SCORE=?,PREVIOUS_MTD_THRESHOLD_GRADE=?,CREATED_BY=?,CREATED_ON=?,CURRENT_MTD_OVERALL_SCORE=?,CURRENT_MTD_THRESHOLD_GRADE=?,TYPE=?,UPDATED_BY=?,UPDATED_ON=?,WEEKEND_DATE=?,WEEKLY_OVERALL_SCORE=?,WEEKLY_OVERALL_SCORE_STATE_NAME=?,WEEKLY_TREND=?,CLOSED_ON=?,COACHING_SESSION_STATE_ID=?,AGENT_ID=?,SCORECARD_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -139,19 +139,27 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCurrentMTDThresholdGrade(rs.getDouble("CURRENT_MTD_THRESHOLD_GRADE"));
-
-nextResult.setPreviousMTDThresholdGrade(rs.getDouble("PREVIOUS_MTD_THRESHOLD_GRADE"));
-
-nextResult.setCurrentMTDOverallScore(rs.getString("CURRENT_MTD_OVERALL_SCORE"));
+			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
 nextResult.setMTDTrend(rs.getString("MTD_TREND"));
 
 nextResult.setPreviousMTDOverallScore(rs.getString("PREVIOUS_MTD_OVERALL_SCORE"));
 
-nextResult.setScorecardName(rs.getString("SCORECARD_NAME"));
+nextResult.setPreviousMTDThresholdGrade(rs.getDouble("PREVIOUS_MTD_THRESHOLD_GRADE"));
 
-nextResult.setStateName(rs.getString("STATE_NAME"));
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+
+nextResult.setCurrentMTDOverallScore(rs.getString("CURRENT_MTD_OVERALL_SCORE"));
+
+nextResult.setCurrentMTDThresholdGrade(rs.getDouble("CURRENT_MTD_THRESHOLD_GRADE"));
+
+nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
 
 nextResult.setWeekendDate(rs.getString("WEEKEND_DATE"));
 
@@ -161,13 +169,15 @@ nextResult.setWeeklyOverallScoreStateName(rs.getString("WEEKLY_OVERALL_SCORE_STA
 
 nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
+nextResult.setClosedOn(rs.getDate("CLOSED_ON"));
 
 CoachingSessionState coachingsessionstate = new CoachingSessionState();
 coachingsessionstate.setID(rs.getString("COACHING_SESSION_STATE_ID"));
 nextResult.setCoachingSessionState(coachingsessionstate);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
@@ -184,45 +194,50 @@ nextResult.setScorecard(scorecard);
 	protected void setPreparedStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDouble(2, perceroObject.getCurrentMTDThresholdGrade());
-pstmt.setDouble(3, perceroObject.getPreviousMTDThresholdGrade());
-pstmt.setString(4, perceroObject.getCurrentMTDOverallScore());
-pstmt.setString(5, perceroObject.getMTDTrend());
-pstmt.setString(6, perceroObject.getPreviousMTDOverallScore());
-pstmt.setString(7, perceroObject.getScorecardName());
-pstmt.setString(8, perceroObject.getStateName());
-pstmt.setString(9, perceroObject.getWeekendDate());
-pstmt.setString(10, perceroObject.getWeeklyOverallScore());
-pstmt.setString(11, perceroObject.getWeeklyOverallScoreStateName());
-pstmt.setString(12, perceroObject.getWeeklyTrend());
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getAgent().getID());
-}
-
+pstmt.setBoolean(2, perceroObject.getIsRequired());
+pstmt.setString(3, perceroObject.getMTDTrend());
+pstmt.setString(4, perceroObject.getPreviousMTDOverallScore());
+pstmt.setDouble(5, perceroObject.getPreviousMTDThresholdGrade());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(8, perceroObject.getCurrentMTDOverallScore());
+pstmt.setDouble(9, perceroObject.getCurrentMTDThresholdGrade());
+pstmt.setString(10, perceroObject.getType());
+pstmt.setString(11, perceroObject.getUpdatedBy());
+pstmt.setDate(12, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(13, perceroObject.getWeekendDate());
+pstmt.setString(14, perceroObject.getWeeklyOverallScore());
+pstmt.setString(15, perceroObject.getWeeklyOverallScoreStateName());
+pstmt.setString(16, perceroObject.getWeeklyTrend());
+pstmt.setDate(17, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
 
 if (perceroObject.getCoachingSessionState() == null)
 {
-pstmt.setString(14, null);
+pstmt.setString(18, null);
 }
 else
 {
-		pstmt.setString(14, perceroObject.getCoachingSessionState().getID());
+		pstmt.setString(18, perceroObject.getCoachingSessionState().getID());
+}
+
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(19, null);
+}
+else
+{
+		pstmt.setString(19, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(15, null);
+pstmt.setString(20, null);
 }
 else
 {
-		pstmt.setString(15, perceroObject.getScorecard().getID());
+		pstmt.setString(20, perceroObject.getScorecard().getID());
 }
 
 
@@ -232,48 +247,53 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDouble(1, perceroObject.getCurrentMTDThresholdGrade());
-pstmt.setDouble(2, perceroObject.getPreviousMTDThresholdGrade());
-pstmt.setString(3, perceroObject.getCurrentMTDOverallScore());
-pstmt.setString(4, perceroObject.getMTDTrend());
-pstmt.setString(5, perceroObject.getPreviousMTDOverallScore());
-pstmt.setString(6, perceroObject.getScorecardName());
-pstmt.setString(7, perceroObject.getStateName());
-pstmt.setString(8, perceroObject.getWeekendDate());
-pstmt.setString(9, perceroObject.getWeeklyOverallScore());
-pstmt.setString(10, perceroObject.getWeeklyOverallScoreStateName());
-pstmt.setString(11, perceroObject.getWeeklyTrend());
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgent().getID());
-}
-
+		pstmt.setBoolean(1, perceroObject.getIsRequired());
+pstmt.setString(2, perceroObject.getMTDTrend());
+pstmt.setString(3, perceroObject.getPreviousMTDOverallScore());
+pstmt.setDouble(4, perceroObject.getPreviousMTDThresholdGrade());
+pstmt.setString(5, perceroObject.getCreatedBy());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(7, perceroObject.getCurrentMTDOverallScore());
+pstmt.setDouble(8, perceroObject.getCurrentMTDThresholdGrade());
+pstmt.setString(9, perceroObject.getType());
+pstmt.setString(10, perceroObject.getUpdatedBy());
+pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(12, perceroObject.getWeekendDate());
+pstmt.setString(13, perceroObject.getWeeklyOverallScore());
+pstmt.setString(14, perceroObject.getWeeklyOverallScoreStateName());
+pstmt.setString(15, perceroObject.getWeeklyTrend());
+pstmt.setDate(16, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
 
 if (perceroObject.getCoachingSessionState() == null)
 {
-pstmt.setString(13, null);
+pstmt.setString(17, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getCoachingSessionState().getID());
+		pstmt.setString(17, perceroObject.getCoachingSessionState().getID());
+}
+
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(18, null);
+}
+else
+{
+		pstmt.setString(18, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(14, null);
+pstmt.setString(19, null);
 }
 else
 {
-		pstmt.setString(14, perceroObject.getScorecard().getID());
+		pstmt.setString(19, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(15, perceroObject.getID());
+pstmt.setString(20, perceroObject.getID());
 
 		
 	}
@@ -290,47 +310,13 @@ pstmt.setString(15, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCurrentMTDThresholdGrade = theQueryObject.getCurrentMTDThresholdGrade() != null && (excludeProperties == null || !excludeProperties.contains("currentMTDThresholdGrade"));
+		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
 
-if (useCurrentMTDThresholdGrade)
+if (useIsRequired)
 {
 sql += " WHERE ";
-sql += " CURRENT_MTD_THRESHOLD_GRADE=? ";
-paramValues.add(theQueryObject.getCurrentMTDThresholdGrade());
-propertyCounter++;
-}
-
-boolean usePreviousMTDThresholdGrade = theQueryObject.getPreviousMTDThresholdGrade() != null && (excludeProperties == null || !excludeProperties.contains("previousMTDThresholdGrade"));
-
-if (usePreviousMTDThresholdGrade)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " PREVIOUS_MTD_THRESHOLD_GRADE=? ";
-paramValues.add(theQueryObject.getPreviousMTDThresholdGrade());
-propertyCounter++;
-}
-
-boolean useCurrentMTDOverallScore = StringUtils.hasText(theQueryObject.getCurrentMTDOverallScore()) && (excludeProperties == null || !excludeProperties.contains("currentMTDOverallScore"));
-
-if (useCurrentMTDOverallScore)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CURRENT_MTD_OVERALL_SCORE=? ";
-paramValues.add(theQueryObject.getCurrentMTDOverallScore());
+sql += " IS_REQUIRED=? ";
+paramValues.add(theQueryObject.getIsRequired());
 propertyCounter++;
 }
 
@@ -368,9 +354,9 @@ paramValues.add(theQueryObject.getPreviousMTDOverallScore());
 propertyCounter++;
 }
 
-boolean useScorecardName = StringUtils.hasText(theQueryObject.getScorecardName()) && (excludeProperties == null || !excludeProperties.contains("scorecardName"));
+boolean usePreviousMTDThresholdGrade = theQueryObject.getPreviousMTDThresholdGrade() != null && (excludeProperties == null || !excludeProperties.contains("previousMTDThresholdGrade"));
 
-if (useScorecardName)
+if (usePreviousMTDThresholdGrade)
 {
 if (propertyCounter > 0)
 {
@@ -380,14 +366,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " SCORECARD_NAME=? ";
-paramValues.add(theQueryObject.getScorecardName());
+sql += " PREVIOUS_MTD_THRESHOLD_GRADE=? ";
+paramValues.add(theQueryObject.getPreviousMTDThresholdGrade());
 propertyCounter++;
 }
 
-boolean useStateName = StringUtils.hasText(theQueryObject.getStateName()) && (excludeProperties == null || !excludeProperties.contains("stateName"));
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
-if (useStateName)
+if (useCreatedBy)
 {
 if (propertyCounter > 0)
 {
@@ -397,8 +383,110 @@ else
 {
 sql += " WHERE ";
 }
-sql += " STATE_NAME=? ";
-paramValues.add(theQueryObject.getStateName());
+sql += " CREATED_BY=? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+
+if (useCreatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CREATED_ON=? ";
+paramValues.add(theQueryObject.getCreatedOn());
+propertyCounter++;
+}
+
+boolean useCurrentMTDOverallScore = StringUtils.hasText(theQueryObject.getCurrentMTDOverallScore()) && (excludeProperties == null || !excludeProperties.contains("currentMTDOverallScore"));
+
+if (useCurrentMTDOverallScore)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CURRENT_MTD_OVERALL_SCORE=? ";
+paramValues.add(theQueryObject.getCurrentMTDOverallScore());
+propertyCounter++;
+}
+
+boolean useCurrentMTDThresholdGrade = theQueryObject.getCurrentMTDThresholdGrade() != null && (excludeProperties == null || !excludeProperties.contains("currentMTDThresholdGrade"));
+
+if (useCurrentMTDThresholdGrade)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CURRENT_MTD_THRESHOLD_GRADE=? ";
+paramValues.add(theQueryObject.getCurrentMTDThresholdGrade());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " TYPE=? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " UPDATED_BY=? ";
+paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+if (useUpdatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " UPDATED_ON=? ";
+paramValues.add(theQueryObject.getUpdatedOn());
 propertyCounter++;
 }
 
@@ -470,9 +558,9 @@ paramValues.add(theQueryObject.getWeeklyTrend());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+boolean useClosedOn = theQueryObject.getClosedOn() != null && (excludeProperties == null || !excludeProperties.contains("closedOn"));
 
-if (useAgentID)
+if (useClosedOn)
 {
 if (propertyCounter > 0)
 {
@@ -482,8 +570,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
-paramValues.add(theQueryObject.getAgent().getID());
+sql += " CLOSED_ON=? ";
+paramValues.add(theQueryObject.getClosedOn());
 propertyCounter++;
 }
 
@@ -501,6 +589,23 @@ sql += " WHERE ";
 }
 sql += " COACHING_SESSION_STATE_ID=? ";
 paramValues.add(theQueryObject.getCoachingSessionState().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " AGENT_ID=? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

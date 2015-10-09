@@ -272,6 +272,19 @@ public void setCoachingNotification(CoachingNotification value)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasure> scorecardMeasures;
+public List<ScorecardMeasure> getScorecardMeasures() {
+	return this.scorecardMeasures;
+}
+
+public void setScorecardMeasures(List<ScorecardMeasure> value) {
+	this.scorecardMeasures = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CoachingSession> coachingSessions;
 public List<CoachingSession> getCoachingSessions() {
@@ -537,6 +550,23 @@ objectJson += ",\"agentScorecards\":[";
 		objectJson += "]";
 //Retrieve value of the Scorecard of Coaching Notification relationship
 
+//Retrieve value of the Scorecard of Scorecard Measure relationship
+objectJson += ",\"scorecardMeasures\":[";
+		
+		if (getScorecardMeasures() != null) {
+			int scorecardMeasuresCounter = 0;
+			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
+				if (scorecardMeasuresCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
+					scorecardMeasuresCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Scorecard of Coaching Session relationship
 objectJson += ",\"coachingSessions\":[";
 		
@@ -592,6 +622,7 @@ objectJson += ",\"coachingSessions\":[";
 		// Target Relationships
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 		this.coachingNotification = (CoachingNotification) JsonUtils.getJsonPerceroObject(jsonObject, "coachingNotification");
+		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
 
 
@@ -603,6 +634,7 @@ objectJson += ",\"coachingSessions\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "scorecard"));
 
 		

@@ -19,7 +19,7 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Observation;
-import com.pulse.mo.CoachingSessionMeasure;
+import com.pulse.mo.ScorecardMeasure;
 
 */
 
@@ -52,7 +52,7 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID=?";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID=?";
 	}
 	
 	@Override
@@ -67,12 +67,12 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID LIMIT ? OFFSET ?";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID IN (?)";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID IN (?)";
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION." + joinColumnName + "=?";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -107,17 +107,17 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.COACHING_SESSION_MEASURE_ID FROM OBSERVATION OBSERVATION ";
+		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO OBSERVATION (ID,COACHING_SESSION_MEASURE_ID) VALUES (?,?)";
+		return "INSERT INTO OBSERVATION (ID,SCORECARD_MEASURE_ID) VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE OBSERVATION SET COACHING_SESSION_MEASURE_ID WHERE ID=?";
+		return "UPDATE OBSERVATION SET SCORECARD_MEASURE_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -134,9 +134,9 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
     	
     	if (!shellOnly) 
 		{
-			CoachingSessionMeasure coachingsessionmeasure = new CoachingSessionMeasure();
-coachingsessionmeasure.setID(rs.getString("COACHING_SESSION_MEASURE_ID"));
-nextResult.setCoachingSessionMeasure(coachingsessionmeasure);
+			ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
+scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 			
@@ -150,13 +150,13 @@ nextResult.setCoachingSessionMeasure(coachingsessionmeasure);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getCoachingSessionMeasure() == null)
+if (perceroObject.getScorecardMeasure() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getCoachingSessionMeasure().getID());
+		pstmt.setString(2, perceroObject.getScorecardMeasure().getID());
 }
 
 
@@ -167,13 +167,13 @@ else
 	protected void setPreparedStatmentUpdateParams(Observation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		
-if (perceroObject.getCoachingSessionMeasure() == null)
+if (perceroObject.getScorecardMeasure() == null)
 {
 pstmt.setString(1, null);
 }
 else
 {
-		pstmt.setString(1, perceroObject.getCoachingSessionMeasure().getID());
+		pstmt.setString(1, perceroObject.getScorecardMeasure().getID());
 }
 
 pstmt.setString(2, perceroObject.getID());
@@ -193,13 +193,13 @@ pstmt.setString(2, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCoachingSessionMeasureID = theQueryObject.getCoachingSessionMeasure() != null && (excludeProperties == null || !excludeProperties.contains("coachingSessionMeasure"));
+		boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
 
-if (useCoachingSessionMeasureID)
+if (useScorecardMeasureID)
 {
 sql += " WHERE ";
-sql += " COACHING_SESSION_MEASURE_ID=? ";
-paramValues.add(theQueryObject.getCoachingSessionMeasure().getID());
+sql += " SCORECARD_MEASURE_ID=? ";
+paramValues.add(theQueryObject.getScorecardMeasure().getID());
 propertyCounter++;
 }
 

@@ -21,6 +21,7 @@ import com.pulse.mo.*;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
+import com.pulse.mo.ScorecardMeasure;
 import com.pulse.mo.CoachingSession;
 import com.pulse.mo.ScorecardState;
 
@@ -55,7 +56,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD.ID=?";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD.ID=?";
 	}
 	
 	@Override
@@ -70,12 +71,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ORDER BY SCORECARD.ID";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ORDER BY SCORECARD.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ORDER BY SCORECARD.ID LIMIT ? OFFSET ?";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ORDER BY SCORECARD.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +86,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD.ID IN (?)";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD.ID IN (?)";
 	}
 	
 	@Override
@@ -95,7 +96,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD." + joinColumnName + "=?";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD WHERE SCORECARD." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +111,17 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SCORECARD.ID,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.NAME,SCORECARD.SCORECARD_NAME,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ";
+		return "SELECT SCORECARD.ID,SCORECARD.NAME,SCORECARD.PENDING_COACH_COACHING_SESSION_COUNT,SCORECARD.PENDING_COACHING_SESSION_COUNT,SCORECARD.PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_NAME,SCORECARD.SKIPPED_COACHING_SESSION_COUNT,SCORECARD.SUBMITTED_COACHING_SESSION_COUNT,SCORECARD.TOTAL_COACHING_SESSION_COUNT,SCORECARD.ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD.SCORECARD_STATE_ID FROM SCORECARD SCORECARD ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCORECARD (ID,ACKNOWLEDGED_COACHING_SESSION_COUNT,PENDING_COACH_COACHING_SESSION_COUNT,PENDING_COACHING_SESSION_COUNT,PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SKIPPED_COACHING_SESSION_COUNT,SUBMITTED_COACHING_SESSION_COUNT,TOTAL_COACHING_SESSION_COUNT,NAME,SCORECARD_NAME,SCORECARD_STATE_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO SCORECARD (ID,NAME,PENDING_COACH_COACHING_SESSION_COUNT,PENDING_COACHING_SESSION_COUNT,PENDING_EMPLOYEE_COACHING_SESSION_COUNT,SCORECARD_NAME,SKIPPED_COACHING_SESSION_COUNT,SUBMITTED_COACHING_SESSION_COUNT,TOTAL_COACHING_SESSION_COUNT,ACKNOWLEDGED_COACHING_SESSION_COUNT,SCORECARD_STATE_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SCORECARD SET ACKNOWLEDGED_COACHING_SESSION_COUNT=?,PENDING_COACH_COACHING_SESSION_COUNT=?,PENDING_COACHING_SESSION_COUNT=?,PENDING_EMPLOYEE_COACHING_SESSION_COUNT=?,SKIPPED_COACHING_SESSION_COUNT=?,SUBMITTED_COACHING_SESSION_COUNT=?,TOTAL_COACHING_SESSION_COUNT=?,NAME=?,SCORECARD_NAME=?,SCORECARD_STATE_ID WHERE ID=?";
+		return "UPDATE SCORECARD SET NAME=?,PENDING_COACH_COACHING_SESSION_COUNT=?,PENDING_COACHING_SESSION_COUNT=?,PENDING_EMPLOYEE_COACHING_SESSION_COUNT=?,SCORECARD_NAME=?,SKIPPED_COACHING_SESSION_COUNT=?,SUBMITTED_COACHING_SESSION_COUNT=?,TOTAL_COACHING_SESSION_COUNT=?,ACKNOWLEDGED_COACHING_SESSION_COUNT=?,SCORECARD_STATE_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -137,7 +138,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
     	
     	if (!shellOnly) 
 		{
-			nextResult.setAcknowledgedCoachingSessionCount(rs.getInt("ACKNOWLEDGED_COACHING_SESSION_COUNT"));
+			nextResult.setName(rs.getString("NAME"));
 
 nextResult.setPendingCoachCoachingSessionCount(rs.getInt("PENDING_COACH_COACHING_SESSION_COUNT"));
 
@@ -145,15 +146,15 @@ nextResult.setPendingCoachingSessionCount(rs.getInt("PENDING_COACHING_SESSION_CO
 
 nextResult.setPendingEmployeeCoachingSessionCount(rs.getInt("PENDING_EMPLOYEE_COACHING_SESSION_COUNT"));
 
+nextResult.setScorecardName(rs.getString("SCORECARD_NAME"));
+
 nextResult.setSkippedCoachingSessionCount(rs.getInt("SKIPPED_COACHING_SESSION_COUNT"));
 
 nextResult.setSubmittedCoachingSessionCount(rs.getInt("SUBMITTED_COACHING_SESSION_COUNT"));
 
 nextResult.setTotalCoachingSessionCount(rs.getInt("TOTAL_COACHING_SESSION_COUNT"));
 
-nextResult.setName(rs.getString("NAME"));
-
-nextResult.setScorecardName(rs.getString("SCORECARD_NAME"));
+nextResult.setAcknowledgedCoachingSessionCount(rs.getInt("ACKNOWLEDGED_COACHING_SESSION_COUNT"));
 
 ScorecardState scorecardstate = new ScorecardState();
 scorecardstate.setID(rs.getString("SCORECARD_STATE_ID"));
@@ -170,15 +171,15 @@ nextResult.setScorecardState(scorecardstate);
 	protected void setPreparedStatmentInsertParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setInt(2, perceroObject.getAcknowledgedCoachingSessionCount());
+pstmt.setString(2, perceroObject.getName());
 pstmt.setInt(3, perceroObject.getPendingCoachCoachingSessionCount());
 pstmt.setInt(4, perceroObject.getPendingCoachingSessionCount());
 pstmt.setInt(5, perceroObject.getPendingEmployeeCoachingSessionCount());
-pstmt.setInt(6, perceroObject.getSkippedCoachingSessionCount());
-pstmt.setInt(7, perceroObject.getSubmittedCoachingSessionCount());
-pstmt.setInt(8, perceroObject.getTotalCoachingSessionCount());
-pstmt.setString(9, perceroObject.getName());
-pstmt.setString(10, perceroObject.getScorecardName());
+pstmt.setString(6, perceroObject.getScorecardName());
+pstmt.setInt(7, perceroObject.getSkippedCoachingSessionCount());
+pstmt.setInt(8, perceroObject.getSubmittedCoachingSessionCount());
+pstmt.setInt(9, perceroObject.getTotalCoachingSessionCount());
+pstmt.setInt(10, perceroObject.getAcknowledgedCoachingSessionCount());
 
 if (perceroObject.getScorecardState() == null)
 {
@@ -196,15 +197,15 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setInt(1, perceroObject.getAcknowledgedCoachingSessionCount());
+		pstmt.setString(1, perceroObject.getName());
 pstmt.setInt(2, perceroObject.getPendingCoachCoachingSessionCount());
 pstmt.setInt(3, perceroObject.getPendingCoachingSessionCount());
 pstmt.setInt(4, perceroObject.getPendingEmployeeCoachingSessionCount());
-pstmt.setInt(5, perceroObject.getSkippedCoachingSessionCount());
-pstmt.setInt(6, perceroObject.getSubmittedCoachingSessionCount());
-pstmt.setInt(7, perceroObject.getTotalCoachingSessionCount());
-pstmt.setString(8, perceroObject.getName());
-pstmt.setString(9, perceroObject.getScorecardName());
+pstmt.setString(5, perceroObject.getScorecardName());
+pstmt.setInt(6, perceroObject.getSkippedCoachingSessionCount());
+pstmt.setInt(7, perceroObject.getSubmittedCoachingSessionCount());
+pstmt.setInt(8, perceroObject.getTotalCoachingSessionCount());
+pstmt.setInt(9, perceroObject.getAcknowledgedCoachingSessionCount());
 
 if (perceroObject.getScorecardState() == null)
 {
@@ -232,13 +233,13 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useAcknowledgedCoachingSessionCount = theQueryObject.getAcknowledgedCoachingSessionCount() != null && (excludeProperties == null || !excludeProperties.contains("acknowledgedCoachingSessionCount"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useAcknowledgedCoachingSessionCount)
+if (useName)
 {
 sql += " WHERE ";
-sql += " ACKNOWLEDGED_COACHING_SESSION_COUNT=? ";
-paramValues.add(theQueryObject.getAcknowledgedCoachingSessionCount());
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
@@ -293,6 +294,23 @@ paramValues.add(theQueryObject.getPendingEmployeeCoachingSessionCount());
 propertyCounter++;
 }
 
+boolean useScorecardName = StringUtils.hasText(theQueryObject.getScorecardName()) && (excludeProperties == null || !excludeProperties.contains("scorecardName"));
+
+if (useScorecardName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " SCORECARD_NAME=? ";
+paramValues.add(theQueryObject.getScorecardName());
+propertyCounter++;
+}
+
 boolean useSkippedCoachingSessionCount = theQueryObject.getSkippedCoachingSessionCount() != null && (excludeProperties == null || !excludeProperties.contains("skippedCoachingSessionCount"));
 
 if (useSkippedCoachingSessionCount)
@@ -344,9 +362,9 @@ paramValues.add(theQueryObject.getTotalCoachingSessionCount());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useAcknowledgedCoachingSessionCount = theQueryObject.getAcknowledgedCoachingSessionCount() != null && (excludeProperties == null || !excludeProperties.contains("acknowledgedCoachingSessionCount"));
 
-if (useName)
+if (useAcknowledgedCoachingSessionCount)
 {
 if (propertyCounter > 0)
 {
@@ -356,25 +374,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useScorecardName = StringUtils.hasText(theQueryObject.getScorecardName()) && (excludeProperties == null || !excludeProperties.contains("scorecardName"));
-
-if (useScorecardName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " SCORECARD_NAME=? ";
-paramValues.add(theQueryObject.getScorecardName());
+sql += " ACKNOWLEDGED_COACHING_SESSION_COUNT=? ";
+paramValues.add(theQueryObject.getAcknowledgedCoachingSessionCount());
 propertyCounter++;
 }
 

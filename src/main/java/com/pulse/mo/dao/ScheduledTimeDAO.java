@@ -53,7 +53,7 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME.ID=?";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME.ID=?";
 	}
 	
 	@Override
@@ -68,12 +68,12 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ORDER BY SCHEDULED_TIME.ID";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ORDER BY SCHEDULED_TIME.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ORDER BY SCHEDULED_TIME.ID LIMIT ? OFFSET ?";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ORDER BY SCHEDULED_TIME.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME.ID IN (?)";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME.ID IN (?)";
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME." + joinColumnName + "=?";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME WHERE SCHEDULED_TIME." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -108,17 +108,17 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ";
+		return "SELECT SCHEDULED_TIME.ID,SCHEDULED_TIME.STATE_NAME,SCHEDULED_TIME.TOTAL_TIME,SCHEDULED_TIME.AGENT_ID FROM SCHEDULED_TIME SCHEDULED_TIME ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCHEDULED_TIME (ID,TOTAL_TIME,STATE_NAME,AGENT_ID) VALUES (?,?,?,?)";
+		return "INSERT INTO SCHEDULED_TIME (ID,STATE_NAME,TOTAL_TIME,AGENT_ID) VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SCHEDULED_TIME SET TOTAL_TIME=?,STATE_NAME=?,AGENT_ID WHERE ID=?";
+		return "UPDATE SCHEDULED_TIME SET STATE_NAME=?,TOTAL_TIME=?,AGENT_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -135,9 +135,9 @@ public class ScheduledTimeDAO extends SqlDataAccessObject<ScheduledTime> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTotalTime(rs.getDouble("TOTAL_TIME"));
+			nextResult.setStateName(rs.getString("STATE_NAME"));
 
-nextResult.setStateName(rs.getString("STATE_NAME"));
+nextResult.setTotalTime(rs.getDouble("TOTAL_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -154,8 +154,8 @@ nextResult.setAgent(agent);
 	protected void setPreparedStatmentInsertParams(ScheduledTime perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDouble(2, perceroObject.getTotalTime());
-pstmt.setString(3, perceroObject.getStateName());
+pstmt.setString(2, perceroObject.getStateName());
+pstmt.setDouble(3, perceroObject.getTotalTime());
 
 if (perceroObject.getAgent() == null)
 {
@@ -173,8 +173,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScheduledTime perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDouble(1, perceroObject.getTotalTime());
-pstmt.setString(2, perceroObject.getStateName());
+		pstmt.setString(1, perceroObject.getStateName());
+pstmt.setDouble(2, perceroObject.getTotalTime());
 
 if (perceroObject.getAgent() == null)
 {
@@ -202,19 +202,19 @@ pstmt.setString(4, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useTotalTime = theQueryObject.getTotalTime() != null && (excludeProperties == null || !excludeProperties.contains("totalTime"));
+		boolean useStateName = StringUtils.hasText(theQueryObject.getStateName()) && (excludeProperties == null || !excludeProperties.contains("stateName"));
 
-if (useTotalTime)
+if (useStateName)
 {
 sql += " WHERE ";
-sql += " TOTAL_TIME=? ";
-paramValues.add(theQueryObject.getTotalTime());
+sql += " STATE_NAME=? ";
+paramValues.add(theQueryObject.getStateName());
 propertyCounter++;
 }
 
-boolean useStateName = StringUtils.hasText(theQueryObject.getStateName()) && (excludeProperties == null || !excludeProperties.contains("stateName"));
+boolean useTotalTime = theQueryObject.getTotalTime() != null && (excludeProperties == null || !excludeProperties.contains("totalTime"));
 
-if (useStateName)
+if (useTotalTime)
 {
 if (propertyCounter > 0)
 {
@@ -224,8 +224,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " STATE_NAME=? ";
-paramValues.add(theQueryObject.getStateName());
+sql += " TOTAL_TIME=? ";
+paramValues.add(theQueryObject.getTotalTime());
 propertyCounter++;
 }
 

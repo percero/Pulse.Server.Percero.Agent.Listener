@@ -53,7 +53,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID=?";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID=?";
 	}
 	
 	@Override
@@ -68,12 +68,12 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID LIMIT ? OFFSET ?";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID IN (?)";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID IN (?)";
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD." + joinColumnName + "=?";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -108,17 +108,17 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.AGENT_ID,AGENT_SCORECARD.SCORECARD_ID FROM AGENT_SCORECARD AGENT_SCORECARD ";
+		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO AGENT_SCORECARD (ID,AGENT_ID,SCORECARD_ID) VALUES (?,?,?)";
+		return "INSERT INTO AGENT_SCORECARD (ID,SCORECARD_ID,AGENT_ID) VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE AGENT_SCORECARD SET AGENT_ID,SCORECARD_ID WHERE ID=?";
+		return "UPDATE AGENT_SCORECARD SET SCORECARD_ID=?,AGENT_ID=? WHERE ID=?";
 	}
 	
 	@Override
@@ -135,13 +135,13 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
     	
     	if (!shellOnly) 
 		{
-			Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
-Scorecard scorecard = new Scorecard();
+			Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 
 			
@@ -155,23 +155,23 @@ nextResult.setScorecard(scorecard);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getAgent().getID());
+		pstmt.setString(2, perceroObject.getScorecard().getID());
 }
 
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getScorecard().getID());
+		pstmt.setString(3, perceroObject.getAgent().getID());
 }
 
 
@@ -182,23 +182,23 @@ else
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		
-if (perceroObject.getAgent() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(1, null);
 }
 else
 {
-		pstmt.setString(1, perceroObject.getAgent().getID());
+		pstmt.setString(1, perceroObject.getScorecard().getID());
 }
 
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getScorecard().getID());
+		pstmt.setString(2, perceroObject.getAgent().getID());
 }
 
 pstmt.setString(3, perceroObject.getID());
@@ -218,19 +218,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+		boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
 
-if (useAgentID)
+if (useScorecardID)
 {
 sql += " WHERE ";
-sql += " AGENT_ID=? ";
-paramValues.add(theQueryObject.getAgent().getID());
+sql += " SCORECARD_ID=? ";
+paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useScorecardID)
+if (useAgentID)
 {
 if (propertyCounter > 0)
 {
@@ -240,8 +240,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " SCORECARD_ID=? ";
-paramValues.add(theQueryObject.getScorecard().getID());
+sql += " AGENT_ID=? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

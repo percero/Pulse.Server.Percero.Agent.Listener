@@ -119,7 +119,7 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE USER_SESSION SET DATE=?,CONNECTED_STATE_NAME=?,IP_ADDRESS=?,CONNECTED_STATE_ID,CURRENT_TEAM_LEADER_ID,PULSE_USER_ID WHERE ID=?";
+		return "UPDATE USER_SESSION SET DATE=?,CONNECTED_STATE_NAME=?,IP_ADDRESS=?,CONNECTED_STATE_ID=?,CURRENT_TEAM_LEADER_ID=?,PULSE_USER_ID=? WHERE ID=?";
 	}
 	
 	@Override

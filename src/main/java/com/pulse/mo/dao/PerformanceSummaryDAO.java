@@ -53,7 +53,7 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY.ID=?";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY.ID=?";
 	}
 	
 	@Override
@@ -68,12 +68,12 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ORDER BY PERFORMANCE_SUMMARY.ID";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ORDER BY PERFORMANCE_SUMMARY.ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ORDER BY PERFORMANCE_SUMMARY.ID LIMIT ? OFFSET ?";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ORDER BY PERFORMANCE_SUMMARY.ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY.ID IN (?)";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY.ID IN (?)";
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY." + joinColumnName + "=?";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY WHERE PERFORMANCE_SUMMARY." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -108,17 +108,17 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ";
+		return "SELECT PERFORMANCE_SUMMARY.ID,PERFORMANCE_SUMMARY.PREVIOUS_MTD_SCORE,PERFORMANCE_SUMMARY.PREVIOUS_MTD_TREND,PERFORMANCE_SUMMARY.WEEKLY_OVERVIEW_SCORE,PERFORMANCE_SUMMARY.WEEKLY_TREND,PERFORMANCE_SUMMARY.WEKEND_DATE,PERFORMANCE_SUMMARY.CURRENT_MTD_SCORE,PERFORMANCE_SUMMARY.CURRENT_MTD_TREND FROM PERFORMANCE_SUMMARY PERFORMANCE_SUMMARY ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO PERFORMANCE_SUMMARY (ID,WEKEND_DATE,CURRENT_MTD_SCORE,CURRENT_MTD_TREND,PREVIOUS_MTD_SCORE,PREVIOUS_MTD_TREND,WEEKLY_OVERVIEW_SCORE,WEEKLY_TREND) VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO PERFORMANCE_SUMMARY (ID,PREVIOUS_MTD_SCORE,PREVIOUS_MTD_TREND,WEEKLY_OVERVIEW_SCORE,WEEKLY_TREND,WEKEND_DATE,CURRENT_MTD_SCORE,CURRENT_MTD_TREND) VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE PERFORMANCE_SUMMARY SET WEKEND_DATE=?,CURRENT_MTD_SCORE=?,CURRENT_MTD_TREND=?,PREVIOUS_MTD_SCORE=?,PREVIOUS_MTD_TREND=?,WEEKLY_OVERVIEW_SCORE=?,WEEKLY_TREND=? WHERE ID=?";
+		return "UPDATE PERFORMANCE_SUMMARY SET PREVIOUS_MTD_SCORE=?,PREVIOUS_MTD_TREND=?,WEEKLY_OVERVIEW_SCORE=?,WEEKLY_TREND=?,WEKEND_DATE=?,CURRENT_MTD_SCORE=?,CURRENT_MTD_TREND=? WHERE ID=?";
 	}
 	
 	@Override
@@ -135,19 +135,19 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWekendDate(rs.getDate("WEKEND_DATE"));
-
-nextResult.setCurrentMTDScore(rs.getString("CURRENT_MTD_SCORE"));
-
-nextResult.setCurrentMTDTrend(rs.getString("CURRENT_MTD_TREND"));
-
-nextResult.setPreviousMTDScore(rs.getString("PREVIOUS_MTD_SCORE"));
+			nextResult.setPreviousMTDScore(rs.getString("PREVIOUS_MTD_SCORE"));
 
 nextResult.setPreviousMTDTrend(rs.getString("PREVIOUS_MTD_TREND"));
 
 nextResult.setWeeklyOverviewScore(rs.getString("WEEKLY_OVERVIEW_SCORE"));
 
 nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
+
+nextResult.setWekendDate(rs.getDate("WEKEND_DATE"));
+
+nextResult.setCurrentMTDScore(rs.getString("CURRENT_MTD_SCORE"));
+
+nextResult.setCurrentMTDTrend(rs.getString("CURRENT_MTD_TREND"));
 
 
 			
@@ -160,13 +160,13 @@ nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
 	protected void setPreparedStatmentInsertParams(PerformanceSummary perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWekendDate()));
-pstmt.setString(3, perceroObject.getCurrentMTDScore());
-pstmt.setString(4, perceroObject.getCurrentMTDTrend());
-pstmt.setString(5, perceroObject.getPreviousMTDScore());
-pstmt.setString(6, perceroObject.getPreviousMTDTrend());
-pstmt.setString(7, perceroObject.getWeeklyOverviewScore());
-pstmt.setString(8, perceroObject.getWeeklyTrend());
+pstmt.setString(2, perceroObject.getPreviousMTDScore());
+pstmt.setString(3, perceroObject.getPreviousMTDTrend());
+pstmt.setString(4, perceroObject.getWeeklyOverviewScore());
+pstmt.setString(5, perceroObject.getWeeklyTrend());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWekendDate()));
+pstmt.setString(7, perceroObject.getCurrentMTDScore());
+pstmt.setString(8, perceroObject.getCurrentMTDTrend());
 
 		
 	}
@@ -174,13 +174,13 @@ pstmt.setString(8, perceroObject.getWeeklyTrend());
 	@Override
 	protected void setPreparedStatmentUpdateParams(PerformanceSummary perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWekendDate()));
-pstmt.setString(2, perceroObject.getCurrentMTDScore());
-pstmt.setString(3, perceroObject.getCurrentMTDTrend());
-pstmt.setString(4, perceroObject.getPreviousMTDScore());
-pstmt.setString(5, perceroObject.getPreviousMTDTrend());
-pstmt.setString(6, perceroObject.getWeeklyOverviewScore());
-pstmt.setString(7, perceroObject.getWeeklyTrend());
+		pstmt.setString(1, perceroObject.getPreviousMTDScore());
+pstmt.setString(2, perceroObject.getPreviousMTDTrend());
+pstmt.setString(3, perceroObject.getWeeklyOverviewScore());
+pstmt.setString(4, perceroObject.getWeeklyTrend());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWekendDate()));
+pstmt.setString(6, perceroObject.getCurrentMTDScore());
+pstmt.setString(7, perceroObject.getCurrentMTDTrend());
 pstmt.setString(8, perceroObject.getID());
 
 		
@@ -198,62 +198,11 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWekendDate = theQueryObject.getWekendDate() != null && (excludeProperties == null || !excludeProperties.contains("wekendDate"));
-
-if (useWekendDate)
-{
-sql += " WHERE ";
-sql += " WEKEND_DATE=? ";
-paramValues.add(theQueryObject.getWekendDate());
-propertyCounter++;
-}
-
-boolean useCurrentMTDScore = StringUtils.hasText(theQueryObject.getCurrentMTDScore()) && (excludeProperties == null || !excludeProperties.contains("currentMTDScore"));
-
-if (useCurrentMTDScore)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CURRENT_MTD_SCORE=? ";
-paramValues.add(theQueryObject.getCurrentMTDScore());
-propertyCounter++;
-}
-
-boolean useCurrentMTDTrend = StringUtils.hasText(theQueryObject.getCurrentMTDTrend()) && (excludeProperties == null || !excludeProperties.contains("currentMTDTrend"));
-
-if (useCurrentMTDTrend)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CURRENT_MTD_TREND=? ";
-paramValues.add(theQueryObject.getCurrentMTDTrend());
-propertyCounter++;
-}
-
-boolean usePreviousMTDScore = StringUtils.hasText(theQueryObject.getPreviousMTDScore()) && (excludeProperties == null || !excludeProperties.contains("previousMTDScore"));
+		boolean usePreviousMTDScore = StringUtils.hasText(theQueryObject.getPreviousMTDScore()) && (excludeProperties == null || !excludeProperties.contains("previousMTDScore"));
 
 if (usePreviousMTDScore)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " PREVIOUS_MTD_SCORE=? ";
 paramValues.add(theQueryObject.getPreviousMTDScore());
 propertyCounter++;
@@ -307,6 +256,57 @@ sql += " WHERE ";
 }
 sql += " WEEKLY_TREND=? ";
 paramValues.add(theQueryObject.getWeeklyTrend());
+propertyCounter++;
+}
+
+boolean useWekendDate = theQueryObject.getWekendDate() != null && (excludeProperties == null || !excludeProperties.contains("wekendDate"));
+
+if (useWekendDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " WEKEND_DATE=? ";
+paramValues.add(theQueryObject.getWekendDate());
+propertyCounter++;
+}
+
+boolean useCurrentMTDScore = StringUtils.hasText(theQueryObject.getCurrentMTDScore()) && (excludeProperties == null || !excludeProperties.contains("currentMTDScore"));
+
+if (useCurrentMTDScore)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CURRENT_MTD_SCORE=? ";
+paramValues.add(theQueryObject.getCurrentMTDScore());
+propertyCounter++;
+}
+
+boolean useCurrentMTDTrend = StringUtils.hasText(theQueryObject.getCurrentMTDTrend()) && (excludeProperties == null || !excludeProperties.contains("currentMTDTrend"));
+
+if (useCurrentMTDTrend)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CURRENT_MTD_TREND=? ";
+paramValues.add(theQueryObject.getCurrentMTDTrend());
 propertyCounter++;
 }
 

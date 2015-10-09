@@ -117,7 +117,7 @@ public class TeamLeaderActionDAO extends SqlDataAccessObject<TeamLeaderAction> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TEAM_LEADER_ACTION SET NAME=?,TEAM_LEADER_ID WHERE ID=?";
+		return "UPDATE TEAM_LEADER_ACTION SET NAME=?,TEAM_LEADER_ID=? WHERE ID=?";
 	}
 	
 	@Override
