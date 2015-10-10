@@ -1,21 +1,21 @@
 
-
-package com.pulse.mo.dao;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.Agent;
-import com.pulse.mo.TimecardEntry;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.util.DateUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+
+import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.TimecardEntry;
@@ -366,4 +366,4 @@ propertyCounter++;
 	}
 	
 }
-
+
