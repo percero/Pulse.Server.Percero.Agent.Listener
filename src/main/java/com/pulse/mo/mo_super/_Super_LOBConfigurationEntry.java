@@ -102,22 +102,22 @@ public void setReminderInterval(Integer reminderInterval)
 {
 	this.reminderInterval = reminderInterval;
 }/*
-OccurrenceToleranceInterval
-Notes:The number of times a event can happen before a notification is sent
+DurationToleranceInterval
+Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer occurrenceToleranceInterval;
+private Integer durationToleranceInterval;
 
-public Integer getOccurrenceToleranceInterval() 
+public Integer getDurationToleranceInterval() 
 {
-	return this.occurrenceToleranceInterval;
+	return this.durationToleranceInterval;
 }
 
-public void setOccurrenceToleranceInterval(Integer occurrenceToleranceInterval)
+public void setDurationToleranceInterval(Integer durationToleranceInterval)
 {
-	this.occurrenceToleranceInterval = occurrenceToleranceInterval;
+	this.durationToleranceInterval = durationToleranceInterval;
 }/*
 DurationToleranceEnabled
 Notes:When there is no tolerance "None" this will be false
@@ -136,6 +136,23 @@ public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
 {
 	this.durationToleranceEnabled = durationToleranceEnabled;
 }/*
+OccurrenceToleranceInterval
+Notes:The number of times a event can happen before a notification is sent
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer occurrenceToleranceInterval;
+
+public Integer getOccurrenceToleranceInterval() 
+{
+	return this.occurrenceToleranceInterval;
+}
+
+public void setOccurrenceToleranceInterval(Integer occurrenceToleranceInterval)
+{
+	this.occurrenceToleranceInterval = occurrenceToleranceInterval;
+}/*
 DurationTolerance
 Notes:
 */
@@ -152,23 +169,6 @@ public Integer getDurationTolerance()
 public void setDurationTolerance(Integer durationTolerance)
 {
 	this.durationTolerance = durationTolerance;
-}/*
-DurationToleranceInterval
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer durationToleranceInterval;
-
-public Integer getDurationToleranceInterval() 
-{
-	return this.durationToleranceInterval;
-}
-
-public void setDurationToleranceInterval(Integer durationToleranceInterval)
-{
-	this.durationToleranceInterval = durationToleranceInterval;
 }
 
 	//////////////////////////////////////////////////////
@@ -279,6 +279,34 @@ public void setTimecardActivity(TimecardActivity value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Duration Tolerance Interval property
+		objectJson += ",\"durationToleranceInterval\":";
+		
+		if (getDurationToleranceInterval() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Duration Tolerance Enabled property
+		objectJson += ",\"durationToleranceEnabled\":";
+		if (getDurationToleranceEnabled() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDurationToleranceEnabled();
+		}
 		//Retrieve value of the Occurrence Tolerance Interval property
 		objectJson += ",\"occurrenceToleranceInterval\":";
 		
@@ -300,13 +328,6 @@ public void setTimecardActivity(TimecardActivity value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Duration Tolerance Enabled property
-		objectJson += ",\"durationToleranceEnabled\":";
-		if (getDurationToleranceEnabled() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDurationToleranceEnabled();
-		}
 		//Retrieve value of the Duration Tolerance property
 		objectJson += ",\"durationTolerance\":";
 		
@@ -317,27 +338,6 @@ public void setTimecardActivity(TimecardActivity value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Duration Tolerance Interval property
-		objectJson += ",\"durationToleranceInterval\":";
-		
-		if (getDurationToleranceInterval() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -433,14 +433,14 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 		// Properties
 		//From value of the Reminder Interval property
 		setReminderInterval(JsonUtils.getJsonInteger(jsonObject, "reminderInterval"));
-		//From value of the Occurrence Tolerance Interval property
-		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
-		//From value of the Duration Tolerance Enabled property
-		setDurationToleranceEnabled(JsonUtils.getJsonBoolean(jsonObject, "durationToleranceEnabled"));
-		//From value of the Duration Tolerance property
-		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
 		//From value of the Duration Tolerance Interval property
 		setDurationToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "durationToleranceInterval"));
+		//From value of the Duration Tolerance Enabled property
+		setDurationToleranceEnabled(JsonUtils.getJsonBoolean(jsonObject, "durationToleranceEnabled"));
+		//From value of the Occurrence Tolerance Interval property
+		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
+		//From value of the Duration Tolerance property
+		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
 
 		
 		// Source Relationships

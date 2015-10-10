@@ -40,6 +40,9 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return EmailDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL.ID=?";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL.ID=?";
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL ORDER BY ID";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL ORDER BY EMAIL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ORDER BY EMAIL.ID";
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ORDER BY EMAIL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM EMAIL EMAIL";
+		return "SELECT COUNT(ID) FROM \"EMAIL\" \"EMAIL\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL.ID IN (?)";
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL.ID IN (?)";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL WHERE EMAIL." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL WHERE EMAIL." + joinColumnName + "=?";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT EMAIL.ID FROM EMAIL EMAIL ";
+		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT EMAIL.ID,EMAIL.EMAIL_ADDRESS,EMAIL.PULSE_USER_ID FROM EMAIL EMAIL ";
+		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EMAIL (ID,EMAIL_ADDRESS,PULSE_USER_ID) VALUES (?,?,?)";
+		return "INSERT INTO EMAIL (\"ID\",\"EMAIL_ADDRESS\",\"PULSE_USER_ID\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EMAIL SET EMAIL_ADDRESS=?,PULSE_USER_ID=? WHERE ID=?";
+		return "UPDATE \"EMAIL\" SET \"EMAIL_ADDRESS\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM EMAIL WHERE ID=?";
+		return "DELETE FROM \"EMAIL\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -202,7 +206,7 @@ pstmt.setString(3, perceroObject.getID());
 if (useEmailAddress)
 {
 sql += " WHERE ";
-sql += " EMAIL_ADDRESS=? ";
+sql += " \"EMAIL_ADDRESS\" =? ";
 paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
 }
@@ -219,7 +223,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PULSE_USER_ID=? ";
+sql += " \"PULSE_USER_ID\" =? ";
 paramValues.add(theQueryObject.getPulseUser().getID());
 propertyCounter++;
 }

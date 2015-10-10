@@ -40,6 +40,9 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return SiteDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT SITE.ID FROM SITE SITE WHERE SITE.ID=?";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" WHERE \"SITE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE WHERE SITE.ID=?";
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" WHERE \"SITE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT SITE.ID FROM SITE SITE ORDER BY ID";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT SITE.ID FROM SITE SITE ORDER BY SITE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" ORDER BY \"SITE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE ORDER BY SITE.ID";
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" ORDER BY \"SITE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE ORDER BY SITE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" ORDER BY \"SITE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM SITE SITE";
+		return "SELECT COUNT(ID) FROM \"SITE\" \"SITE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE WHERE SITE.ID IN (?)";
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" WHERE \"SITE\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT SITE.ID FROM SITE SITE WHERE SITE.ID IN (?)";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" WHERE \"SITE\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE WHERE SITE." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" WHERE \"SITE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT SITE.ID FROM SITE SITE WHERE SITE." + joinColumnName + "=?";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" WHERE \"SITE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT SITE.ID FROM SITE SITE ";
+		return "SELECT \"SITE\".\"ID\" FROM \"SITE\" \"SITE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SITE.ID,SITE.NAME FROM SITE SITE ";
+		return "SELECT \"SITE\".\"ID\",\"SITE\".\"NAME\" FROM \"SITE\" \"SITE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SITE (ID,NAME) VALUES (?,?)";
+		return "INSERT INTO SITE (\"ID\",\"NAME\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SITE SET NAME=? WHERE ID=?";
+		return "UPDATE \"SITE\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM SITE WHERE ID=?";
+		return "DELETE FROM \"SITE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -178,7 +182,7 @@ pstmt.setString(2, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }

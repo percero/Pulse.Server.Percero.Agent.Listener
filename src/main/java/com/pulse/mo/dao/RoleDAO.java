@@ -39,6 +39,9 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return RoleDAO.CONNECTION_FACTORY_NAME;
@@ -46,82 +49,83 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT ROLE.ID FROM ROLE ROLE WHERE ROLE.ID=?";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE WHERE ROLE.ID=?";
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT ROLE.ID FROM ROLE ROLE ORDER BY ID";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT ROLE.ID FROM ROLE ROLE ORDER BY ROLE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE ORDER BY ROLE.ID";
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE ORDER BY ROLE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM ROLE ROLE";
+		return "SELECT COUNT(ID) FROM \"ROLE\" \"ROLE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE WHERE ROLE.ID IN (?)";
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT ROLE.ID FROM ROLE ROLE WHERE ROLE.ID IN (?)";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE WHERE ROLE." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT ROLE.ID FROM ROLE ROLE WHERE ROLE." + joinColumnName + "=?";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT ROLE.ID FROM ROLE ROLE ";
+		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ROLE.ID,ROLE.NAME FROM ROLE ROLE ";
+		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ROLE (ID,NAME) VALUES (?,?)";
+		return "INSERT INTO ROLE (\"ID\",\"NAME\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ROLE SET NAME=? WHERE ID=?";
+		return "UPDATE \"ROLE\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM ROLE WHERE ID=?";
+		return "DELETE FROM \"ROLE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -177,7 +181,7 @@ pstmt.setString(2, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }

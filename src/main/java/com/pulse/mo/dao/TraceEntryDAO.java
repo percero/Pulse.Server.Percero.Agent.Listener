@@ -41,6 +41,9 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return TraceEntryDAO.CONNECTION_FACTORY_NAME;
@@ -48,82 +51,83 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY.ID=?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY.ID=?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY ORDER BY ID";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY ORDER BY TRACE_ENTRY.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY ORDER BY TRACE_ENTRY.ID";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY ORDER BY TRACE_ENTRY.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM TRACE_ENTRY TRACE_ENTRY";
+		return "SELECT COUNT(ID) FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY.ID IN (?)";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY.ID IN (?)";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY WHERE TRACE_ENTRY." + joinColumnName + "=?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT TRACE_ENTRY.ID FROM TRACE_ENTRY TRACE_ENTRY ";
+		return "SELECT \"TRACE_ENTRY\".\"ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT TRACE_ENTRY.ID,TRACE_ENTRY.LOG_MESSAGE,TRACE_ENTRY.TIMESTAMP,TRACE_ENTRY.TRACE_TYPE,TRACE_ENTRY.TRACE_LOG_ID,TRACE_ENTRY.PULSE_USER_ID FROM TRACE_ENTRY TRACE_ENTRY ";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TRACE_ENTRY (ID,LOG_MESSAGE,TIMESTAMP,TRACE_TYPE,TRACE_LOG_ID,PULSE_USER_ID) VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO TRACE_ENTRY (\"ID\",\"LOG_MESSAGE\",\"TIMESTAMP\",\"TRACE_TYPE\",\"TRACE_LOG_ID\",\"PULSE_USER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TRACE_ENTRY SET LOG_MESSAGE=?,TIMESTAMP=?,TRACE_TYPE=?,TRACE_LOG_ID=?,PULSE_USER_ID=? WHERE ID=?";
+		return "UPDATE \"TRACE_ENTRY\" SET \"LOG_MESSAGE\"=?,\"TIMESTAMP\"=?,\"TRACE_TYPE\"=?,\"TRACE_LOG_ID\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TRACE_ENTRY WHERE ID=?";
+		return "DELETE FROM \"TRACE_ENTRY\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -235,7 +239,7 @@ pstmt.setString(6, perceroObject.getID());
 if (useLogMessage)
 {
 sql += " WHERE ";
-sql += " LOG_MESSAGE=? ";
+sql += " \"LOG_MESSAGE\" =? ";
 paramValues.add(theQueryObject.getLogMessage());
 propertyCounter++;
 }
@@ -252,7 +256,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TIMESTAMP=? ";
+sql += " \"TIMESTAMP\" =? ";
 paramValues.add(theQueryObject.getTimestamp());
 propertyCounter++;
 }
@@ -269,7 +273,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TRACE_TYPE=? ";
+sql += " \"TRACE_TYPE\" =? ";
 paramValues.add(theQueryObject.getTraceType());
 propertyCounter++;
 }
@@ -286,7 +290,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TRACE_LOG_ID=? ";
+sql += " \"TRACE_LOG_ID\" =? ";
 paramValues.add(theQueryObject.getTraceLog().getID());
 propertyCounter++;
 }
@@ -303,7 +307,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PULSE_USER_ID=? ";
+sql += " \"PULSE_USER_ID\" =? ";
 paramValues.add(theQueryObject.getPulseUser().getID());
 propertyCounter++;
 }

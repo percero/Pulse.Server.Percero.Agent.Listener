@@ -41,6 +41,9 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return BehaviorDAO.CONNECTION_FACTORY_NAME;
@@ -48,82 +51,83 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR.ID=?";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR.ID=?";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR ORDER BY ID";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR ORDER BY BEHAVIOR.ID LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR ORDER BY BEHAVIOR.ID";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR ORDER BY BEHAVIOR.ID LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM BEHAVIOR BEHAVIOR";
+		return "SELECT COUNT(ID) FROM \"BEHAVIOR\" \"BEHAVIOR\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR.ID IN (?)";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR.ID IN (?)";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR WHERE BEHAVIOR." + joinColumnName + "=?";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT BEHAVIOR.ID FROM BEHAVIOR BEHAVIOR ";
+		return "SELECT \"BEHAVIOR\".\"ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT BEHAVIOR.ID,BEHAVIOR.NAME,BEHAVIOR.DESCRIPTION,BEHAVIOR.SCORECARD_MEASURE_ID FROM BEHAVIOR BEHAVIOR ";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO BEHAVIOR (ID,NAME,DESCRIPTION,SCORECARD_MEASURE_ID) VALUES (?,?,?,?)";
+		return "INSERT INTO BEHAVIOR (\"ID\",\"NAME\",\"DESCRIPTION\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE BEHAVIOR SET NAME=?,DESCRIPTION=?,SCORECARD_MEASURE_ID=? WHERE ID=?";
+		return "UPDATE \"BEHAVIOR\" SET \"NAME\"=?,\"DESCRIPTION\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM BEHAVIOR WHERE ID=?";
+		return "DELETE FROM \"BEHAVIOR\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -207,7 +211,7 @@ pstmt.setString(4, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -224,7 +228,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " DESCRIPTION=? ";
+sql += " \"DESCRIPTION\" =? ";
 paramValues.add(theQueryObject.getDescription());
 propertyCounter++;
 }
@@ -241,7 +245,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " SCORECARD_MEASURE_ID=? ";
+sql += " \"SCORECARD_MEASURE_ID\" =? ";
 paramValues.add(theQueryObject.getScorecardMeasure().getID());
 propertyCounter++;
 }

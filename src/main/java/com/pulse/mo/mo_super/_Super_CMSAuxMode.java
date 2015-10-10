@@ -123,7 +123,21 @@ public void setEventCount(Integer eventCount)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@com.percero.agents.sync.metadata.annotations.Externalize
+@OneToOne(fetch=FetchType.LAZY, mappedBy="cMSAuxMode", cascade=javax.persistence.CascadeType.REMOVE)
+private LOBConfigurationEntry lOBConfigurationEntry;
+public LOBConfigurationEntry getLOBConfigurationEntry() {
+	return this.lOBConfigurationEntry;
+}
+
+public void setLOBConfigurationEntry(LOBConfigurationEntry value) 
+{
+	this.lOBConfigurationEntry = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=DiscrepancyDetectedNotification.class, mappedBy="cMSAuxMode", cascade=javax.persistence.CascadeType.REMOVE)
@@ -147,20 +161,6 @@ public List<CMSEntry> getCMSEntries() {
 
 public void setCMSEntries(List<CMSEntry> value) {
 	this.cMSEntries = value;
-}
-
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@com.percero.agents.sync.metadata.annotations.Externalize
-@OneToOne(fetch=FetchType.LAZY, mappedBy="cMSAuxMode", cascade=javax.persistence.CascadeType.REMOVE)
-private LOBConfigurationEntry lOBConfigurationEntry;
-public LOBConfigurationEntry getLOBConfigurationEntry() {
-	return this.lOBConfigurationEntry;
-}
-
-public void setLOBConfigurationEntry(LOBConfigurationEntry value) 
-{
-	this.lOBConfigurationEntry = value;
 }
 
 
@@ -227,6 +227,8 @@ public void setLOBConfigurationEntry(LOBConfigurationEntry value)
 
 		
 		// Target Relationships
+//Retrieve value of the CMS Aux Mode of LOB Configuration Entry relationship
+
 //Retrieve value of the CMS Aux Mode of Discrepancy Detected Notification relationship
 objectJson += ",\"discrepancyDetectedNotifications\":[";
 		
@@ -261,8 +263,6 @@ objectJson += ",\"cMSEntries\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the CMS Aux Mode of LOB Configuration Entry relationship
-
 
 		
 		return objectJson;
@@ -284,9 +284,9 @@ objectJson += ",\"cMSEntries\":[";
 
 
 		// Target Relationships
+		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
 		this.discrepancyDetectedNotifications = (List<DiscrepancyDetectedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "discrepancyDetectedNotifications");
 		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
-		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
 
 
 	}

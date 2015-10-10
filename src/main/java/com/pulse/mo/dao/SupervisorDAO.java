@@ -41,6 +41,9 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return SupervisorDAO.CONNECTION_FACTORY_NAME;
@@ -48,82 +51,83 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR.ID=?";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR.ID=?";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR ORDER BY ID";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR ORDER BY SUPERVISOR.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR ORDER BY SUPERVISOR.ID";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR ORDER BY SUPERVISOR.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM SUPERVISOR SUPERVISOR";
+		return "SELECT COUNT(ID) FROM \"SUPERVISOR\" \"SUPERVISOR\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR.ID IN (?)";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR.ID IN (?)";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR WHERE SUPERVISOR." + joinColumnName + "=?";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT SUPERVISOR.ID FROM SUPERVISOR SUPERVISOR ";
+		return "SELECT \"SUPERVISOR\".\"ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SUPERVISOR.ID,SUPERVISOR.LAST_NAME,SUPERVISOR.EMAIL_ADDRESS,SUPERVISOR.FIRST_NAME,SUPERVISOR.FULL_NAME,SUPERVISOR.PHOTO_URI,SUPERVISOR.MANAGER_SUPERVISOR_ID FROM SUPERVISOR SUPERVISOR ";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR (ID,LAST_NAME,EMAIL_ADDRESS,FIRST_NAME,FULL_NAME,PHOTO_URI,MANAGER_SUPERVISOR_ID) VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO SUPERVISOR (\"ID\",\"LAST_NAME\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SUPERVISOR SET LAST_NAME=?,EMAIL_ADDRESS=?,FIRST_NAME=?,FULL_NAME=?,PHOTO_URI=?,MANAGER_SUPERVISOR_ID=? WHERE ID=?";
+		return "UPDATE \"SUPERVISOR\" SET \"LAST_NAME\"=?,\"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM SUPERVISOR WHERE ID=?";
+		return "DELETE FROM \"SUPERVISOR\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -219,7 +223,7 @@ pstmt.setString(7, perceroObject.getID());
 if (useLastName)
 {
 sql += " WHERE ";
-sql += " LAST_NAME=? ";
+sql += " \"LAST_NAME\" =? ";
 paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
@@ -236,7 +240,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " EMAIL_ADDRESS=? ";
+sql += " \"EMAIL_ADDRESS\" =? ";
 paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
 }
@@ -253,7 +257,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " FIRST_NAME=? ";
+sql += " \"FIRST_NAME\" =? ";
 paramValues.add(theQueryObject.getFirstName());
 propertyCounter++;
 }
@@ -270,7 +274,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " FULL_NAME=? ";
+sql += " \"FULL_NAME\" =? ";
 paramValues.add(theQueryObject.getFullName());
 propertyCounter++;
 }
@@ -287,7 +291,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PHOTO_URI=? ";
+sql += " \"PHOTO_URI\" =? ";
 paramValues.add(theQueryObject.getPhotoUri());
 propertyCounter++;
 }
@@ -304,7 +308,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " MANAGER_SUPERVISOR_ID=? ";
+sql += " \"MANAGER_SUPERVISOR_ID\" =? ";
 paramValues.add(theQueryObject.getManagerSupervisor().getID());
 propertyCounter++;
 }

@@ -20,9 +20,9 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.TimecardActivity;
 import com.pulse.mo.DiscrepancyDetectedNotification;
+import com.pulse.mo.ChangesNotApprovedNotification;
 import com.pulse.mo.TimecardEntry;
 import com.pulse.mo.LOBConfigurationEntry;
-import com.pulse.mo.ChangesNotApprovedNotification;
 import com.pulse.mo.CVGProject;
 
 */
@@ -43,10 +43,10 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "convergys.estart--activity--code--vw";
+	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"CVG_PROJECT\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"TIMECARD_ACTIVITY\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -55,7 +55,7 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".\"ID\"=?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".\"ID\"=?";
 	}
 	
 	@Override
@@ -65,12 +65,12 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ORDER BY ID";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ORDER BY \"TIMECARD_ACTIVITY\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ORDER BY \"TIMECARD_ACTIVITY\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CENTRE\" \"TIMECARD_ACTIVITY\"";
+		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\"";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".ID IN (?)";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\".ID IN (?)";
 	}
 
 	@Override
@@ -105,12 +105,12 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\"." + joinColumnName + "=?";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" WHERE \"TIMECARD_ACTIVITY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CENTRE\" \"TIMECARD_ACTIVITY\" ";
+		return "SELECT \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\" FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
 	}
 
 	@Override

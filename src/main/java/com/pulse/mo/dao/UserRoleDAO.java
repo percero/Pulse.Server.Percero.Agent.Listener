@@ -40,6 +40,9 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return UserRoleDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID=?";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID=?";
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ORDER BY ID";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID";
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ORDER BY USER_ROLE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM USER_ROLE USER_ROLE";
+		return "SELECT COUNT(ID) FROM \"USER_ROLE\" \"USER_ROLE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID IN (?)";
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE.ID IN (?)";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE WHERE USER_ROLE." + joinColumnName + "=?";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT USER_ROLE.ID FROM USER_ROLE USER_ROLE ";
+		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT USER_ROLE.ID,USER_ROLE.ROLE_NAME,USER_ROLE.PULSE_USER_ID FROM USER_ROLE USER_ROLE ";
+		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO USER_ROLE (ID,ROLE_NAME,PULSE_USER_ID) VALUES (?,?,?)";
+		return "INSERT INTO USER_ROLE (\"ID\",\"ROLE_NAME\",\"PULSE_USER_ID\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE USER_ROLE SET ROLE_NAME=?,PULSE_USER_ID=? WHERE ID=?";
+		return "UPDATE \"USER_ROLE\" SET \"ROLE_NAME\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM USER_ROLE WHERE ID=?";
+		return "DELETE FROM \"USER_ROLE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -202,7 +206,7 @@ pstmt.setString(3, perceroObject.getID());
 if (useRoleName)
 {
 sql += " WHERE ";
-sql += " ROLE_NAME=? ";
+sql += " \"ROLE_NAME\" =? ";
 paramValues.add(theQueryObject.getRoleName());
 propertyCounter++;
 }
@@ -219,7 +223,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PULSE_USER_ID=? ";
+sql += " \"PULSE_USER_ID\" =? ";
 paramValues.add(theQueryObject.getPulseUser().getID());
 propertyCounter++;
 }

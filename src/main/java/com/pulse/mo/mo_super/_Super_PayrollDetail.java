@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ShiftStartDateTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date shiftStartDateTime;
-
-public Date getShiftStartDateTime() 
-{
-	return this.shiftStartDateTime;
-}
-
-public void setShiftStartDateTime(Date shiftStartDateTime)
-{
-	this.shiftStartDateTime = shiftStartDateTime;
-}/*
 ShiftStartEndTime
 Notes:
 */
@@ -119,22 +102,22 @@ public void setShiftStartEndTime(Date shiftStartEndTime)
 {
 	this.shiftStartEndTime = shiftStartEndTime;
 }/*
-AssumedOff
+ShiftStartDateTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean assumedOff;
+private Date shiftStartDateTime;
 
-public Boolean getAssumedOff() 
+public Date getShiftStartDateTime() 
 {
-	return this.assumedOff;
+	return this.shiftStartDateTime;
 }
 
-public void setAssumedOff(Boolean assumedOff)
+public void setShiftStartDateTime(Date shiftStartDateTime)
 {
-	this.assumedOff = assumedOff;
+	this.shiftStartDateTime = shiftStartDateTime;
 }/*
 ShiftRule
 Notes:
@@ -152,6 +135,23 @@ public String getShiftRule()
 public void setShiftRule(String shiftRule)
 {
 	this.shiftRule = shiftRule;
+}/*
+AssumedOff
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean assumedOff;
+
+public Boolean getAssumedOff() 
+{
+	return this.assumedOff;
+}
+
+public void setAssumedOff(Boolean assumedOff)
+{
+	this.assumedOff = assumedOff;
 }
 
 	//////////////////////////////////////////////////////
@@ -173,13 +173,6 @@ public void setShiftRule(String shiftRule)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Shift Start Date Time property
-		objectJson += ",\"shiftStartDateTime\":";
-		if (getShiftStartDateTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getShiftStartDateTime().getTime();
-		}
 		//Retrieve value of the Shift Start End Time property
 		objectJson += ",\"shiftStartEndTime\":";
 		if (getShiftStartEndTime() == null)
@@ -187,12 +180,12 @@ public void setShiftRule(String shiftRule)
 		else {
 			objectJson += getShiftStartEndTime().getTime();
 		}
-		//Retrieve value of the Assumed Off property
-		objectJson += ",\"assumedOff\":";
-		if (getAssumedOff() == null)
+		//Retrieve value of the Shift Start Date Time property
+		objectJson += ",\"shiftStartDateTime\":";
+		if (getShiftStartDateTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getAssumedOff();
+			objectJson += getShiftStartDateTime().getTime();
 		}
 		//Retrieve value of the Shift Rule property
 		objectJson += ",\"shiftRule\":";
@@ -215,6 +208,13 @@ public void setShiftRule(String shiftRule)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Assumed Off property
+		objectJson += ",\"assumedOff\":";
+		if (getAssumedOff() == null)
+			objectJson += "null";
+		else {
+			objectJson += getAssumedOff();
+		}
 
 				
 		// Source Relationships
@@ -232,14 +232,14 @@ public void setShiftRule(String shiftRule)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Shift Start Date Time property
-		setShiftStartDateTime(JsonUtils.getJsonDate(jsonObject, "shiftStartDateTime"));
 		//From value of the Shift Start End Time property
 		setShiftStartEndTime(JsonUtils.getJsonDate(jsonObject, "shiftStartEndTime"));
-		//From value of the Assumed Off property
-		setAssumedOff(JsonUtils.getJsonBoolean(jsonObject, "assumedOff"));
+		//From value of the Shift Start Date Time property
+		setShiftStartDateTime(JsonUtils.getJsonDate(jsonObject, "shiftStartDateTime"));
 		//From value of the Shift Rule property
 		setShiftRule(JsonUtils.getJsonString(jsonObject, "shiftRule"));
+		//From value of the Assumed Off property
+		setAssumedOff(JsonUtils.getJsonBoolean(jsonObject, "assumedOff"));
 
 		
 		// Source Relationships

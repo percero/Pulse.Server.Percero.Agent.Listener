@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ConnectedStateName
+ConnectedState
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String connectedStateName;
+private String connectedState;
 
-public String getConnectedStateName() 
+public String getConnectedState() 
 {
-	return this.connectedStateName;
+	return this.connectedState;
 }
 
-public void setConnectedStateName(String connectedStateName)
+public void setConnectedState(String connectedState)
 {
-	this.connectedStateName = connectedStateName;
+	this.connectedState = connectedState;
 }/*
 IPAddress
 Notes:???
@@ -148,19 +148,6 @@ public void setDate(Date date)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CONNECTED_STATE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ConnectedStateOfUserSession")
-@ManyToOne(fetch=FetchType.LAZY, optional=true)
-private ConnectedState connectedState;
-public ConnectedState getConnectedState() {
-	return this.connectedState;
-}
-
-public void setConnectedState(ConnectedState value) {
-	this.connectedState = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="CURRENT_TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CurrentTeamLeaderOfUserSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -195,16 +182,16 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Connected State Name property
-		objectJson += ",\"connectedStateName\":";
+		//Retrieve value of the Connected State property
+		objectJson += ",\"connectedState\":";
 		
-		if (getConnectedStateName() == null)
+		if (getConnectedState() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getConnectedStateName());
+				objectJson += objectMapper.writeValueAsString(getConnectedState());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -247,18 +234,6 @@ public void setPulseUser(PulseUser value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Connected State of User Session relationship
-objectJson += ",\"connectedState\":";
-		if (getConnectedState() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getConnectedState()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Current Team Leader of User Session relationship
 objectJson += ",\"currentTeamLeader\":";
 		if (getCurrentTeamLeader() == null)
@@ -297,8 +272,8 @@ objectJson += ",\"pulseUser\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Connected State Name property
-		setConnectedStateName(JsonUtils.getJsonString(jsonObject, "connectedStateName"));
+		//From value of the Connected State property
+		setConnectedState(JsonUtils.getJsonString(jsonObject, "connectedState"));
 		//From value of the IP Address property
 		setIPAddress(JsonUtils.getJsonString(jsonObject, "iPAddress"));
 		//From value of the Date property
@@ -306,7 +281,6 @@ objectJson += ",\"pulseUser\":";
 
 		
 		// Source Relationships
-		this.connectedState = (ConnectedState) JsonUtils.getJsonPerceroObject(jsonObject, "connectedState");
 		this.currentTeamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "currentTeamLeader");
 		this.pulseUser = (PulseUser) JsonUtils.getJsonPerceroObject(jsonObject, "pulseUser");
 

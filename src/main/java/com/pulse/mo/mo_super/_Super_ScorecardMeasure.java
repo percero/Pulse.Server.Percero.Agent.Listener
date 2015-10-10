@@ -85,39 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Coachable
+WeeklyTrend
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean coachable;
+private String weeklyTrend;
 
-public Boolean getCoachable() 
+public String getWeeklyTrend() 
 {
-	return this.coachable;
+	return this.weeklyTrend;
 }
 
-public void setCoachable(Boolean coachable)
+public void setWeeklyTrend(String weeklyTrend)
 {
-	this.coachable = coachable;
-}/*
-CurrentWeekScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String currentWeekScore;
-
-public String getCurrentWeekScore() 
-{
-	return this.currentWeekScore;
-}
-
-public void setCurrentWeekScore(String currentWeekScore)
-{
-	this.currentWeekScore = currentWeekScore;
+	this.weeklyTrend = weeklyTrend;
 }/*
 Name
 Notes:
@@ -136,23 +119,6 @@ public void setName(String name)
 {
 	this.name = name;
 }/*
-Weight
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weight;
-
-public String getWeight() 
-{
-	return this.weight;
-}
-
-public void setWeight(String weight)
-{
-	this.weight = weight;
-}/*
 MTDScore
 Notes:
 */
@@ -170,124 +136,22 @@ public void setMTDScore(String mTDScore)
 {
 	this.mTDScore = mTDScore;
 }/*
-PreviousWeekScoreThresholdGrade
+Coachable
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String previousWeekScoreThresholdGrade;
+private Boolean coachable;
 
-public String getPreviousWeekScoreThresholdGrade() 
+public Boolean getCoachable() 
 {
-	return this.previousWeekScoreThresholdGrade;
+	return this.coachable;
 }
 
-public void setPreviousWeekScoreThresholdGrade(String previousWeekScoreThresholdGrade)
+public void setCoachable(Boolean coachable)
 {
-	this.previousWeekScoreThresholdGrade = previousWeekScoreThresholdGrade;
-}/*
-RequiresCoaching
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean requiresCoaching;
-
-public Boolean getRequiresCoaching() 
-{
-	return this.requiresCoaching;
-}
-
-public void setRequiresCoaching(Boolean requiresCoaching)
-{
-	this.requiresCoaching = requiresCoaching;
-}/*
-PreviousMonthScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String previousMonthScore;
-
-public String getPreviousMonthScore() 
-{
-	return this.previousMonthScore;
-}
-
-public void setPreviousMonthScore(String previousMonthScore)
-{
-	this.previousMonthScore = previousMonthScore;
-}/*
-PreviousWeekScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String previousWeekScore;
-
-public String getPreviousWeekScore() 
-{
-	return this.previousWeekScore;
-}
-
-public void setPreviousWeekScore(String previousWeekScore)
-{
-	this.previousWeekScore = previousWeekScore;
-}/*
-MTDTrend
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String mTDTrend;
-
-public String getMTDTrend() 
-{
-	return this.mTDTrend;
-}
-
-public void setMTDTrend(String mTDTrend)
-{
-	this.mTDTrend = mTDTrend;
-}/*
-PreviousMonthScoreThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String previousMonthScoreThresholdGrade;
-
-public String getPreviousMonthScoreThresholdGrade() 
-{
-	return this.previousMonthScoreThresholdGrade;
-}
-
-public void setPreviousMonthScoreThresholdGrade(String previousMonthScoreThresholdGrade)
-{
-	this.previousMonthScoreThresholdGrade = previousMonthScoreThresholdGrade;
-}/*
-CurrentWeekScoreThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String currentWeekScoreThresholdGrade;
-
-public String getCurrentWeekScoreThresholdGrade() 
-{
-	return this.currentWeekScoreThresholdGrade;
-}
-
-public void setCurrentWeekScoreThresholdGrade(String currentWeekScoreThresholdGrade)
-{
-	this.currentWeekScoreThresholdGrade = currentWeekScoreThresholdGrade;
+	this.coachable = coachable;
 }/*
 MTDScoreThresholdGrade
 Notes:
@@ -306,22 +170,56 @@ public void setMTDScoreThresholdGrade(String mTDScoreThresholdGrade)
 {
 	this.mTDScoreThresholdGrade = mTDScoreThresholdGrade;
 }/*
-EligableForIncentive
+PreviousWeekScore
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean eligableForIncentive;
+private String previousWeekScore;
 
-public Boolean getEligableForIncentive() 
+public String getPreviousWeekScore() 
 {
-	return this.eligableForIncentive;
+	return this.previousWeekScore;
 }
 
-public void setEligableForIncentive(Boolean eligableForIncentive)
+public void setPreviousWeekScore(String previousWeekScore)
 {
-	this.eligableForIncentive = eligableForIncentive;
+	this.previousWeekScore = previousWeekScore;
+}/*
+PreviousMonthScore
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String previousMonthScore;
+
+public String getPreviousMonthScore() 
+{
+	return this.previousMonthScore;
+}
+
+public void setPreviousMonthScore(String previousMonthScore)
+{
+	this.previousMonthScore = previousMonthScore;
+}/*
+CurrentWeekScoreThresholdGrade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String currentWeekScoreThresholdGrade;
+
+public String getCurrentWeekScoreThresholdGrade() 
+{
+	return this.currentWeekScoreThresholdGrade;
+}
+
+public void setCurrentWeekScoreThresholdGrade(String currentWeekScoreThresholdGrade)
+{
+	this.currentWeekScoreThresholdGrade = currentWeekScoreThresholdGrade;
 }/*
 Tenure
 Notes:
@@ -340,6 +238,125 @@ public void setTenure(String tenure)
 {
 	this.tenure = tenure;
 }/*
+CurrentWeekScore
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String currentWeekScore;
+
+public String getCurrentWeekScore() 
+{
+	return this.currentWeekScore;
+}
+
+public void setCurrentWeekScore(String currentWeekScore)
+{
+	this.currentWeekScore = currentWeekScore;
+}/*
+RequiresCoaching
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean requiresCoaching;
+
+public Boolean getRequiresCoaching() 
+{
+	return this.requiresCoaching;
+}
+
+public void setRequiresCoaching(Boolean requiresCoaching)
+{
+	this.requiresCoaching = requiresCoaching;
+}/*
+EligableForIncentive
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean eligableForIncentive;
+
+public Boolean getEligableForIncentive() 
+{
+	return this.eligableForIncentive;
+}
+
+public void setEligableForIncentive(Boolean eligableForIncentive)
+{
+	this.eligableForIncentive = eligableForIncentive;
+}/*
+MTDTrend
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String mTDTrend;
+
+public String getMTDTrend() 
+{
+	return this.mTDTrend;
+}
+
+public void setMTDTrend(String mTDTrend)
+{
+	this.mTDTrend = mTDTrend;
+}/*
+Weight
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String weight;
+
+public String getWeight() 
+{
+	return this.weight;
+}
+
+public void setWeight(String weight)
+{
+	this.weight = weight;
+}/*
+PreviousMonthScoreThresholdGrade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String previousMonthScoreThresholdGrade;
+
+public String getPreviousMonthScoreThresholdGrade() 
+{
+	return this.previousMonthScoreThresholdGrade;
+}
+
+public void setPreviousMonthScoreThresholdGrade(String previousMonthScoreThresholdGrade)
+{
+	this.previousMonthScoreThresholdGrade = previousMonthScoreThresholdGrade;
+}/*
+PreviousWeekScoreThresholdGrade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String previousWeekScoreThresholdGrade;
+
+public String getPreviousWeekScoreThresholdGrade() 
+{
+	return this.previousWeekScoreThresholdGrade;
+}
+
+public void setPreviousWeekScoreThresholdGrade(String previousWeekScoreThresholdGrade)
+{
+	this.previousWeekScoreThresholdGrade = previousWeekScoreThresholdGrade;
+}/*
 Goal
 Notes:
 */
@@ -356,23 +373,6 @@ public String getGoal()
 public void setGoal(String goal)
 {
 	this.goal = goal;
-}/*
-WeeklyTrend
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyTrend;
-
-public String getWeeklyTrend() 
-{
-	return this.weeklyTrend;
-}
-
-public void setWeeklyTrend(String weeklyTrend)
-{
-	this.weeklyTrend = weeklyTrend;
 }
 
 	//////////////////////////////////////////////////////
@@ -407,6 +407,19 @@ public void setBehaviorResponses(List<BehaviorResponse> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentPlan.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
+private List<DevelopmentPlan> developmentPlans;
+public List<DevelopmentPlan> getDevelopmentPlans() {
+	return this.developmentPlans;
+}
+
+public void setDevelopmentPlans(List<DevelopmentPlan> value) {
+	this.developmentPlans = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Observation.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Observation> observations;
 public List<Observation> getObservations() {
@@ -423,6 +436,19 @@ public void setObservations(List<Observation> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_MeasureOfScorecardMeasure")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Measure measure;
+public Measure getMeasure() {
+	return this.measure;
+}
+
+public void setMeasure(Measure value) {
+	this.measure = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -446,23 +472,16 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Coachable property
-		objectJson += ",\"coachable\":";
-		if (getCoachable() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCoachable();
-		}
-		//Retrieve value of the Current Week Score property
-		objectJson += ",\"currentWeekScore\":";
+		//Retrieve value of the Weekly Trend property
+		objectJson += ",\"weeklyTrend\":";
 		
-		if (getCurrentWeekScore() == null)
+		if (getWeeklyTrend() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCurrentWeekScore());
+				objectJson += objectMapper.writeValueAsString(getWeeklyTrend());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -495,27 +514,6 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Weight property
-		objectJson += ",\"weight\":";
-		
-		if (getWeight() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeight());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the MTD Score property
 		objectJson += ",\"mTDScore\":";
 		
@@ -537,44 +535,23 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Previous Week Score Threshold Grade property
-		objectJson += ",\"previousWeekScoreThresholdGrade\":";
+		//Retrieve value of the Coachable property
+		objectJson += ",\"coachable\":";
+		if (getCoachable() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCoachable();
+		}
+		//Retrieve value of the MTD Score Threshold Grade property
+		objectJson += ",\"mTDScoreThresholdGrade\":";
 		
-		if (getPreviousWeekScoreThresholdGrade() == null)
+		if (getMTDScoreThresholdGrade() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getPreviousWeekScoreThresholdGrade());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Requires Coaching property
-		objectJson += ",\"requiresCoaching\":";
-		if (getRequiresCoaching() == null)
-			objectJson += "null";
-		else {
-			objectJson += getRequiresCoaching();
-		}
-		//Retrieve value of the Previous Month Score property
-		objectJson += ",\"previousMonthScore\":";
-		
-		if (getPreviousMonthScore() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPreviousMonthScore());
+				objectJson += objectMapper.writeValueAsString(getMTDScoreThresholdGrade());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -607,37 +584,16 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the MTD Trend property
-		objectJson += ",\"mTDTrend\":";
+		//Retrieve value of the Previous Month Score property
+		objectJson += ",\"previousMonthScore\":";
 		
-		if (getMTDTrend() == null)
+		if (getPreviousMonthScore() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMTDTrend());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Previous Month Score Threshold Grade property
-		objectJson += ",\"previousMonthScoreThresholdGrade\":";
-		
-		if (getPreviousMonthScoreThresholdGrade() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPreviousMonthScoreThresholdGrade());
+				objectJson += objectMapper.writeValueAsString(getPreviousMonthScore());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -670,16 +626,16 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the MTD Score Threshold Grade property
-		objectJson += ",\"mTDScoreThresholdGrade\":";
+		//Retrieve value of the Tenure property
+		objectJson += ",\"tenure\":";
 		
-		if (getMTDScoreThresholdGrade() == null)
+		if (getTenure() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMTDScoreThresholdGrade());
+				objectJson += objectMapper.writeValueAsString(getTenure());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -691,6 +647,34 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Current Week Score property
+		objectJson += ",\"currentWeekScore\":";
+		
+		if (getCurrentWeekScore() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCurrentWeekScore());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Requires Coaching property
+		objectJson += ",\"requiresCoaching\":";
+		if (getRequiresCoaching() == null)
+			objectJson += "null";
+		else {
+			objectJson += getRequiresCoaching();
+		}
 		//Retrieve value of the Eligable For Incentive property
 		objectJson += ",\"eligableForIncentive\":";
 		if (getEligableForIncentive() == null)
@@ -698,16 +682,79 @@ public void setScorecard(Scorecard value) {
 		else {
 			objectJson += getEligableForIncentive();
 		}
-		//Retrieve value of the Tenure property
-		objectJson += ",\"tenure\":";
+		//Retrieve value of the MTD Trend property
+		objectJson += ",\"mTDTrend\":";
 		
-		if (getTenure() == null)
+		if (getMTDTrend() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTenure());
+				objectJson += objectMapper.writeValueAsString(getMTDTrend());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Weight property
+		objectJson += ",\"weight\":";
+		
+		if (getWeight() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getWeight());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Previous Month Score Threshold Grade property
+		objectJson += ",\"previousMonthScoreThresholdGrade\":";
+		
+		if (getPreviousMonthScoreThresholdGrade() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPreviousMonthScoreThresholdGrade());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Previous Week Score Threshold Grade property
+		objectJson += ",\"previousWeekScoreThresholdGrade\":";
+		
+		if (getPreviousWeekScoreThresholdGrade() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPreviousWeekScoreThresholdGrade());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -740,30 +787,21 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Weekly Trend property
-		objectJson += ",\"weeklyTrend\":";
-		
-		if (getWeeklyTrend() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyTrend());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
+//Retrieve value of the Measure of Scorecard Measure relationship
+objectJson += ",\"measure\":";
+		if (getMeasure() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getMeasure()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Scorecard of Scorecard Measure relationship
 objectJson += ",\"scorecard\":";
 		if (getScorecard() == null)
@@ -813,6 +851,23 @@ objectJson += ",\"behaviorResponses\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Scorecard Measure of Development Plan relationship
+objectJson += ",\"developmentPlans\":[";
+		
+		if (getDevelopmentPlans() != null) {
+			int developmentPlansCounter = 0;
+			for(DevelopmentPlan nextDevelopmentPlans : getDevelopmentPlans()) {
+				if (developmentPlansCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextDevelopmentPlans).toEmbeddedJson();
+					developmentPlansCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Scorecard Measure of Observation relationship
 objectJson += ",\"observations\":[";
 		
@@ -841,49 +896,51 @@ objectJson += ",\"observations\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Coachable property
-		setCoachable(JsonUtils.getJsonBoolean(jsonObject, "coachable"));
-		//From value of the Current Week Score property
-		setCurrentWeekScore(JsonUtils.getJsonString(jsonObject, "currentWeekScore"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Weight property
-		setWeight(JsonUtils.getJsonString(jsonObject, "weight"));
-		//From value of the MTD Score property
-		setMTDScore(JsonUtils.getJsonString(jsonObject, "mTDScore"));
-		//From value of the Previous Week Score Threshold Grade property
-		setPreviousWeekScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "previousWeekScoreThresholdGrade"));
-		//From value of the Requires Coaching property
-		setRequiresCoaching(JsonUtils.getJsonBoolean(jsonObject, "requiresCoaching"));
-		//From value of the Previous Month Score property
-		setPreviousMonthScore(JsonUtils.getJsonString(jsonObject, "previousMonthScore"));
-		//From value of the Previous Week Score property
-		setPreviousWeekScore(JsonUtils.getJsonString(jsonObject, "previousWeekScore"));
-		//From value of the MTD Trend property
-		setMTDTrend(JsonUtils.getJsonString(jsonObject, "mTDTrend"));
-		//From value of the Previous Month Score Threshold Grade property
-		setPreviousMonthScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "previousMonthScoreThresholdGrade"));
-		//From value of the Current Week Score Threshold Grade property
-		setCurrentWeekScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "currentWeekScoreThresholdGrade"));
-		//From value of the MTD Score Threshold Grade property
-		setMTDScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "mTDScoreThresholdGrade"));
-		//From value of the Eligable For Incentive property
-		setEligableForIncentive(JsonUtils.getJsonBoolean(jsonObject, "eligableForIncentive"));
-		//From value of the Tenure property
-		setTenure(JsonUtils.getJsonString(jsonObject, "tenure"));
-		//From value of the Goal property
-		setGoal(JsonUtils.getJsonString(jsonObject, "goal"));
 		//From value of the Weekly Trend property
 		setWeeklyTrend(JsonUtils.getJsonString(jsonObject, "weeklyTrend"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the MTD Score property
+		setMTDScore(JsonUtils.getJsonString(jsonObject, "mTDScore"));
+		//From value of the Coachable property
+		setCoachable(JsonUtils.getJsonBoolean(jsonObject, "coachable"));
+		//From value of the MTD Score Threshold Grade property
+		setMTDScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "mTDScoreThresholdGrade"));
+		//From value of the Previous Week Score property
+		setPreviousWeekScore(JsonUtils.getJsonString(jsonObject, "previousWeekScore"));
+		//From value of the Previous Month Score property
+		setPreviousMonthScore(JsonUtils.getJsonString(jsonObject, "previousMonthScore"));
+		//From value of the Current Week Score Threshold Grade property
+		setCurrentWeekScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "currentWeekScoreThresholdGrade"));
+		//From value of the Tenure property
+		setTenure(JsonUtils.getJsonString(jsonObject, "tenure"));
+		//From value of the Current Week Score property
+		setCurrentWeekScore(JsonUtils.getJsonString(jsonObject, "currentWeekScore"));
+		//From value of the Requires Coaching property
+		setRequiresCoaching(JsonUtils.getJsonBoolean(jsonObject, "requiresCoaching"));
+		//From value of the Eligable For Incentive property
+		setEligableForIncentive(JsonUtils.getJsonBoolean(jsonObject, "eligableForIncentive"));
+		//From value of the MTD Trend property
+		setMTDTrend(JsonUtils.getJsonString(jsonObject, "mTDTrend"));
+		//From value of the Weight property
+		setWeight(JsonUtils.getJsonString(jsonObject, "weight"));
+		//From value of the Previous Month Score Threshold Grade property
+		setPreviousMonthScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "previousMonthScoreThresholdGrade"));
+		//From value of the Previous Week Score Threshold Grade property
+		setPreviousWeekScoreThresholdGrade(JsonUtils.getJsonString(jsonObject, "previousWeekScoreThresholdGrade"));
+		//From value of the Goal property
+		setGoal(JsonUtils.getJsonString(jsonObject, "goal"));
 
 		
 		// Source Relationships
+		this.measure = (Measure) JsonUtils.getJsonPerceroObject(jsonObject, "measure");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 
 
 		// Target Relationships
 		this.behaviors = (List<Behavior>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviors");
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
+		this.developmentPlans = (List<DevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentPlans");
 		this.observations = (List<Observation>) JsonUtils.getJsonListPerceroObject(jsonObject, "observations");
 
 
@@ -896,6 +953,7 @@ objectJson += ",\"observations\":[";
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(Behavior.class, "scorecardmeasure"));
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "scorecardmeasure"));
+		listSetters.add(MappedClass.getFieldSetters(DevelopmentPlan.class, "scorecardmeasure"));
 		listSetters.add(MappedClass.getFieldSetters(Observation.class, "scorecardmeasure"));
 
 		

@@ -39,6 +39,9 @@ public class ThresholdGradeScaleDAO extends SqlDataAccessObject<ThresholdGradeSc
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return ThresholdGradeScaleDAO.CONNECTION_FACTORY_NAME;
@@ -46,82 +49,83 @@ public class ThresholdGradeScaleDAO extends SqlDataAccessObject<ThresholdGradeSc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE.ID=?";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE.ID=?";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ORDER BY ID";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ORDER BY THRESHOLD_GRADE_SCALE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ORDER BY \"THRESHOLD_GRADE_SCALE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ORDER BY THRESHOLD_GRADE_SCALE.ID";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ORDER BY \"THRESHOLD_GRADE_SCALE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ORDER BY THRESHOLD_GRADE_SCALE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ORDER BY \"THRESHOLD_GRADE_SCALE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE";
+		return "SELECT COUNT(ID) FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE.ID IN (?)";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE.ID IN (?)";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE WHERE THRESHOLD_GRADE_SCALE." + joinColumnName + "=?";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" WHERE \"THRESHOLD_GRADE_SCALE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT THRESHOLD_GRADE_SCALE.ID FROM THRESHOLD_GRADE_SCALE THRESHOLD_GRADE_SCALE ";
+		return "SELECT \"THRESHOLD_GRADE_SCALE\".\"ID\" FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO THRESHOLD_GRADE_SCALE (ID) VALUES (?)";
+		return "INSERT INTO THRESHOLD_GRADE_SCALE (\"ID\") VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE THRESHOLD_GRADE_SCALE SET  WHERE ID=?";
+		return "UPDATE \"THRESHOLD_GRADE_SCALE\" SET  WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM THRESHOLD_GRADE_SCALE WHERE ID=?";
+		return "DELETE FROM \"THRESHOLD_GRADE_SCALE\" WHERE \"ID\"=?";
 	}
 	
 	@Override

@@ -70,6 +70,23 @@ public class _Super_CoachingNotification extends Notification implements Seriali
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+PendingEmployeeStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer pendingEmployeeStateCount;
+
+public Integer getPendingEmployeeStateCount() 
+{
+	return this.pendingEmployeeStateCount;
+}
+
+public void setPendingEmployeeStateCount(Integer pendingEmployeeStateCount)
+{
+	this.pendingEmployeeStateCount = pendingEmployeeStateCount;
+}/*
 WeekendDate
 Notes:
 */
@@ -104,23 +121,6 @@ public void setSubmittedStateCount(Integer submittedStateCount)
 {
 	this.submittedStateCount = submittedStateCount;
 }/*
-SkippedStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer skippedStateCount;
-
-public Integer getSkippedStateCount() 
-{
-	return this.skippedStateCount;
-}
-
-public void setSkippedStateCount(Integer skippedStateCount)
-{
-	this.skippedStateCount = skippedStateCount;
-}/*
 PendingCoachStateCount
 Notes:
 */
@@ -138,22 +138,22 @@ public void setPendingCoachStateCount(Integer pendingCoachStateCount)
 {
 	this.pendingCoachStateCount = pendingCoachStateCount;
 }/*
-PendingEmployeeStateCount
+SkippedStateCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer pendingEmployeeStateCount;
+private Integer skippedStateCount;
 
-public Integer getPendingEmployeeStateCount() 
+public Integer getSkippedStateCount() 
 {
-	return this.pendingEmployeeStateCount;
+	return this.skippedStateCount;
 }
 
-public void setPendingEmployeeStateCount(Integer pendingEmployeeStateCount)
+public void setSkippedStateCount(Integer skippedStateCount)
 {
-	this.pendingEmployeeStateCount = pendingEmployeeStateCount;
+	this.skippedStateCount = skippedStateCount;
 }/*
 AcknowledgementStateCount
 Notes:
@@ -223,6 +223,27 @@ public void setScorecard(Scorecard value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Pending Employee State Count property
+		objectJson += ",\"pendingEmployeeStateCount\":";
+		
+		if (getPendingEmployeeStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPendingEmployeeStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Weekend Date property
 		objectJson += ",\"weekendDate\":";
 		
@@ -265,27 +286,6 @@ public void setScorecard(Scorecard value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Skipped State Count property
-		objectJson += ",\"skippedStateCount\":";
-		
-		if (getSkippedStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSkippedStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Pending Coach State Count property
 		objectJson += ",\"pendingCoachStateCount\":";
 		
@@ -307,16 +307,16 @@ public void setScorecard(Scorecard value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Pending Employee State Count property
-		objectJson += ",\"pendingEmployeeStateCount\":";
+		//Retrieve value of the Skipped State Count property
+		objectJson += ",\"skippedStateCount\":";
 		
-		if (getPendingEmployeeStateCount() == null)
+		if (getSkippedStateCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getPendingEmployeeStateCount());
+				objectJson += objectMapper.writeValueAsString(getSkippedStateCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -399,16 +399,16 @@ objectJson += ",\"scorecard\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Pending Employee State Count property
+		setPendingEmployeeStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeStateCount"));
 		//From value of the Weekend Date property
 		setWeekendDate(JsonUtils.getJsonDate(jsonObject, "weekendDate"));
 		//From value of the Submitted State Count property
 		setSubmittedStateCount(JsonUtils.getJsonInteger(jsonObject, "submittedStateCount"));
-		//From value of the Skipped State Count property
-		setSkippedStateCount(JsonUtils.getJsonInteger(jsonObject, "skippedStateCount"));
 		//From value of the Pending Coach State Count property
 		setPendingCoachStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingCoachStateCount"));
-		//From value of the Pending Employee State Count property
-		setPendingEmployeeStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeStateCount"));
+		//From value of the Skipped State Count property
+		setSkippedStateCount(JsonUtils.getJsonInteger(jsonObject, "skippedStateCount"));
 		//From value of the Acknowledgement State Count property
 		setAcknowledgementStateCount(JsonUtils.getJsonInteger(jsonObject, "acknowledgementStateCount"));
 		//From value of the Pending State Count property

@@ -85,39 +85,56 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-CoachingComment
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String coachingComment;
+private Date weekDate;
 
-public String getCoachingComment() 
+public Date getWeekDate() 
 {
-	return this.coachingComment;
+	return this.weekDate;
 }
 
-public void setCoachingComment(String coachingComment)
+public void setWeekDate(Date weekDate)
 {
-	this.coachingComment = coachingComment;
+	this.weekDate = weekDate;
 }/*
-AdhocCoachingCategoryName
+SessionType
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String adhocCoachingCategoryName;
+private String sessionType;
 
-public String getAdhocCoachingCategoryName() 
+public String getSessionType() 
 {
-	return this.adhocCoachingCategoryName;
+	return this.sessionType;
 }
 
-public void setAdhocCoachingCategoryName(String adhocCoachingCategoryName)
+public void setSessionType(String sessionType)
 {
-	this.adhocCoachingCategoryName = adhocCoachingCategoryName;
+	this.sessionType = sessionType;
+}/*
+Status
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String status;
+
+public String getStatus() 
+{
+	return this.status;
+}
+
+public void setStatus(String status)
+{
+	this.status = status;
 }
 
 	//////////////////////////////////////////////////////
@@ -126,14 +143,14 @@ public void setAdhocCoachingCategoryName(String adhocCoachingCategoryName)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Attachment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Attachment> attachments;
-public List<Attachment> getAttachments() {
-	return this.attachments;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingComment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CoachingComment> coachingComments;
+public List<CoachingComment> getCoachingComments() {
+	return this.coachingComments;
 }
 
-public void setAttachments(List<Attachment> value) {
-	this.attachments = value;
+public void setCoachingComments(List<CoachingComment> value) {
+	this.coachingComments = value;
 }
 
 
@@ -191,16 +208,16 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Coaching Comment property
-		objectJson += ",\"coachingComment\":";
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
 		
-		if (getCoachingComment() == null)
+		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCoachingComment());
+				objectJson += objectMapper.writeValueAsString(getWeekDate());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -212,16 +229,37 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Adhoc Coaching Category Name property
-		objectJson += ",\"adhocCoachingCategoryName\":";
+		//Retrieve value of the Session Type property
+		objectJson += ",\"sessionType\":";
 		
-		if (getAdhocCoachingCategoryName() == null)
+		if (getSessionType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getAdhocCoachingCategoryName());
+				objectJson += objectMapper.writeValueAsString(getSessionType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Status property
+		objectJson += ",\"status\":";
+		
+		if (getStatus() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStatus());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -275,17 +313,17 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Adhoc Coaching Session of Attachment relationship
-objectJson += ",\"attachments\":[";
+//Retrieve value of the Adhoc Coaching Session of Coaching Comment relationship
+objectJson += ",\"coachingComments\":[";
 		
-		if (getAttachments() != null) {
-			int attachmentsCounter = 0;
-			for(Attachment nextAttachments : getAttachments()) {
-				if (attachmentsCounter > 0)
+		if (getCoachingComments() != null) {
+			int coachingCommentsCounter = 0;
+			for(CoachingComment nextCoachingComments : getCoachingComments()) {
+				if (coachingCommentsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextAttachments).toEmbeddedJson();
-					attachmentsCounter++;
+					objectJson += ((BaseDataObject) nextCoachingComments).toEmbeddedJson();
+					coachingCommentsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -303,10 +341,12 @@ objectJson += ",\"attachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Coaching Comment property
-		setCoachingComment(JsonUtils.getJsonString(jsonObject, "coachingComment"));
-		//From value of the Adhoc Coaching Category Name property
-		setAdhocCoachingCategoryName(JsonUtils.getJsonString(jsonObject, "adhocCoachingCategoryName"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Session Type property
+		setSessionType(JsonUtils.getJsonString(jsonObject, "sessionType"));
+		//From value of the Status property
+		setStatus(JsonUtils.getJsonString(jsonObject, "status"));
 
 		
 		// Source Relationships
@@ -316,7 +356,7 @@ objectJson += ",\"attachments\":[";
 
 
 		// Target Relationships
-		this.attachments = (List<Attachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "attachments");
+		this.coachingComments = (List<CoachingComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingComments");
 
 
 	}
@@ -326,7 +366,7 @@ objectJson += ",\"attachments\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Attachment.class, "adhoccoachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(CoachingComment.class, "adhoccoachingsession"));
 
 		
 		return listSetters;

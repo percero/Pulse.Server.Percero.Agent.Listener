@@ -40,6 +40,9 @@ public class TraceLogDAO extends SqlDataAccessObject<TraceLog> implements IDataA
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return TraceLogDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class TraceLogDAO extends SqlDataAccessObject<TraceLog> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG.ID=?";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG.ID=?";
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG ORDER BY ID";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG ORDER BY TRACE_LOG.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG ORDER BY TRACE_LOG.ID";
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG ORDER BY TRACE_LOG.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM TRACE_LOG TRACE_LOG";
+		return "SELECT COUNT(ID) FROM \"TRACE_LOG\" \"TRACE_LOG\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG.ID IN (?)";
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG.ID IN (?)";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG WHERE TRACE_LOG." + joinColumnName + "=?";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT TRACE_LOG.ID FROM TRACE_LOG TRACE_LOG ";
+		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT TRACE_LOG.ID,TRACE_LOG.NAME FROM TRACE_LOG TRACE_LOG ";
+		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TRACE_LOG (ID,NAME) VALUES (?,?)";
+		return "INSERT INTO TRACE_LOG (\"ID\",\"NAME\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TRACE_LOG SET NAME=? WHERE ID=?";
+		return "UPDATE \"TRACE_LOG\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TRACE_LOG WHERE ID=?";
+		return "DELETE FROM \"TRACE_LOG\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -178,7 +182,7 @@ pstmt.setString(2, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }

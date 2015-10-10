@@ -20,10 +20,10 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.PulseUser;
 import com.pulse.mo.Email;
-import com.pulse.mo.TraceEntry;
-import com.pulse.mo.TeamLeaderImpersonation;
 import com.pulse.mo.UserSession;
+import com.pulse.mo.TraceEntry;
 import com.pulse.mo.UserRole;
+import com.pulse.mo.TeamLeaderImpersonation;
 import com.pulse.mo.TeamLeader;
 
 */
@@ -45,6 +45,9 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return PulseUserDAO.CONNECTION_FACTORY_NAME;
@@ -52,82 +55,83 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER.ID=?";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER.ID=?";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER ORDER BY ID";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER ORDER BY PULSE_USER.ID LIMIT ? OFFSET ?";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER ORDER BY PULSE_USER.ID";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER ORDER BY PULSE_USER.ID LIMIT ? OFFSET ?";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM PULSE_USER PULSE_USER";
+		return "SELECT COUNT(ID) FROM \"PULSE_USER\" \"PULSE_USER\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER.ID IN (?)";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER.ID IN (?)";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER WHERE PULSE_USER." + joinColumnName + "=?";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT PULSE_USER.ID FROM PULSE_USER PULSE_USER ";
+		return "SELECT \"PULSE_USER\".\"ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT PULSE_USER.ID,PULSE_USER.USER_ID,PULSE_USER.LAST_NAME,PULSE_USER.EMPLOYEE_ID,PULSE_USER.FIRST_NAME,PULSE_USER.TEAM_LEADER_ID FROM PULSE_USER PULSE_USER ";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO PULSE_USER (ID,USER_ID,LAST_NAME,EMPLOYEE_ID,FIRST_NAME,TEAM_LEADER_ID) VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO PULSE_USER (\"ID\",\"USER_ID\",\"LAST_NAME\",\"EMPLOYEE_ID\",\"FIRST_NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE PULSE_USER SET USER_ID=?,LAST_NAME=?,EMPLOYEE_ID=?,FIRST_NAME=?,TEAM_LEADER_ID=? WHERE ID=?";
+		return "UPDATE \"PULSE_USER\" SET \"USER_ID\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM PULSE_USER WHERE ID=?";
+		return "DELETE FROM \"PULSE_USER\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -219,7 +223,7 @@ pstmt.setString(6, perceroObject.getID());
 if (useUserId)
 {
 sql += " WHERE ";
-sql += " USER_ID=? ";
+sql += " \"USER_ID\" =? ";
 paramValues.add(theQueryObject.getUserId());
 propertyCounter++;
 }
@@ -236,7 +240,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " LAST_NAME=? ";
+sql += " \"LAST_NAME\" =? ";
 paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
@@ -253,7 +257,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " EMPLOYEE_ID=? ";
+sql += " \"EMPLOYEE_ID\" =? ";
 paramValues.add(theQueryObject.getEmployeeId());
 propertyCounter++;
 }
@@ -270,7 +274,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " FIRST_NAME=? ";
+sql += " \"FIRST_NAME\" =? ";
 paramValues.add(theQueryObject.getFirstName());
 propertyCounter++;
 }
@@ -287,7 +291,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TEAM_LEADER_ID=? ";
+sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }

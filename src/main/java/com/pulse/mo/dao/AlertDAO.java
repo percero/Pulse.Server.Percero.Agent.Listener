@@ -40,6 +40,9 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return AlertDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT ALERT.ID FROM ALERT ALERT WHERE ALERT.ID=?";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID=?";
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT ALERT.ID FROM ALERT ALERT ORDER BY ID";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT ALERT.ID FROM ALERT ALERT ORDER BY ALERT.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" ORDER BY \"ALERT\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID";
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" ORDER BY \"ALERT\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ORDER BY ALERT.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" ORDER BY \"ALERT\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM ALERT ALERT";
+		return "SELECT COUNT(ID) FROM \"ALERT\" \"ALERT\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT.ID IN (?)";
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT ALERT.ID FROM ALERT ALERT WHERE ALERT.ID IN (?)";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT WHERE ALERT." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT ALERT.ID FROM ALERT ALERT WHERE ALERT." + joinColumnName + "=?";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" WHERE \"ALERT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT ALERT.ID FROM ALERT ALERT ";
+		return "SELECT \"ALERT\".\"ID\" FROM \"ALERT\" \"ALERT\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ALERT.ID,ALERT.NAME,ALERT.DATE,ALERT.HAS_BEEN_READ,ALERT.TEAM_LEADER_ID FROM ALERT ALERT ";
+		return "SELECT \"ALERT\".\"ID\",\"ALERT\".\"NAME\",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"TEAM_LEADER_ID\" FROM \"ALERT\" \"ALERT\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ALERT (ID,NAME,DATE,HAS_BEEN_READ,TEAM_LEADER_ID) VALUES (?,?,?,?,?)";
+		return "INSERT INTO ALERT (\"ID\",\"NAME\",\"DATE\",\"HAS_BEEN_READ\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ALERT SET NAME=?,DATE=?,HAS_BEEN_READ=?,TEAM_LEADER_ID=? WHERE ID=?";
+		return "UPDATE \"ALERT\" SET \"NAME\"=?,\"DATE\"=?,\"HAS_BEEN_READ\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM ALERT WHERE ID=?";
+		return "DELETE FROM \"ALERT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -210,7 +214,7 @@ pstmt.setString(5, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -227,7 +231,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " DATE=? ";
+sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
@@ -244,7 +248,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " HAS_BEEN_READ=? ";
+sql += " \"HAS_BEEN_READ\" =? ";
 paramValues.add(theQueryObject.getHasBeenRead());
 propertyCounter++;
 }
@@ -261,7 +265,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TEAM_LEADER_ID=? ";
+sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }

@@ -102,23 +102,6 @@ public void setType(String type)
 {
 	this.type = type;
 }/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String date;
-
-public String getDate() 
-{
-	return this.date;
-}
-
-public void setDate(String date)
-{
-	this.date = date;
-}/*
 Name
 Notes:
 */
@@ -135,6 +118,23 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
+}/*
+Date
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String date;
+
+public String getDate() 
+{
+	return this.date;
+}
+
+public void setDate(String date)
+{
+	this.date = date;
 }
 
 	//////////////////////////////////////////////////////
@@ -190,16 +190,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getDate() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDate());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -211,16 +211,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
 		
-		if (getName() == null)
+		if (getDate() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getDate());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -263,10 +263,10 @@ objectJson += ",\"teamLeader\":";
 		// Properties
 		//From value of the Type property
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
-		//From value of the Date property
-		setDate(JsonUtils.getJsonString(jsonObject, "date"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonString(jsonObject, "date"));
 
 		
 		// Source Relationships

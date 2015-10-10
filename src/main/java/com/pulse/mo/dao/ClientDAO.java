@@ -40,7 +40,11 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "default";
+	public static final String CONNECTION_FACTORY_NAME = "cms";
+	
+	//TODO:For use refactoring, so we set it once
+	public static final String SQL_VIEW = "SELECT  \"CLIENT\".\"ID\" as \"ID\", \"CLIENT\".\"NAME\" as \"NAME\", \"CLIENT\".\"SITE_ID\" as \"SITE_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return ClientDAO.CONNECTION_FACTORY_NAME;
@@ -48,82 +52,83 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT WHERE CLIENT.ID=?";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT WHERE CLIENT.ID=?";
+		return SQL_VIEW + " where \"CLIENT\".ID=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT ORDER BY ID";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT ORDER BY CLIENT.ID LIMIT ? OFFSET ?";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ORDER BY \"CLIENT\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT ORDER BY CLIENT.ID";
+		return SQL_VIEW + " ORDER BY \"CLIENT\".ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT ORDER BY CLIENT.ID LIMIT ? OFFSET ?";
+		return SQL_VIEW + " ORDER BY \"CLIENT\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM CLIENT CLIENT";
+		return "SELECT COUNT(ID) FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT WHERE CLIENT.ID IN (?)";
+		return SQL_VIEW + " where \"CLIENT\".ID IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT WHERE CLIENT.ID IN (?)";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\".ID IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT WHERE CLIENT." + joinColumnName + "=?";
+		return SQL_VIEW + "  \"CLIENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT WHERE CLIENT." + joinColumnName + "=?";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT CLIENT.ID FROM CLIENT CLIENT ";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT CLIENT.ID,CLIENT.NAME,CLIENT.SITE_ID FROM CLIENT CLIENT ";
+		return SQL_VIEW;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO CLIENT (ID,NAME,SITE_ID) VALUES (?,?,?)";
+		return "";//"INSERT INTO CLIENT (ID) VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE CLIENT SET NAME=?,SITE_ID=? WHERE ID=?";
+		return "";//"UPDATE CLIENT SET  WHERE ID=?";
 	}
 	
 	@Override
-	protected String getDeleteFromSQL() {
-		return "DELETE FROM CLIENT WHERE ID=?";
+	protected String getDeleteFromSQL() 
+	{
+		return "";//"DELETE FROM CLIENT WHERE ID=?";
 	}
 	
 	@Override
@@ -151,38 +156,14 @@ nextResult.setSite(site);
 	@Override
 	protected void setPreparedStatmentInsertParams(Client perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-
-if (perceroObject.getSite() == null)
-{
-pstmt.setString(3, null);
-}
-else
-{
-		pstmt.setString(3, perceroObject.getSite().getID());
-}
-
-
+		
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(Client perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-
-if (perceroObject.getSite() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getSite().getID());
-}
-
-pstmt.setString(3, perceroObject.getID());
-
+	
 		
 	}
 
@@ -226,30 +207,7 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
 		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
-		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

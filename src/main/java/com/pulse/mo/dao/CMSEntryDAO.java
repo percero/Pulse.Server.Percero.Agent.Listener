@@ -39,10 +39,10 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "pulse.mob--cms--data--vw";
+	public static final String CONNECTION_FACTORY_NAME = "cms";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_AUX_MODE\".\"AUXREASON\" as \"CMS_AUX_MODE_ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,7 +51,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".\"ID\"=?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".\"ID\"=?";
 	}
 	
 	@Override
@@ -61,12 +61,12 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" ORDER BY ID";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" ORDER BY \"CMS_ENTRY\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ORDER BY \"CMS_ENTRY\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"AUXREASON\" \"CMS_ENTRY\"";
+		return "SELECT COUNT(ID) FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\"";
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".ID IN (?)";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".ID IN (?)";
 	}
 
 	@Override
@@ -101,12 +101,12 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"AUXREASON\" \"CMS_ENTRY\" ";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
 	}
 
 	@Override
@@ -146,10 +146,6 @@ nextResult.setDuration(rs.getInt("DURATION"));
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 nextResult.setFromTime(rs.getDate("FROM_TIME"));
-
-CMSAuxMode cmsauxmode = new CMSAuxMode();
-cmsauxmode.setID(rs.getString("CMS_AUX_MODE_ID"));
-nextResult.setCMSAuxMode(cmsauxmode);
 
 
 			
@@ -242,23 +238,6 @@ sql += " WHERE ";
 }
 sql += " FROM_TIME=? ";
 paramValues.add(theQueryObject.getFromTime());
-propertyCounter++;
-}
-
-boolean useCMSAuxModeID = theQueryObject.getCMSAuxMode() != null && (excludeProperties == null || !excludeProperties.contains("cMSAuxMode"));
-
-if (useCMSAuxModeID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CMS_AUX_MODE_ID=? ";
-paramValues.add(theQueryObject.getCMSAuxMode().getID());
 propertyCounter++;
 }
 

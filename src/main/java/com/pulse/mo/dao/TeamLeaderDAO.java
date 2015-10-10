@@ -26,10 +26,9 @@ import com.pulse.mo.AdhocCoachingSession;
 import com.pulse.mo.AdhocTask;
 import com.pulse.mo.DevelopmentActivity;
 import com.pulse.mo.GeneralComment;
-import com.pulse.mo.UserSession;
-import com.pulse.mo.TeamLeaderImpersonation;
-import com.pulse.mo.TeamLeaderAction;
 import com.pulse.mo.Setting;
+import com.pulse.mo.TeamLeaderImpersonation;
+import com.pulse.mo.UserSession;
 import com.pulse.mo.Supervisor;
 
 */
@@ -51,6 +50,9 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return TeamLeaderDAO.CONNECTION_FACTORY_NAME;
@@ -58,82 +60,83 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID=?";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID=?";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER ORDER BY ID";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER ORDER BY TEAM_LEADER.ID LIMIT ? OFFSET ?";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM TEAM_LEADER TEAM_LEADER";
+		return "SELECT COUNT(ID) FROM \"TEAM_LEADER\" \"TEAM_LEADER\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID IN (?)";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER.ID IN (?)";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER WHERE TEAM_LEADER." + joinColumnName + "=?";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT TEAM_LEADER.ID FROM TEAM_LEADER TEAM_LEADER ";
+		return "SELECT \"TEAM_LEADER\".\"ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT TEAM_LEADER.ID,TEAM_LEADER.LAST_NAME,TEAM_LEADER.EMAIL_ADDRESS,TEAM_LEADER.FIRST_NAME,TEAM_LEADER.FULL_NAME,TEAM_LEADER.EMPLOYEE_ID,TEAM_LEADER.PHOTO_URI,TEAM_LEADER.SUPERVISOR_ID FROM TEAM_LEADER TEAM_LEADER ";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TEAM_LEADER (ID,LAST_NAME,EMAIL_ADDRESS,FIRST_NAME,FULL_NAME,EMPLOYEE_ID,PHOTO_URI,SUPERVISOR_ID) VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TEAM_LEADER (\"ID\",\"LAST_NAME\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"FULL_NAME\",\"EMPLOYEE_ID\",\"PHOTO_URI\",\"SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TEAM_LEADER SET LAST_NAME=?,EMAIL_ADDRESS=?,FIRST_NAME=?,FULL_NAME=?,EMPLOYEE_ID=?,PHOTO_URI=?,SUPERVISOR_ID=? WHERE ID=?";
+		return "UPDATE \"TEAM_LEADER\" SET \"LAST_NAME\"=?,\"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"EMPLOYEE_ID\"=?,\"PHOTO_URI\"=?,\"SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TEAM_LEADER WHERE ID=?";
+		return "DELETE FROM \"TEAM_LEADER\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -233,7 +236,7 @@ pstmt.setString(8, perceroObject.getID());
 if (useLastName)
 {
 sql += " WHERE ";
-sql += " LAST_NAME=? ";
+sql += " \"LAST_NAME\" =? ";
 paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
@@ -250,7 +253,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " EMAIL_ADDRESS=? ";
+sql += " \"EMAIL_ADDRESS\" =? ";
 paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
 }
@@ -267,7 +270,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " FIRST_NAME=? ";
+sql += " \"FIRST_NAME\" =? ";
 paramValues.add(theQueryObject.getFirstName());
 propertyCounter++;
 }
@@ -284,7 +287,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " FULL_NAME=? ";
+sql += " \"FULL_NAME\" =? ";
 paramValues.add(theQueryObject.getFullName());
 propertyCounter++;
 }
@@ -301,7 +304,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " EMPLOYEE_ID=? ";
+sql += " \"EMPLOYEE_ID\" =? ";
 paramValues.add(theQueryObject.getEmployeeId());
 propertyCounter++;
 }
@@ -318,7 +321,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " PHOTO_URI=? ";
+sql += " \"PHOTO_URI\" =? ";
 paramValues.add(theQueryObject.getPhotoUri());
 propertyCounter++;
 }
@@ -335,7 +338,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " SUPERVISOR_ID=? ";
+sql += " \"SUPERVISOR_ID\" =? ";
 paramValues.add(theQueryObject.getSupervisor().getID());
 propertyCounter++;
 }

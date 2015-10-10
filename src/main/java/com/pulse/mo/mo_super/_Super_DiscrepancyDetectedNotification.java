@@ -70,23 +70,6 @@ public class _Super_DiscrepancyDetectedNotification extends LOBConfigurationNoti
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-AuxCodeEntryName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String auxCodeEntryName;
-
-public String getAuxCodeEntryName() 
-{
-	return this.auxCodeEntryName;
-}
-
-public void setAuxCodeEntryName(String auxCodeEntryName)
-{
-	this.auxCodeEntryName = auxCodeEntryName;
-}/*
 TimecardActivityName
 Notes:
 */
@@ -103,6 +86,23 @@ public String getTimecardActivityName()
 public void setTimecardActivityName(String timecardActivityName)
 {
 	this.timecardActivityName = timecardActivityName;
+}/*
+AuxCodeEntryName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String auxCodeEntryName;
+
+public String getAuxCodeEntryName() 
+{
+	return this.auxCodeEntryName;
+}
+
+public void setAuxCodeEntryName(String auxCodeEntryName)
+{
+	this.auxCodeEntryName = auxCodeEntryName;
 }
 
 	//////////////////////////////////////////////////////
@@ -150,16 +150,16 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Aux Code Entry Name property
-		objectJson += ",\"auxCodeEntryName\":";
+		//Retrieve value of the Timecard Activity Name property
+		objectJson += ",\"timecardActivityName\":";
 		
-		if (getAuxCodeEntryName() == null)
+		if (getTimecardActivityName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getAuxCodeEntryName());
+				objectJson += objectMapper.writeValueAsString(getTimecardActivityName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -171,16 +171,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Timecard Activity Name property
-		objectJson += ",\"timecardActivityName\":";
+		//Retrieve value of the Aux Code Entry Name property
+		objectJson += ",\"auxCodeEntryName\":";
 		
-		if (getTimecardActivityName() == null)
+		if (getAuxCodeEntryName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTimecardActivityName());
+				objectJson += objectMapper.writeValueAsString(getAuxCodeEntryName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -233,10 +233,10 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Aux Code Entry Name property
-		setAuxCodeEntryName(JsonUtils.getJsonString(jsonObject, "auxCodeEntryName"));
 		//From value of the Timecard Activity Name property
 		setTimecardActivityName(JsonUtils.getJsonString(jsonObject, "timecardActivityName"));
+		//From value of the Aux Code Entry Name property
+		setAuxCodeEntryName(JsonUtils.getJsonString(jsonObject, "auxCodeEntryName"));
 
 		
 		// Source Relationships

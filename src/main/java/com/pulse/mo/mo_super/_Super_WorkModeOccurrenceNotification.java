@@ -70,23 +70,6 @@ public class _Super_WorkModeOccurrenceNotification extends ThresholdExceededNoti
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-LoginCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer loginCount;
-
-public Integer getLoginCount() 
-{
-	return this.loginCount;
-}
-
-public void setLoginCount(Integer loginCount)
-{
-	this.loginCount = loginCount;
-}/*
 LogoutCount
 Notes:
 */
@@ -103,6 +86,23 @@ public Integer getLogoutCount()
 public void setLogoutCount(Integer logoutCount)
 {
 	this.logoutCount = logoutCount;
+}/*
+LoginCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer loginCount;
+
+public Integer getLoginCount() 
+{
+	return this.loginCount;
+}
+
+public void setLoginCount(Integer loginCount)
+{
+	this.loginCount = loginCount;
 }
 
 	//////////////////////////////////////////////////////
@@ -124,16 +124,16 @@ public void setLogoutCount(Integer logoutCount)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Login Count property
-		objectJson += ",\"loginCount\":";
+		//Retrieve value of the Logout Count property
+		objectJson += ",\"logoutCount\":";
 		
-		if (getLoginCount() == null)
+		if (getLogoutCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLoginCount());
+				objectJson += objectMapper.writeValueAsString(getLogoutCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -145,16 +145,16 @@ public void setLogoutCount(Integer logoutCount)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Logout Count property
-		objectJson += ",\"logoutCount\":";
+		//Retrieve value of the Login Count property
+		objectJson += ",\"loginCount\":";
 		
-		if (getLogoutCount() == null)
+		if (getLoginCount() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLogoutCount());
+				objectJson += objectMapper.writeValueAsString(getLoginCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -183,10 +183,10 @@ public void setLogoutCount(Integer logoutCount)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Login Count property
-		setLoginCount(JsonUtils.getJsonInteger(jsonObject, "loginCount"));
 		//From value of the Logout Count property
 		setLogoutCount(JsonUtils.getJsonInteger(jsonObject, "logoutCount"));
+		//From value of the Login Count property
+		setLoginCount(JsonUtils.getJsonInteger(jsonObject, "loginCount"));
 
 		
 		// Source Relationships

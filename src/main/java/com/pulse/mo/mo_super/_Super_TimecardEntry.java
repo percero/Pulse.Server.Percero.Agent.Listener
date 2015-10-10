@@ -1,49 +1,32 @@
 
-package com.pulse.mo.mo_super;
 
-import java.io.IOException;
-import java.io.Serializable;
+package com.pulse.mo.mo_super;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SecondaryTable;
-
+import com.google.gson.JsonObject;
+import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.serial.BDODeserializer;
+import com.percero.serial.BDOSerializer;
+import com.percero.serial.JsonUtils;
+import com.pulse.mo.Agent;
+import com.pulse.mo.Timecard;
+import com.pulse.mo.TimecardActivity;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.AccessType;
 
-import com.google.gson.JsonObject;
-import com.percero.agents.sync.metadata.MappedClass.MappedClassMethodPair;
-import com.percero.agents.sync.metadata.MappedClass;
+import javax.persistence.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /*
 Imports based on semantic requirements
 */
-
-
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.serial.BDODeserializer;
-import com.percero.serial.BDOSerializer;
-import com.percero.serial.JsonUtils;
-
-import com.pulse.mo.*;
 
 /*
 Entity Tags based on semantic requirements
@@ -85,57 +68,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Duration
-Notes:Number of minutes
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer duration;
-
-public Integer getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Integer duration)
-{
-	this.duration = duration;
-}/*
-ActionCode
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String actionCode;
-
-public String getActionCode() 
-{
-	return this.actionCode;
-}
-
-public void setActionCode(String actionCode)
-{
-	this.actionCode = actionCode;
-}/*
-ActionName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String actionName;
-
-public String getActionName() 
-{
-	return this.actionName;
-}
-
-public void setActionName(String actionName)
-{
-	this.actionName = actionName;
-}/*
 FromTime
 Notes:
 */
@@ -153,22 +85,22 @@ public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
 }/*
-NotificationDetected
+NotificationResolved
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean notificationDetected;
+private Boolean notificationResolved;
 
-public Boolean getNotificationDetected() 
+public Boolean getNotificationResolved() 
 {
-	return this.notificationDetected;
+	return this.notificationResolved;
 }
 
-public void setNotificationDetected(Boolean notificationDetected)
+public void setNotificationResolved(Boolean notificationResolved)
 {
-	this.notificationDetected = notificationDetected;
+	this.notificationResolved = notificationResolved;
 }/*
 ToTime
 Notes:
@@ -204,22 +136,39 @@ public void setEStartProjectName(String eStartProjectName)
 {
 	this.eStartProjectName = eStartProjectName;
 }/*
-NotificationResolved
+Duration
+Notes:Number of minutes
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer duration;
+
+public Integer getDuration() 
+{
+	return this.duration;
+}
+
+public void setDuration(Integer duration)
+{
+	this.duration = duration;
+}/*
+ActionName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean notificationResolved;
+private String actionName;
 
-public Boolean getNotificationResolved() 
+public String getActionName() 
 {
-	return this.notificationResolved;
+	return this.actionName;
 }
 
-public void setNotificationResolved(Boolean notificationResolved)
+public void setActionName(String actionName)
 {
-	this.notificationResolved = notificationResolved;
+	this.actionName = actionName;
 }/*
 ActivityName
 Notes:
@@ -237,6 +186,40 @@ public String getActivityName()
 public void setActivityName(String activityName)
 {
 	this.activityName = activityName;
+}/*
+NotificationDetected
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean notificationDetected;
+
+public Boolean getNotificationDetected() 
+{
+	return this.notificationDetected;
+}
+
+public void setNotificationDetected(Boolean notificationDetected)
+{
+	this.notificationDetected = notificationDetected;
+}/*
+ActionCode
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String actionCode;
+
+public String getActionCode() 
+{
+	return this.actionCode;
+}
+
+public void setActionCode(String actionCode)
+{
+	this.actionCode = actionCode;
 }
 
 	//////////////////////////////////////////////////////
@@ -247,7 +230,8 @@ public void setActivityName(String activityName)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
@@ -260,10 +244,11 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="WORKED--ID")
+@JoinColumn(name="WORKED_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Timecard timecard;
@@ -273,7 +258,8 @@ public Timecard getTimecard() {
 
 public void setTimecard(Timecard value) {
 	this.timecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
@@ -297,16 +283,37 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
+		//Retrieve value of the From Time property
+		objectJson += ",\"fromTime\":";
+		if (getFromTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getFromTime().getTime();
+		}
+		//Retrieve value of the Notification Resolved property
+		objectJson += ",\"notificationResolved\":";
+		if (getNotificationResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNotificationResolved();
+		}
+		//Retrieve value of the To Time property
+		objectJson += ",\"toTime\":";
+		if (getToTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getToTime().getTime();
+		}
+		//Retrieve value of the EStart Project Name property
+		objectJson += ",\"eStartProjectName\":";
 		
-		if (getDuration() == null)
+		if (getEStartProjectName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDuration());
+				objectJson += objectMapper.writeValueAsString(getEStartProjectName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -318,16 +325,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Action Code property
-		objectJson += ",\"actionCode\":";
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
 		
-		if (getActionCode() == null)
+		if (getDuration() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActionCode());
+				objectJson += objectMapper.writeValueAsString(getDuration());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -360,37 +367,16 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the From Time property
-		objectJson += ",\"fromTime\":";
-		if (getFromTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getFromTime().getTime();
-		}
-		//Retrieve value of the Notification Detected property
-		objectJson += ",\"notificationDetected\":";
-		if (getNotificationDetected() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationDetected();
-		}
-		//Retrieve value of the To Time property
-		objectJson += ",\"toTime\":";
-		if (getToTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the EStart Project Name property
-		objectJson += ",\"eStartProjectName\":";
+		//Retrieve value of the Activity Name property
+		objectJson += ",\"activityName\":";
 		
-		if (getEStartProjectName() == null)
+		if (getActivityName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEStartProjectName());
+				objectJson += objectMapper.writeValueAsString(getActivityName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -402,23 +388,23 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Notification Resolved property
-		objectJson += ",\"notificationResolved\":";
-		if (getNotificationResolved() == null)
+		//Retrieve value of the Notification Detected property
+		objectJson += ",\"notificationDetected\":";
+		if (getNotificationDetected() == null)
 			objectJson += "null";
 		else {
-			objectJson += getNotificationResolved();
+			objectJson += getNotificationDetected();
 		}
-		//Retrieve value of the Activity Name property
-		objectJson += ",\"activityName\":";
+		//Retrieve value of the Action Code property
+		objectJson += ",\"actionCode\":";
 		
-		if (getActivityName() == null)
+		if (getActionCode() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActivityName());
+				objectJson += objectMapper.writeValueAsString(getActionCode());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -483,24 +469,24 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
-		//From value of the Action Code property
-		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
-		//From value of the Action Name property
-		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the Notification Detected property
-		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
+		//From value of the Notification Resolved property
+		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
 		//From value of the To Time property
 		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
-		//From value of the Notification Resolved property
-		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
+		//From value of the Duration property
+		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
+		//From value of the Action Name property
+		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
 		//From value of the Activity Name property
 		setActivityName(JsonUtils.getJsonString(jsonObject, "activityName"));
+		//From value of the Notification Detected property
+		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
+		//From value of the Action Code property
+		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
 
 		
 		// Source Relationships
@@ -524,4 +510,4 @@ objectJson += ",\"timecardActivity\":";
 		return listSetters;
 	}
 }
-
+

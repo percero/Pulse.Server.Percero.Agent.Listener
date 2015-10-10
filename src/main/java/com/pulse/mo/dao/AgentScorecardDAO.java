@@ -19,6 +19,7 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Agent;
 import com.pulse.mo.Scorecard;
 
@@ -41,6 +42,9 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return AgentScorecardDAO.CONNECTION_FACTORY_NAME;
@@ -48,82 +52,83 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY ID";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID LIMIT ? OFFSET ?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ORDER BY AGENT_SCORECARD.ID LIMIT ? OFFSET ?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM AGENT_SCORECARD AGENT_SCORECARD";
+		return "SELECT COUNT(ID) FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID IN (?)";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD.ID IN (?)";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD WHERE AGENT_SCORECARD." + joinColumnName + "=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT AGENT_SCORECARD.ID FROM AGENT_SCORECARD AGENT_SCORECARD ";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT AGENT_SCORECARD.ID,AGENT_SCORECARD.SCORECARD_ID,AGENT_SCORECARD.AGENT_ID FROM AGENT_SCORECARD AGENT_SCORECARD ";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO AGENT_SCORECARD (ID,SCORECARD_ID,AGENT_ID) VALUES (?,?,?)";
+		return "INSERT INTO AGENT_SCORECARD (\"ID\",\"WEEK_DATE\",\"AGENT_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE AGENT_SCORECARD SET SCORECARD_ID=?,AGENT_ID=? WHERE ID=?";
+		return "UPDATE \"AGENT_SCORECARD\" SET \"WEEK_DATE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM AGENT_SCORECARD WHERE ID=?";
+		return "DELETE FROM \"AGENT_SCORECARD\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -135,13 +140,15 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
     	
     	if (!shellOnly) 
 		{
-			Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
-nextResult.setScorecard(scorecard);
+			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
+
+Scorecard scorecard = new Scorecard();
+scorecard.setID(rs.getString("SCORECARD_ID"));
+nextResult.setScorecard(scorecard);
 
 
 			
@@ -154,16 +161,7 @@ nextResult.setAgent(agent);
 	protected void setPreparedStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getScorecard().getID());
-}
-
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 
 if (perceroObject.getAgent() == null)
 {
@@ -175,22 +173,23 @@ else
 }
 
 
+if (perceroObject.getScorecard() == null)
+{
+pstmt.setString(4, null);
+}
+else
+{
+		pstmt.setString(4, perceroObject.getScorecard().getID());
+}
+
+
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(1, null);
-}
-else
-{
-		pstmt.setString(1, perceroObject.getScorecard().getID());
-}
-
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 
 if (perceroObject.getAgent() == null)
 {
@@ -201,7 +200,17 @@ else
 		pstmt.setString(2, perceroObject.getAgent().getID());
 }
 
-pstmt.setString(3, perceroObject.getID());
+
+if (perceroObject.getScorecard() == null)
+{
+pstmt.setString(3, null);
+}
+else
+{
+		pstmt.setString(3, perceroObject.getScorecard().getID());
+}
+
+pstmt.setString(4, perceroObject.getID());
 
 		
 	}
@@ -218,13 +227,13 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
 
-if (useScorecardID)
+if (useWeekDate)
 {
 sql += " WHERE ";
-sql += " SCORECARD_ID=? ";
-paramValues.add(theQueryObject.getScorecard().getID());
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 
@@ -240,8 +249,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
+sql += " \"AGENT_ID\" =? ";
 paramValues.add(theQueryObject.getAgent().getID());
+propertyCounter++;
+}
+
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 

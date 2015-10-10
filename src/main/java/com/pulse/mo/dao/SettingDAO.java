@@ -40,6 +40,9 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return SettingDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT SETTING.ID FROM SETTING SETTING WHERE SETTING.ID=?";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING WHERE SETTING.ID=?";
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT SETTING.ID FROM SETTING SETTING ORDER BY ID";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT SETTING.ID FROM SETTING SETTING ORDER BY SETTING.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING ORDER BY SETTING.ID";
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING ORDER BY SETTING.ID LIMIT ? OFFSET ?";
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM SETTING SETTING";
+		return "SELECT COUNT(ID) FROM \"SETTING\" \"SETTING\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING WHERE SETTING.ID IN (?)";
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT SETTING.ID FROM SETTING SETTING WHERE SETTING.ID IN (?)";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING WHERE SETTING." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT SETTING.ID FROM SETTING SETTING WHERE SETTING." + joinColumnName + "=?";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT SETTING.ID FROM SETTING SETTING ";
+		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT SETTING.ID,SETTING.VALUE,SETTING.NAME,SETTING.TEAM_LEADER_ID FROM SETTING SETTING ";
+		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SETTING (ID,VALUE,NAME,TEAM_LEADER_ID) VALUES (?,?,?,?)";
+		return "INSERT INTO SETTING (\"ID\",\"VALUE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE SETTING SET VALUE=?,NAME=?,TEAM_LEADER_ID=? WHERE ID=?";
+		return "UPDATE \"SETTING\" SET \"VALUE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM SETTING WHERE ID=?";
+		return "DELETE FROM \"SETTING\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -206,7 +210,7 @@ pstmt.setString(4, perceroObject.getID());
 if (useValue)
 {
 sql += " WHERE ";
-sql += " VALUE=? ";
+sql += " \"VALUE\" =? ";
 paramValues.add(theQueryObject.getValue());
 propertyCounter++;
 }
@@ -223,7 +227,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -240,7 +244,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TEAM_LEADER_ID=? ";
+sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }

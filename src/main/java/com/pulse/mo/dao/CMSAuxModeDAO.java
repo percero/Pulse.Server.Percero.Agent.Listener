@@ -19,9 +19,9 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.CMSAuxMode;
+import com.pulse.mo.LOBConfigurationEntry;
 import com.pulse.mo.DiscrepancyDetectedNotification;
 import com.pulse.mo.CMSEntry;
-import com.pulse.mo.LOBConfigurationEntry;
 
 */
 
@@ -42,6 +42,10 @@ public class CMSAuxModeDAO extends SqlDataAccessObject<CMSAuxMode> implements ID
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	//TODO:For use refactoring, so we set it once
+	public static final String SQL_VIEW = "SELECT  '' as \"ID\", '' as \"NAME\", '' as \"EVENT_COUNT\" FROM \"TBL_CMS_AUX_MODE\" \"CMS_AUX_MODE\" ";
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return CMSAuxModeDAO.CONNECTION_FACTORY_NAME;
@@ -49,82 +53,83 @@ public class CMSAuxModeDAO extends SqlDataAccessObject<CMSAuxMode> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE.ID=?";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" WHERE \"CMS_AUX_MODE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE.ID=?";
+		return SQL_VIEW + " where \"CMS_AUX_MODE\".ID=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE ORDER BY ID";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" ORDER BY ID";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE ORDER BY CMS_AUX_MODE.ID LIMIT ? OFFSET ?";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" ORDER BY \"CMS_AUX_MODE\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE ORDER BY CMS_AUX_MODE.ID";
+		return SQL_VIEW + " ORDER BY \"CMS_AUX_MODE\".ID";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE ORDER BY CMS_AUX_MODE.ID LIMIT ? OFFSET ?";
+		return SQL_VIEW + " ORDER BY \"CMS_AUX_MODE\".ID LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM CMS_AUX_MODE CMS_AUX_MODE";
+		return "SELECT COUNT(ID) FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE.ID IN (?)";
+		return SQL_VIEW + " where \"CMS_AUX_MODE\".ID IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE.ID IN (?)";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" WHERE \"CMS_AUX_MODE\".ID IN (?)";
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE." + joinColumnName + "=?";
+		return SQL_VIEW + "  \"CMS_AUX_MODE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE WHERE CMS_AUX_MODE." + joinColumnName + "=?";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" WHERE \"CMS_AUX_MODE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT CMS_AUX_MODE.ID FROM CMS_AUX_MODE CMS_AUX_MODE ";
+		return "SELECT '' as \"ID\" FROM \"CMS_AUX_MODE\" \"CMS_AUX_MODE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT CMS_AUX_MODE.ID,CMS_AUX_MODE.NAME,CMS_AUX_MODE.EVENT_COUNT FROM CMS_AUX_MODE CMS_AUX_MODE ";
+		return SQL_VIEW;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO CMS_AUX_MODE (ID,NAME,EVENT_COUNT) VALUES (?,?,?)";
+		return "";//"INSERT INTO CMS_AUX_MODE (ID) VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE CMS_AUX_MODE SET NAME=?,EVENT_COUNT=? WHERE ID=?";
+		return "";//"UPDATE CMS_AUX_MODE SET  WHERE ID=?";
 	}
 	
 	@Override
-	protected String getDeleteFromSQL() {
-		return "DELETE FROM CMS_AUX_MODE WHERE ID=?";
+	protected String getDeleteFromSQL() 
+	{
+		return "";//"DELETE FROM CMS_AUX_MODE WHERE ID=?";
 	}
 	
 	@Override
@@ -150,20 +155,14 @@ nextResult.setEventCount(rs.getInt("EVENT_COUNT"));
 	@Override
 	protected void setPreparedStatmentInsertParams(CMSAuxMode perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setInt(3, perceroObject.getEventCount());
-
+		
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(CMSAuxMode perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setInt(2, perceroObject.getEventCount());
-pstmt.setString(3, perceroObject.getID());
-
+	
 		
 	}
 
@@ -207,30 +206,7 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
 		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
-		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

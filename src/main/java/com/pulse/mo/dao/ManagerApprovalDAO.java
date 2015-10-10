@@ -40,6 +40,9 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return ManagerApprovalDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL.ID=?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL.ID=?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL ORDER BY ID";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL ORDER BY MANAGER_APPROVAL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL ORDER BY MANAGER_APPROVAL.ID";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL ORDER BY MANAGER_APPROVAL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM MANAGER_APPROVAL MANAGER_APPROVAL";
+		return "SELECT COUNT(ID) FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL.ID IN (?)";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL.ID IN (?)";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL WHERE MANAGER_APPROVAL." + joinColumnName + "=?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT MANAGER_APPROVAL.ID FROM MANAGER_APPROVAL MANAGER_APPROVAL ";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT MANAGER_APPROVAL.ID,MANAGER_APPROVAL.NAME,MANAGER_APPROVAL.DATE FROM MANAGER_APPROVAL MANAGER_APPROVAL ";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO MANAGER_APPROVAL (ID,NAME,DATE) VALUES (?,?,?)";
+		return "INSERT INTO MANAGER_APPROVAL (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE MANAGER_APPROVAL SET NAME=?,DATE=? WHERE ID=?";
+		return "UPDATE \"MANAGER_APPROVAL\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM MANAGER_APPROVAL WHERE ID=?";
+		return "DELETE FROM \"MANAGER_APPROVAL\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -182,7 +186,7 @@ pstmt.setString(3, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -199,7 +203,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " DATE=? ";
+sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }

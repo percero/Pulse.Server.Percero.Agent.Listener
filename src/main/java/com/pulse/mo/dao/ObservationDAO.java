@@ -40,6 +40,9 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return ObservationDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID=?";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID=?";
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION ORDER BY ID";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID LIMIT ? OFFSET ?";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID";
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ORDER BY OBSERVATION.ID LIMIT ? OFFSET ?";
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM OBSERVATION OBSERVATION";
+		return "SELECT COUNT(ID) FROM \"OBSERVATION\" \"OBSERVATION\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID IN (?)";
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION.ID IN (?)";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION WHERE OBSERVATION." + joinColumnName + "=?";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT OBSERVATION.ID FROM OBSERVATION OBSERVATION ";
+		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT OBSERVATION.ID,OBSERVATION.SCORECARD_MEASURE_ID FROM OBSERVATION OBSERVATION ";
+		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO OBSERVATION (ID,SCORECARD_MEASURE_ID) VALUES (?,?)";
+		return "INSERT INTO OBSERVATION (\"ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE OBSERVATION SET SCORECARD_MEASURE_ID=? WHERE ID=?";
+		return "UPDATE \"OBSERVATION\" SET \"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM OBSERVATION WHERE ID=?";
+		return "DELETE FROM \"OBSERVATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -198,7 +202,7 @@ pstmt.setString(2, perceroObject.getID());
 if (useScorecardMeasureID)
 {
 sql += " WHERE ";
-sql += " SCORECARD_MEASURE_ID=? ";
+sql += " \"SCORECARD_MEASURE_ID\" =? ";
 paramValues.add(theQueryObject.getScorecardMeasure().getID());
 propertyCounter++;
 }

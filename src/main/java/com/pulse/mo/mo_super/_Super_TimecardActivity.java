@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
+}/*
 Description
 Notes:
 */
@@ -118,23 +135,6 @@ public Boolean getNonBillable()
 public void setNonBillable(Boolean nonBillable)
 {
 	this.nonBillable = nonBillable;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
 }/*
 Code
 Notes:
@@ -173,6 +173,19 @@ public void setDiscrepancyDetectedNotifications(List<DiscrepancyDetectedNotifica
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ChangesNotApprovedNotification.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ChangesNotApprovedNotification> changesNotApprovedNotifications;
+public List<ChangesNotApprovedNotification> getChangesNotApprovedNotifications() {
+	return this.changesNotApprovedNotifications;
+}
+
+public void setChangesNotApprovedNotifications(List<ChangesNotApprovedNotification> value) {
+	this.changesNotApprovedNotifications = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=TimecardEntry.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
 private List<TimecardEntry> timecardEntries;
 public List<TimecardEntry> getTimecardEntries() {
@@ -195,19 +208,6 @@ public LOBConfigurationEntry getLOBConfigurationEntry() {
 public void setLOBConfigurationEntry(LOBConfigurationEntry value) 
 {
 	this.lOBConfigurationEntry = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ChangesNotApprovedNotification.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ChangesNotApprovedNotification> changesNotApprovedNotifications;
-public List<ChangesNotApprovedNotification> getChangesNotApprovedNotifications() {
-	return this.changesNotApprovedNotifications;
-}
-
-public void setChangesNotApprovedNotifications(List<ChangesNotApprovedNotification> value) {
-	this.changesNotApprovedNotifications = value;
 }
 
 
@@ -239,6 +239,27 @@ public void setCVGProject(CVGProject value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
+		
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
 		
@@ -266,27 +287,6 @@ public void setCVGProject(CVGProject value) {
 			objectJson += "null";
 		else {
 			objectJson += getNonBillable();
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the Code property
 		objectJson += ",\"code\":";
@@ -344,6 +344,23 @@ objectJson += ",\"discrepancyDetectedNotifications\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Timecard Activity of Changes Not Approved Notification relationship
+objectJson += ",\"changesNotApprovedNotifications\":[";
+		
+		if (getChangesNotApprovedNotifications() != null) {
+			int changesNotApprovedNotificationsCounter = 0;
+			for(ChangesNotApprovedNotification nextChangesNotApprovedNotifications : getChangesNotApprovedNotifications()) {
+				if (changesNotApprovedNotificationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextChangesNotApprovedNotifications).toEmbeddedJson();
+					changesNotApprovedNotificationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Timecard Activity of Timecard Entry relationship
 objectJson += ",\"timecardEntries\":[";
 		
@@ -363,23 +380,6 @@ objectJson += ",\"timecardEntries\":[";
 		objectJson += "]";
 //Retrieve value of the Timecard Activity of LOB Configuration Entry relationship
 
-//Retrieve value of the Timecard Activity of Changes Not Approved Notification relationship
-objectJson += ",\"changesNotApprovedNotifications\":[";
-		
-		if (getChangesNotApprovedNotifications() != null) {
-			int changesNotApprovedNotificationsCounter = 0;
-			for(ChangesNotApprovedNotification nextChangesNotApprovedNotifications : getChangesNotApprovedNotifications()) {
-				if (changesNotApprovedNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextChangesNotApprovedNotifications).toEmbeddedJson();
-					changesNotApprovedNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -391,12 +391,12 @@ objectJson += ",\"changesNotApprovedNotifications\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Non Billable property
 		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Code property
 		setCode(JsonUtils.getJsonString(jsonObject, "code"));
 
@@ -407,9 +407,9 @@ objectJson += ",\"changesNotApprovedNotifications\":[";
 
 		// Target Relationships
 		this.discrepancyDetectedNotifications = (List<DiscrepancyDetectedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "discrepancyDetectedNotifications");
+		this.changesNotApprovedNotifications = (List<ChangesNotApprovedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "changesNotApprovedNotifications");
 		this.timecardEntries = (List<TimecardEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecardEntries");
 		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
-		this.changesNotApprovedNotifications = (List<ChangesNotApprovedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "changesNotApprovedNotifications");
 
 
 	}
@@ -420,8 +420,8 @@ objectJson += ",\"changesNotApprovedNotifications\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(DiscrepancyDetectedNotification.class, "timecardactivity"));
-		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "timecardactivity"));
 		listSetters.add(MappedClass.getFieldSetters(ChangesNotApprovedNotification.class, "timecardactivity"));
+		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "timecardactivity"));
 
 		
 		return listSetters;

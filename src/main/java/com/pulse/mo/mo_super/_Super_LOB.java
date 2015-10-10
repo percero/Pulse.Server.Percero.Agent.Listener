@@ -127,19 +127,6 @@ public void setLOBConfigurations(List<LOBConfiguration> value) {
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CLIENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ClientOfLOB")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Client client;
-public Client getClient() {
-	return this.client;
-}
-
-public void setClient(Client value) {
-	this.client = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="PULSE_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseConfigurationOfLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -150,6 +137,19 @@ public PulseConfiguration getPulseConfiguration() {
 
 public void setPulseConfiguration(PulseConfiguration value) {
 	this.pulseConfiguration = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="CLIENT--ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ClientOfLOB")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Client client;
+public Client getClient() {
+	return this.client;
+}
+
+public void setClient(Client value) {
+	this.client = value;
 }
 
 	
@@ -185,18 +185,6 @@ public void setPulseConfiguration(PulseConfiguration value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Client of LOB relationship
-objectJson += ",\"client\":";
-		if (getClient() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Pulse Configuration of LOB relationship
 objectJson += ",\"pulseConfiguration\":";
 		if (getPulseConfiguration() == null)
@@ -204,6 +192,18 @@ objectJson += ",\"pulseConfiguration\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getPulseConfiguration()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Client of LOB relationship
+objectJson += ",\"client\":";
+		if (getClient() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -245,8 +245,8 @@ objectJson += ",\"lOBConfigurations\":[";
 
 		
 		// Source Relationships
-		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
 		this.pulseConfiguration = (PulseConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "pulseConfiguration");
+		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
 
 
 		// Target Relationships

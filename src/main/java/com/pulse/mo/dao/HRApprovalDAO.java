@@ -40,6 +40,9 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return HRApprovalDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL.ID=?";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL.ID=?";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL ORDER BY ID";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL ORDER BY HR_APPROVAL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL ORDER BY HR_APPROVAL.ID";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL ORDER BY HR_APPROVAL.ID LIMIT ? OFFSET ?";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM HR_APPROVAL HR_APPROVAL";
+		return "SELECT COUNT(ID) FROM \"HR_APPROVAL\" \"HR_APPROVAL\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL.ID IN (?)";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL.ID IN (?)";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL WHERE HR_APPROVAL." + joinColumnName + "=?";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT HR_APPROVAL.ID FROM HR_APPROVAL HR_APPROVAL ";
+		return "SELECT \"HR_APPROVAL\".\"ID\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT HR_APPROVAL.ID,HR_APPROVAL.NAME,HR_APPROVAL.DATE FROM HR_APPROVAL HR_APPROVAL ";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO HR_APPROVAL (ID,NAME,DATE) VALUES (?,?,?)";
+		return "INSERT INTO HR_APPROVAL (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE HR_APPROVAL SET NAME=?,DATE=? WHERE ID=?";
+		return "UPDATE \"HR_APPROVAL\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM HR_APPROVAL WHERE ID=?";
+		return "DELETE FROM \"HR_APPROVAL\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -182,7 +186,7 @@ pstmt.setString(3, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -199,7 +203,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " DATE=? ";
+sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }

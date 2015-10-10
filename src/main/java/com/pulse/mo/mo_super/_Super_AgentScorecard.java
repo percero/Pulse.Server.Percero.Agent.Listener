@@ -84,12 +84,42 @@ public void setID(String value) {
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	
+	/*
+WeekDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekDate;
+
+public Date getWeekDate() 
+{
+	return this.weekDate;
+}
+
+public void setWeekDate(Date weekDate)
+{
+	this.weekDate = weekDate;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CoachingSession> coachingSessions;
+public List<CoachingSession> getCoachingSessions() {
+	return this.coachingSessions;
+}
+
+public void setCoachingSessions(List<CoachingSession> value) {
+	this.coachingSessions = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -131,6 +161,27 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getWeekDate());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
@@ -161,6 +212,23 @@ objectJson += ",\"scorecard\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Agent Scorecard of Coaching Session relationship
+objectJson += ",\"coachingSessions\":[";
+		
+		if (getCoachingSessions() != null) {
+			int coachingSessionsCounter = 0;
+			for(CoachingSession nextCoachingSessions : getCoachingSessions()) {
+				if (coachingSessionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCoachingSessions).toEmbeddedJson();
+					coachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -172,6 +240,8 @@ objectJson += ",\"scorecard\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 
 		
 		// Source Relationships
@@ -180,6 +250,7 @@ objectJson += ",\"scorecard\":";
 
 
 		// Target Relationships
+		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
 
 
 	}
@@ -189,6 +260,7 @@ objectJson += ",\"scorecard\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
 
 		
 		return listSetters;

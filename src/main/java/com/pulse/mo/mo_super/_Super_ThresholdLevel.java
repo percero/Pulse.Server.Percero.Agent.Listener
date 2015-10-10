@@ -102,6 +102,40 @@ public void setColor(String color)
 {
 	this.color = color;
 }/*
+ExpressionOperator
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String expressionOperator;
+
+public String getExpressionOperator() 
+{
+	return this.expressionOperator;
+}
+
+public void setExpressionOperator(String expressionOperator)
+{
+	this.expressionOperator = expressionOperator;
+}/*
+StartValue
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String startValue;
+
+public String getStartValue() 
+{
+	return this.startValue;
+}
+
+public void setStartValue(String startValue)
+{
+	this.startValue = startValue;
+}/*
 StartExpression
 Notes:
 */
@@ -136,23 +170,6 @@ public void setEndExpression(String endExpression)
 {
 	this.endExpression = endExpression;
 }/*
-ExpressionOperator
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String expressionOperator;
-
-public String getExpressionOperator() 
-{
-	return this.expressionOperator;
-}
-
-public void setExpressionOperator(String expressionOperator)
-{
-	this.expressionOperator = expressionOperator;
-}/*
 EndValue
 Notes:
 */
@@ -169,23 +186,6 @@ public String getEndValue()
 public void setEndValue(String endValue)
 {
 	this.endValue = endValue;
-}/*
-StartValue
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String startValue;
-
-public String getStartValue() 
-{
-	return this.startValue;
-}
-
-public void setStartValue(String startValue)
-{
-	this.startValue = startValue;
 }
 
 	//////////////////////////////////////////////////////
@@ -241,6 +241,48 @@ public void setThresholdScale(ThresholdScale value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Expression Operator property
+		objectJson += ",\"expressionOperator\":";
+		
+		if (getExpressionOperator() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExpressionOperator());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Start Value property
+		objectJson += ",\"startValue\":";
+		
+		if (getStartValue() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartValue());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Start Expression property
 		objectJson += ",\"startExpression\":";
 		
@@ -283,27 +325,6 @@ public void setThresholdScale(ThresholdScale value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Expression Operator property
-		objectJson += ",\"expressionOperator\":";
-		
-		if (getExpressionOperator() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExpressionOperator());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the End Value property
 		objectJson += ",\"endValue\":";
 		
@@ -314,27 +335,6 @@ public void setThresholdScale(ThresholdScale value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEndValue());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Start Value property
-		objectJson += ",\"startValue\":";
-		
-		if (getStartValue() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartValue());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -377,16 +377,16 @@ objectJson += ",\"thresholdScale\":";
 		// Properties
 		//From value of the Color property
 		setColor(JsonUtils.getJsonString(jsonObject, "color"));
+		//From value of the Expression Operator property
+		setExpressionOperator(JsonUtils.getJsonString(jsonObject, "expressionOperator"));
+		//From value of the Start Value property
+		setStartValue(JsonUtils.getJsonString(jsonObject, "startValue"));
 		//From value of the Start Expression property
 		setStartExpression(JsonUtils.getJsonString(jsonObject, "startExpression"));
 		//From value of the End Expression property
 		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
-		//From value of the Expression Operator property
-		setExpressionOperator(JsonUtils.getJsonString(jsonObject, "expressionOperator"));
 		//From value of the End Value property
 		setEndValue(JsonUtils.getJsonString(jsonObject, "endValue"));
-		//From value of the Start Value property
-		setStartValue(JsonUtils.getJsonString(jsonObject, "startValue"));
 
 		
 		// Source Relationships

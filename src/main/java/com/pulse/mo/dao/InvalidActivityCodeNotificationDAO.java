@@ -1,20 +1,21 @@
 
-
-package com.pulse.mo.dao;
-
-import com.percero.agents.sync.dao.DAORegistry;
-import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.*;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.util.DateUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.percero.agents.sync.dao.DAORegistry;
+import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncException;
+
+import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.InvalidActivityCodeNotification;
@@ -38,6 +39,9 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return InvalidActivityCodeNotificationDAO.CONNECTION_FACTORY_NAME;
@@ -45,82 +49,83 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF.ID=?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF.ID=?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ORDER BY ID";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ORDER BY INV_ACTVTY_CODE_NOTIF.ID LIMIT ? OFFSET ?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ORDER BY INV_ACTVTY_CODE_NOTIF.ID";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ORDER BY INV_ACTVTY_CODE_NOTIF.ID LIMIT ? OFFSET ?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF";
+		return "SELECT COUNT(ID) FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF.ID IN (?)";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF.ID IN (?)";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF WHERE INV_ACTVTY_CODE_NOTIF." + joinColumnName + "=?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT INV_ACTVTY_CODE_NOTIF.ID,INV_ACTVTY_CODE_NOTIF.DATE,INV_ACTVTY_CODE_NOTIF.MESSAGE,INV_ACTVTY_CODE_NOTIF.NAME,INV_ACTVTY_CODE_NOTIF.TYPE,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ID,INV_ACTVTY_CODE_NOTIF.AGENT_ID,INV_ACTVTY_CODE_NOTIF.LOB_CONFIGURATION_ENTRY_ID,INV_ACTVTY_CODE_NOTIF.TEAM_LEADER_ID FROM INV_ACTVTY_CODE_NOTIF INV_ACTVTY_CODE_NOTIF ";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO INV_ACTVTY_CODE_NOTIF (ID,DATE,MESSAGE,NAME,TYPE,LOB_CONFIGURATION_ID,AGENT_ID,LOB_CONFIGURATION_ENTRY_ID,TEAM_LEADER_ID) VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO INV_ACTVTY_CODE_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE INV_ACTVTY_CODE_NOTIF SET DATE=?,MESSAGE=?,NAME=?,TYPE=?,LOB_CONFIGURATION_ID=?,AGENT_ID=?,LOB_CONFIGURATION_ENTRY_ID=?,TEAM_LEADER_ID=? WHERE ID=?";
+		return "UPDATE \"INV_ACTVTY_CODE_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM INV_ACTVTY_CODE_NOTIF WHERE ID=?";
+		return "DELETE FROM \"INV_ACTVTY_CODE_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -284,7 +289,7 @@ pstmt.setString(9, perceroObject.getID());
 if (useDate)
 {
 sql += " WHERE ";
-sql += " DATE=? ";
+sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
@@ -301,7 +306,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " MESSAGE=? ";
+sql += " \"MESSAGE\" =? ";
 paramValues.add(theQueryObject.getMessage());
 propertyCounter++;
 }
@@ -318,7 +323,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
@@ -335,7 +340,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TYPE=? ";
+sql += " \"TYPE\" =? ";
 paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
@@ -352,7 +357,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " LOB_CONFIGURATION_ID=? ";
+sql += " \"LOB_CONFIGURATION_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfiguration().getID());
 propertyCounter++;
 }
@@ -369,7 +374,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
+sql += " \"AGENT_ID\" =? ";
 paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
@@ -386,7 +391,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " LOB_CONFIGURATION_ENTRY_ID=? ";
+sql += " \"LOB_CONFIGURATION_ENTRY_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfigurationEntry().getID());
 propertyCounter++;
 }
@@ -403,7 +408,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TEAM_LEADER_ID=? ";
+sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
@@ -438,4 +443,4 @@ propertyCounter++;
 	}
 	
 }
-
+

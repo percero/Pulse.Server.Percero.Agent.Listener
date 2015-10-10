@@ -19,8 +19,8 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.LOBConfiguration;
-import com.pulse.mo.LOBConfigurationNotification;
 import com.pulse.mo.LOBConfigurationEntry;
+import com.pulse.mo.LOBConfigurationNotification;
 import com.pulse.mo.LOB;
 
 */
@@ -42,6 +42,9 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return LOBConfigurationDAO.CONNECTION_FACTORY_NAME;
@@ -49,82 +52,83 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION.ID=?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION.ID=?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ORDER BY ID";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ORDER BY LOB_CONFIGURATION.ID LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ORDER BY LOB_CONFIGURATION.ID";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ORDER BY LOB_CONFIGURATION.ID LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM LOB_CONFIGURATION LOB_CONFIGURATION";
+		return "SELECT COUNT(ID) FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION.ID IN (?)";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION.ID IN (?)";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION WHERE LOB_CONFIGURATION." + joinColumnName + "=?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT LOB_CONFIGURATION.ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT LOB_CONFIGURATION.ID,LOB_CONFIGURATION.LOB_ID FROM LOB_CONFIGURATION LOB_CONFIGURATION ";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO LOB_CONFIGURATION (ID,LOB_ID) VALUES (?,?)";
+		return "INSERT INTO LOB_CONFIGURATION (\"ID\") VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE LOB_CONFIGURATION SET LOB_ID=? WHERE ID=?";
+		return "UPDATE \"LOB_CONFIGURATION\" SET  WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM LOB_CONFIGURATION WHERE ID=?";
+		return "DELETE FROM \"LOB_CONFIGURATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -136,11 +140,7 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
     	
     	if (!shellOnly) 
 		{
-			LOB lob = new LOB();
-lob.setID(rs.getString("LOB_ID"));
-nextResult.setLOB(lob);
-
-
+			
 			
     	}
     	
@@ -152,33 +152,13 @@ nextResult.setLOB(lob);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getLOB() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getLOB().getID());
-}
-
-
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		
-if (perceroObject.getLOB() == null)
-{
-pstmt.setString(1, null);
-}
-else
-{
-		pstmt.setString(1, perceroObject.getLOB().getID());
-}
-
-pstmt.setString(2, perceroObject.getID());
+		pstmt.setString(1, perceroObject.getID());
 
 		
 	}
@@ -195,17 +175,7 @@ pstmt.setString(2, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useLOBID = theQueryObject.getLOB() != null && (excludeProperties == null || !excludeProperties.contains("lOB"));
-
-if (useLOBID)
-{
-sql += " WHERE ";
-sql += " LOB_ID=? ";
-paramValues.add(theQueryObject.getLOB().getID());
-propertyCounter++;
-}
-
-
+		
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
 		

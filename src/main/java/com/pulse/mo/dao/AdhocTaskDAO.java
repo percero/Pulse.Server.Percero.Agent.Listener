@@ -42,6 +42,9 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return AdhocTaskDAO.CONNECTION_FACTORY_NAME;
@@ -49,82 +52,83 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK.ID=?";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK.ID=?";
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK ORDER BY ID";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK ORDER BY ADHOC_TASK.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ORDER BY \"ADHOC_TASK\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK ORDER BY ADHOC_TASK.ID";
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ORDER BY \"ADHOC_TASK\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK ORDER BY ADHOC_TASK.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ORDER BY \"ADHOC_TASK\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM ADHOC_TASK ADHOC_TASK";
+		return "SELECT COUNT(ID) FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK.ID IN (?)";
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK.ID IN (?)";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK WHERE ADHOC_TASK." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT ADHOC_TASK.ID FROM ADHOC_TASK ADHOC_TASK ";
+		return "SELECT \"ADHOC_TASK\".\"ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ADHOC_TASK.ID,ADHOC_TASK.PLAN_ID,ADHOC_TASK.TASK_DETAIL,ADHOC_TASK.COMPLETED_ON,ADHOC_TASK.CREATED_BY,ADHOC_TASK.CREATED_ON,ADHOC_TASK.DUE_DATE,ADHOC_TASK.TYPE,ADHOC_TASK.UPDATED_BY,ADHOC_TASK.UPDATED_ON,ADHOC_TASK.WEEK_DATE,ADHOC_TASK.ADHOC_TASK_STATE_ID,ADHOC_TASK.AGENT_ID,ADHOC_TASK.TEAM_LEADER_ID FROM ADHOC_TASK ADHOC_TASK ";
+		return "SELECT \"ADHOC_TASK\".\"ID\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\" FROM \"ADHOC_TASK\" \"ADHOC_TASK\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ADHOC_TASK (ID,PLAN_ID,TASK_DETAIL,COMPLETED_ON,CREATED_BY,CREATED_ON,DUE_DATE,TYPE,UPDATED_BY,UPDATED_ON,WEEK_DATE,ADHOC_TASK_STATE_ID,AGENT_ID,TEAM_LEADER_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO ADHOC_TASK (\"ID\",\"PLAN_ID\",\"TASK_DETAIL\",\"COMPLETED_ON\",\"CREATED_BY\",\"CREATED_ON\",\"DUE_DATE\",\"TYPE\",\"UPDATED_BY\",\"UPDATED_ON\",\"WEEK_DATE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ADHOC_TASK SET PLAN_ID=?,TASK_DETAIL=?,COMPLETED_ON=?,CREATED_BY=?,CREATED_ON=?,DUE_DATE=?,TYPE=?,UPDATED_BY=?,UPDATED_ON=?,WEEK_DATE=?,ADHOC_TASK_STATE_ID=?,AGENT_ID=?,TEAM_LEADER_ID=? WHERE ID=?";
+		return "UPDATE \"ADHOC_TASK\" SET \"PLAN_ID\"=?,\"TASK_DETAIL\"=?,\"COMPLETED_ON\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM ADHOC_TASK WHERE ID=?";
+		return "DELETE FROM \"ADHOC_TASK\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -288,7 +292,7 @@ pstmt.setString(14, perceroObject.getID());
 if (usePlanId)
 {
 sql += " WHERE ";
-sql += " PLAN_ID=? ";
+sql += " \"PLAN_ID\" =? ";
 paramValues.add(theQueryObject.getPlanId());
 propertyCounter++;
 }
@@ -305,7 +309,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TASK_DETAIL=? ";
+sql += " \"TASK_DETAIL\" =? ";
 paramValues.add(theQueryObject.getTaskDetail());
 propertyCounter++;
 }
@@ -322,7 +326,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " COMPLETED_ON=? ";
+sql += " \"COMPLETED_ON\" =? ";
 paramValues.add(theQueryObject.getCompletedOn());
 propertyCounter++;
 }
@@ -339,7 +343,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " CREATED_BY=? ";
+sql += " \"CREATED_BY\" =? ";
 paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
 }
@@ -356,7 +360,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " CREATED_ON=? ";
+sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
@@ -373,7 +377,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " DUE_DATE=? ";
+sql += " \"DUE_DATE\" =? ";
 paramValues.add(theQueryObject.getDueDate());
 propertyCounter++;
 }
@@ -390,7 +394,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TYPE=? ";
+sql += " \"TYPE\" =? ";
 paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
@@ -407,7 +411,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " UPDATED_BY=? ";
+sql += " \"UPDATED_BY\" =? ";
 paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
@@ -424,7 +428,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " UPDATED_ON=? ";
+sql += " \"UPDATED_ON\" =? ";
 paramValues.add(theQueryObject.getUpdatedOn());
 propertyCounter++;
 }
@@ -441,7 +445,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " WEEK_DATE=? ";
+sql += " \"WEEK_DATE\" =? ";
 paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
@@ -458,7 +462,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " ADHOC_TASK_STATE_ID=? ";
+sql += " \"ADHOC_TASK_STATE_ID\" =? ";
 paramValues.add(theQueryObject.getAdhocTaskState().getID());
 propertyCounter++;
 }
@@ -475,7 +479,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
+sql += " \"AGENT_ID\" =? ";
 paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
@@ -492,7 +496,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TEAM_LEADER_ID=? ";
+sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }

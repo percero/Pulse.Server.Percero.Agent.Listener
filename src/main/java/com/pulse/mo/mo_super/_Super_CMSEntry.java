@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Duration
-Notes:Number of minutes
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer duration;
-
-public Integer getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Integer duration)
-{
-	this.duration = duration;
-}/*
 EStartProjectName
 Notes:
 */
@@ -119,23 +102,6 @@ public void setEStartProjectName(String eStartProjectName)
 {
 	this.eStartProjectName = eStartProjectName;
 }/*
-ToTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date toTime;
-
-public Date getToTime() 
-{
-	return this.toTime;
-}
-
-public void setToTime(Date toTime)
-{
-	this.toTime = toTime;
-}/*
 FromTime
 Notes:
 */
@@ -152,6 +118,40 @@ public Date getFromTime()
 public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
+}/*
+Duration
+Notes:Number of minutes
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer duration;
+
+public Integer getDuration() 
+{
+	return this.duration;
+}
+
+public void setDuration(Integer duration)
+{
+	this.duration = duration;
+}/*
+ToTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date toTime;
+
+public Date getToTime() 
+{
+	return this.toTime;
+}
+
+public void setToTime(Date toTime)
+{
+	this.toTime = toTime;
 }
 
 	//////////////////////////////////////////////////////
@@ -186,27 +186,6 @@ public void setCMSAuxMode(CMSAuxMode value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		
-		if (getDuration() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDuration());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
 		
@@ -228,19 +207,40 @@ public void setCMSAuxMode(CMSAuxMode value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the To Time property
-		objectJson += ",\"toTime\":";
-		if (getToTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getToTime().getTime();
-		}
 		//Retrieve value of the From Time property
 		objectJson += ",\"fromTime\":";
 		if (getFromTime() == null)
 			objectJson += "null";
 		else {
 			objectJson += getFromTime().getTime();
+		}
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDuration());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the To Time property
+		objectJson += ",\"toTime\":";
+		if (getToTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getToTime().getTime();
 		}
 
 				
@@ -271,14 +271,14 @@ objectJson += ",\"cMSAuxMode\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+		//From value of the Duration property
+		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
+		//From value of the To Time property
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 
 		
 		// Source Relationships

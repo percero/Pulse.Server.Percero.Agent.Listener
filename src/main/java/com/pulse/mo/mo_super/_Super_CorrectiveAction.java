@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-SupervisorName
+SupervisorComment
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String supervisorName;
+private String supervisorComment;
 
-public String getSupervisorName() 
+public String getSupervisorComment() 
 {
-	return this.supervisorName;
+	return this.supervisorComment;
 }
 
-public void setSupervisorName(String supervisorName)
+public void setSupervisorComment(String supervisorComment)
 {
-	this.supervisorName = supervisorName;
+	this.supervisorComment = supervisorComment;
 }/*
 CorrectiveActionTypeName
 Notes:
@@ -119,6 +119,40 @@ public void setCorrectiveActionTypeName(String correctiveActionTypeName)
 {
 	this.correctiveActionTypeName = correctiveActionTypeName;
 }/*
+CorrectiveActionStateName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String correctiveActionStateName;
+
+public String getCorrectiveActionStateName() 
+{
+	return this.correctiveActionStateName;
+}
+
+public void setCorrectiveActionStateName(String correctiveActionStateName)
+{
+	this.correctiveActionStateName = correctiveActionStateName;
+}/*
+CompletionDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date completionDate;
+
+public Date getCompletionDate() 
+{
+	return this.completionDate;
+}
+
+public void setCompletionDate(Date completionDate)
+{
+	this.completionDate = completionDate;
+}/*
 EmployeeComment
 Notes:
 */
@@ -136,22 +170,39 @@ public void setEmployeeComment(String employeeComment)
 {
 	this.employeeComment = employeeComment;
 }/*
-Message
+NextStepsMessage
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String message;
+private String nextStepsMessage;
 
-public String getMessage() 
+public String getNextStepsMessage() 
 {
-	return this.message;
+	return this.nextStepsMessage;
 }
 
-public void setMessage(String message)
+public void setNextStepsMessage(String nextStepsMessage)
 {
-	this.message = message;
+	this.nextStepsMessage = nextStepsMessage;
+}/*
+AgentFirstName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String agentFirstName;
+
+public String getAgentFirstName() 
+{
+	return this.agentFirstName;
+}
+
+public void setAgentFirstName(String agentFirstName)
+{
+	this.agentFirstName = agentFirstName;
 }/*
 MessageReason
 Notes:
@@ -187,57 +238,6 @@ public void setDetails(String details)
 {
 	this.details = details;
 }/*
-NextStepsMessage
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String nextStepsMessage;
-
-public String getNextStepsMessage() 
-{
-	return this.nextStepsMessage;
-}
-
-public void setNextStepsMessage(String nextStepsMessage)
-{
-	this.nextStepsMessage = nextStepsMessage;
-}/*
-LOBName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String lOBName;
-
-public String getLOBName() 
-{
-	return this.lOBName;
-}
-
-public void setLOBName(String lOBName)
-{
-	this.lOBName = lOBName;
-}/*
-SupervisorComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String supervisorComment;
-
-public String getSupervisorComment() 
-{
-	return this.supervisorComment;
-}
-
-public void setSupervisorComment(String supervisorComment)
-{
-	this.supervisorComment = supervisorComment;
-}/*
 CompletionStatus
 Notes:
 */
@@ -254,57 +254,6 @@ public String getCompletionStatus()
 public void setCompletionStatus(String completionStatus)
 {
 	this.completionStatus = completionStatus;
-}/*
-AgentEmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String agentEmployeeId;
-
-public String getAgentEmployeeId() 
-{
-	return this.agentEmployeeId;
-}
-
-public void setAgentEmployeeId(String agentEmployeeId)
-{
-	this.agentEmployeeId = agentEmployeeId;
-}/*
-CorrectiveActionStateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String correctiveActionStateName;
-
-public String getCorrectiveActionStateName() 
-{
-	return this.correctiveActionStateName;
-}
-
-public void setCorrectiveActionStateName(String correctiveActionStateName)
-{
-	this.correctiveActionStateName = correctiveActionStateName;
-}/*
-AgentFirstName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String agentFirstName;
-
-public String getAgentFirstName() 
-{
-	return this.agentFirstName;
-}
-
-public void setAgentFirstName(String agentFirstName)
-{
-	this.agentFirstName = agentFirstName;
 }/*
 AgentLastName
 Notes:
@@ -323,41 +272,79 @@ public void setAgentLastName(String agentLastName)
 {
 	this.agentLastName = agentLastName;
 }/*
-CompletionDate
+LOBName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date completionDate;
+private String lOBName;
 
-public Date getCompletionDate() 
+public String getLOBName() 
 {
-	return this.completionDate;
+	return this.lOBName;
 }
 
-public void setCompletionDate(Date completionDate)
+public void setLOBName(String lOBName)
 {
-	this.completionDate = completionDate;
+	this.lOBName = lOBName;
+}/*
+SupervisorName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String supervisorName;
+
+public String getSupervisorName() 
+{
+	return this.supervisorName;
+}
+
+public void setSupervisorName(String supervisorName)
+{
+	this.supervisorName = supervisorName;
+}/*
+AgentEmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String agentEmployeeId;
+
+public String getAgentEmployeeId() 
+{
+	return this.agentEmployeeId;
+}
+
+public void setAgentEmployeeId(String agentEmployeeId)
+{
+	this.agentEmployeeId = agentEmployeeId;
+}/*
+Message
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String message;
+
+public String getMessage() 
+{
+	return this.message;
+}
+
+public void setMessage(String message)
+{
+	this.message = message;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Attachment.class, mappedBy="correctiveAction", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Attachment> attachments;
-public List<Attachment> getAttachments() {
-	return this.attachments;
-}
-
-public void setAttachments(List<Attachment> value) {
-	this.attachments = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -468,16 +455,16 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Supervisor Name property
-		objectJson += ",\"supervisorName\":";
+		//Retrieve value of the Supervisor Comment property
+		objectJson += ",\"supervisorComment\":";
 		
-		if (getSupervisorName() == null)
+		if (getSupervisorComment() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorName());
+				objectJson += objectMapper.writeValueAsString(getSupervisorComment());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -510,6 +497,34 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Corrective Action State Name property
+		objectJson += ",\"correctiveActionStateName\":";
+		
+		if (getCorrectiveActionStateName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCorrectiveActionStateName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Completion Date property
+		objectJson += ",\"completionDate\":";
+		if (getCompletionDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCompletionDate().getTime();
+		}
 		//Retrieve value of the Employee Comment property
 		objectJson += ",\"employeeComment\":";
 		
@@ -531,16 +546,37 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Message property
-		objectJson += ",\"message\":";
+		//Retrieve value of the Next Steps Message property
+		objectJson += ",\"nextStepsMessage\":";
 		
-		if (getMessage() == null)
+		if (getNextStepsMessage() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMessage());
+				objectJson += objectMapper.writeValueAsString(getNextStepsMessage());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Agent First Name property
+		objectJson += ",\"agentFirstName\":";
+		
+		if (getAgentFirstName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAgentFirstName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -594,69 +630,6 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Next Steps Message property
-		objectJson += ",\"nextStepsMessage\":";
-		
-		if (getNextStepsMessage() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getNextStepsMessage());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the LOB Name property
-		objectJson += ",\"lOBName\":";
-		
-		if (getLOBName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLOBName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Supervisor Comment property
-		objectJson += ",\"supervisorComment\":";
-		
-		if (getSupervisorComment() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Completion Status property
 		objectJson += ",\"completionStatus\":";
 		
@@ -667,69 +640,6 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getCompletionStatus());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Agent Employee Id property
-		objectJson += ",\"agentEmployeeId\":";
-		
-		if (getAgentEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAgentEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Corrective Action State Name property
-		objectJson += ",\"correctiveActionStateName\":";
-		
-		if (getCorrectiveActionStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCorrectiveActionStateName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Agent First Name property
-		objectJson += ",\"agentFirstName\":";
-		
-		if (getAgentFirstName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAgentFirstName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -762,12 +672,89 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Completion Date property
-		objectJson += ",\"completionDate\":";
-		if (getCompletionDate() == null)
+		//Retrieve value of the LOB Name property
+		objectJson += ",\"lOBName\":";
+		
+		if (getLOBName() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCompletionDate().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getLOBName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Supervisor Name property
+		objectJson += ",\"supervisorName\":";
+		
+		if (getSupervisorName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSupervisorName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Agent Employee Id property
+		objectJson += ",\"agentEmployeeId\":";
+		
+		if (getAgentEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAgentEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Message property
+		objectJson += ",\"message\":";
+		
+		if (getMessage() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getMessage());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -859,23 +846,6 @@ objectJson += ",\"supervisorAcknowledgement\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Corrective Action of Attachment relationship
-objectJson += ",\"attachments\":[";
-		
-		if (getAttachments() != null) {
-			int attachmentsCounter = 0;
-			for(Attachment nextAttachments : getAttachments()) {
-				if (attachmentsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAttachments).toEmbeddedJson();
-					attachmentsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -887,36 +857,36 @@ objectJson += ",\"attachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Supervisor Name property
-		setSupervisorName(JsonUtils.getJsonString(jsonObject, "supervisorName"));
+		//From value of the Supervisor Comment property
+		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
 		//From value of the Corrective Action Type Name property
 		setCorrectiveActionTypeName(JsonUtils.getJsonString(jsonObject, "correctiveActionTypeName"));
+		//From value of the Corrective Action State Name property
+		setCorrectiveActionStateName(JsonUtils.getJsonString(jsonObject, "correctiveActionStateName"));
+		//From value of the Completion Date property
+		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
 		//From value of the Employee Comment property
 		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
-		//From value of the Message property
-		setMessage(JsonUtils.getJsonString(jsonObject, "message"));
+		//From value of the Next Steps Message property
+		setNextStepsMessage(JsonUtils.getJsonString(jsonObject, "nextStepsMessage"));
+		//From value of the Agent First Name property
+		setAgentFirstName(JsonUtils.getJsonString(jsonObject, "agentFirstName"));
 		//From value of the Message Reason property
 		setMessageReason(JsonUtils.getJsonString(jsonObject, "messageReason"));
 		//From value of the Details property
 		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
-		//From value of the Next Steps Message property
-		setNextStepsMessage(JsonUtils.getJsonString(jsonObject, "nextStepsMessage"));
-		//From value of the LOB Name property
-		setLOBName(JsonUtils.getJsonString(jsonObject, "lOBName"));
-		//From value of the Supervisor Comment property
-		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
 		//From value of the Completion Status property
 		setCompletionStatus(JsonUtils.getJsonString(jsonObject, "completionStatus"));
-		//From value of the Agent Employee Id property
-		setAgentEmployeeId(JsonUtils.getJsonString(jsonObject, "agentEmployeeId"));
-		//From value of the Corrective Action State Name property
-		setCorrectiveActionStateName(JsonUtils.getJsonString(jsonObject, "correctiveActionStateName"));
-		//From value of the Agent First Name property
-		setAgentFirstName(JsonUtils.getJsonString(jsonObject, "agentFirstName"));
 		//From value of the Agent Last Name property
 		setAgentLastName(JsonUtils.getJsonString(jsonObject, "agentLastName"));
-		//From value of the Completion Date property
-		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
+		//From value of the LOB Name property
+		setLOBName(JsonUtils.getJsonString(jsonObject, "lOBName"));
+		//From value of the Supervisor Name property
+		setSupervisorName(JsonUtils.getJsonString(jsonObject, "supervisorName"));
+		//From value of the Agent Employee Id property
+		setAgentEmployeeId(JsonUtils.getJsonString(jsonObject, "agentEmployeeId"));
+		//From value of the Message property
+		setMessage(JsonUtils.getJsonString(jsonObject, "message"));
 
 		
 		// Source Relationships
@@ -930,7 +900,6 @@ objectJson += ",\"attachments\":[";
 
 
 		// Target Relationships
-		this.attachments = (List<Attachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "attachments");
 
 
 	}
@@ -940,7 +909,6 @@ objectJson += ",\"attachments\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Attachment.class, "correctiveaction"));
 
 		
 		return listSetters;

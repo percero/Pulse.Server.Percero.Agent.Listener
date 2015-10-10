@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date date;
-
-public Date getDate() 
-{
-	return this.date;
-}
-
-public void setDate(Date date)
-{
-	this.date = date;
-}/*
 Name
 Notes:
 */
@@ -118,6 +101,23 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
+}/*
+Date
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date date;
+
+public Date getDate() 
+{
+	return this.date;
+}
+
+public void setDate(Date date)
+{
+	this.date = date;
 }
 
 	//////////////////////////////////////////////////////
@@ -153,16 +153,16 @@ public void setCorrectiveAction(CorrectiveAction value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getDate() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDate());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -174,16 +174,16 @@ public void setCorrectiveAction(CorrectiveAction value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
 		
-		if (getName() == null)
+		if (getDate() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getDate());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -214,10 +214,10 @@ public void setCorrectiveAction(CorrectiveAction value)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 
 		
 		// Source Relationships

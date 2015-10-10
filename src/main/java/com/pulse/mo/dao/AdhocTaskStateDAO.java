@@ -40,6 +40,9 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
+	
+	
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return AdhocTaskStateDAO.CONNECTION_FACTORY_NAME;
@@ -47,82 +50,83 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE.ID=?";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE.ID=?";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\".\"ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ORDER BY ID";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ORDER BY \"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ORDER BY ADHOC_TASK_STATE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ORDER BY \"ADHOC_TASK_STATE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ORDER BY ADHOC_TASK_STATE.ID";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ORDER BY \"ADHOC_TASK_STATE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ORDER BY ADHOC_TASK_STATE.ID LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ORDER BY \"ADHOC_TASK_STATE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM ADHOC_TASK_STATE ADHOC_TASK_STATE";
+		return "SELECT COUNT(ID) FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\"";
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE.ID IN (?)";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\".\"ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE.ID IN (?)";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\".\"ID\" IN (?)";
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE." + joinColumnName + "=?";
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE WHERE ADHOC_TASK_STATE." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" WHERE \"ADHOC_TASK_STATE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT ADHOC_TASK_STATE.ID FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ";
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT ADHOC_TASK_STATE.ID,ADHOC_TASK_STATE.NAME FROM ADHOC_TASK_STATE ADHOC_TASK_STATE ";
+		return "SELECT \"ADHOC_TASK_STATE\".\"ID\",\"ADHOC_TASK_STATE\".\"NAME\" FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ADHOC_TASK_STATE (ID,NAME) VALUES (?,?)";
+		return "INSERT INTO ADHOC_TASK_STATE (\"ID\",\"NAME\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE ADHOC_TASK_STATE SET NAME=? WHERE ID=?";
+		return "UPDATE \"ADHOC_TASK_STATE\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM ADHOC_TASK_STATE WHERE ID=?";
+		return "DELETE FROM \"ADHOC_TASK_STATE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -178,7 +182,7 @@ pstmt.setString(2, perceroObject.getID());
 if (useName)
 {
 sql += " WHERE ";
-sql += " NAME=? ";
+sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }

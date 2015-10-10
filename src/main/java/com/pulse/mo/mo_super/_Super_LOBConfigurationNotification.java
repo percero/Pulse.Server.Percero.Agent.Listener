@@ -99,19 +99,6 @@ public void setMessage(String message)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="LOB_CONFIGURATION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationNotification")
-@ManyToOne(fetch=FetchType.LAZY, optional=true)
-private LOBConfiguration lOBConfiguration;
-public LOBConfiguration getLOBConfiguration() {
-	return this.lOBConfiguration;
-}
-
-public void setLOBConfiguration(LOBConfiguration value) {
-	this.lOBConfiguration = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfLOBConfigurationNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)
@@ -122,6 +109,19 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="LOB_CONFIGURATION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
+private LOBConfiguration lOBConfiguration;
+public LOBConfiguration getLOBConfiguration() {
+	return this.lOBConfiguration;
+}
+
+public void setLOBConfiguration(LOBConfiguration value) {
+	this.lOBConfiguration = value;
 }
 
 	
@@ -157,18 +157,6 @@ public void setAgent(Agent value) {
 
 				
 		// Source Relationships
-//Retrieve value of the LOB Configuration of LOB Configuration Notification relationship
-objectJson += ",\"lOBConfiguration\":";
-		if (getLOBConfiguration() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Agent of LOB Configuration Notification relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
@@ -176,6 +164,18 @@ objectJson += ",\"agent\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the LOB Configuration of LOB Configuration Notification relationship
+objectJson += ",\"lOBConfiguration\":";
+		if (getLOBConfiguration() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -200,8 +200,8 @@ objectJson += ",\"agent\":";
 
 		
 		// Source Relationships
-		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
 
 
 		// Target Relationships
