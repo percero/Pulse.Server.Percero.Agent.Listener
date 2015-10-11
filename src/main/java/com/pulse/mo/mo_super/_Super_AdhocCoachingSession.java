@@ -198,13 +198,11 @@ public void setTeamLeader(TeamLeader value) {
 		// Properties		
 		//Retrieve value of the Week Date property
 		objectJson += ",\"weekDate\":";
-
 		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
 			objectJson += getWeekDate().getTime();
 		}
-
 		//Retrieve value of the Session Type property
 		objectJson += ",\"sessionType\":";
 		

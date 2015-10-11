@@ -286,24 +286,10 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		// Properties		
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
-		
 		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
@@ -349,24 +335,10 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
-		
 		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Rank property
 		objectJson += ",\"rank\":";
@@ -433,45 +405,17 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		}
 		//Retrieve value of the End Date property
 		objectJson += ",\"endDate\":";
-		
 		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEndDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getEndDate().getTime();
 		}
 		//Retrieve value of the Start Date property
 		objectJson += ",\"startDate\":";
-		
 		if (getStartDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getStartDate().getTime();
 		}
 
 				

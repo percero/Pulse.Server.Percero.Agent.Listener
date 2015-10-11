@@ -298,24 +298,10 @@ public void setTimecardActivity(TimecardActivity value) {
 		}
 		//Retrieve value of the Shift End Date property
 		objectJson += ",\"shiftEndDate\":";
-		
 		if (getShiftEndDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getShiftEndDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getShiftEndDate().getTime();
 		}
 
 				

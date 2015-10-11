@@ -155,24 +155,10 @@ public void setCorrectiveAction(CorrectiveAction value)
 		// Properties		
 		//Retrieve value of the Date property
 		objectJson += ",\"date\":";
-		
 		if (getDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getDate().getTime();
 		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";

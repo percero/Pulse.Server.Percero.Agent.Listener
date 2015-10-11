@@ -246,24 +246,10 @@ public void setScorecard(Scorecard value)
 		}
 		//Retrieve value of the Weekend Date property
 		objectJson += ",\"weekendDate\":";
-		
 		if (getWeekendDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeekendDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getWeekendDate().getTime();
 		}
 		//Retrieve value of the Submitted State Count property
 		objectJson += ",\"submittedStateCount\":";

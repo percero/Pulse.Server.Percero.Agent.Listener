@@ -583,24 +583,10 @@ public void setCoachingNotification(CoachingNotification value)
 		}
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
-		
 		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
@@ -772,24 +758,10 @@ public void setCoachingNotification(CoachingNotification value)
 		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
-		
 		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getUpdatedOn().getTime();
 		}
 
 				
