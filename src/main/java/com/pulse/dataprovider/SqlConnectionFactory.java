@@ -111,6 +111,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
             cpds.setAcquireIncrement(acquireIncrement);
             cpds.setMaxPoolSize(maxPoolSize);
 			cpds.setNumHelperThreads(30);
+			cpds.setTestConnectionOnCheckout(true);
             
             PulseDataConnectionRegistry.getInstance().registerConnectionFactory(getName(), this);
             DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());

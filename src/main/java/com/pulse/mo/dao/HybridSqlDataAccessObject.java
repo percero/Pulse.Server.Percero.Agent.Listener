@@ -189,8 +189,10 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 		PreparedStatement externalPstmt = null;
 		Connection internalConn = null;
 		PreparedStatement internalPstmt = null;
+        ResultSet externalResultSet = null;
+        ResultSet internalResultSet = null;
 
-		try {
+        try {
 			// External
 			IConnectionFactory externalConnectionFactory = getConnectionRegistry().getConnectionFactory(getExternalConnectionFactoryName());
 			externalConn = externalConnectionFactory.getConnection();
@@ -211,8 +213,8 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 				counter++;
 			}
 			
-			ResultSet externalResultSet = externalPstmt.executeQuery();
-			ResultSet internalResultSet = internalPstmt.executeQuery();
+			externalResultSet = externalPstmt.executeQuery();
+			internalResultSet = internalPstmt.executeQuery();
 			
 			results = retrieveHybridResults(externalResultSet, internalResultSet, shellOnly);
 		} catch(Exception e) {
@@ -220,12 +222,14 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			throw new SyncDataException(e);
 		} finally {
 			try {
+                if (externalResultSet != null) externalResultSet.close();
 				if (externalPstmt != null) {
 					externalPstmt.close();
 				}
 				if (externalConn != null) {
 					externalConn.close();
 				}
+                if (internalResultSet != null) internalResultSet.close();
 				if (internalPstmt != null) {
 					internalPstmt.close();
 				}
@@ -284,10 +288,12 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 		PreparedStatement externalPstmt = null;
 		Connection internalConnection = null;
 		PreparedStatement internalPstmt = null;
+        ResultSet externalResultSet = null;
+        ResultSet internalResultSet = null;
 		
 		try {
 			// External
-			ResultSet externalResultSet = null;
+
 			if (StringUtils.hasText(selectExternalQueryString)) {
 				IConnectionFactory externalConnectionFactory = getConnectionRegistry().getConnectionFactory(getExternalConnectionFactoryName());
 				externalConnection = externalConnectionFactory.getConnection();
@@ -299,7 +305,7 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			}
 
 			// Internal
-			ResultSet internalResultSet = null;
+
 			if (StringUtils.hasText(selectInternalQueryString)) {
 				IConnectionFactory internalConnectionFactory = getConnectionRegistry().getConnectionFactory(getInternalConnectionFactoryName());
 				internalConnection = internalConnectionFactory.getConnection();
@@ -316,12 +322,14 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			throw new SyncDataException(e);
 		} finally {
 			try {
+                if(externalResultSet != null) externalResultSet.close();
 				if (externalPstmt != null) {
 					externalPstmt.close();
 				}
 				if (externalConnection != null) {
 					externalConnection.close();
 				}
+                if(internalResultSet != null) internalResultSet.close();
 				if (internalPstmt != null) {
 					internalPstmt.close();
 				}
@@ -374,8 +382,10 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 		PreparedStatement externalPstmt = null;
 		Connection internalConn = null;
 		PreparedStatement internalPstmt = null;
+        ResultSet externalResultSet = null;
+        ResultSet internalResultSet = null;
 
-		try {
+        try {
 			// External
 			IConnectionFactory externalConnectionFactory = getConnectionRegistry().getConnectionFactory(getExternalConnectionFactoryName());
 			externalConn = externalConnectionFactory.getConnection();
@@ -385,7 +395,7 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 				externalPstmt.setObject(i+1, externalParamValues[i]);
 			}
 			
-			ResultSet externalResultSet = externalPstmt.executeQuery();
+			externalResultSet = externalPstmt.executeQuery();
 			Map<String, T> externalMappedResults = new HashMap<String, T>();
 			while (externalResultSet.next()) {
 				T nextResult = extractObjectFromExternalResultSet(externalResultSet, shellOnly, null);
@@ -402,7 +412,7 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 				internalPstmt.setObject(i+1, internalParamValues[i]);
 			}
 			
-			ResultSet internalResultSet = internalPstmt.executeQuery();
+			internalResultSet = internalPstmt.executeQuery();
 			Map<String, T> internalMappedResults = new HashMap<String, T>();
 			while (internalResultSet.next()) {
 				T existingResult = externalMappedResults.get(internalResultSet.getString(getIdColumnName()));
@@ -450,12 +460,14 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			throw new SyncDataException(e);
 		} finally {
 			try {
+                if (externalResultSet != null) externalResultSet.close();
 				if (externalPstmt != null) {
 					externalPstmt.close();
 				}
 				if (externalConn != null) {
 					externalConn.close();
 				}
+                if(internalResultSet != null) internalResultSet.close();
 				if (internalPstmt != null) {
 					internalPstmt.close();
 				}
@@ -498,8 +510,9 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 		PreparedStatement externalPstmt = null;
 		Connection internalConnection = null;
 		PreparedStatement internalPstmt = null;
-		
-		try {
+        ResultSet externalResultSet = null;
+        ResultSet internalResultSet = null;
+        try {
 			// TODO: External needs to be the gold standard for COUNT/LIMIT/OFFSET.
 			// External
 			IConnectionFactory externalConnectionFactory = getConnectionRegistry().getConnectionFactory(getExternalConnectionFactoryName());
@@ -509,7 +522,7 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 				externalPstmt.setInt(1, pageSize);
 				externalPstmt.setInt(2, pageNumber);
 			}
-			ResultSet externalResultSet = externalPstmt.executeQuery();
+			externalResultSet = externalPstmt.executeQuery();
 			
 			// Internal
 			IConnectionFactory internalConnectionFactory = getConnectionRegistry().getConnectionFactory(getInternalConnectionFactoryName());
@@ -519,7 +532,7 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 				internalPstmt.setInt(1, pageSize);
 				internalPstmt.setInt(2, pageNumber);
 			}
-			ResultSet internalResultSet = internalPstmt.executeQuery();
+			internalResultSet = internalPstmt.executeQuery();
 			
 			objects = retrieveHybridResults(externalResultSet, internalResultSet, shellOnly);
 			
@@ -528,12 +541,14 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			throw new SyncDataException(e);
 		} finally {
 			try {
+                if (externalResultSet != null) externalResultSet.close();
 				if (externalPstmt != null) {
 					externalPstmt.close();
 				}
 				if (externalConnection != null) {
 					externalConnection.close();
 				}
+                if (internalResultSet != null) internalResultSet.close();
 				if (internalPstmt != null) {
 					internalPstmt.close();
 				}
@@ -565,12 +580,13 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 		// Open the database session.
 		Connection externalConn = null;
 		Statement externalStmt = null;
+        ResultSet rs = null;
 		try {
 			IConnectionFactory externalConnectionFactory = getConnectionRegistry().getConnectionFactory(getExternalConnectionFactoryName());
 			externalConn = externalConnectionFactory.getConnection();
 			externalStmt = externalConn.createStatement();
 			
-	        ResultSet rs = externalStmt.executeQuery(externalSql);
+	        rs = externalStmt.executeQuery(externalSql);
 	        if (rs.next()) {
 	        	return rs.getInt(1);
 	        }
@@ -582,12 +598,15 @@ public abstract class HybridSqlDataAccessObject<T extends IPerceroObject> implem
 			throw new SyncDataException(e);
 		} finally {
 			try {
+                if(rs != null)
+                    rs.close();
 				if (externalStmt != null) {
 					externalStmt.close();
 				}
 				if (externalConn != null) {
 					externalConn.close();
 				}
+
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}

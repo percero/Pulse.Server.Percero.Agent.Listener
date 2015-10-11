@@ -1,0 +1,9 @@
+tableName: SOME_TABLE
+classNames:
+ - com.blah.What
+ - com.pulse.Ever
+---
+tableName: ANOTHER_TABLE
+classNames:
+ - com.google.SomeClass
+ - io.activestack.Poof
