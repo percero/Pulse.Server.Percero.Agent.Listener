@@ -23,6 +23,8 @@ import com.pulse.mo.Behavior;
 import com.pulse.mo.BehaviorResponse;
 import com.pulse.mo.DevelopmentPlan;
 import com.pulse.mo.Observation;
+import com.pulse.mo.ScorecardMeasureMonthlyResult;
+import com.pulse.mo.ScorecardMeasureWeeklyResult;
 import com.pulse.mo.Measure;
 import com.pulse.mo.Scorecard;
 
