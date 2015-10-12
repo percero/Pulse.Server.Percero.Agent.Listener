@@ -54,7 +54,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"=?";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"WORK_MODE_OCCURRENCE_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ";
+		return "SELECT \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO WORK_MODE_OCCURRENCE_NOTIF (\"ID\",\"LOGIN_COUNT\",\"LOGOUT_COUNT\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO WORK_MODE_OCCURRENCE_NOTIF (\"ID\",\"DATE\",\"LOGIN_COUNT\",\"LOGOUT_COUNT\",\"MESSAGE\",\"NAME\",\"TYPE\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"WORK_MODE_OCCURRENCE_NOTIF\" SET \"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"WORK_MODE_OCCURRENCE_NOTIF\" SET \"DATE\"=?,\"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,11 +137,11 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
     	
     	if (!shellOnly) 
 		{
-			nextResult.setLoginCount(rs.getInt("LOGIN_COUNT"));
+			nextResult.setDate(rs.getDate("DATE"));
+
+nextResult.setLoginCount(rs.getInt("LOGIN_COUNT"));
 
 nextResult.setLogoutCount(rs.getInt("LOGOUT_COUNT"));
-
-nextResult.setDate(rs.getString("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -149,13 +149,13 @@ nextResult.setName(rs.getString("NAME"));
 
 nextResult.setType(rs.getString("TYPE"));
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
@@ -176,30 +176,30 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setInt(2, perceroObject.getLoginCount());
-pstmt.setInt(3, perceroObject.getLogoutCount());
-pstmt.setString(4, perceroObject.getDate());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setInt(3, perceroObject.getLoginCount());
+pstmt.setInt(4, perceroObject.getLogoutCount());
 pstmt.setString(5, perceroObject.getMessage());
 pstmt.setString(6, perceroObject.getName());
 pstmt.setString(7, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getAgent().getID());
+		pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(9, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(9, perceroObject.getAgent().getID());
 }
 
 
@@ -229,30 +229,30 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setInt(1, perceroObject.getLoginCount());
-pstmt.setInt(2, perceroObject.getLogoutCount());
-pstmt.setString(3, perceroObject.getDate());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setInt(2, perceroObject.getLoginCount());
+pstmt.setInt(3, perceroObject.getLogoutCount());
 pstmt.setString(4, perceroObject.getMessage());
 pstmt.setString(5, perceroObject.getName());
 pstmt.setString(6, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getAgent().getID());
+		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(8, perceroObject.getAgent().getID());
 }
 
 
@@ -292,11 +292,28 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useLoginCount = theQueryObject.getLoginCount() != null && (excludeProperties == null || !excludeProperties.contains("loginCount"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+
+if (useDate)
+{
+sql += " WHERE ";
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useLoginCount = theQueryObject.getLoginCount() != null && (excludeProperties == null || !excludeProperties.contains("loginCount"));
 
 if (useLoginCount)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"LOGIN_COUNT\" =? ";
 paramValues.add(theQueryObject.getLoginCount());
 propertyCounter++;
@@ -316,23 +333,6 @@ sql += " WHERE ";
 }
 sql += " \"LOGOUT_COUNT\" =? ";
 paramValues.add(theQueryObject.getLogoutCount());
-propertyCounter++;
-}
-
-boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
-
-if (useDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
@@ -387,23 +387,6 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
 boolean useLOBConfigurationID = theQueryObject.getLOBConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfiguration"));
 
 if (useLOBConfigurationID)
@@ -418,6 +401,23 @@ sql += " WHERE ";
 }
 sql += " \"LOB_CONFIGURATION_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfiguration().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

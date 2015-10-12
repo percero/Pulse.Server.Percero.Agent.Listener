@@ -119,6 +119,23 @@ public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
 }/*
+WekendDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date wekendDate;
+
+public Date getWekendDate() 
+{
+	return this.wekendDate;
+}
+
+public void setWekendDate(Date wekendDate)
+{
+	this.wekendDate = wekendDate;
+}/*
 UpdatedBy
 Notes:
 */
@@ -389,6 +406,13 @@ public void setAgentScorecard(AgentScorecard value) {
 		else {
 			objectJson += getUpdatedOn().getTime();
 		}
+		//Retrieve value of the Wekend Date property
+		objectJson += ",\"wekendDate\":";
+		if (getWekendDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWekendDate().getTime();
+		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
 		
@@ -608,6 +632,8 @@ objectJson += ",\"qualityEvaluations\":[";
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Wekend Date property
+		setWekendDate(JsonUtils.getJsonDate(jsonObject, "wekendDate"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Previous MTD Threshold Grade property

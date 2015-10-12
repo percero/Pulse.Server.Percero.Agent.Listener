@@ -1,5 +1,5 @@
 
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,7 +60,7 @@ public class _Super_CMSEntry extends BaseDataObject implements Serializable
 		return "1.0.0";
 	}
 
-	
+
 	/*
 	Keys of CMSEntry
 	*/
@@ -80,7 +80,7 @@ public String getID() {
 public void setID(String value) {
 	this.ID = value;
 }
-	
+
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ Notes:
 
 private String eStartProjectName;
 
-public String getEStartProjectName() 
+public String getEStartProjectName()
 {
 	return this.eStartProjectName;
 }
@@ -110,7 +110,7 @@ Notes:
 
 private Date fromTime;
 
-public Date getFromTime() 
+public Date getFromTime()
 {
 	return this.fromTime;
 }
@@ -127,7 +127,7 @@ Notes:Number of minutes
 
 private Double duration;
 
-public Double getDuration() 
+public Double getDuration()
 {
 	return this.duration;
 }
@@ -144,7 +144,7 @@ Notes:
 
 private String toTime;
 
-public String getToTime() 
+public String getToTime()
 {
 	return this.toTime;
 }
@@ -157,12 +157,13 @@ public void setToTime(String toTime)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="AUXREASON")
@@ -175,10 +176,11 @@ public CMSAuxMode getCMSAuxMode() {
 
 public void setCMSAuxMode(CMSAuxMode value) {
 	this.cMSAuxMode = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
+@JoinColumn(name="EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfCMSEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
@@ -190,7 +192,7 @@ public void setAgent(Agent value) {
 	this.agent = value;
 }
 
-	
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -198,10 +200,10 @@ public void setAgent(Agent value) {
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties		
+		// Properties
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
-		
+
 		if (getEStartProjectName() == null)
 			objectJson += "null";
 		else {
@@ -236,7 +238,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the To Time property
 		objectJson += ",\"toTime\":";
-		
+
 		if (getToTime() == null)
 			objectJson += "null";
 		else {
@@ -256,7 +258,7 @@ public void setAgent(Agent value) {
 			}
 		}
 
-				
+
 		// Source Relationships
 //Retrieve value of the CMS Aux Mode of CMS Entry relationship
 objectJson += ",\"cMSAuxMode\":";
@@ -283,10 +285,10 @@ objectJson += ",\"agent\":";
 		}
 		objectJson += "";
 
-		
+
 		// Target Relationships
 
-		
+
 		return objectJson;
 	}
 
@@ -305,7 +307,7 @@ objectJson += ",\"agent\":";
 		//From value of the To Time property
 		setToTime(JsonUtils.getJsonString(jsonObject, "toTime"));
 
-		
+
 		// Source Relationships
 		this.cMSAuxMode = (CMSAuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "cMSAuxMode");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
@@ -315,15 +317,14 @@ objectJson += ",\"agent\":";
 
 
 	}
-	
+
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
 
-		
+
 		return listSetters;
 	}
 }
-

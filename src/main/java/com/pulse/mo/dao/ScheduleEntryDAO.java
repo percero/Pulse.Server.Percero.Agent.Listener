@@ -139,23 +139,23 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEndDate(rs.getDate("END_DATE"));
-
-nextResult.setStartDate(rs.getDate("START_DATE"));
-
-nextResult.setEndTime(rs.getDate("END_TIME"));
-
-nextResult.setModifiedTimestamp(rs.getDate("MODIFIED_TIMESTAMP"));
-
-nextResult.setStartTime(rs.getDate("START_TIME"));
-
-nextResult.setDuration(rs.getDouble("DURATION"));
-
-nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
+			nextResult.setModifiedTimestamp(rs.getDate("MODIFIED_TIMESTAMP"));
 
 nextResult.setPosition(rs.getString("POSITION"));
 
 nextResult.setProject(rs.getString("PROJECT"));
+
+nextResult.setStartDate(rs.getDate("START_DATE"));
+
+nextResult.setStartTime(rs.getDate("START_TIME"));
+
+nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
+
+nextResult.setDuration(rs.getDouble("DURATION"));
+
+nextResult.setEndDate(rs.getDate("END_DATE"));
+
+nextResult.setEndTime(rs.getDate("END_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -194,115 +194,13 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
-
-if (useEndDate)
-{
-sql += " WHERE ";
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
-propertyCounter++;
-}
-
-boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
-
-if (useStartDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_DATE=? ";
-paramValues.add(theQueryObject.getStartDate());
-propertyCounter++;
-}
-
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
-
-if (useEndTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_TIME=? ";
-paramValues.add(theQueryObject.getEndTime());
-propertyCounter++;
-}
-
-boolean useModifiedTimestamp = theQueryObject.getModifiedTimestamp() != null && (excludeProperties == null || !excludeProperties.contains("modifiedTimestamp"));
+		boolean useModifiedTimestamp = theQueryObject.getModifiedTimestamp() != null && (excludeProperties == null || !excludeProperties.contains("modifiedTimestamp"));
 
 if (useModifiedTimestamp)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " MODIFIED_TIMESTAMP=? ";
 paramValues.add(theQueryObject.getModifiedTimestamp());
-propertyCounter++;
-}
-
-boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
-
-if (useStartTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
-propertyCounter++;
-}
-
-boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
-
-if (useDuration)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DURATION=? ";
-paramValues.add(theQueryObject.getDuration());
-propertyCounter++;
-}
-
-boolean useCostPOSIndex = theQueryObject.getCostPOSIndex() != null && (excludeProperties == null || !excludeProperties.contains("costPOSIndex"));
-
-if (useCostPOSIndex)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " COST_POS_INDEX=? ";
-paramValues.add(theQueryObject.getCostPOSIndex());
 propertyCounter++;
 }
 
@@ -337,6 +235,108 @@ sql += " WHERE ";
 }
 sql += " PROJECT=? ";
 paramValues.add(theQueryObject.getProject());
+propertyCounter++;
+}
+
+boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
+
+if (useStartDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_DATE=? ";
+paramValues.add(theQueryObject.getStartDate());
+propertyCounter++;
+}
+
+boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+
+if (useStartTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_TIME=? ";
+paramValues.add(theQueryObject.getStartTime());
+propertyCounter++;
+}
+
+boolean useCostPOSIndex = theQueryObject.getCostPOSIndex() != null && (excludeProperties == null || !excludeProperties.contains("costPOSIndex"));
+
+if (useCostPOSIndex)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " COST_POS_INDEX=? ";
+paramValues.add(theQueryObject.getCostPOSIndex());
+propertyCounter++;
+}
+
+boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
+
+if (useDuration)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DURATION=? ";
+paramValues.add(theQueryObject.getDuration());
+propertyCounter++;
+}
+
+boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+
+if (useEndDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " END_DATE=? ";
+paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+
+if (useEndTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " END_TIME=? ";
+paramValues.add(theQueryObject.getEndTime());
 propertyCounter++;
 }
 

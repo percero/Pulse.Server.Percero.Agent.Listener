@@ -65,7 +65,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\"=?";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\"=?";
 	}
 	
 	@Override
@@ -80,12 +80,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\"";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ORDER BY \"TEAM_LEADER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\" IN (?)";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -121,17 +121,17 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ";
+		return "SELECT \"TEAM_LEADER\".\"ID\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\" FROM \"TEAM_LEADER\" \"TEAM_LEADER\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TEAM_LEADER (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"LAST_NAME\",\"EMPLOYEE_ID\",\"FULL_NAME\",\"PHOTO_URI\",\"SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TEAM_LEADER (\"ID\",\"LAST_NAME\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"FULL_NAME\",\"EMPLOYEE_ID\",\"PHOTO_URI\",\"SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TEAM_LEADER\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"SUPERVISOR_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TEAM_LEADER\" SET \"LAST_NAME\"=?,\"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"EMPLOYEE_ID\"=?,\"PHOTO_URI\"=?,\"SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -148,15 +148,15 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
+			nextResult.setLastName(rs.getString("LAST_NAME"));
+
+nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
 
-nextResult.setLastName(rs.getString("LAST_NAME"));
+nextResult.setFullName(rs.getString("FULL_NAME"));
 
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
-
-nextResult.setFullName(rs.getString("FULL_NAME"));
 
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
@@ -175,11 +175,11 @@ nextResult.setSupervisor(supervisor);
 	protected void setPreparedStatmentInsertParams(TeamLeader perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getEmailAddress());
-pstmt.setString(3, perceroObject.getFirstName());
-pstmt.setString(4, perceroObject.getLastName());
-pstmt.setString(5, perceroObject.getEmployeeId());
-pstmt.setString(6, perceroObject.getFullName());
+pstmt.setString(2, perceroObject.getLastName());
+pstmt.setString(3, perceroObject.getEmailAddress());
+pstmt.setString(4, perceroObject.getFirstName());
+pstmt.setString(5, perceroObject.getFullName());
+pstmt.setString(6, perceroObject.getEmployeeId());
 pstmt.setString(7, perceroObject.getPhotoUri());
 
 if (perceroObject.getSupervisor() == null)
@@ -198,11 +198,11 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(TeamLeader perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getEmailAddress());
-pstmt.setString(2, perceroObject.getFirstName());
-pstmt.setString(3, perceroObject.getLastName());
-pstmt.setString(4, perceroObject.getEmployeeId());
-pstmt.setString(5, perceroObject.getFullName());
+		pstmt.setString(1, perceroObject.getLastName());
+pstmt.setString(2, perceroObject.getEmailAddress());
+pstmt.setString(3, perceroObject.getFirstName());
+pstmt.setString(4, perceroObject.getFullName());
+pstmt.setString(5, perceroObject.getEmployeeId());
 pstmt.setString(6, perceroObject.getPhotoUri());
 
 if (perceroObject.getSupervisor() == null)
@@ -231,11 +231,28 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
+		boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+
+if (useLastName)
+{
+sql += " WHERE ";
+sql += " \"LAST_NAME\" =? ";
+paramValues.add(theQueryObject.getLastName());
+propertyCounter++;
+}
+
+boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
 
 if (useEmailAddress)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"EMAIL_ADDRESS\" =? ";
 paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
@@ -258,9 +275,9 @@ paramValues.add(theQueryObject.getFirstName());
 propertyCounter++;
 }
 
-boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+boolean useFullName = StringUtils.hasText(theQueryObject.getFullName()) && (excludeProperties == null || !excludeProperties.contains("fullName"));
 
-if (useLastName)
+if (useFullName)
 {
 if (propertyCounter > 0)
 {
@@ -270,8 +287,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getLastName());
+sql += " \"FULL_NAME\" =? ";
+paramValues.add(theQueryObject.getFullName());
 propertyCounter++;
 }
 
@@ -289,23 +306,6 @@ sql += " WHERE ";
 }
 sql += " \"EMPLOYEE_ID\" =? ";
 paramValues.add(theQueryObject.getEmployeeId());
-propertyCounter++;
-}
-
-boolean useFullName = StringUtils.hasText(theQueryObject.getFullName()) && (excludeProperties == null || !excludeProperties.contains("fullName"));
-
-if (useFullName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"FULL_NAME\" =? ";
-paramValues.add(theQueryObject.getFullName());
 propertyCounter++;
 }
 

@@ -125,14 +125,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String date;
+private Date date;
 
-public String getDate() 
+public Date getDate() 
 {
 	return this.date;
 }
 
-public void setDate(String date)
+public void setDate(Date date)
 {
 	this.date = date;
 }
@@ -213,24 +213,10 @@ public void setTeamLeader(TeamLeader value) {
 		}
 		//Retrieve value of the Date property
 		objectJson += ",\"date\":";
-		
 		if (getDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getDate().getTime();
 		}
 
 				
@@ -266,7 +252,7 @@ objectJson += ",\"teamLeader\":";
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Date property
-		setDate(JsonUtils.getJsonString(jsonObject, "date"));
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 
 		
 		// Source Relationships

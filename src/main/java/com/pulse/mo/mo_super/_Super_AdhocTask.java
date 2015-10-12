@@ -176,14 +176,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String dueDate;
+private Date dueDate;
 
-public String getDueDate() 
+public Date getDueDate() 
 {
 	return this.dueDate;
 }
 
-public void setDueDate(String dueDate)
+public void setDueDate(Date dueDate)
 {
 	this.dueDate = dueDate;
 }/*
@@ -393,24 +393,10 @@ public void setTeamLeader(TeamLeader value) {
 		}
 		//Retrieve value of the Due Date property
 		objectJson += ",\"dueDate\":";
-		
 		if (getDueDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDueDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getDueDate().getTime();
 		}
 		//Retrieve value of the Plan Id property
 		objectJson += ",\"planId\":";
@@ -532,7 +518,7 @@ objectJson += ",\"teamLeader\":";
 		//From value of the Completed On property
 		setCompletedOn(JsonUtils.getJsonDate(jsonObject, "completedOn"));
 		//From value of the Due Date property
-		setDueDate(JsonUtils.getJsonString(jsonObject, "dueDate"));
+		setDueDate(JsonUtils.getJsonDate(jsonObject, "dueDate"));
 		//From value of the Plan Id property
 		setPlanId(JsonUtils.getJsonInteger(jsonObject, "planId"));
 		//From value of the Created On property

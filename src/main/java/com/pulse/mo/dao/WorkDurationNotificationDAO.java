@@ -54,7 +54,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\"";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\" IN (?)";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" WHERE \"WORK_DURATION_NOTIFICATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ";
+		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO WORK_DURATION_NOTIFICATION (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO WORK_DURATION_NOTIFICATION (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"WORK_DURATION_NOTIFICATION\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"WORK_DURATION_NOTIFICATION\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,7 +137,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessObject<WorkDuratio
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getString("DATE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -145,13 +145,13 @@ nextResult.setName(rs.getString("NAME"));
 
 nextResult.setType(rs.getString("TYPE"));
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
@@ -172,28 +172,28 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(WorkDurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDate());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getMessage());
 pstmt.setString(4, perceroObject.getName());
 pstmt.setString(5, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getAgent().getID());
+		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(7, perceroObject.getAgent().getID());
 }
 
 
@@ -223,28 +223,28 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(WorkDurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getDate());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(2, perceroObject.getMessage());
 pstmt.setString(3, perceroObject.getName());
 pstmt.setString(4, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getAgent().getID());
+		pstmt.setString(5, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(6, perceroObject.getAgent().getID());
 }
 
 
@@ -284,7 +284,7 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
@@ -345,23 +345,6 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
 boolean useLOBConfigurationID = theQueryObject.getLOBConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfiguration"));
 
 if (useLOBConfigurationID)
@@ -376,6 +359,23 @@ sql += " WHERE ";
 }
 sql += " \"LOB_CONFIGURATION_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfiguration().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
