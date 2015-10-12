@@ -27,6 +27,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -67,9 +68,9 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         }
 
         String endpoint = hostPortAndContext +"/Authenticate";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userDomainAndLogin", cred.getUsername());
-        params.put("userPassword", cred.getPassword());
+        Map<String, String> params = new HashMap<>();
+        params.put("userDomainAndLogin", URLEncoder.encode(cred.getUsername()));
+        params.put("userPassword", URLEncoder.encode(cred.getPassword()));
     	String body = makeRequest(endpoint, params);
 
     	/**

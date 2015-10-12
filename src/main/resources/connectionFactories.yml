@@ -12,4 +12,11 @@ jdbcUrl:  jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1
 username: pulse
 password: pulse
 ---
+!com.pulse.dataprovider.SqlConnectionFactory
+name: cms
+driverClassName: oracle.jdbc.OracleDriver
+jdbcUrl: jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1523/dasht
+username: PULSEUSER
+password: V2PULSEUSER
+---
 

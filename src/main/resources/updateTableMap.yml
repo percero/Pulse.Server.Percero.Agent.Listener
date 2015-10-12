@@ -1,9 +1,3 @@
-tableName: SOME_TABLE
+tableName: MOB_CMS_DATA_VW
 classNames:
- - com.blah.What
- - com.pulse.Ever
----
-tableName: ANOTHER_TABLE
-classNames:
- - com.google.SomeClass
- - io.activestack.Poof
+ - com.pulse.mo.CMSEntry

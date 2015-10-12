@@ -1,18 +1,5 @@
 package com.pulse.mo.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
@@ -24,6 +11,10 @@ import com.percero.framework.vo.IPerceroObject;
 import com.percero.framework.vo.PerceroList;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
+import org.apache.log4j.Logger;
+
+import java.sql.*;
+import java.util.*;
 
 public abstract class SqlDataAccessObject<T extends IPerceroObject> implements IDataAccessObject<T> {
 
@@ -234,8 +225,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		
 		String sql = getSelectIn(shellOnly);
 		sql = sql.replace("?", questionMarkString);
-		
-		Connection conn = null;
+        log.debug("running retrieveObjects query: \n"+sql);
+
+        Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
@@ -288,8 +280,6 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	}
 
 	/**
-	 * @param results
-	 * @param isUser
 	 * @param selectQueryString
 	 * @return
 	 * @throws SyncDataException
@@ -297,7 +287,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	protected List<T> executeSelect(String selectQueryString, Boolean shellOnly)
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
-		
+		log.debug("running executeSelect query: \n"+selectQueryString);
+
 		// Open the database session.
 		Connection conn = null;
 		Statement stmt = null;
@@ -372,7 +363,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	protected List<T> executeSelectWithParams(String selectQueryString, Object[] paramValues, Boolean shellOnly)
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
-		
+		log.debug("running executeSelectWithParams query: \n"+selectQueryString+"\nparams: "+paramValues);
+
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -434,6 +426,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
+			log.debug("running getAll query: \n"+sql);
+
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -479,8 +473,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	public Integer countAll(String userId) throws SyncException {
 
 		String sql = getCountAllSQL();
-		
-		// Open the database session.
+        log.debug("running countAll query: \n"+sql);
+
+        // Open the database session.
 		Connection conn = null;
 		Statement stmt = null;
 		try {

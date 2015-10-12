@@ -27,7 +27,6 @@ public class Pulse_AccountHelper extends AccountHelper {
 		super();
 		manifest = new Pulse_Manifest();
 		ManifestHelper.setManifest(manifest);
-		
 		log.debug("Pulse_AccountHelper instantiated.");
 	}
 
