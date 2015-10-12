@@ -56,7 +56,7 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
@@ -71,12 +71,12 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DISCREPANCY_DETECTED_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO DISCREPANCY_DETECTED_NOTIF (\"ID\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"MESSAGE\",\"NAME\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DISCREPANCY_DETECTED_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"DISCREPANCY_DETECTED_NOTIF\" SET \"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,17 +139,17 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
-
-nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
+			nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
 
 nextResult.setDate(rs.getString("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
+
+nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
+
+nextResult.setType(rs.getString("TYPE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -174,12 +174,12 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getTimecardActivityName());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getAuxCodeEntryName());
-pstmt.setString(5, perceroObject.getDate());
-pstmt.setString(6, perceroObject.getMessage());
-pstmt.setString(7, perceroObject.getName());
+pstmt.setString(2, perceroObject.getAuxCodeEntryName());
+pstmt.setString(3, perceroObject.getDate());
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
+pstmt.setString(6, perceroObject.getTimecardActivityName());
+pstmt.setString(7, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -217,12 +217,12 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getTimecardActivityName());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getAuxCodeEntryName());
-pstmt.setString(4, perceroObject.getDate());
-pstmt.setString(5, perceroObject.getMessage());
-pstmt.setString(6, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getAuxCodeEntryName());
+pstmt.setString(2, perceroObject.getDate());
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
+pstmt.setString(5, perceroObject.getTimecardActivityName());
+pstmt.setString(6, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -270,45 +270,11 @@ pstmt.setString(10, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
-
-if (useTimecardActivityName)
-{
-sql += " WHERE ";
-sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
-paramValues.add(theQueryObject.getTimecardActivityName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
+		boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
 
 if (useAuxCodeEntryName)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
 paramValues.add(theQueryObject.getAuxCodeEntryName());
 propertyCounter++;
@@ -362,6 +328,40 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
+
+if (useTimecardActivityName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
+paramValues.add(theQueryObject.getTimecardActivityName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

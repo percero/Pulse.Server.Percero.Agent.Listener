@@ -55,7 +55,7 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"=?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"=?";
 	}
 	
 	@Override
@@ -70,12 +70,12 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" IN (?)";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -111,17 +111,17 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR_ACKNOWLEDGEMENT (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
+		return "INSERT INTO SUPERVISOR_ACKNOWLEDGEMENT (\"ID\",\"DATE\",\"NAME\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SUPERVISOR_ACKNOWLEDGEMENT\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"SUPERVISOR_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,9 +138,9 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setDate(rs.getDate("DATE"));
 
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setName(rs.getString("NAME"));
 
 
 			
@@ -153,8 +153,8 @@ nextResult.setDate(rs.getDate("DATE"));
 	protected void setPreparedStatmentInsertParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getName());
 
 		
 	}
@@ -162,8 +162,8 @@ pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 	@Override
 	protected void setPreparedStatmentUpdateParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(2, perceroObject.getName());
 pstmt.setString(3, perceroObject.getID());
 
 		
@@ -181,19 +181,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 if (propertyCounter > 0)
 {
@@ -203,8 +203,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

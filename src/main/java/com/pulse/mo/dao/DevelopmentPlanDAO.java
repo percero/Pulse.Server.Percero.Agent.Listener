@@ -56,7 +56,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
 	}
 	
 	@Override
@@ -71,12 +71,12 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ORDER BY \"DEVELOPMENT_PLAN\".\"ID\"";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ORDER BY \"DEVELOPMENT_PLAN\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ORDER BY \"DEVELOPMENT_PLAN\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ORDER BY \"DEVELOPMENT_PLAN\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\".\"ID\" IN (?)";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\"." + joinColumnName + "=?";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" WHERE \"DEVELOPMENT_PLAN\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ";
+		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\" FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DEVELOPMENT_PLAN (\"ID\",\"NAME\",\"RANK\",\"CREATED_BY\",\"CREATED_ON\",\"DESCRIPTION\",\"END_DATE\",\"START_DATE\",\"UPDATED_BY\",\"UPDATED_ON\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO DEVELOPMENT_PLAN (\"ID\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"RANK\",\"CREATED_BY\",\"DESCRIPTION\",\"NAME\",\"UPDATED_BY\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DEVELOPMENT_PLAN\" SET \"NAME\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"DESCRIPTION\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"DEVELOPMENT_PLAN\" SET \"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"NAME\"=?,\"UPDATED_BY\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,23 +139,23 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
-
-nextResult.setRank(rs.getInt("RANK"));
-
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
-
-nextResult.setDescription(rs.getString("DESCRIPTION"));
+			nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setEndDate(rs.getDate("END_DATE"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
 
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
-
 nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+
+nextResult.setRank(rs.getInt("RANK"));
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setName(rs.getString("NAME"));
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
@@ -172,15 +172,15 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setPreparedStatmentInsertParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setInt(3, perceroObject.getRank());
-pstmt.setString(4, perceroObject.getCreatedBy());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(6, perceroObject.getDescription());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setString(9, perceroObject.getUpdatedBy());
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(6, perceroObject.getRank());
+pstmt.setString(7, perceroObject.getCreatedBy());
+pstmt.setString(8, perceroObject.getDescription());
+pstmt.setString(9, perceroObject.getName());
+pstmt.setString(10, perceroObject.getUpdatedBy());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
@@ -198,15 +198,15 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setInt(2, perceroObject.getRank());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(5, perceroObject.getDescription());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setString(8, perceroObject.getUpdatedBy());
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(5, perceroObject.getRank());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(7, perceroObject.getDescription());
+pstmt.setString(8, perceroObject.getName());
+pstmt.setString(9, perceroObject.getUpdatedBy());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
@@ -234,81 +234,13 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useRank = theQueryObject.getRank() != null && (excludeProperties == null || !excludeProperties.contains("rank"));
-
-if (useRank)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"RANK\" =? ";
-paramValues.add(theQueryObject.getRank());
-propertyCounter++;
-}
-
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
-propertyCounter++;
-}
-
-boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
-
-if (useDescription)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DESCRIPTION\" =? ";
-paramValues.add(theQueryObject.getDescription());
 propertyCounter++;
 }
 
@@ -346,23 +278,6 @@ paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
 boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
 
 if (useUpdatedOn)
@@ -377,6 +292,91 @@ sql += " WHERE ";
 }
 sql += " \"UPDATED_ON\" =? ";
 paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useRank = theQueryObject.getRank() != null && (excludeProperties == null || !excludeProperties.contains("rank"));
+
+if (useRank)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"RANK\" =? ";
+paramValues.add(theQueryObject.getRank());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+
+if (useDescription)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 

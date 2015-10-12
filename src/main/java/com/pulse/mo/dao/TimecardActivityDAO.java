@@ -143,13 +143,13 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
-
-nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
+			nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
 
 nextResult.setCode(rs.getString("CODE"));
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setName(rs.getString("NAME"));
 
 CVGProject cvgproject = new CVGProject();
 cvgproject.setID(rs.getString("CVG_PROJECT_ID"));
@@ -188,28 +188,11 @@ nextResult.setCVGProject(cvgproject);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-sql += " WHERE ";
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
+		boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
 
 if (useNonBillable)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " NON_BILLABLE=? ";
 paramValues.add(theQueryObject.getNonBillable());
 propertyCounter++;
@@ -246,6 +229,23 @@ sql += " WHERE ";
 }
 sql += " DESCRIPTION=? ";
 paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

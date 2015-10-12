@@ -56,7 +56,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\"=?";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\"=?";
 	}
 	
 	@Override
@@ -71,12 +71,12 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\"";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ORDER BY \"SUPERVISOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\" IN (?)";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ";
+		return "SELECT \"SUPERVISOR\".\"ID\",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\" FROM \"SUPERVISOR\" \"SUPERVISOR\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR (\"ID\",\"LAST_NAME\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO SUPERVISOR (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"LAST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SUPERVISOR\" SET \"LAST_NAME\"=?,\"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"SUPERVISOR\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,11 +139,11 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setLastName(rs.getString("LAST_NAME"));
-
-nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
+			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
+
+nextResult.setLastName(rs.getString("LAST_NAME"));
 
 nextResult.setFullName(rs.getString("FULL_NAME"));
 
@@ -164,9 +164,9 @@ nextResult.setManagerSupervisor(supervisor);
 	protected void setPreparedStatmentInsertParams(Supervisor perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getLastName());
-pstmt.setString(3, perceroObject.getEmailAddress());
-pstmt.setString(4, perceroObject.getFirstName());
+pstmt.setString(2, perceroObject.getEmailAddress());
+pstmt.setString(3, perceroObject.getFirstName());
+pstmt.setString(4, perceroObject.getLastName());
 pstmt.setString(5, perceroObject.getFullName());
 pstmt.setString(6, perceroObject.getPhotoUri());
 
@@ -186,9 +186,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Supervisor perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getLastName());
-pstmt.setString(2, perceroObject.getEmailAddress());
-pstmt.setString(3, perceroObject.getFirstName());
+		pstmt.setString(1, perceroObject.getEmailAddress());
+pstmt.setString(2, perceroObject.getFirstName());
+pstmt.setString(3, perceroObject.getLastName());
 pstmt.setString(4, perceroObject.getFullName());
 pstmt.setString(5, perceroObject.getPhotoUri());
 
@@ -218,28 +218,11 @@ pstmt.setString(7, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
-
-if (useLastName)
-{
-sql += " WHERE ";
-sql += " \"LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getLastName());
-propertyCounter++;
-}
-
-boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
+		boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
 
 if (useEmailAddress)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"EMAIL_ADDRESS\" =? ";
 paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
@@ -259,6 +242,23 @@ sql += " WHERE ";
 }
 sql += " \"FIRST_NAME\" =? ";
 paramValues.add(theQueryObject.getFirstName());
+propertyCounter++;
+}
+
+boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+
+if (useLastName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"LAST_NAME\" =? ";
+paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
 

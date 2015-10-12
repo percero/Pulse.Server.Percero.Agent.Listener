@@ -58,7 +58,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
 	}
 	
 	@Override
@@ -73,12 +73,12 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\" IN (?)";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -99,7 +99,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -114,17 +114,17 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ADHOC_COACHING_SESSION (\"ID\",\"SESSION_TYPE\",\"STATUS\",\"WEEK_DATE\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO ADHOC_COACHING_SESSION (\"ID\",\"WEEK_DATE\",\"SESSION_TYPE\",\"STATUS\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"ADHOC_COACHING_SESSION\" SET \"SESSION_TYPE\"=?,\"STATUS\"=?,\"WEEK_DATE\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"ADHOC_COACHING_SESSION\" SET \"WEEK_DATE\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -141,11 +141,11 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
     	
     	if (!shellOnly) 
 		{
-			nextResult.setSessionType(rs.getString("SESSION_TYPE"));
+			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+
+nextResult.setSessionType(rs.getString("SESSION_TYPE"));
 
 nextResult.setStatus(rs.getString("STATUS"));
-
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
 AdhocCoachingCategory adhoccoachingcategory = new AdhocCoachingCategory();
 adhoccoachingcategory.setID(rs.getString("ADHOC_COACHING_CATEGORY_ID"));
@@ -170,9 +170,9 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getSessionType());
-pstmt.setString(3, perceroObject.getStatus());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setString(3, perceroObject.getSessionType());
+pstmt.setString(4, perceroObject.getStatus());
 
 if (perceroObject.getAdhocCoachingCategory() == null)
 {
@@ -210,9 +210,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getSessionType());
-pstmt.setString(2, perceroObject.getStatus());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setString(2, perceroObject.getSessionType());
+pstmt.setString(3, perceroObject.getStatus());
 
 if (perceroObject.getAdhocCoachingCategory() == null)
 {
@@ -260,11 +260,28 @@ pstmt.setString(7, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useSessionType = StringUtils.hasText(theQueryObject.getSessionType()) && (excludeProperties == null || !excludeProperties.contains("sessionType"));
+		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+
+if (useWeekDate)
+{
+sql += " WHERE ";
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
+propertyCounter++;
+}
+
+boolean useSessionType = StringUtils.hasText(theQueryObject.getSessionType()) && (excludeProperties == null || !excludeProperties.contains("sessionType"));
 
 if (useSessionType)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"SESSION_TYPE\" =? ";
 paramValues.add(theQueryObject.getSessionType());
 propertyCounter++;
@@ -284,23 +301,6 @@ sql += " WHERE ";
 }
 sql += " \"STATUS\" =? ";
 paramValues.add(theQueryObject.getStatus());
-propertyCounter++;
-}
-
-boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
-
-if (useWeekDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEEK_DATE\" =? ";
-paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 

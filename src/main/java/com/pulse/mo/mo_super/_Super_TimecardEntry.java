@@ -91,14 +91,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date fromTime;
+private String fromTime;
 
-public Date getFromTime() 
+public String getFromTime() 
 {
 	return this.fromTime;
 }
 
-public void setFromTime(Date fromTime)
+public void setFromTime(String fromTime)
 {
 	this.fromTime = fromTime;
 }/*
@@ -125,14 +125,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date toTime;
+private String toTime;
 
-public Date getToTime() 
+public String getToTime() 
 {
 	return this.toTime;
 }
 
-public void setToTime(Date toTime)
+public void setToTime(String toTime)
 {
 	this.toTime = toTime;
 }/*
@@ -159,14 +159,14 @@ Notes:Number of minutes
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer duration;
+private Double duration;
 
-public Integer getDuration() 
+public Double getDuration() 
 {
 	return this.duration;
 }
 
-public void setDuration(Integer duration)
+public void setDuration(Double duration)
 {
 	this.duration = duration;
 }/*
@@ -299,10 +299,24 @@ public void setTimecardActivity(TimecardActivity value) {
 		// Properties		
 		//Retrieve value of the From Time property
 		objectJson += ",\"fromTime\":";
+		
 		if (getFromTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getFromTime().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getFromTime());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Notification Resolved property
 		objectJson += ",\"notificationResolved\":";
@@ -313,10 +327,24 @@ public void setTimecardActivity(TimecardActivity value) {
 		}
 		//Retrieve value of the To Time property
 		objectJson += ",\"toTime\":";
+		
 		if (getToTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getToTime().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getToTime());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
@@ -341,24 +369,10 @@ public void setTimecardActivity(TimecardActivity value) {
 		}
 		//Retrieve value of the Duration property
 		objectJson += ",\"duration\":";
-		
 		if (getDuration() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDuration());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getDuration();
 		}
 		//Retrieve value of the Action Name property
 		objectJson += ",\"actionName\":";
@@ -484,15 +498,15 @@ objectJson += ",\"timecardActivity\":";
 
 		// Properties
 		//From value of the From Time property
-		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+		setFromTime(JsonUtils.getJsonString(jsonObject, "fromTime"));
 		//From value of the Notification Resolved property
 		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
 		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		setToTime(JsonUtils.getJsonString(jsonObject, "toTime"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
 		//From value of the Duration property
-		setDuration(JsonUtils.getJsonInteger(jsonObject, "duration"));
+		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the Action Name property
 		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
 		//From value of the Activity Name property

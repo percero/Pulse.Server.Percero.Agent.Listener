@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Timecard extends BaseDataObject implements Serializable
+public class _Super_ScheduleEntry extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Timecard extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Timecard
+	Keys of ScheduleEntry
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,40 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date date;
-
-public Date getDate() 
-{
-	return this.date;
-}
-
-public void setDate(Date date)
-{
-	this.date = date;
-}/*
-IsHoliday
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String isHoliday;
-
-public String getIsHoliday() 
-{
-	return this.isHoliday;
-}
-
-public void setIsHoliday(String isHoliday)
-{
-	this.isHoliday = isHoliday;
-}/*
 StartDate
 Notes:
 */
@@ -136,39 +102,22 @@ public void setStartDate(Date startDate)
 {
 	this.startDate = startDate;
 }/*
-LockLevel
+Project
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String lockLevel;
+private String project;
 
-public String getLockLevel() 
+public String getProject() 
 {
-	return this.lockLevel;
+	return this.project;
 }
 
-public void setLockLevel(String lockLevel)
+public void setProject(String project)
 {
-	this.lockLevel = lockLevel;
-}/*
-AssumedOff
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String assumedOff;
-
-public String getAssumedOff() 
-{
-	return this.assumedOff;
-}
-
-public void setAssumedOff(String assumedOff)
-{
-	this.assumedOff = assumedOff;
+	this.project = project;
 }/*
 EndDate
 Notes:
@@ -187,75 +136,113 @@ public void setEndDate(Date endDate)
 {
 	this.endDate = endDate;
 }/*
-TotalTime
+CostPOSIndex
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double totalTime;
+private Integer costPOSIndex;
 
-public Double getTotalTime() 
+public Integer getCostPOSIndex() 
 {
-	return this.totalTime;
+	return this.costPOSIndex;
 }
 
-public void setTotalTime(Double totalTime)
+public void setCostPOSIndex(Integer costPOSIndex)
 {
-	this.totalTime = totalTime;
+	this.costPOSIndex = costPOSIndex;
 }/*
-LocalTimeCode
-Notes:
+Duration
+Notes:Number of minutes
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String localTimeCode;
+private Double duration;
 
-public String getLocalTimeCode() 
+public Double getDuration() 
 {
-	return this.localTimeCode;
+	return this.duration;
 }
 
-public void setLocalTimeCode(String localTimeCode)
+public void setDuration(Double duration)
 {
-	this.localTimeCode = localTimeCode;
+	this.duration = duration;
 }/*
-TimecardState
+StartTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String timecardState;
+private Date startTime;
 
-public String getTimecardState() 
+public Date getStartTime() 
 {
-	return this.timecardState;
+	return this.startTime;
 }
 
-public void setTimecardState(String timecardState)
+public void setStartTime(Date startTime)
 {
-	this.timecardState = timecardState;
+	this.startTime = startTime;
+}/*
+Position
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String position;
+
+public String getPosition() 
+{
+	return this.position;
+}
+
+public void setPosition(String position)
+{
+	this.position = position;
+}/*
+ModifiedTimestamp
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date modifiedTimestamp;
+
+public Date getModifiedTimestamp() 
+{
+	return this.modifiedTimestamp;
+}
+
+public void setModifiedTimestamp(Date modifiedTimestamp)
+{
+	this.modifiedTimestamp = modifiedTimestamp;
+}/*
+EndTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endTime;
+
+public Date getEndTime() 
+{
+	return this.endTime;
+}
+
+public void setEndTime(Date endTime)
+{
+	this.endTime = endTime;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=TimecardEntry.class, mappedBy="timecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<TimecardEntry> timecardEntries;
-public List<TimecardEntry> getTimecardEntries() {
-	return this.timecardEntries;
-}
-
-public void setTimecardEntries(List<TimecardEntry> value) {
-	this.timecardEntries = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -264,7 +251,7 @@ public void setTimecardEntries(List<TimecardEntry> value) {
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfTimecard")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfScheduleEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
 public Agent getAgent() {
@@ -284,34 +271,6 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-		//Retrieve value of the Is Holiday property
-		objectJson += ",\"isHoliday\":";
-		
-		if (getIsHoliday() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getIsHoliday());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Start Date property
 		objectJson += ",\"startDate\":";
 		if (getStartDate() == null)
@@ -319,37 +278,16 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getStartDate().getTime();
 		}
-		//Retrieve value of the Lock Level property
-		objectJson += ",\"lockLevel\":";
+		//Retrieve value of the Project property
+		objectJson += ",\"project\":";
 		
-		if (getLockLevel() == null)
+		if (getProject() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLockLevel());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Assumed Off property
-		objectJson += ",\"assumedOff\":";
-		
-		if (getAssumedOff() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAssumedOff());
+				objectJson += objectMapper.writeValueAsString(getProject());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -368,23 +306,16 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getEndDate().getTime();
 		}
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getTotalTime();
-		}
-		//Retrieve value of the Local Time Code property
-		objectJson += ",\"localTimeCode\":";
+		//Retrieve value of the Cost POS Index property
+		objectJson += ",\"costPOSIndex\":";
 		
-		if (getLocalTimeCode() == null)
+		if (getCostPOSIndex() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLocalTimeCode());
+				objectJson += objectMapper.writeValueAsString(getCostPOSIndex());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -396,16 +327,30 @@ public void setAgent(Agent value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Timecard State property
-		objectJson += ",\"timecardState\":";
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDuration();
+		}
+		//Retrieve value of the Start Time property
+		objectJson += ",\"startTime\":";
+		if (getStartTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartTime().getTime();
+		}
+		//Retrieve value of the Position property
+		objectJson += ",\"position\":";
 		
-		if (getTimecardState() == null)
+		if (getPosition() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTimecardState());
+				objectJson += objectMapper.writeValueAsString(getPosition());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -416,11 +361,25 @@ public void setAgent(Agent value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Modified Timestamp property
+		objectJson += ",\"modifiedTimestamp\":";
+		if (getModifiedTimestamp() == null)
+			objectJson += "null";
+		else {
+			objectJson += getModifiedTimestamp().getTime();
+		}
+		//Retrieve value of the End Time property
+		objectJson += ",\"endTime\":";
+		if (getEndTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndTime().getTime();
 		}
 
 				
 		// Source Relationships
-//Retrieve value of the Agent of Timecard relationship
+//Retrieve value of the Agent of Schedule Entry relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
 			objectJson += "null";
@@ -435,23 +394,6 @@ objectJson += ",\"agent\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Timecard of Timecard Entry relationship
-objectJson += ",\"timecardEntries\":[";
-		
-		if (getTimecardEntries() != null) {
-			int timecardEntriesCounter = 0;
-			for(TimecardEntry nextTimecardEntries : getTimecardEntries()) {
-				if (timecardEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextTimecardEntries).toEmbeddedJson();
-					timecardEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -463,24 +405,24 @@ objectJson += ",\"timecardEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the Is Holiday property
-		setIsHoliday(JsonUtils.getJsonString(jsonObject, "isHoliday"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the Lock Level property
-		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
-		//From value of the Assumed Off property
-		setAssumedOff(JsonUtils.getJsonString(jsonObject, "assumedOff"));
+		//From value of the Project property
+		setProject(JsonUtils.getJsonString(jsonObject, "project"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Total Time property
-		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
-		//From value of the Local Time Code property
-		setLocalTimeCode(JsonUtils.getJsonString(jsonObject, "localTimeCode"));
-		//From value of the Timecard State property
-		setTimecardState(JsonUtils.getJsonString(jsonObject, "timecardState"));
+		//From value of the Cost POS Index property
+		setCostPOSIndex(JsonUtils.getJsonInteger(jsonObject, "costPOSIndex"));
+		//From value of the Duration property
+		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+		//From value of the Start Time property
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		//From value of the Position property
+		setPosition(JsonUtils.getJsonString(jsonObject, "position"));
+		//From value of the Modified Timestamp property
+		setModifiedTimestamp(JsonUtils.getJsonDate(jsonObject, "modifiedTimestamp"));
+		//From value of the End Time property
+		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
 
 		
 		// Source Relationships
@@ -488,7 +430,6 @@ objectJson += ",\"timecardEntries\":[";
 
 
 		// Target Relationships
-		this.timecardEntries = (List<TimecardEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecardEntries");
 
 
 	}
@@ -498,7 +439,6 @@ objectJson += ",\"timecardEntries\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "timecard"));
 
 		
 		return listSetters;

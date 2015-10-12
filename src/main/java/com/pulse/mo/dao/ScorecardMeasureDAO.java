@@ -60,7 +60,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
 	}
 	
 	@Override
@@ -75,12 +75,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ORDER BY \"SCORECARD_MEASURE\".\"ID\"";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ORDER BY \"SCORECARD_MEASURE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ORDER BY \"SCORECARD_MEASURE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ORDER BY \"SCORECARD_MEASURE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -90,7 +90,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\".\"ID\" IN (?)";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\"." + joinColumnName + "=?";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" WHERE \"SCORECARD_MEASURE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -116,17 +116,17 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ";
+		return "SELECT \"SCORECARD_MEASURE\".\"ID\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"ELIGABLE_FOR_INCENTIVE\",\"SCORECARD_MEASURE\".\"REQUIRES_COACHING\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"GOAL\",\"SCORECARD_MEASURE\".\"MTD_SCORE\",\"SCORECARD_MEASURE\".\"MTD_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"MTD_TREND\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE\",\"SCORECARD_MEASURE\".\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"SCORECARD_MEASURE\".\"TENURE\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\" FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCORECARD_MEASURE (\"ID\",\"TENURE\",\"WEEKLY_TREND\",\"WEIGHT\",\"COACHABLE\",\"CURRENT_WEEK_SCORE\",\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"ELIGABLE_FOR_INCENTIVE\",\"GOAL\",\"MTD_SCORE\",\"MTD_SCORE_THRESHOLD_GRADE\",\"MTD_TREND\",\"NAME\",\"PREVIOUS_MONTH_SCORE\",\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"PREVIOUS_WEEK_SCORE\",\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"REQUIRES_COACHING\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO SCORECARD_MEASURE (\"ID\",\"COACHABLE\",\"ELIGABLE_FOR_INCENTIVE\",\"REQUIRES_COACHING\",\"CURRENT_WEEK_SCORE\",\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\",\"GOAL\",\"MTD_SCORE\",\"MTD_SCORE_THRESHOLD_GRADE\",\"MTD_TREND\",\"NAME\",\"PREVIOUS_MONTH_SCORE\",\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\",\"PREVIOUS_WEEK_SCORE\",\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\",\"TENURE\",\"WEEKLY_TREND\",\"WEIGHT\",\"MEASURE_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SCORECARD_MEASURE\" SET \"TENURE\"=?,\"WEEKLY_TREND\"=?,\"WEIGHT\"=?,\"COACHABLE\"=?,\"CURRENT_WEEK_SCORE\"=?,\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\"=?,\"ELIGABLE_FOR_INCENTIVE\"=?,\"GOAL\"=?,\"MTD_SCORE\"=?,\"MTD_SCORE_THRESHOLD_GRADE\"=?,\"MTD_TREND\"=?,\"NAME\"=?,\"PREVIOUS_MONTH_SCORE\"=?,\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\"=?,\"PREVIOUS_WEEK_SCORE\"=?,\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\"=?,\"REQUIRES_COACHING\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"SCORECARD_MEASURE\" SET \"COACHABLE\"=?,\"ELIGABLE_FOR_INCENTIVE\"=?,\"REQUIRES_COACHING\"=?,\"CURRENT_WEEK_SCORE\"=?,\"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\"=?,\"GOAL\"=?,\"MTD_SCORE\"=?,\"MTD_SCORE_THRESHOLD_GRADE\"=?,\"MTD_TREND\"=?,\"NAME\"=?,\"PREVIOUS_MONTH_SCORE\"=?,\"PREVIOUS_MONTH_SCORE_THRESHOLD_GRADE\"=?,\"PREVIOUS_WEEK_SCORE\"=?,\"PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE\"=?,\"TENURE\"=?,\"WEEKLY_TREND\"=?,\"WEIGHT\"=?,\"MEASURE_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,19 +143,15 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTenure(rs.getString("TENURE"));
+			nextResult.setCoachable(rs.getBoolean("COACHABLE"));
 
-nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
+nextResult.setEligableForIncentive(rs.getBoolean("ELIGABLE_FOR_INCENTIVE"));
 
-nextResult.setWeight(rs.getString("WEIGHT"));
-
-nextResult.setCoachable(rs.getBoolean("COACHABLE"));
+nextResult.setRequiresCoaching(rs.getBoolean("REQUIRES_COACHING"));
 
 nextResult.setCurrentWeekScore(rs.getString("CURRENT_WEEK_SCORE"));
 
 nextResult.setCurrentWeekScoreThresholdGrade(rs.getString("CURRENT_WEEK_SCORE_THRESHOLD_GRADE"));
-
-nextResult.setEligableForIncentive(rs.getBoolean("ELIGABLE_FOR_INCENTIVE"));
 
 nextResult.setGoal(rs.getString("GOAL"));
 
@@ -175,15 +171,19 @@ nextResult.setPreviousWeekScore(rs.getString("PREVIOUS_WEEK_SCORE"));
 
 nextResult.setPreviousWeekScoreThresholdGrade(rs.getString("PREVIOUS_WEEK_SCORE_THRESHOLD_GRADE"));
 
-nextResult.setRequiresCoaching(rs.getBoolean("REQUIRES_COACHING"));
+nextResult.setTenure(rs.getString("TENURE"));
 
-Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
-nextResult.setScorecard(scorecard);
+nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
+
+nextResult.setWeight(rs.getString("WEIGHT"));
 
 Measure measure = new Measure();
 measure.setID(rs.getString("MEASURE_ID"));
 nextResult.setMeasure(measure);
+
+Scorecard scorecard = new Scorecard();
+scorecard.setID(rs.getString("SCORECARD_ID"));
+nextResult.setScorecard(scorecard);
 
 
 			
@@ -196,41 +196,41 @@ nextResult.setMeasure(measure);
 	protected void setPreparedStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getTenure());
-pstmt.setString(3, perceroObject.getWeeklyTrend());
-pstmt.setString(4, perceroObject.getWeight());
-pstmt.setBoolean(5, perceroObject.getCoachable());
-pstmt.setString(6, perceroObject.getCurrentWeekScore());
-pstmt.setString(7, perceroObject.getCurrentWeekScoreThresholdGrade());
-pstmt.setBoolean(8, perceroObject.getEligableForIncentive());
-pstmt.setString(9, perceroObject.getGoal());
-pstmt.setString(10, perceroObject.getMTDScore());
-pstmt.setString(11, perceroObject.getMTDScoreThresholdGrade());
-pstmt.setString(12, perceroObject.getMTDTrend());
-pstmt.setString(13, perceroObject.getName());
-pstmt.setString(14, perceroObject.getPreviousMonthScore());
-pstmt.setString(15, perceroObject.getPreviousMonthScoreThresholdGrade());
-pstmt.setString(16, perceroObject.getPreviousWeekScore());
-pstmt.setString(17, perceroObject.getPreviousWeekScoreThresholdGrade());
-pstmt.setBoolean(18, perceroObject.getRequiresCoaching());
+pstmt.setBoolean(2, perceroObject.getCoachable());
+pstmt.setBoolean(3, perceroObject.getEligableForIncentive());
+pstmt.setBoolean(4, perceroObject.getRequiresCoaching());
+pstmt.setString(5, perceroObject.getCurrentWeekScore());
+pstmt.setString(6, perceroObject.getCurrentWeekScoreThresholdGrade());
+pstmt.setString(7, perceroObject.getGoal());
+pstmt.setString(8, perceroObject.getMTDScore());
+pstmt.setString(9, perceroObject.getMTDScoreThresholdGrade());
+pstmt.setString(10, perceroObject.getMTDTrend());
+pstmt.setString(11, perceroObject.getName());
+pstmt.setString(12, perceroObject.getPreviousMonthScore());
+pstmt.setString(13, perceroObject.getPreviousMonthScoreThresholdGrade());
+pstmt.setString(14, perceroObject.getPreviousWeekScore());
+pstmt.setString(15, perceroObject.getPreviousWeekScoreThresholdGrade());
+pstmt.setString(16, perceroObject.getTenure());
+pstmt.setString(17, perceroObject.getWeeklyTrend());
+pstmt.setString(18, perceroObject.getWeight());
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getMeasure() == null)
 {
 pstmt.setString(19, null);
 }
 else
 {
-		pstmt.setString(19, perceroObject.getScorecard().getID());
+		pstmt.setString(19, perceroObject.getMeasure().getID());
 }
 
 
-if (perceroObject.getMeasure() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(20, null);
 }
 else
 {
-		pstmt.setString(20, perceroObject.getMeasure().getID());
+		pstmt.setString(20, perceroObject.getScorecard().getID());
 }
 
 
@@ -240,41 +240,41 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getTenure());
-pstmt.setString(2, perceroObject.getWeeklyTrend());
-pstmt.setString(3, perceroObject.getWeight());
-pstmt.setBoolean(4, perceroObject.getCoachable());
-pstmt.setString(5, perceroObject.getCurrentWeekScore());
-pstmt.setString(6, perceroObject.getCurrentWeekScoreThresholdGrade());
-pstmt.setBoolean(7, perceroObject.getEligableForIncentive());
-pstmt.setString(8, perceroObject.getGoal());
-pstmt.setString(9, perceroObject.getMTDScore());
-pstmt.setString(10, perceroObject.getMTDScoreThresholdGrade());
-pstmt.setString(11, perceroObject.getMTDTrend());
-pstmt.setString(12, perceroObject.getName());
-pstmt.setString(13, perceroObject.getPreviousMonthScore());
-pstmt.setString(14, perceroObject.getPreviousMonthScoreThresholdGrade());
-pstmt.setString(15, perceroObject.getPreviousWeekScore());
-pstmt.setString(16, perceroObject.getPreviousWeekScoreThresholdGrade());
-pstmt.setBoolean(17, perceroObject.getRequiresCoaching());
+		pstmt.setBoolean(1, perceroObject.getCoachable());
+pstmt.setBoolean(2, perceroObject.getEligableForIncentive());
+pstmt.setBoolean(3, perceroObject.getRequiresCoaching());
+pstmt.setString(4, perceroObject.getCurrentWeekScore());
+pstmt.setString(5, perceroObject.getCurrentWeekScoreThresholdGrade());
+pstmt.setString(6, perceroObject.getGoal());
+pstmt.setString(7, perceroObject.getMTDScore());
+pstmt.setString(8, perceroObject.getMTDScoreThresholdGrade());
+pstmt.setString(9, perceroObject.getMTDTrend());
+pstmt.setString(10, perceroObject.getName());
+pstmt.setString(11, perceroObject.getPreviousMonthScore());
+pstmt.setString(12, perceroObject.getPreviousMonthScoreThresholdGrade());
+pstmt.setString(13, perceroObject.getPreviousWeekScore());
+pstmt.setString(14, perceroObject.getPreviousWeekScoreThresholdGrade());
+pstmt.setString(15, perceroObject.getTenure());
+pstmt.setString(16, perceroObject.getWeeklyTrend());
+pstmt.setString(17, perceroObject.getWeight());
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getMeasure() == null)
 {
 pstmt.setString(18, null);
 }
 else
 {
-		pstmt.setString(18, perceroObject.getScorecard().getID());
+		pstmt.setString(18, perceroObject.getMeasure().getID());
 }
 
 
-if (perceroObject.getMeasure() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(19, null);
 }
 else
 {
-		pstmt.setString(19, perceroObject.getMeasure().getID());
+		pstmt.setString(19, perceroObject.getScorecard().getID());
 }
 
 pstmt.setString(20, perceroObject.getID());
@@ -294,54 +294,20 @@ pstmt.setString(20, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useTenure = StringUtils.hasText(theQueryObject.getTenure()) && (excludeProperties == null || !excludeProperties.contains("tenure"));
-
-if (useTenure)
-{
-sql += " WHERE ";
-sql += " \"TENURE\" =? ";
-paramValues.add(theQueryObject.getTenure());
-propertyCounter++;
-}
-
-boolean useWeeklyTrend = StringUtils.hasText(theQueryObject.getWeeklyTrend()) && (excludeProperties == null || !excludeProperties.contains("weeklyTrend"));
-
-if (useWeeklyTrend)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEEKLY_TREND\" =? ";
-paramValues.add(theQueryObject.getWeeklyTrend());
-propertyCounter++;
-}
-
-boolean useWeight = StringUtils.hasText(theQueryObject.getWeight()) && (excludeProperties == null || !excludeProperties.contains("weight"));
-
-if (useWeight)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEIGHT\" =? ";
-paramValues.add(theQueryObject.getWeight());
-propertyCounter++;
-}
-
-boolean useCoachable = theQueryObject.getCoachable() != null && (excludeProperties == null || !excludeProperties.contains("coachable"));
+		boolean useCoachable = theQueryObject.getCoachable() != null && (excludeProperties == null || !excludeProperties.contains("coachable"));
 
 if (useCoachable)
 {
+sql += " WHERE ";
+sql += " \"COACHABLE\" =? ";
+paramValues.add(theQueryObject.getCoachable());
+propertyCounter++;
+}
+
+boolean useEligableForIncentive = theQueryObject.getEligableForIncentive() != null && (excludeProperties == null || !excludeProperties.contains("eligableForIncentive"));
+
+if (useEligableForIncentive)
+{
 if (propertyCounter > 0)
 {
 sql += " AND ";
@@ -350,8 +316,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"COACHABLE\" =? ";
-paramValues.add(theQueryObject.getCoachable());
+sql += " \"ELIGABLE_FOR_INCENTIVE\" =? ";
+paramValues.add(theQueryObject.getEligableForIncentive());
+propertyCounter++;
+}
+
+boolean useRequiresCoaching = theQueryObject.getRequiresCoaching() != null && (excludeProperties == null || !excludeProperties.contains("requiresCoaching"));
+
+if (useRequiresCoaching)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"REQUIRES_COACHING\" =? ";
+paramValues.add(theQueryObject.getRequiresCoaching());
 propertyCounter++;
 }
 
@@ -386,23 +369,6 @@ sql += " WHERE ";
 }
 sql += " \"CURRENT_WEEK_SCORE_THRESHOLD_GRADE\" =? ";
 paramValues.add(theQueryObject.getCurrentWeekScoreThresholdGrade());
-propertyCounter++;
-}
-
-boolean useEligableForIncentive = theQueryObject.getEligableForIncentive() != null && (excludeProperties == null || !excludeProperties.contains("eligableForIncentive"));
-
-if (useEligableForIncentive)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"ELIGABLE_FOR_INCENTIVE\" =? ";
-paramValues.add(theQueryObject.getEligableForIncentive());
 propertyCounter++;
 }
 
@@ -559,9 +525,9 @@ paramValues.add(theQueryObject.getPreviousWeekScoreThresholdGrade());
 propertyCounter++;
 }
 
-boolean useRequiresCoaching = theQueryObject.getRequiresCoaching() != null && (excludeProperties == null || !excludeProperties.contains("requiresCoaching"));
+boolean useTenure = StringUtils.hasText(theQueryObject.getTenure()) && (excludeProperties == null || !excludeProperties.contains("tenure"));
 
-if (useRequiresCoaching)
+if (useTenure)
 {
 if (propertyCounter > 0)
 {
@@ -571,14 +537,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"REQUIRES_COACHING\" =? ";
-paramValues.add(theQueryObject.getRequiresCoaching());
+sql += " \"TENURE\" =? ";
+paramValues.add(theQueryObject.getTenure());
 propertyCounter++;
 }
 
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+boolean useWeeklyTrend = StringUtils.hasText(theQueryObject.getWeeklyTrend()) && (excludeProperties == null || !excludeProperties.contains("weeklyTrend"));
 
-if (useScorecardID)
+if (useWeeklyTrend)
 {
 if (propertyCounter > 0)
 {
@@ -588,8 +554,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"SCORECARD_ID\" =? ";
-paramValues.add(theQueryObject.getScorecard().getID());
+sql += " \"WEEKLY_TREND\" =? ";
+paramValues.add(theQueryObject.getWeeklyTrend());
+propertyCounter++;
+}
+
+boolean useWeight = StringUtils.hasText(theQueryObject.getWeight()) && (excludeProperties == null || !excludeProperties.contains("weight"));
+
+if (useWeight)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WEIGHT\" =? ";
+paramValues.add(theQueryObject.getWeight());
 propertyCounter++;
 }
 
@@ -607,6 +590,23 @@ sql += " WHERE ";
 }
 sql += " \"MEASURE_ID\" =? ";
 paramValues.add(theQueryObject.getMeasure().getID());
+propertyCounter++;
+}
+
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 

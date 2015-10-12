@@ -145,19 +145,19 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
 
+nextResult.setDuration(rs.getDouble("DURATION"));
+
 nextResult.setActionCode(rs.getString("ACTION_CODE"));
 
 nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
 
-nextResult.setDuration(rs.getInt("DURATION"));
-
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
-nextResult.setFromTime(rs.getDate("FROM_TIME"));
+nextResult.setFromTime(rs.getString("FROM_TIME"));
 
-nextResult.setToTime(rs.getDate("TO_TIME"));
+nextResult.setToTime(rs.getString("TO_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -223,6 +223,23 @@ paramValues.add(theQueryObject.getNotificationResolved());
 propertyCounter++;
 }
 
+boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
+
+if (useDuration)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DURATION=? ";
+paramValues.add(theQueryObject.getDuration());
+propertyCounter++;
+}
+
 boolean useActionCode = StringUtils.hasText(theQueryObject.getActionCode()) && (excludeProperties == null || !excludeProperties.contains("actionCode"));
 
 if (useActionCode)
@@ -274,23 +291,6 @@ paramValues.add(theQueryObject.getActivityName());
 propertyCounter++;
 }
 
-boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
-
-if (useDuration)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DURATION=? ";
-paramValues.add(theQueryObject.getDuration());
-propertyCounter++;
-}
-
 boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
 
 if (useEStartProjectName)
@@ -308,7 +308,7 @@ paramValues.add(theQueryObject.getEStartProjectName());
 propertyCounter++;
 }
 
-boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
+boolean useFromTime = StringUtils.hasText(theQueryObject.getFromTime()) && (excludeProperties == null || !excludeProperties.contains("fromTime"));
 
 if (useFromTime)
 {
@@ -325,7 +325,7 @@ paramValues.add(theQueryObject.getFromTime());
 propertyCounter++;
 }
 
-boolean useToTime = theQueryObject.getToTime() != null && (excludeProperties == null || !excludeProperties.contains("toTime"));
+boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
 
 if (useToTime)
 {

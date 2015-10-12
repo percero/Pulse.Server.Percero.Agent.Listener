@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_ScheduledTime extends BaseDataObject implements Serializable
+public class _Super_Schedule extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_ScheduledTime extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of ScheduledTime
+	Keys of Schedule
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,22 +85,90 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-TotalTime
+EndTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double totalTime;
+private Date endTime;
 
-public Double getTotalTime() 
+public Date getEndTime() 
 {
-	return this.totalTime;
+	return this.endTime;
 }
 
-public void setTotalTime(Double totalTime)
+public void setEndTime(Date endTime)
 {
-	this.totalTime = totalTime;
+	this.endTime = endTime;
+}/*
+StartTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startTime;
+
+public Date getStartTime() 
+{
+	return this.startTime;
+}
+
+public void setStartTime(Date startTime)
+{
+	this.startTime = startTime;
+}/*
+Shift
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer shift;
+
+public Integer getShift() 
+{
+	return this.shift;
+}
+
+public void setShift(Integer shift)
+{
+	this.shift = shift;
+}/*
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
 }/*
 StateName
 Notes:
@@ -118,25 +186,29 @@ public String getStateName()
 public void setStateName(String stateName)
 {
 	this.stateName = stateName;
+}/*
+TotalTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double totalTime;
+
+public Double getTotalTime() 
+{
+	return this.totalTime;
+}
+
+public void setTotalTime(Double totalTime)
+{
+	this.totalTime = totalTime;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScheduledTimeEntry.class, mappedBy="scheduledTime", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScheduledTimeEntry> scheduledTimeEntries;
-public List<ScheduledTimeEntry> getScheduledTimeEntries() {
-	return this.scheduledTimeEntries;
-}
-
-public void setScheduledTimeEntries(List<ScheduledTimeEntry> value) {
-	this.scheduledTimeEntries = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -144,8 +216,8 @@ public void setScheduledTimeEntries(List<ScheduledTimeEntry> value) {
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfScheduledTime")
+@JoinColumn(name="PAYROLL")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfSchedule")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
 public Agent getAgent() {
@@ -165,12 +237,54 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
+		//Retrieve value of the End Time property
+		objectJson += ",\"endTime\":";
+		if (getEndTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getTotalTime();
+			objectJson += getEndTime().getTime();
+		}
+		//Retrieve value of the Start Time property
+		objectJson += ",\"startTime\":";
+		if (getStartTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartTime().getTime();
+		}
+		//Retrieve value of the Shift property
+		objectJson += ",\"shift\":";
+		
+		if (getShift() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getShift());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
@@ -193,10 +307,17 @@ public void setAgent(Agent value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Total Time property
+		objectJson += ",\"totalTime\":";
+		if (getTotalTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getTotalTime();
+		}
 
 				
 		// Source Relationships
-//Retrieve value of the Agent of Scheduled Time relationship
+//Retrieve value of the Agent of Schedule relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
 			objectJson += "null";
@@ -211,23 +332,6 @@ objectJson += ",\"agent\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Scheduled Time of Scheduled Time Entry relationship
-objectJson += ",\"scheduledTimeEntries\":[";
-		
-		if (getScheduledTimeEntries() != null) {
-			int scheduledTimeEntriesCounter = 0;
-			for(ScheduledTimeEntry nextScheduledTimeEntries : getScheduledTimeEntries()) {
-				if (scheduledTimeEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScheduledTimeEntries).toEmbeddedJson();
-					scheduledTimeEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -239,10 +343,20 @@ objectJson += ",\"scheduledTimeEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Total Time property
-		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
+		//From value of the End Time property
+		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
+		//From value of the Start Time property
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		//From value of the Shift property
+		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the State Name property
 		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
+		//From value of the Total Time property
+		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 
 		
 		// Source Relationships
@@ -250,7 +364,6 @@ objectJson += ",\"scheduledTimeEntries\":[";
 
 
 		// Target Relationships
-		this.scheduledTimeEntries = (List<ScheduledTimeEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduledTimeEntries");
 
 
 	}
@@ -260,7 +373,6 @@ objectJson += ",\"scheduledTimeEntries\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScheduledTimeEntry.class, "scheduledtime"));
 
 		
 		return listSetters;

@@ -56,7 +56,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\"=?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\"=?";
 	}
 	
 	@Override
@@ -71,12 +71,12 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\"";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ORDER BY \"TRACE_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\" IN (?)";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\",\"TRACE_ENTRY\".\"PULSE_USER_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ";
+		return "SELECT \"TRACE_ENTRY\".\"ID\",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\" FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TRACE_ENTRY (\"ID\",\"LOG_MESSAGE\",\"TIMESTAMP\",\"TRACE_TYPE\",\"TRACE_LOG_ID\",\"PULSE_USER_ID\") VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO TRACE_ENTRY (\"ID\",\"TIMESTAMP\",\"TRACE_TYPE\",\"LOG_MESSAGE\",\"PULSE_USER_ID\",\"TRACE_LOG_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TRACE_ENTRY\" SET \"LOG_MESSAGE\"=?,\"TIMESTAMP\"=?,\"TRACE_TYPE\"=?,\"TRACE_LOG_ID\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TRACE_ENTRY\" SET \"TIMESTAMP\"=?,\"TRACE_TYPE\"=?,\"LOG_MESSAGE\"=?,\"PULSE_USER_ID\"=?,\"TRACE_LOG_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,19 +139,19 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setLogMessage(rs.getString("LOG_MESSAGE"));
-
-nextResult.setTimestamp(rs.getDate("TIMESTAMP"));
+			nextResult.setTimestamp(rs.getDate("TIMESTAMP"));
 
 nextResult.setTraceType(rs.getString("TRACE_TYPE"));
 
-TraceLog tracelog = new TraceLog();
-tracelog.setID(rs.getString("TRACE_LOG_ID"));
-nextResult.setTraceLog(tracelog);
+nextResult.setLogMessage(rs.getString("LOG_MESSAGE"));
 
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
+
+TraceLog tracelog = new TraceLog();
+tracelog.setID(rs.getString("TRACE_LOG_ID"));
+nextResult.setTraceLog(tracelog);
 
 
 			
@@ -164,27 +164,27 @@ nextResult.setPulseUser(pulseuser);
 	protected void setPreparedStatmentInsertParams(TraceEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getLogMessage());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getTimestamp()));
-pstmt.setString(4, perceroObject.getTraceType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getTimestamp()));
+pstmt.setString(3, perceroObject.getTraceType());
+pstmt.setString(4, perceroObject.getLogMessage());
 
-if (perceroObject.getTraceLog() == null)
+if (perceroObject.getPulseUser() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getTraceLog().getID());
+		pstmt.setString(5, perceroObject.getPulseUser().getID());
 }
 
 
-if (perceroObject.getPulseUser() == null)
+if (perceroObject.getTraceLog() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getPulseUser().getID());
+		pstmt.setString(6, perceroObject.getTraceLog().getID());
 }
 
 
@@ -194,27 +194,27 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(TraceEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getLogMessage());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getTimestamp()));
-pstmt.setString(3, perceroObject.getTraceType());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getTimestamp()));
+pstmt.setString(2, perceroObject.getTraceType());
+pstmt.setString(3, perceroObject.getLogMessage());
 
-if (perceroObject.getTraceLog() == null)
+if (perceroObject.getPulseUser() == null)
 {
 pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getTraceLog().getID());
+		pstmt.setString(4, perceroObject.getPulseUser().getID());
 }
 
 
-if (perceroObject.getPulseUser() == null)
+if (perceroObject.getTraceLog() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getPulseUser().getID());
+		pstmt.setString(5, perceroObject.getTraceLog().getID());
 }
 
 pstmt.setString(6, perceroObject.getID());
@@ -234,28 +234,11 @@ pstmt.setString(6, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useLogMessage = StringUtils.hasText(theQueryObject.getLogMessage()) && (excludeProperties == null || !excludeProperties.contains("logMessage"));
-
-if (useLogMessage)
-{
-sql += " WHERE ";
-sql += " \"LOG_MESSAGE\" =? ";
-paramValues.add(theQueryObject.getLogMessage());
-propertyCounter++;
-}
-
-boolean useTimestamp = theQueryObject.getTimestamp() != null && (excludeProperties == null || !excludeProperties.contains("timestamp"));
+		boolean useTimestamp = theQueryObject.getTimestamp() != null && (excludeProperties == null || !excludeProperties.contains("timestamp"));
 
 if (useTimestamp)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"TIMESTAMP\" =? ";
 paramValues.add(theQueryObject.getTimestamp());
 propertyCounter++;
@@ -278,9 +261,9 @@ paramValues.add(theQueryObject.getTraceType());
 propertyCounter++;
 }
 
-boolean useTraceLogID = theQueryObject.getTraceLog() != null && (excludeProperties == null || !excludeProperties.contains("traceLog"));
+boolean useLogMessage = StringUtils.hasText(theQueryObject.getLogMessage()) && (excludeProperties == null || !excludeProperties.contains("logMessage"));
 
-if (useTraceLogID)
+if (useLogMessage)
 {
 if (propertyCounter > 0)
 {
@@ -290,8 +273,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TRACE_LOG_ID\" =? ";
-paramValues.add(theQueryObject.getTraceLog().getID());
+sql += " \"LOG_MESSAGE\" =? ";
+paramValues.add(theQueryObject.getLogMessage());
 propertyCounter++;
 }
 
@@ -309,6 +292,23 @@ sql += " WHERE ";
 }
 sql += " \"PULSE_USER_ID\" =? ";
 paramValues.add(theQueryObject.getPulseUser().getID());
+propertyCounter++;
+}
+
+boolean useTraceLogID = theQueryObject.getTraceLog() != null && (excludeProperties == null || !excludeProperties.contains("traceLog"));
+
+if (useTraceLogID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TRACE_LOG_ID\" =? ";
+paramValues.add(theQueryObject.getTraceLog().getID());
 propertyCounter++;
 }
 

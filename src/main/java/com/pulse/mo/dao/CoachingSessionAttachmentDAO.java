@@ -54,7 +54,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\"=?";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\"=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ORDER BY \"COACHING_SESSION_ATTACHMENT\".\"ID\"";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ORDER BY \"COACHING_SESSION_ATTACHMENT\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ORDER BY \"COACHING_SESSION_ATTACHMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ORDER BY \"COACHING_SESSION_ATTACHMENT\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\" IN (?)";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" WHERE \"COACHING_SESSION_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ";
+		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\" FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_SESSION_ATTACHMENT (\"ID\",\"NAME\",\"FILE_URI\",\"DOCUMENT_REFERENCE_ID\",\"TYPE\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO COACHING_SESSION_ATTACHMENT (\"ID\",\"FILE_URI\",\"NAME\",\"DOCUMENT_REFERENCE_ID\",\"TYPE\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"COACHING_SESSION_ATTACHMENT\" SET \"NAME\"=?,\"FILE_URI\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"COACHING_SESSION_ATTACHMENT\" SET \"FILE_URI\"=?,\"NAME\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,9 +137,9 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setFileUri(rs.getString("FILE_URI"));
 
-nextResult.setFileUri(rs.getString("FILE_URI"));
+nextResult.setName(rs.getString("NAME"));
 
 nextResult.setDocumentReferenceId(rs.getString("DOCUMENT_REFERENCE_ID"));
 
@@ -156,8 +156,8 @@ nextResult.setType(rs.getString("TYPE"));
 	protected void setPreparedStatmentInsertParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setString(3, perceroObject.getFileUri());
+pstmt.setString(2, perceroObject.getFileUri());
+pstmt.setString(3, perceroObject.getName());
 pstmt.setString(4, perceroObject.getDocumentReferenceId());
 pstmt.setString(5, perceroObject.getType());
 
@@ -167,8 +167,8 @@ pstmt.setString(5, perceroObject.getType());
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setString(2, perceroObject.getFileUri());
+		pstmt.setString(1, perceroObject.getFileUri());
+pstmt.setString(2, perceroObject.getName());
 pstmt.setString(3, perceroObject.getDocumentReferenceId());
 pstmt.setString(4, perceroObject.getType());
 pstmt.setString(5, perceroObject.getID());
@@ -188,19 +188,19 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useFileUri = StringUtils.hasText(theQueryObject.getFileUri()) && (excludeProperties == null || !excludeProperties.contains("fileUri"));
 
-if (useName)
+if (useFileUri)
 {
 sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"FILE_URI\" =? ";
+paramValues.add(theQueryObject.getFileUri());
 propertyCounter++;
 }
 
-boolean useFileUri = StringUtils.hasText(theQueryObject.getFileUri()) && (excludeProperties == null || !excludeProperties.contains("fileUri"));
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useFileUri)
+if (useName)
 {
 if (propertyCounter > 0)
 {
@@ -210,8 +210,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"FILE_URI\" =? ";
-paramValues.add(theQueryObject.getFileUri());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

@@ -23,19 +23,6 @@ public void setRecentDiscrepancyDetectedNotifications(List<DiscrepancyDetectedNo
 	this.recentDiscrepancyDetectedNotifications = value;
 }
 
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Timecard.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Timecard> recentTimecards;
-public List<Timecard> getRecentTimecards() {
-	return this.recentTimecards;
-}
-
-public void setRecentTimecards(List<Timecard> value) {
-	this.recentTimecards = value;
-}
-
 
 	
 	*/

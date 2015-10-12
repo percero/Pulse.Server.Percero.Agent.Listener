@@ -55,7 +55,7 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\"=?";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
@@ -70,12 +70,12 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ORDER BY \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\"";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ORDER BY \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ORDER BY \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ORDER BY \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" WHERE \"CHANGES_NOT_APPROVED_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -111,17 +111,17 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ";
+		return "SELECT \"CHANGES_NOT_APPROVED_NOTIF\".\"ID\",\"CHANGES_NOT_APPROVED_NOTIF\".\"RESOLVED\",\"CHANGES_NOT_APPROVED_NOTIF\".\"SHIFT_END_DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"APPROVED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"COMPLETE_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"IN_PROGRESS_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NOT_YET_STARTED_STATE_COUNT\",\"CHANGES_NOT_APPROVED_NOTIF\".\"DATE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"NAME\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TYPE\",\"CHANGES_NOT_APPROVED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"CHANGES_NOT_APPROVED_NOTIF\" \"CHANGES_NOT_APPROVED_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO CHANGES_NOT_APPROVED_NOTIF (\"ID\",\"RESOLVED\",\"SHIFT_END_DATE\",\"IN_PROGRESS_STATE_COUNT\",\"NAME\",\"NOT_YET_STARTED_STATE_COUNT\",\"APPROVED_STATE_COUNT\",\"COMPLETE_STATE_COUNT\",\"DATE\",\"TYPE\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO CHANGES_NOT_APPROVED_NOTIF (\"ID\",\"RESOLVED\",\"SHIFT_END_DATE\",\"APPROVED_STATE_COUNT\",\"COMPLETE_STATE_COUNT\",\"IN_PROGRESS_STATE_COUNT\",\"NOT_YET_STARTED_STATE_COUNT\",\"DATE\",\"NAME\",\"TYPE\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"CHANGES_NOT_APPROVED_NOTIF\" SET \"RESOLVED\"=?,\"SHIFT_END_DATE\"=?,\"IN_PROGRESS_STATE_COUNT\"=?,\"NAME\"=?,\"NOT_YET_STARTED_STATE_COUNT\"=?,\"APPROVED_STATE_COUNT\"=?,\"COMPLETE_STATE_COUNT\"=?,\"DATE\"=?,\"TYPE\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"CHANGES_NOT_APPROVED_NOTIF\" SET \"RESOLVED\"=?,\"SHIFT_END_DATE\"=?,\"APPROVED_STATE_COUNT\"=?,\"COMPLETE_STATE_COUNT\"=?,\"IN_PROGRESS_STATE_COUNT\"=?,\"NOT_YET_STARTED_STATE_COUNT\"=?,\"DATE\"=?,\"NAME\"=?,\"TYPE\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -142,17 +142,17 @@ public class ChangesNotApprovedNotificationDAO extends SqlDataAccessObject<Chang
 
 nextResult.setShiftEndDate(rs.getDate("SHIFT_END_DATE"));
 
-nextResult.setInProgressStateCount(rs.getInt("IN_PROGRESS_STATE_COUNT"));
-
-nextResult.setName(rs.getString("NAME"));
-
-nextResult.setNotYetStartedStateCount(rs.getInt("NOT_YET_STARTED_STATE_COUNT"));
-
 nextResult.setApprovedStateCount(rs.getInt("APPROVED_STATE_COUNT"));
 
 nextResult.setCompleteStateCount(rs.getInt("COMPLETE_STATE_COUNT"));
 
+nextResult.setInProgressStateCount(rs.getInt("IN_PROGRESS_STATE_COUNT"));
+
+nextResult.setNotYetStartedStateCount(rs.getInt("NOT_YET_STARTED_STATE_COUNT"));
+
 nextResult.setDate(rs.getString("DATE"));
+
+nextResult.setName(rs.getString("NAME"));
 
 nextResult.setType(rs.getString("TYPE"));
 
@@ -173,12 +173,12 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setBoolean(2, perceroObject.getResolved());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
-pstmt.setInt(4, perceroObject.getInProgressStateCount());
-pstmt.setString(5, perceroObject.getName());
-pstmt.setInt(6, perceroObject.getNotYetStartedStateCount());
-pstmt.setInt(7, perceroObject.getApprovedStateCount());
-pstmt.setInt(8, perceroObject.getCompleteStateCount());
-pstmt.setString(9, perceroObject.getDate());
+pstmt.setInt(4, perceroObject.getApprovedStateCount());
+pstmt.setInt(5, perceroObject.getCompleteStateCount());
+pstmt.setInt(6, perceroObject.getInProgressStateCount());
+pstmt.setInt(7, perceroObject.getNotYetStartedStateCount());
+pstmt.setString(8, perceroObject.getDate());
+pstmt.setString(9, perceroObject.getName());
 pstmt.setString(10, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
@@ -199,12 +199,12 @@ else
 		
 		pstmt.setBoolean(1, perceroObject.getResolved());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
-pstmt.setInt(3, perceroObject.getInProgressStateCount());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setInt(5, perceroObject.getNotYetStartedStateCount());
-pstmt.setInt(6, perceroObject.getApprovedStateCount());
-pstmt.setInt(7, perceroObject.getCompleteStateCount());
-pstmt.setString(8, perceroObject.getDate());
+pstmt.setInt(3, perceroObject.getApprovedStateCount());
+pstmt.setInt(4, perceroObject.getCompleteStateCount());
+pstmt.setInt(5, perceroObject.getInProgressStateCount());
+pstmt.setInt(6, perceroObject.getNotYetStartedStateCount());
+pstmt.setString(7, perceroObject.getDate());
+pstmt.setString(8, perceroObject.getName());
 pstmt.setString(9, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
@@ -260,57 +260,6 @@ paramValues.add(theQueryObject.getShiftEndDate());
 propertyCounter++;
 }
 
-boolean useInProgressStateCount = theQueryObject.getInProgressStateCount() != null && (excludeProperties == null || !excludeProperties.contains("inProgressStateCount"));
-
-if (useInProgressStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"IN_PROGRESS_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getInProgressStateCount());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useNotYetStartedStateCount = theQueryObject.getNotYetStartedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("notYetStartedStateCount"));
-
-if (useNotYetStartedStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NOT_YET_STARTED_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getNotYetStartedStateCount());
-propertyCounter++;
-}
-
 boolean useApprovedStateCount = theQueryObject.getApprovedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("approvedStateCount"));
 
 if (useApprovedStateCount)
@@ -345,6 +294,40 @@ paramValues.add(theQueryObject.getCompleteStateCount());
 propertyCounter++;
 }
 
+boolean useInProgressStateCount = theQueryObject.getInProgressStateCount() != null && (excludeProperties == null || !excludeProperties.contains("inProgressStateCount"));
+
+if (useInProgressStateCount)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"IN_PROGRESS_STATE_COUNT\" =? ";
+paramValues.add(theQueryObject.getInProgressStateCount());
+propertyCounter++;
+}
+
+boolean useNotYetStartedStateCount = theQueryObject.getNotYetStartedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("notYetStartedStateCount"));
+
+if (useNotYetStartedStateCount)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NOT_YET_STARTED_STATE_COUNT\" =? ";
+paramValues.add(theQueryObject.getNotYetStartedStateCount());
+propertyCounter++;
+}
+
 boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
@@ -359,6 +342,23 @@ sql += " WHERE ";
 }
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
