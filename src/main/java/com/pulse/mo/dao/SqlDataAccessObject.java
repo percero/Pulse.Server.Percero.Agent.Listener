@@ -158,25 +158,22 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			return null;
 		}
 		
+		long timeStart = System.currentTimeMillis();
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		String sql = null;
+		int result = 0;
 		try {
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
-			String sql = getInsertIntoSQL();
+			sql = getInsertIntoSQL();
 			pstmt = conn.prepareStatement(sql);
 			
 			setPreparedStatmentInsertParams(perceroObject, pstmt);
-			int result = pstmt.executeUpdate();
-			
-			if (result > 0) {
-				return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
-			}
-			else {
-				return null;
-			}
+			result = pstmt.executeUpdate();
 		} catch(Exception e) {
-			log.error("Unable to executeUpdate", e);
+			log.error("Unable to executeUpdate\n" + sql, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -189,6 +186,19 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
+		
+		if (result > 0) {
+			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+		}
+		else {
+			return null;
 		}
 	}
 
@@ -229,6 +239,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		sql = sql.replace("?", questionMarkString);
         log.debug("running retrieveObjects query: \n"+sql);
 
+		long timeStart = System.currentTimeMillis();
+		
         Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -250,7 +262,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects", e);
+			log.error("Unable to retrieveObjects\n" + sql, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -263,6 +275,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
 		}
 		
 		return results;
@@ -291,6 +309,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		List<T> results = new ArrayList<T>();
 		log.debug("running executeSelect query: \n"+selectQueryString);
 
+		long timeStart = System.currentTimeMillis();
+		
 		// Open the database session.
 		Connection conn = null;
 		Statement stmt = null;
@@ -307,7 +327,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
     			results.add(nextResult);
 	        }
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects", e);
+			log.error("Unable to retrieveObjects\n" + selectQueryString, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -322,6 +342,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			}
 		}
 		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString);
+		}
+		
 		return results;
 	}
 	
@@ -329,7 +355,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
 		log.debug("running selectById query: \n"+selectQueryString+"\nID: "+id);
+		
 		long timeStart = System.currentTimeMillis();
+		
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -345,7 +373,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects", e);
+			log.error("Unable to retrieveObjects\n" + selectQueryString, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -363,7 +391,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.info("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString+"\nID: "+id);
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString+"\nID: "+id);
 		}
 		
 		return results;
@@ -374,6 +402,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		List<T> results = new ArrayList<T>();
 		log.debug("running executeSelectWithParams query: \n"+selectQueryString+"\nparams: "+paramValues);
 
+		long timeStart = System.currentTimeMillis();
+		
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -392,7 +422,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects", e);
+			log.error("Unable to retrieveObjects\n" + selectQueryString, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -405,6 +435,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString);
 		}
 		
 		return results;
@@ -431,6 +467,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		}
 		List<T> objects = new ArrayList<T>();
 		
+		long timeStart = System.currentTimeMillis();
+		
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -452,7 +490,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				objects.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects", e);
+			log.error("Unable to retrieveObjects\n" + sql, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -465,6 +503,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
 		}
 		
 		PerceroList<T> results = new PerceroList<T>(objects);
@@ -484,9 +528,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		String sql = getCountAllSQL();
         log.debug("running countAll query: \n"+sql);
 
+		long timeStart = System.currentTimeMillis();
+		
         // Open the database session.
 		Connection conn = null;
 		Statement stmt = null;
+		Integer result = null;
 		try {
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
@@ -496,13 +543,10 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			
 	        ResultSet rs = stmt.executeQuery(sql);
 	        if (rs.next()) {
-	        	return rs.getInt(1);
-	        }
-	        else {
-	        	return null;
+	        	result = rs.getInt(1);
 	        }
 		} catch(Exception e) {
-			log.error("Unable to executeSelectCount", e);
+			log.error("Unable to executeSelectCount\n" + sql, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -516,7 +560,14 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				log.error("Error closing database statement/connection", e);
 			}
 		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
 
+		return result;
 	}
 	
 
@@ -531,25 +582,26 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			return null;
 		}
 		
+		long timeStart = System.currentTimeMillis();
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		String sql = null;
+		T result = null;
 		try {
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
-			String sql = getUpdateSet();
+			sql = getUpdateSet();
 			pstmt = conn.prepareStatement(sql);
 			
 			setPreparedStatmentUpdateParams(perceroObject, pstmt);
-			int result = pstmt.executeUpdate();
+			int updateResult = pstmt.executeUpdate();
 			
-			if (result > 0) {
-				return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
-			}
-			else {
-				return null;
+			if (updateResult > 0) {
+				result = retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
 			}
 		} catch(Exception e) {
-			log.error("Unable to executeUpdate", e);
+			log.error("Unable to executeUpdate\n" + sql, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -563,21 +615,32 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				log.error("Error closing database statement/connection", e);
 			}
 		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
+		
+		return result;
 	}
 
 	protected int executeUpdate(String sqlStatement) throws SyncDataException {
+
+		long timeStart = System.currentTimeMillis();
+		
 		Connection conn = null;
 		Statement stmt = null;
+		int result = 0;
 		try {
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
 			
-	        int queryResult = stmt.executeUpdate(sqlStatement);
-			return queryResult;
+	        result = stmt.executeUpdate(sqlStatement);
 			
 		} catch(Exception e) {
-			log.error("Unable to executeUpdate", e);
+			log.error("Unable to executeUpdate\n" + sqlStatement, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
@@ -591,6 +654,14 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				log.error("Error closing database statement/connection", e);
 			}
 		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sqlStatement);
+		}
+		
+		return result;
 	}
 	
 //	/**
