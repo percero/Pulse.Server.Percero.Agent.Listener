@@ -42,7 +42,14 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"USER_SESSION\" \"USER_SESSION\"";
+	private String whereClause = " WHERE \"USER_SESSION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_SESSION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"USER_SESSION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,78 +58,83 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\".\"ID\"=?";
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\".\"ID\"=?";
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ORDER BY \"ID\"";
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ORDER BY \"USER_SESSION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ORDER BY \"USER_SESSION\".\"ID\"";
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ORDER BY \"USER_SESSION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"USER_SESSION\" \"USER_SESSION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\".\"ID\" IN (?)";
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"USER_SESSION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" WHERE \"USER_SESSION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + " WHERE \"USER_SESSION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ";
+		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\" FROM \"USER_SESSION\" \"USER_SESSION\" ";
+		return "SELECT \"USER_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO USER_SESSION (\"ID\",\"CONNECTED_STATE\",\"DATE\",\"IP_ADDRESS\",\"PULSE_USER_ID\",\"CURRENT_TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO USER_SESSION (\"ID\",\"DATE\",\"CONNECTED_STATE\",\"IP_ADDRESS\",\"PULSE_USER_ID\",\"CURRENT_TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"USER_SESSION\" SET \"CONNECTED_STATE\"=?,\"DATE\"=?,\"IP_ADDRESS\"=?,\"PULSE_USER_ID\"=?,\"CURRENT_TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"USER_SESSION\" SET \"DATE\"=?,\"CONNECTED_STATE\"=?,\"IP_ADDRESS\"=?,\"PULSE_USER_ID\"=?,\"CURRENT_TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,9 +151,9 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
     	
     	if (!shellOnly) 
 		{
-			nextResult.setConnectedState(rs.getString("CONNECTED_STATE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setConnectedState(rs.getString("CONNECTED_STATE"));
 
 nextResult.setIPAddress(rs.getString("IP_ADDRESS"));
 
@@ -164,8 +176,8 @@ nextResult.setCurrentTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(UserSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getConnectedState());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getConnectedState());
 pstmt.setString(4, perceroObject.getIPAddress());
 
 if (perceroObject.getPulseUser() == null)
@@ -194,8 +206,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(UserSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getConnectedState());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(2, perceroObject.getConnectedState());
 pstmt.setString(3, perceroObject.getIPAddress());
 
 if (perceroObject.getPulseUser() == null)
@@ -234,19 +246,19 @@ pstmt.setString(6, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useConnectedState = StringUtils.hasText(theQueryObject.getConnectedState()) && (excludeProperties == null || !excludeProperties.contains("connectedState"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useConnectedState)
+if (useDate)
 {
 sql += " WHERE ";
-sql += " \"CONNECTED_STATE\" =? ";
-paramValues.add(theQueryObject.getConnectedState());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useConnectedState = StringUtils.hasText(theQueryObject.getConnectedState()) && (excludeProperties == null || !excludeProperties.contains("connectedState"));
 
-if (useDate)
+if (useConnectedState)
 {
 if (propertyCounter > 0)
 {
@@ -256,8 +268,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"CONNECTED_STATE\" =? ";
+paramValues.add(theQueryObject.getConnectedState());
 propertyCounter++;
 }
 

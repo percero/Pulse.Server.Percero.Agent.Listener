@@ -41,7 +41,14 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
+	private String whereClause = " WHERE \"NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"NOTIFICATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,78 +57,83 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\".\"ID\"=?";
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\".\"ID\"=?";
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ORDER BY \"ID\"";
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ORDER BY \"NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ORDER BY \"NOTIFICATION\".\"ID\"";
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ORDER BY \"NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"NOTIFICATION\" \"NOTIFICATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\".\"ID\" IN (?)";
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ";
+		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"TEAM_LEADER_ID\" FROM \"NOTIFICATION\" \"NOTIFICATION\" ";
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO NOTIFICATION (\"ID\",\"NAME\",\"DATE\",\"TYPE\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO NOTIFICATION (\"ID\",\"TYPE\",\"DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"NOTIFICATION\" SET \"NAME\"=?,\"DATE\"=?,\"TYPE\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"NOTIFICATION\" SET \"TYPE\"=?,\"DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,11 +150,11 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setDate(rs.getDate("DATE"));
 
-nextResult.setType(rs.getString("TYPE"));
+nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -159,9 +171,9 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
+pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(4, perceroObject.getType());
+pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -179,9 +191,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getType());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getType());
+pstmt.setString(3, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -209,13 +221,13 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
 
-if (useName)
+if (useType)
 {
 sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
@@ -236,9 +248,9 @@ paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useType)
+if (useName)
 {
 if (propertyCounter > 0)
 {
@@ -248,8 +260,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

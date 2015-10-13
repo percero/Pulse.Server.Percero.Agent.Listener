@@ -41,7 +41,14 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\"";
+	private String selectFromStatementTableName = " FROM \"EMAIL\" \"EMAIL\"";
+	private String whereClause = " WHERE \"EMAIL\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"EMAIL\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"EMAIL\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\"=?";
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\"=?";
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"ID\"";
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\"";
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ORDER BY \"EMAIL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"EMAIL\" \"EMAIL\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\".\"ID\" IN (?)";
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\"." + joinColumnName + "=?";
+		
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"EMAIL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" WHERE \"EMAIL\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + " WHERE \"EMAIL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" FROM \"EMAIL\" \"EMAIL\" ";
+		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"EMAIL\".\"ID\",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\" FROM \"EMAIL\" \"EMAIL\" ";
+		return "SELECT \"EMAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

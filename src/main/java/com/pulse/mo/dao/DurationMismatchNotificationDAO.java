@@ -40,7 +40,14 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessObject<Duratio
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
+	private String whereClause = " WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"DURATION_MISMATCH_NOTIF\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -49,78 +56,83 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessObject<Duratio
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ORDER BY \"ID\"";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ORDER BY \"DURATION_MISMATCH_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ORDER BY \"DURATION_MISMATCH_NOTIF\".\"ID\"";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ORDER BY \"DURATION_MISMATCH_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
+		
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\" ";
+		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DURATION_MISMATCH_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"DURATION\",\"END_TIME\",\"MESSAGE\",\"NAME\",\"START_TIME\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO DURATION_MISMATCH_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"DATE\",\"END_TIME\",\"START_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DURATION_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"DURATION\"=?,\"END_TIME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"START_TIME\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"DURATION_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"END_TIME\"=?,\"START_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -141,27 +153,27 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessObject<Duratio
 
 nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
-
 nextResult.setDate(rs.getDate("DATE"));
+
+nextResult.setEndTime(rs.getDate("END_TIME"));
+
+nextResult.setStartTime(rs.getDate("START_TIME"));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 
-nextResult.setEndTime(rs.getDate("END_TIME"));
+nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
 
-nextResult.setStartTime(rs.getDate("START_TIME"));
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
-
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -180,31 +192,31 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getTimecardActivityName());
 pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getAuxCodeEntryName());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDouble(6, perceroObject.getDuration());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-pstmt.setString(8, perceroObject.getMessage());
-pstmt.setString(9, perceroObject.getName());
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDouble(7, perceroObject.getDuration());
+pstmt.setString(8, perceroObject.getAuxCodeEntryName());
+pstmt.setString(9, perceroObject.getMessage());
+pstmt.setString(10, perceroObject.getName());
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(11, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getAgent().getID());
+		pstmt.setString(12, perceroObject.getLOBConfiguration().getID());
 }
 
 
@@ -226,31 +238,31 @@ else
 		
 		pstmt.setString(1, perceroObject.getTimecardActivityName());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getAuxCodeEntryName());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDouble(5, perceroObject.getDuration());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-pstmt.setString(7, perceroObject.getMessage());
-pstmt.setString(8, perceroObject.getName());
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDouble(6, perceroObject.getDuration());
+pstmt.setString(7, perceroObject.getAuxCodeEntryName());
+pstmt.setString(8, perceroObject.getMessage());
+pstmt.setString(9, perceroObject.getName());
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(10, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(10, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getAgent().getID());
+		pstmt.setString(11, perceroObject.getLOBConfiguration().getID());
 }
 
 
@@ -307,23 +319,6 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
-
-if (useAuxCodeEntryName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
-paramValues.add(theQueryObject.getAuxCodeEntryName());
-propertyCounter++;
-}
-
 boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
@@ -338,6 +333,40 @@ sql += " WHERE ";
 }
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+
+if (useEndTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"END_TIME\" =? ";
+paramValues.add(theQueryObject.getEndTime());
+propertyCounter++;
+}
+
+boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+
+if (useStartTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"START_TIME\" =? ";
+paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 
@@ -358,9 +387,9 @@ paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
 
-if (useEndTime)
+if (useAuxCodeEntryName)
 {
 if (propertyCounter > 0)
 {
@@ -370,8 +399,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"END_TIME\" =? ";
-paramValues.add(theQueryObject.getEndTime());
+sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
+paramValues.add(theQueryObject.getAuxCodeEntryName());
 propertyCounter++;
 }
 
@@ -409,9 +438,9 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useStartTime)
+if (useAgentID)
 {
 if (propertyCounter > 0)
 {
@@ -421,8 +450,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"START_TIME\" =? ";
-paramValues.add(theQueryObject.getStartTime());
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
@@ -440,23 +469,6 @@ sql += " WHERE ";
 }
 sql += " \"LOB_CONFIGURATION_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfiguration().getID());
-propertyCounter++;
-}
-
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

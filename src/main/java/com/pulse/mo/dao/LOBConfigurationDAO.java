@@ -43,7 +43,14 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = "";
+	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\"";
+	private String whereClause = " WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -52,68 +59,73 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"ID\"";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\"";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ORDER BY \"LOB_CONFIGURATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\".\"ID\" IN (?)";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\" ";
+		return "SELECT \"LOB_CONFIGURATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

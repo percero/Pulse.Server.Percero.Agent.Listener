@@ -21,8 +21,7 @@ import com.pulse.mo.*;
 import com.pulse.mo.AdhocCoachingSession;
 import com.pulse.mo.CoachingComment;
 import com.pulse.mo.AdhocCoachingCategory;
-import com.pulse.mo.Agent;
-import com.pulse.mo.TeamLeader;
+import com.pulse.mo.AgentScorecard;
 
 */
 
@@ -44,7 +43,15 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"EMPLOYEE_ID\",\"ADHOC_COACHING_SESSION\".\"SCORECARD_ID\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_SCORECARD_ID\"";
+	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\"";
+	private String whereClause = " WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
 	
+	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQLID From Dual) WHERE ADHOC_COACHING_SESSION.AGENT_ID= SUBSTR(SQLID,0,9) AND ADHOC_COACHING_SESSION.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND ADHOC_COACHING_SESSION.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -53,78 +60,91 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ID\"";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\".\"ID\" IN (?)";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDCoachingSession;
+}
+		
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDCoachingSession;
+}
+		
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"TEAM_LEADER_ID\" FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\" ";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ADHOC_COACHING_SESSION (\"ID\",\"SESSION_TYPE\",\"STATUS\",\"WEEK_DATE\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO ADHOC_COACHING_SESSION (\"ID\",\"SESSION_TYPE\",\"STATUS\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"ADHOC_COACHING_SESSION\" SET \"SESSION_TYPE\"=?,\"STATUS\"=?,\"WEEK_DATE\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"ADHOC_COACHING_SESSION\" SET \"SESSION_TYPE\"=?,\"STATUS\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -147,17 +167,17 @@ nextResult.setStatus(rs.getString("STATUS"));
 
 nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
+nextResult.setEmployeeId(rs.getInt("EMPLOYEE_ID"));
+
+nextResult.setScorecardId(rs.getInt("SCORECARD_ID"));
+
 AdhocCoachingCategory adhoccoachingcategory = new AdhocCoachingCategory();
 adhoccoachingcategory.setID(rs.getString("ADHOC_COACHING_CATEGORY_ID"));
 nextResult.setAdhocCoachingCategory(adhoccoachingcategory);
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-nextResult.setTeamLeader(teamleader);
+AgentScorecard agentscorecard = new AgentScorecard();
+agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
+nextResult.setAgentScorecard(agentscorecard);
 
 
 			
@@ -173,34 +193,26 @@ nextResult.setTeamLeader(teamleader);
 pstmt.setString(2, perceroObject.getSessionType());
 pstmt.setString(3, perceroObject.getStatus());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(5, perceroObject.getEmployeeId());
+pstmt.setInt(6, perceroObject.getScorecardId());
 
 if (perceroObject.getAdhocCoachingCategory() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getAdhocCoachingCategory().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getTeamLeader().getID());
+		pstmt.setString(7, perceroObject.getAdhocCoachingCategory().getID());
+}
+
+
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getAgentScorecard().getID());
 }
 
 
@@ -213,37 +225,29 @@ else
 		pstmt.setString(1, perceroObject.getSessionType());
 pstmt.setString(2, perceroObject.getStatus());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(4, perceroObject.getEmployeeId());
+pstmt.setInt(5, perceroObject.getScorecardId());
 
 if (perceroObject.getAdhocCoachingCategory() == null)
-{
-pstmt.setString(4, null);
-}
-else
-{
-		pstmt.setString(4, perceroObject.getAdhocCoachingCategory().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getTeamLeader().getID());
+		pstmt.setString(6, perceroObject.getAdhocCoachingCategory().getID());
 }
 
-pstmt.setString(7, perceroObject.getID());
+
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(7, null);
+}
+else
+{
+		pstmt.setString(7, perceroObject.getAgentScorecard().getID());
+}
+
+pstmt.setString(8, perceroObject.getID());
 
 		
 	}
@@ -304,6 +308,40 @@ paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 
+boolean useEmployeeId = theQueryObject.getEmployeeId() != null && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+if (useEmployeeId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getEmployeeId());
+propertyCounter++;
+}
+
+boolean useScorecardId = theQueryObject.getScorecardId() != null && (excludeProperties == null || !excludeProperties.contains("scorecardId"));
+
+if (useScorecardId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardId());
+propertyCounter++;
+}
+
 boolean useAdhocCoachingCategoryID = theQueryObject.getAdhocCoachingCategory() != null && (excludeProperties == null || !excludeProperties.contains("adhocCoachingCategory"));
 
 if (useAdhocCoachingCategoryID)
@@ -321,9 +359,9 @@ paramValues.add(theQueryObject.getAdhocCoachingCategory().getID());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
 
-if (useAgentID)
+if (useAgentScorecardID)
 {
 if (propertyCounter > 0)
 {
@@ -333,25 +371,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-if (useTeamLeaderID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TEAM_LEADER_ID\" =? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
+sql += " \"AGENT_SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getAgentScorecard().getID());
 propertyCounter++;
 }
 

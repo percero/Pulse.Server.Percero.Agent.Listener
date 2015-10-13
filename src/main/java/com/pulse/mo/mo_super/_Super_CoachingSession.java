@@ -119,22 +119,22 @@ public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
 }/*
-WekendDate
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date wekendDate;
+private Integer employeeId;
 
-public Date getWekendDate() 
+public Integer getEmployeeId() 
 {
-	return this.wekendDate;
+	return this.employeeId;
 }
 
-public void setWekendDate(Date wekendDate)
+public void setEmployeeId(Integer employeeId)
 {
-	this.wekendDate = wekendDate;
+	this.employeeId = employeeId;
 }/*
 UpdatedBy
 Notes:
@@ -187,6 +187,23 @@ public void setCurrentMTDThresholdGrade(Double currentMTDThresholdGrade)
 {
 	this.currentMTDThresholdGrade = currentMTDThresholdGrade;
 }/*
+ScorecardId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer scorecardId;
+
+public Integer getScorecardId() 
+{
+	return this.scorecardId;
+}
+
+public void setScorecardId(Integer scorecardId)
+{
+	this.scorecardId = scorecardId;
+}/*
 CreatedBy
 Notes:
 */
@@ -221,23 +238,6 @@ public void setWeeklyOverallScore(String weeklyOverallScore)
 {
 	this.weeklyOverallScore = weeklyOverallScore;
 }/*
-WeekendDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weekendDate;
-
-public String getWeekendDate() 
-{
-	return this.weekendDate;
-}
-
-public void setWeekendDate(String weekendDate)
-{
-	this.weekendDate = weekendDate;
-}/*
 CreatedOn
 Notes:
 */
@@ -271,6 +271,23 @@ public Boolean getIsRequired()
 public void setIsRequired(Boolean isRequired)
 {
 	this.isRequired = isRequired;
+}/*
+WeekDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekDate;
+
+public Date getWeekDate() 
+{
+	return this.weekDate;
+}
+
+public void setWeekDate(Date weekDate)
+{
+	this.weekDate = weekDate;
 }/*
 ClosedOn
 Notes:
@@ -406,12 +423,26 @@ public void setAgentScorecard(AgentScorecard value) {
 		else {
 			objectJson += getUpdatedOn().getTime();
 		}
-		//Retrieve value of the Wekend Date property
-		objectJson += ",\"wekendDate\":";
-		if (getWekendDate() == null)
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
-			objectJson += getWekendDate().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
@@ -447,6 +478,27 @@ public void setAgentScorecard(AgentScorecard value) {
 			objectJson += "null";
 		else {
 			objectJson += getCurrentMTDThresholdGrade();
+		}
+		//Retrieve value of the Scorecard Id property
+		objectJson += ",\"scorecardId\":";
+		
+		if (getScorecardId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getScorecardId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
@@ -490,27 +542,6 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Weekend Date property
-		objectJson += ",\"weekendDate\":";
-		
-		if (getWeekendDate() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeekendDate());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
 		if (getCreatedOn() == null)
@@ -524,6 +555,13 @@ public void setAgentScorecard(AgentScorecard value) {
 			objectJson += "null";
 		else {
 			objectJson += getIsRequired();
+		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
 		}
 		//Retrieve value of the Closed On property
 		objectJson += ",\"closedOn\":";
@@ -632,24 +670,26 @@ objectJson += ",\"qualityEvaluations\":[";
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
-		//From value of the Wekend Date property
-		setWekendDate(JsonUtils.getJsonDate(jsonObject, "wekendDate"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Previous MTD Threshold Grade property
 		setPreviousMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "previousMTDThresholdGrade"));
 		//From value of the Current MTD Threshold Grade property
 		setCurrentMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "currentMTDThresholdGrade"));
+		//From value of the Scorecard Id property
+		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Weekly Overall Score property
 		setWeeklyOverallScore(JsonUtils.getJsonString(jsonObject, "weeklyOverallScore"));
-		//From value of the Weekend Date property
-		setWeekendDate(JsonUtils.getJsonString(jsonObject, "weekendDate"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Is Required property
 		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Closed On property
 		setClosedOn(JsonUtils.getJsonDate(jsonObject, "closedOn"));
 		//From value of the Weekly Overall Score State Name property

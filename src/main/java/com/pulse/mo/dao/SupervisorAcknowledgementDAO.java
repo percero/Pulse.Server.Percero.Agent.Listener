@@ -41,7 +41,14 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\"";
+	private String whereClause = " WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,78 +57,83 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"=?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"=?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"ID\"";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ORDER BY \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" IN (?)";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
+		
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"SUPERVISOR_ACKNOWLEDGEMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"NAME\",\"SUPERVISOR_ACKNOWLEDGEMENT\".\"DATE\" FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" \"SUPERVISOR_ACKNOWLEDGEMENT\" ";
+		return "SELECT \"SUPERVISOR_ACKNOWLEDGEMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR_ACKNOWLEDGEMENT (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
+		return "INSERT INTO SUPERVISOR_ACKNOWLEDGEMENT (\"ID\",\"DATE\",\"NAME\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SUPERVISOR_ACKNOWLEDGEMENT\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"SUPERVISOR_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,9 +150,9 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setDate(rs.getDate("DATE"));
 
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setName(rs.getString("NAME"));
 
 
 			
@@ -153,8 +165,8 @@ nextResult.setDate(rs.getDate("DATE"));
 	protected void setPreparedStatmentInsertParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getName());
 
 		
 	}
@@ -162,8 +174,8 @@ pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 	@Override
 	protected void setPreparedStatmentUpdateParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(2, perceroObject.getName());
 pstmt.setString(3, perceroObject.getID());
 
 		
@@ -181,19 +193,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 if (propertyCounter > 0)
 {
@@ -203,8 +215,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

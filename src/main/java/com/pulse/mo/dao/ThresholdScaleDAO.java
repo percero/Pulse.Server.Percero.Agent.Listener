@@ -41,7 +41,14 @@ public class ThresholdScaleDAO extends SqlDataAccessObject<ThresholdScale> imple
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\"";
+	private String selectFromStatementTableName = " FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\"";
+	private String whereClause = " WHERE \"THRESHOLD_SCALE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRESHOLD_SCALE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"THRESHOLD_SCALE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class ThresholdScaleDAO extends SqlDataAccessObject<ThresholdScale> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\".\"ID\"=?";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\".\"ID\"=?";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ORDER BY \"ID\"";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ORDER BY \"THRESHOLD_SCALE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ORDER BY \"THRESHOLD_SCALE\".\"ID\"";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ORDER BY \"THRESHOLD_SCALE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\".\"ID\" IN (?)";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"THRESHOLD_SCALE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" WHERE \"THRESHOLD_SCALE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName + " WHERE \"THRESHOLD_SCALE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"THRESHOLD_SCALE\".\"ID\",\"THRESHOLD_SCALE\".\"DATE\",\"THRESHOLD_SCALE\".\"GOAL\" FROM \"THRESHOLD_SCALE\" \"THRESHOLD_SCALE\" ";
+		return "SELECT \"THRESHOLD_SCALE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

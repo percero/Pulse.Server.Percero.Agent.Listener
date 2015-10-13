@@ -44,7 +44,9 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"ID\" as \"ID\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"TIMECARD_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"ID\" as \"ID\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", '' as \"NOTIFICATION_RESOLVED\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"TIMECARD_ID\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -141,9 +143,13 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
+			nextResult.setToTime(rs.getString("TO_TIME"));
+
+nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
+
+nextResult.setDuration(rs.getDouble("DURATION"));
 
 nextResult.setActionCode(rs.getString("ACTION_CODE"));
 
@@ -151,13 +157,9 @@ nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
 
-nextResult.setDuration(rs.getDouble("DURATION"));
-
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 nextResult.setFromTime(rs.getString("FROM_TIME"));
-
-nextResult.setToTime(rs.getString("TO_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -196,11 +198,28 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useNotificationDetected = theQueryObject.getNotificationDetected() != null && (excludeProperties == null || !excludeProperties.contains("notificationDetected"));
+		boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
+
+if (useToTime)
+{
+sql += " WHERE ";
+sql += " TO_TIME=? ";
+paramValues.add(theQueryObject.getToTime());
+propertyCounter++;
+}
+
+boolean useNotificationDetected = theQueryObject.getNotificationDetected() != null && (excludeProperties == null || !excludeProperties.contains("notificationDetected"));
 
 if (useNotificationDetected)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " NOTIFICATION_DETECTED=? ";
 paramValues.add(theQueryObject.getNotificationDetected());
 propertyCounter++;
@@ -220,6 +239,23 @@ sql += " WHERE ";
 }
 sql += " NOTIFICATION_RESOLVED=? ";
 paramValues.add(theQueryObject.getNotificationResolved());
+propertyCounter++;
+}
+
+boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
+
+if (useDuration)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DURATION=? ";
+paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 
@@ -274,23 +310,6 @@ paramValues.add(theQueryObject.getActivityName());
 propertyCounter++;
 }
 
-boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
-
-if (useDuration)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DURATION=? ";
-paramValues.add(theQueryObject.getDuration());
-propertyCounter++;
-}
-
 boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
 
 if (useEStartProjectName)
@@ -322,23 +341,6 @@ sql += " WHERE ";
 }
 sql += " FROM_TIME=? ";
 paramValues.add(theQueryObject.getFromTime());
-propertyCounter++;
-}
-
-boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
-
-if (useToTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " TO_TIME=? ";
-paramValues.add(theQueryObject.getToTime());
 propertyCounter++;
 }
 

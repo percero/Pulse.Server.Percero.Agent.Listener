@@ -311,19 +311,6 @@ public void setScheduleEntries(List<ScheduleEntry> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocCoachingSession> adhocCoachingSessions;
-public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-	return this.adhocCoachingSessions;
-}
-
-public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-	this.adhocCoachingSessions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Schedule.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Schedule> schedules;
 public List<Schedule> getSchedules() {
@@ -686,23 +673,6 @@ objectJson += ",\"scheduleEntries\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of Adhoc Coaching Session relationship
-objectJson += ",\"adhocCoachingSessions\":[";
-		
-		if (getAdhocCoachingSessions() != null) {
-			int adhocCoachingSessionsCounter = 0;
-			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-				if (adhocCoachingSessionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-					adhocCoachingSessionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Schedule relationship
 objectJson += ",\"schedules\":[";
 		
@@ -794,7 +764,6 @@ objectJson += ",\"cMSEntries\":[";
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 		this.scheduleEntries = (List<ScheduleEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduleEntries");
-		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
@@ -816,7 +785,6 @@ objectJson += ",\"cMSEntries\":[";
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(ScheduleEntry.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Schedule.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));

@@ -19,7 +19,6 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Observation;
-import com.pulse.mo.ScorecardMeasure;
 
 */
 
@@ -41,7 +40,14 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = "";
+	private String selectFromStatementTableName = " FROM \"OBSERVATION\" \"OBSERVATION\"";
+	private String whereClause = " WHERE \"OBSERVATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OBSERVATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"OBSERVATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,78 +56,83 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\"=?";
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\"=?";
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"ID\"";
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\"";
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ORDER BY \"OBSERVATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"OBSERVATION\" \"OBSERVATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\".\"ID\" IN (?)";
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"OBSERVATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" WHERE \"OBSERVATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"OBSERVATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"OBSERVATION\".\"ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ";
+		return "SELECT \"OBSERVATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"OBSERVATION\".\"ID\",\"OBSERVATION\".\"SCORECARD_MEASURE_ID\" FROM \"OBSERVATION\" \"OBSERVATION\" ";
+		return "SELECT \"OBSERVATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO OBSERVATION (\"ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?)";
+		return "INSERT INTO OBSERVATION (\"ID\") VALUES (?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"OBSERVATION\" SET \"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"OBSERVATION\" SET  WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,11 +149,7 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
     	
     	if (!shellOnly) 
 		{
-			ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
-nextResult.setScorecardMeasure(scorecardmeasure);
-
-
+			
 			
     	}
     	
@@ -154,33 +161,13 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getScorecardMeasure().getID());
-}
-
-
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(Observation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(1, null);
-}
-else
-{
-		pstmt.setString(1, perceroObject.getScorecardMeasure().getID());
-}
-
-pstmt.setString(2, perceroObject.getID());
+		pstmt.setString(1, perceroObject.getID());
 
 		
 	}
@@ -197,17 +184,7 @@ pstmt.setString(2, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
-
-if (useScorecardMeasureID)
-{
-sql += " WHERE ";
-sql += " \"SCORECARD_MEASURE_ID\" =? ";
-paramValues.add(theQueryObject.getScorecardMeasure().getID());
-propertyCounter++;
-}
-
-
+		
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
 		

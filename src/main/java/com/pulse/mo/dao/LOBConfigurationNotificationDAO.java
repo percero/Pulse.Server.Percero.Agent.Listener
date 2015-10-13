@@ -42,7 +42,14 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessObject<LOBConf
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
+	private String whereClause = " WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,78 +58,83 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessObject<LOBConf
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ORDER BY \"ID\"";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\"";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
+		
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\" FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\" ";
+		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO LOB_CONFIGURATION_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO LOB_CONFIGURATION_NOTIF (\"ID\",\"TYPE\",\"DATE\",\"MESSAGE\",\"NAME\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"LOB_CONFIGURATION_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"LOB_CONFIGURATION_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,21 +151,21 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessObject<LOBConf
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
 
-nextResult.setType(rs.getString("TYPE"));
+LOBConfiguration lobconfiguration = new LOBConfiguration();
+lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
+nextResult.setLOBConfiguration(lobconfiguration);
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
-
-LOBConfiguration lobconfiguration = new LOBConfiguration();
-lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
-nextResult.setLOBConfiguration(lobconfiguration);
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -170,28 +182,28 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setString(5, perceroObject.getType());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getAgent().getID());
+		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(7, perceroObject.getAgent().getID());
 }
 
 
@@ -211,28 +223,28 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getMessage());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getType());
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getAgent().getID());
+		pstmt.setString(5, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(6, perceroObject.getAgent().getID());
 }
 
 
@@ -262,11 +274,28 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+sql += " WHERE ";
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -306,9 +335,9 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useLOBConfigurationID = theQueryObject.getLOBConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfiguration"));
 
-if (useType)
+if (useLOBConfigurationID)
 {
 if (propertyCounter > 0)
 {
@@ -318,8 +347,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
+sql += " \"LOB_CONFIGURATION_ID\" =? ";
+paramValues.add(theQueryObject.getLOBConfiguration().getID());
 propertyCounter++;
 }
 
@@ -337,23 +366,6 @@ sql += " WHERE ";
 }
 sql += " \"AGENT_ID\" =? ";
 paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
-boolean useLOBConfigurationID = theQueryObject.getLOBConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfiguration"));
-
-if (useLOBConfigurationID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LOB_CONFIGURATION_ID\" =? ";
-paramValues.add(theQueryObject.getLOBConfiguration().getID());
 propertyCounter++;
 }
 

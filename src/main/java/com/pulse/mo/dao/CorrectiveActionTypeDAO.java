@@ -41,7 +41,14 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION_TYPE\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\"";
+	private String whereClause = " WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION_TYPE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\"=?";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\"=?";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ORDER BY \"ID\"";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\"";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\" IN (?)";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION_TYPE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" WHERE \"CORRECTIVE_ACTION_TYPE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION_TYPE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\",\"CORRECTIVE_ACTION_TYPE\".\"NAME\" FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\" ";
+		return "SELECT \"CORRECTIVE_ACTION_TYPE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

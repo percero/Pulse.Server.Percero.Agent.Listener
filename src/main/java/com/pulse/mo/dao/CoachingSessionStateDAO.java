@@ -40,7 +40,14 @@ public class CoachingSessionStateDAO extends SqlDataAccessObject<CoachingSession
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"COACHING_SESSION_STATE\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\"";
+	private String whereClause = " WHERE \"COACHING_SESSION_STATE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION_STATE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"COACHING_SESSION_STATE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -49,68 +56,73 @@ public class CoachingSessionStateDAO extends SqlDataAccessObject<CoachingSession
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\".\"ID\"=?";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\".\"ID\"=?";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ORDER BY \"ID\"";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ORDER BY \"COACHING_SESSION_STATE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ORDER BY \"COACHING_SESSION_STATE\".\"ID\"";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ORDER BY \"COACHING_SESSION_STATE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\".\"ID\" IN (?)";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_SESSION_STATE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" WHERE \"COACHING_SESSION_STATE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_SESSION_STATE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_STATE\".\"ID\",\"COACHING_SESSION_STATE\".\"NAME\" FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\" ";
+		return "SELECT \"COACHING_SESSION_STATE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

@@ -284,19 +284,6 @@ public void setDueDate(Date dueDate)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfDevelopmentActivity")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Agent agent;
-public Agent getAgent() {
-	return this.agent;
-}
-
-public void setAgent(Agent value) {
-	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="DEVELOPMENT_PLAN_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_DevelopmentPlanOfDevelopmentActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -307,6 +294,19 @@ public DevelopmentPlan getDevelopmentPlan() {
 
 public void setDevelopmentPlan(DevelopmentPlan value) {
 	this.developmentPlan = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfDevelopmentActivity")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Agent agent;
+public Agent getAgent() {
+	return this.agent;
+}
+
+public void setAgent(Agent value) {
+	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -495,18 +495,6 @@ public void setTeamLeader(TeamLeader value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Agent of Development Activity relationship
-objectJson += ",\"agent\":";
-		if (getAgent() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Development Plan of Development Activity relationship
 objectJson += ",\"developmentPlan\":";
 		if (getDevelopmentPlan() == null)
@@ -514,6 +502,18 @@ objectJson += ",\"developmentPlan\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getDevelopmentPlan()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Agent of Development Activity relationship
+objectJson += ",\"agent\":";
+		if (getAgent() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -570,8 +570,8 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Source Relationships
-		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.developmentPlan = (DevelopmentPlan) JsonUtils.getJsonPerceroObject(jsonObject, "developmentPlan");
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
 
 

@@ -199,19 +199,6 @@ public void setUpdatedBy(String updatedBy)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfBehaviorResponse")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Agent agent;
-public Agent getAgent() {
-	return this.agent;
-}
-
-public void setAgent(Agent value) {
-	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="BEHAVIOR_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_BehaviorOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -225,16 +212,16 @@ public void setBehavior(Behavior value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMeasure scorecardMeasure;
-public ScorecardMeasure getScorecardMeasure() {
-	return this.scorecardMeasure;
+private Agent agent;
+public Agent getAgent() {
+	return this.agent;
 }
 
-public void setScorecardMeasure(ScorecardMeasure value) {
-	this.scorecardMeasure = value;
+public void setAgent(Agent value) {
+	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -346,18 +333,6 @@ public void setCoachingSession(CoachingSession value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Agent of Behavior Response relationship
-objectJson += ",\"agent\":";
-		if (getAgent() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Behavior of Behavior Response relationship
 objectJson += ",\"behavior\":";
 		if (getBehavior() == null)
@@ -370,13 +345,13 @@ objectJson += ",\"behavior\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Scorecard Measure of Behavior Response relationship
-objectJson += ",\"scorecardMeasure\":";
-		if (getScorecardMeasure() == null)
+//Retrieve value of the Agent of Behavior Response relationship
+objectJson += ",\"agent\":";
+		if (getAgent() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -423,9 +398,8 @@ objectJson += ",\"coachingSession\":";
 
 		
 		// Source Relationships
-		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
-		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 
 

@@ -43,7 +43,9 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -140,21 +142,21 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setIsHoliday(rs.getString("IS_HOLIDAY"));
+			nextResult.setDate(rs.getDate("DATE"));
+
+nextResult.setEndDate(rs.getDate("END_DATE"));
+
+nextResult.setStartDate(rs.getDate("START_DATE"));
+
+nextResult.setAssumedOff(rs.getString("ASSUMED_OFF"));
+
+nextResult.setIsHoliday(rs.getString("IS_HOLIDAY"));
 
 nextResult.setLocalTimeCode(rs.getString("LOCAL_TIME_CODE"));
 
 nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
-
 nextResult.setTimecardState(rs.getString("TIMECARD_STATE"));
-
-nextResult.setAssumedOff(rs.getString("ASSUMED_OFF"));
-
-nextResult.setDate(rs.getDate("DATE"));
-
-nextResult.setEndDate(rs.getDate("END_DATE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -193,11 +195,79 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useIsHoliday = StringUtils.hasText(theQueryObject.getIsHoliday()) && (excludeProperties == null || !excludeProperties.contains("isHoliday"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+
+if (useDate)
+{
+sql += " WHERE ";
+sql += " DATE=? ";
+paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+
+if (useEndDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " END_DATE=? ";
+paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
+
+if (useStartDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_DATE=? ";
+paramValues.add(theQueryObject.getStartDate());
+propertyCounter++;
+}
+
+boolean useAssumedOff = StringUtils.hasText(theQueryObject.getAssumedOff()) && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
+
+if (useAssumedOff)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " ASSUMED_OFF=? ";
+paramValues.add(theQueryObject.getAssumedOff());
+propertyCounter++;
+}
+
+boolean useIsHoliday = StringUtils.hasText(theQueryObject.getIsHoliday()) && (excludeProperties == null || !excludeProperties.contains("isHoliday"));
 
 if (useIsHoliday)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " IS_HOLIDAY=? ";
 paramValues.add(theQueryObject.getIsHoliday());
 propertyCounter++;
@@ -237,23 +307,6 @@ paramValues.add(theQueryObject.getLockLevel());
 propertyCounter++;
 }
 
-boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
-
-if (useStartDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_DATE=? ";
-paramValues.add(theQueryObject.getStartDate());
-propertyCounter++;
-}
-
 boolean useTimecardState = StringUtils.hasText(theQueryObject.getTimecardState()) && (excludeProperties == null || !excludeProperties.contains("timecardState"));
 
 if (useTimecardState)
@@ -268,57 +321,6 @@ sql += " WHERE ";
 }
 sql += " TIMECARD_STATE=? ";
 paramValues.add(theQueryObject.getTimecardState());
-propertyCounter++;
-}
-
-boolean useAssumedOff = StringUtils.hasText(theQueryObject.getAssumedOff()) && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
-
-if (useAssumedOff)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " ASSUMED_OFF=? ";
-paramValues.add(theQueryObject.getAssumedOff());
-propertyCounter++;
-}
-
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
-
-if (useDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DATE=? ";
-paramValues.add(theQueryObject.getDate());
-propertyCounter++;
-}
-
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
-
-if (useEndDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
 }
 

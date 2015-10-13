@@ -19,9 +19,8 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.BehaviorResponse;
-import com.pulse.mo.Agent;
 import com.pulse.mo.Behavior;
-import com.pulse.mo.ScorecardMeasure;
+import com.pulse.mo.Agent;
 import com.pulse.mo.CoachingSession;
 
 */
@@ -44,7 +43,14 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\"";
+	private String selectFromStatementTableName = " FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\"";
+	private String whereClause = " WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR_RESPONSE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -53,78 +59,83 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"ID\"";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\" IN (?)";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + " WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"RESPONSE\",\"UPDATED_BY\",\"UPDATED_ON\",\"WEEK_DATE\",\"CREATED_BY\",\"CREATED_ON\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"CREATED_BY\",\"UPDATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"BEHAVIOR_RESPONSE\" SET \"RESPONSE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"BEHAVIOR_RESPONSE\" SET \"CREATED_BY\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -141,17 +152,17 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setResponse(rs.getInt("RESPONSE"));
+			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
-
 nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
 nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+
+nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+
+nextResult.setResponse(rs.getInt("RESPONSE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -165,10 +176,6 @@ CoachingSession coachingsession = new CoachingSession();
 coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
 nextResult.setCoachingSession(coachingsession);
 
-ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
-nextResult.setScorecardMeasure(scorecardmeasure);
-
 
 			
     	}
@@ -180,12 +187,12 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setPreparedStatmentInsertParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setInt(2, perceroObject.getResponse());
+pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(6, perceroObject.getCreatedBy());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(7, perceroObject.getResponse());
 
 if (perceroObject.getAgent() == null)
 {
@@ -217,28 +224,18 @@ else
 }
 
 
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
-}
-
-
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setInt(1, perceroObject.getResponse());
+		pstmt.setString(1, perceroObject.getCreatedBy());
 pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(6, perceroObject.getResponse());
 
 if (perceroObject.getAgent() == null)
 {
@@ -269,17 +266,7 @@ else
 		pstmt.setString(9, perceroObject.getCoachingSession().getID());
 }
 
-
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getScorecardMeasure().getID());
-}
-
-pstmt.setString(11, perceroObject.getID());
+pstmt.setString(10, perceroObject.getID());
 
 		
 	}
@@ -296,13 +283,13 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useResponse = theQueryObject.getResponse() != null && (excludeProperties == null || !excludeProperties.contains("response"));
+		boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
-if (useResponse)
+if (useCreatedBy)
 {
 sql += " WHERE ";
-sql += " \"RESPONSE\" =? ";
-paramValues.add(theQueryObject.getResponse());
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
 }
 
@@ -323,23 +310,6 @@ paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
-boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
-
-if (useUpdatedOn)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_ON\" =? ";
-paramValues.add(theQueryObject.getUpdatedOn());
-propertyCounter++;
-}
-
 boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
 
 if (useWeekDate)
@@ -357,23 +327,6 @@ paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
 boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
@@ -388,6 +341,40 @@ sql += " WHERE ";
 }
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
+propertyCounter++;
+}
+
+boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+if (useUpdatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_ON\" =? ";
+paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useResponse = theQueryObject.getResponse() != null && (excludeProperties == null || !excludeProperties.contains("response"));
+
+if (useResponse)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"RESPONSE\" =? ";
+paramValues.add(theQueryObject.getResponse());
 propertyCounter++;
 }
 
@@ -439,23 +426,6 @@ sql += " WHERE ";
 }
 sql += " \"COACHING_SESSION_ID\" =? ";
 paramValues.add(theQueryObject.getCoachingSession().getID());
-propertyCounter++;
-}
-
-boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
-
-if (useScorecardMeasureID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SCORECARD_MEASURE_ID\" =? ";
-paramValues.add(theQueryObject.getScorecardMeasure().getID());
 propertyCounter++;
 }
 

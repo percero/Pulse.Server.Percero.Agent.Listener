@@ -87,23 +87,6 @@ public void setPendingEmployeeStateCount(Integer pendingEmployeeStateCount)
 {
 	this.pendingEmployeeStateCount = pendingEmployeeStateCount;
 }/*
-WeekendDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date weekendDate;
-
-public Date getWeekendDate() 
-{
-	return this.weekendDate;
-}
-
-public void setWeekendDate(Date weekendDate)
-{
-	this.weekendDate = weekendDate;
-}/*
 SubmittedStateCount
 Notes:
 */
@@ -172,6 +155,23 @@ public void setAcknowledgementStateCount(Integer acknowledgementStateCount)
 {
 	this.acknowledgementStateCount = acknowledgementStateCount;
 }/*
+WeekDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekDate;
+
+public Date getWeekDate() 
+{
+	return this.weekDate;
+}
+
+public void setWeekDate(Date weekDate)
+{
+	this.weekDate = weekDate;
+}/*
 PendingStateCount
 Notes:
 */
@@ -198,21 +198,7 @@ public void setPendingStateCount(Integer pendingStateCount)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfCoachingNotification")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private Scorecard scorecard;
-public Scorecard getScorecard() {
-	return this.scorecard;
-}
-
-public void setScorecard(Scorecard value) 
-{
-	this.scorecard = value;
-}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -243,13 +229,6 @@ public void setScorecard(Scorecard value)
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Weekend Date property
-		objectJson += ",\"weekendDate\":";
-		if (getWeekendDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWeekendDate().getTime();
 		}
 		//Retrieve value of the Submitted State Count property
 		objectJson += ",\"submittedStateCount\":";
@@ -335,6 +314,13 @@ public void setScorecard(Scorecard value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
+		}
 		//Retrieve value of the Pending State Count property
 		objectJson += ",\"pendingStateCount\":";
 		
@@ -359,18 +345,6 @@ public void setScorecard(Scorecard value)
 
 				
 		// Source Relationships
-//Retrieve value of the Scorecard of Coaching Notification relationship
-objectJson += ",\"scorecard\":";
-		if (getScorecard() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
@@ -387,8 +361,6 @@ objectJson += ",\"scorecard\":";
 		// Properties
 		//From value of the Pending Employee State Count property
 		setPendingEmployeeStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingEmployeeStateCount"));
-		//From value of the Weekend Date property
-		setWeekendDate(JsonUtils.getJsonDate(jsonObject, "weekendDate"));
 		//From value of the Submitted State Count property
 		setSubmittedStateCount(JsonUtils.getJsonInteger(jsonObject, "submittedStateCount"));
 		//From value of the Pending Coach State Count property
@@ -397,12 +369,13 @@ objectJson += ",\"scorecard\":";
 		setSkippedStateCount(JsonUtils.getJsonInteger(jsonObject, "skippedStateCount"));
 		//From value of the Acknowledgement State Count property
 		setAcknowledgementStateCount(JsonUtils.getJsonInteger(jsonObject, "acknowledgementStateCount"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Pending State Count property
 		setPendingStateCount(JsonUtils.getJsonInteger(jsonObject, "pendingStateCount"));
 
 		
 		// Source Relationships
-		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 
 
 		// Target Relationships

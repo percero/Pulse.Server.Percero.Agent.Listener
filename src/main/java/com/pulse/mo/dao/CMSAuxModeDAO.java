@@ -46,6 +46,8 @@ public class CMSAuxModeDAO extends SqlDataAccessObject<CMSAuxMode> implements ID
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  '' as \"ID\", '' as \"NAME\", '' as \"EVENT_COUNT\" FROM \"TBL_CMS_AUX_MODE\" \"CMS_AUX_MODE\" ";
 	
+
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return CMSAuxModeDAO.CONNECTION_FACTORY_NAME;

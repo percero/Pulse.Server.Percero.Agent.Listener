@@ -41,7 +41,14 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\"";
+	private String selectFromStatementTableName = " FROM \"USER_ROLE\" \"USER_ROLE\"";
+	private String whereClause = " WHERE \"USER_ROLE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_ROLE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"USER_ROLE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\"=?";
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\"=?";
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"ID\"";
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\"";
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ORDER BY \"USER_ROLE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"USER_ROLE\" \"USER_ROLE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\".\"ID\" IN (?)";
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"USER_ROLE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" WHERE \"USER_ROLE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + " WHERE \"USER_ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ";
+		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\" FROM \"USER_ROLE\" \"USER_ROLE\" ";
+		return "SELECT \"USER_ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

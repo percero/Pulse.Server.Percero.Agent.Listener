@@ -45,6 +45,8 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"CLIENT\".\"ID\" as \"ID\", \"CLIENT\".\"NAME\" as \"NAME\", \"CLIENT\".\"SITE_ID\" as \"SITE_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
 	
+
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return ClientDAO.CONNECTION_FACTORY_NAME;

@@ -136,22 +136,22 @@ public void setPreviousMTDScore(String previousMTDScore)
 {
 	this.previousMTDScore = previousMTDScore;
 }/*
-WekendDate
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date wekendDate;
+private Date weekDate;
 
-public Date getWekendDate() 
+public Date getWeekDate() 
 {
-	return this.wekendDate;
+	return this.weekDate;
 }
 
-public void setWekendDate(Date wekendDate)
+public void setWeekDate(Date weekDate)
 {
-	this.wekendDate = wekendDate;
+	this.weekDate = weekDate;
 }/*
 PreviousMTDTrend
 Notes:
@@ -300,12 +300,12 @@ public void setQualityEvaluations(List<QualityEvaluation> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Wekend Date property
-		objectJson += ",\"wekendDate\":";
-		if (getWekendDate() == null)
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getWekendDate().getTime();
+			objectJson += getWeekDate().getTime();
 		}
 		//Retrieve value of the Previous MTD Trend property
 		objectJson += ",\"previousMTDTrend\":";
@@ -410,8 +410,8 @@ objectJson += ",\"qualityEvaluations\":[";
 		setCurrentMTDScore(JsonUtils.getJsonString(jsonObject, "currentMTDScore"));
 		//From value of the Previous MTD Score property
 		setPreviousMTDScore(JsonUtils.getJsonString(jsonObject, "previousMTDScore"));
-		//From value of the Wekend Date property
-		setWekendDate(JsonUtils.getJsonDate(jsonObject, "wekendDate"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Previous MTD Trend property
 		setPreviousMTDTrend(JsonUtils.getJsonString(jsonObject, "previousMTDTrend"));
 		//From value of the Weekly Overview Score property
