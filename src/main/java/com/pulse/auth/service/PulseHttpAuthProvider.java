@@ -26,6 +26,7 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.auth.services.IAuthProvider;
 import com.percero.agents.auth.vo.BasicAuthCredential;
@@ -68,6 +69,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
             cred.setPassword(parts[0]);
             employeeId = parts[1];
         }
+        
+        logger.debug("Autheticating user " + cred.getUsername());
 
         String endpoint = hostPortAndContext +"/Authenticate";
         Map<String, String> params = new HashMap<String, String>();
@@ -80,6 +83,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
     	 */
     	if(body.contains("true")){
+    		logger.debug("Authentication successful for user " + cred.getUsername());
             PulseUserInfo pulseUserInfo = null;
 
             // If the employeeId is set then we are using the backdoor
@@ -102,12 +106,23 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
                 } catch (JsonMappingException jme) {
                     logger.warn(jme.getMessage(), jme);
+                    return result;
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
+                    return result;
                 }
+            }
+            
+            if (pulseUserInfo == null) {
+            	logger.warn("Invalid UserInfo retrieved from Pulse server: " + (StringUtils.hasText(body) ? body : ""));
+            	return result;
+            }
+            else {
+            	logger.debug("Successfully retrieved Pulse User Info for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
             }
 
             try {
+            	logger.debug("Retrieving TeamLeader object for employee " + pulseUserInfo.getEmployeeId());
                 TeamLeader example = new TeamLeader();
                 example.setEmployeeId(pulseUserInfo.getEmployeeId());
                 List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
@@ -122,6 +137,10 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     result.getRoleNames().add("TeamLeader");
                     result.setAreRoleNamesAccurate(true);
                     result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
+                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+                }
+                else {
+                	logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
                 }
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);

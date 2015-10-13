@@ -20,6 +20,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 
 	static final Logger log = Logger.getLogger(SqlDataAccessObject.class);
 	
+	public static long LONG_RUNNING_QUERY_TIME = 6000;
+	
 	public SqlDataAccessObject() {
 		super();
 	}
@@ -327,6 +329,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
 		log.debug("running selectById query: \n"+selectQueryString+"\nID: "+id);
+		long timeStart = System.currentTimeMillis();
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -355,6 +358,12 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			} catch (Exception e) {
 				log.error("Error closing database statement/connection", e);
 			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.info("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString+"\nID: "+id);
 		}
 		
 		return results;

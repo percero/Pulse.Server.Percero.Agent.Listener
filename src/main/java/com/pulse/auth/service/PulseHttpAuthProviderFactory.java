@@ -39,7 +39,7 @@ public class PulseHttpAuthProviderFactory {
     @PostConstruct
     public void init(){
         if(hostPortAndContext != null){
-            logger.info("Using PulseHttpAuthProvider with endpoint: "+hostPortAndContext);
+            logger.info("Using PulseHttpAuthProvider with endpoint: "+hostPortAndContext + (insecureMode ? " (dev mode)" : ""));
             PulseHttpAuthProvider provider = new PulseHttpAuthProvider(hostPortAndContext, objectMapper,
                     trustAllCerts, teamLeaderDAO, insecureMode);
             authProviderRegistry.addProvider(provider);
