@@ -20,7 +20,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 
 	static final Logger log = Logger.getLogger(SqlDataAccessObject.class);
 	
-	public static long LONG_RUNNING_QUERY_TIME = 6000;
+	public static long LONG_RUNNING_QUERY_TIME = 2500;
 	
 	public SqlDataAccessObject() {
 		super();
