@@ -145,13 +145,13 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
 
-nextResult.setDuration(rs.getDouble("DURATION"));
-
 nextResult.setActionCode(rs.getString("ACTION_CODE"));
 
 nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
+
+nextResult.setDuration(rs.getDouble("DURATION"));
 
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
@@ -223,23 +223,6 @@ paramValues.add(theQueryObject.getNotificationResolved());
 propertyCounter++;
 }
 
-boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
-
-if (useDuration)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DURATION=? ";
-paramValues.add(theQueryObject.getDuration());
-propertyCounter++;
-}
-
 boolean useActionCode = StringUtils.hasText(theQueryObject.getActionCode()) && (excludeProperties == null || !excludeProperties.contains("actionCode"));
 
 if (useActionCode)
@@ -288,6 +271,23 @@ sql += " WHERE ";
 }
 sql += " ACTIVITY_NAME=? ";
 paramValues.add(theQueryObject.getActivityName());
+propertyCounter++;
+}
+
+boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
+
+if (useDuration)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DURATION=? ";
+paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 

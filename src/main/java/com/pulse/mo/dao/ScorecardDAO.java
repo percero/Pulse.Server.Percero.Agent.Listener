@@ -57,7 +57,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\".\"ID\"=?";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\".\"ID\"=?";
 	}
 	
 	@Override
@@ -72,12 +72,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" ORDER BY \"SCORECARD\".\"ID\"";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" ORDER BY \"SCORECARD\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" ORDER BY \"SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" ORDER BY \"SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\".\"ID\" IN (?)";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" WHERE \"SCORECARD\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -113,17 +113,17 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\" FROM \"SCORECARD\" \"SCORECARD\" ";
+		return "SELECT \"SCORECARD\".\"ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\" FROM \"SCORECARD\" \"SCORECARD\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCORECARD (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"CREATED_BY\",\"DESCRIPTION\",\"ECOACHING_LOB_ID\",\"GROUP_ID\",\"LOCK_LEVEL\",\"NAME\",\"REGION_ID\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO SCORECARD (\"ID\",\"LOCK_LEVEL\",\"NAME\",\"REGION_ID\",\"UPDATED_BY\",\"UPDATED_ON\",\"CREATED_BY\",\"CREATED_ON\",\"DESCRIPTION\",\"ECOACHING_LOB_ID\",\"GROUP_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SCORECARD\" SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=?,\"LOCK_LEVEL\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE \"SCORECARD\" SET \"LOCK_LEVEL\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -140,25 +140,25 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
-
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
-
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-nextResult.setDescription(rs.getString("DESCRIPTION"));
-
-nextResult.setECoachingLOBId(rs.getString("ECOACHING_LOB_ID"));
-
-nextResult.setGroupId(rs.getString("GROUP_ID"));
-
-nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
+			nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 
 nextResult.setName(rs.getString("NAME"));
 
 nextResult.setRegionId(rs.getString("REGION_ID"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+
+nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setECoachingLOBId(rs.getString("ECOACHING_LOB_ID"));
+
+nextResult.setGroupId(rs.getString("GROUP_ID"));
 
 
 			
@@ -171,16 +171,16 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 	protected void setPreparedStatmentInsertParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(4, perceroObject.getCreatedBy());
-pstmt.setString(5, perceroObject.getDescription());
-pstmt.setString(6, perceroObject.getECoachingLOBId());
-pstmt.setString(7, perceroObject.getGroupId());
-pstmt.setString(8, perceroObject.getLockLevel());
-pstmt.setString(9, perceroObject.getName());
-pstmt.setString(10, perceroObject.getRegionId());
-pstmt.setString(11, perceroObject.getUpdatedBy());
+pstmt.setString(2, perceroObject.getLockLevel());
+pstmt.setString(3, perceroObject.getName());
+pstmt.setString(4, perceroObject.getRegionId());
+pstmt.setString(5, perceroObject.getUpdatedBy());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(7, perceroObject.getCreatedBy());
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(9, perceroObject.getDescription());
+pstmt.setString(10, perceroObject.getECoachingLOBId());
+pstmt.setString(11, perceroObject.getGroupId());
 
 		
 	}
@@ -188,16 +188,16 @@ pstmt.setString(11, perceroObject.getUpdatedBy());
 	@Override
 	protected void setPreparedStatmentUpdateParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getDescription());
-pstmt.setString(5, perceroObject.getECoachingLOBId());
-pstmt.setString(6, perceroObject.getGroupId());
-pstmt.setString(7, perceroObject.getLockLevel());
-pstmt.setString(8, perceroObject.getName());
-pstmt.setString(9, perceroObject.getRegionId());
-pstmt.setString(10, perceroObject.getUpdatedBy());
+		pstmt.setString(1, perceroObject.getLockLevel());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getRegionId());
+pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(8, perceroObject.getDescription());
+pstmt.setString(9, perceroObject.getECoachingLOBId());
+pstmt.setString(10, perceroObject.getGroupId());
 pstmt.setString(11, perceroObject.getID());
 
 		
@@ -215,113 +215,11 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
-
-if (useCreatedOn)
-{
-sql += " WHERE ";
-sql += " \"CREATED_ON\" =? ";
-paramValues.add(theQueryObject.getCreatedOn());
-propertyCounter++;
-}
-
-boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
-
-if (useUpdatedOn)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_ON\" =? ";
-paramValues.add(theQueryObject.getUpdatedOn());
-propertyCounter++;
-}
-
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
-
-if (useDescription)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DESCRIPTION\" =? ";
-paramValues.add(theQueryObject.getDescription());
-propertyCounter++;
-}
-
-boolean useECoachingLOBId = StringUtils.hasText(theQueryObject.getECoachingLOBId()) && (excludeProperties == null || !excludeProperties.contains("eCoachingLOBId"));
-
-if (useECoachingLOBId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"ECOACHING_LOB_ID\" =? ";
-paramValues.add(theQueryObject.getECoachingLOBId());
-propertyCounter++;
-}
-
-boolean useGroupId = StringUtils.hasText(theQueryObject.getGroupId()) && (excludeProperties == null || !excludeProperties.contains("groupId"));
-
-if (useGroupId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"GROUP_ID\" =? ";
-paramValues.add(theQueryObject.getGroupId());
-propertyCounter++;
-}
-
-boolean useLockLevel = StringUtils.hasText(theQueryObject.getLockLevel()) && (excludeProperties == null || !excludeProperties.contains("lockLevel"));
+		boolean useLockLevel = StringUtils.hasText(theQueryObject.getLockLevel()) && (excludeProperties == null || !excludeProperties.contains("lockLevel"));
 
 if (useLockLevel)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"LOCK_LEVEL\" =? ";
 paramValues.add(theQueryObject.getLockLevel());
 propertyCounter++;
@@ -375,6 +273,108 @@ sql += " WHERE ";
 }
 sql += " \"UPDATED_BY\" =? ";
 paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+if (useUpdatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_ON\" =? ";
+paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+
+if (useCreatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
+propertyCounter++;
+}
+
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+
+if (useDescription)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useECoachingLOBId = StringUtils.hasText(theQueryObject.getECoachingLOBId()) && (excludeProperties == null || !excludeProperties.contains("eCoachingLOBId"));
+
+if (useECoachingLOBId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"ECOACHING_LOB_ID\" =? ";
+paramValues.add(theQueryObject.getECoachingLOBId());
+propertyCounter++;
+}
+
+boolean useGroupId = StringUtils.hasText(theQueryObject.getGroupId()) && (excludeProperties == null || !excludeProperties.contains("groupId"));
+
+if (useGroupId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"GROUP_ID\" =? ";
+paramValues.add(theQueryObject.getGroupId());
 propertyCounter++;
 }
 

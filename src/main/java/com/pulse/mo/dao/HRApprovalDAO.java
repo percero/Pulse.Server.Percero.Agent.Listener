@@ -55,7 +55,7 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\"=?";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
@@ -70,12 +70,12 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\"";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ORDER BY \"HR_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\" IN (?)";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\"." + joinColumnName + "=?";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" WHERE \"HR_APPROVAL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -111,17 +111,17 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"DATE\",\"HR_APPROVAL\".\"NAME\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ";
+		return "SELECT \"HR_APPROVAL\".\"ID\",\"HR_APPROVAL\".\"NAME\",\"HR_APPROVAL\".\"DATE\" FROM \"HR_APPROVAL\" \"HR_APPROVAL\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO HR_APPROVAL (\"ID\",\"DATE\",\"NAME\") VALUES (?,?,?)";
+		return "INSERT INTO HR_APPROVAL (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"HR_APPROVAL\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"HR_APPROVAL\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,9 +138,9 @@ public class HRApprovalDAO extends SqlDataAccessObject<HRApproval> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDate(rs.getDate("DATE"));
 
 
 			
@@ -153,8 +153,8 @@ nextResult.setName(rs.getString("NAME"));
 	protected void setPreparedStatmentInsertParams(HRApproval perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 
 		
 	}
@@ -162,8 +162,8 @@ pstmt.setString(3, perceroObject.getName());
 	@Override
 	protected void setPreparedStatmentUpdateParams(HRApproval perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getID());
 
 		
@@ -181,19 +181,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 sql += " WHERE ";
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 if (propertyCounter > 0)
 {
@@ -203,8 +203,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 

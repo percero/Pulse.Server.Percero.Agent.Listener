@@ -85,6 +85,91 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+PointsReceived
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsReceived;
+
+public Double getPointsReceived() 
+{
+	return this.pointsReceived;
+}
+
+public void setPointsReceived(Double pointsReceived)
+{
+	this.pointsReceived = pointsReceived;
+}/*
+Quartile
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer quartile;
+
+public Integer getQuartile() 
+{
+	return this.quartile;
+}
+
+public void setQuartile(Integer quartile)
+{
+	this.quartile = quartile;
+}/*
+Score
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double score;
+
+public Double getScore() 
+{
+	return this.score;
+}
+
+public void setScore(Double score)
+{
+	this.score = score;
+}/*
+Grade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer grade;
+
+public Integer getGrade() 
+{
+	return this.grade;
+}
+
+public void setGrade(Integer grade)
+{
+	this.grade = grade;
+}/*
+PointsPossible
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsPossible;
+
+public Double getPointsPossible() 
+{
+	return this.pointsPossible;
+}
+
+public void setPointsPossible(Double pointsPossible)
+{
+	this.pointsPossible = pointsPossible;
+}/*
 WeekDate
 Notes:
 */
@@ -107,6 +192,19 @@ public void setWeekDate(Date weekDate)
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureWeeklyResult.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasureWeeklyResult> scorecardMeasureWeeklyResults;
+public List<ScorecardMeasureWeeklyResult> getScorecardMeasureWeeklyResults() {
+	return this.scorecardMeasureWeeklyResults;
+}
+
+public void setScorecardMeasureWeeklyResults(List<ScorecardMeasureWeeklyResult> value) {
+	this.scorecardMeasureWeeklyResults = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
@@ -161,6 +259,69 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsReceived();
+		}
+		//Retrieve value of the Quartile property
+		objectJson += ",\"quartile\":";
+		
+		if (getQuartile() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getQuartile());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Score property
+		objectJson += ",\"score\":";
+		if (getScore() == null)
+			objectJson += "null";
+		else {
+			objectJson += getScore();
+		}
+		//Retrieve value of the Grade property
+		objectJson += ",\"grade\":";
+		
+		if (getGrade() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getGrade());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsPossible();
+		}
 		//Retrieve value of the Week Date property
 		objectJson += ",\"weekDate\":";
 		if (getWeekDate() == null)
@@ -198,6 +359,23 @@ objectJson += ",\"scorecard\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Agent Scorecard of Scorecard Measure Weekly Result relationship
+objectJson += ",\"scorecardMeasureWeeklyResults\":[";
+		
+		if (getScorecardMeasureWeeklyResults() != null) {
+			int scorecardMeasureWeeklyResultsCounter = 0;
+			for(ScorecardMeasureWeeklyResult nextScorecardMeasureWeeklyResults : getScorecardMeasureWeeklyResults()) {
+				if (scorecardMeasureWeeklyResultsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasureWeeklyResults).toEmbeddedJson();
+					scorecardMeasureWeeklyResultsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Agent Scorecard of Coaching Session relationship
 objectJson += ",\"coachingSessions\":[";
 		
@@ -226,6 +404,16 @@ objectJson += ",\"coachingSessions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Points Received property
+		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
+		//From value of the Quartile property
+		setQuartile(JsonUtils.getJsonInteger(jsonObject, "quartile"));
+		//From value of the Score property
+		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Points Possible property
+		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
 		//From value of the Week Date property
 		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 
@@ -236,6 +424,7 @@ objectJson += ",\"coachingSessions\":[";
 
 
 		// Target Relationships
+		this.scorecardMeasureWeeklyResults = (List<ScorecardMeasureWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureWeeklyResults");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
 
 
@@ -246,6 +435,7 @@ objectJson += ",\"coachingSessions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureWeeklyResult.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
 
 		

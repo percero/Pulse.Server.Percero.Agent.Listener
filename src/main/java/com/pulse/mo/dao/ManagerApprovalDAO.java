@@ -55,7 +55,7 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\"=?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\"=?";
 	}
 	
 	@Override
@@ -70,12 +70,12 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\"";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ORDER BY \"MANAGER_APPROVAL\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\" IN (?)";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\"." + joinColumnName + "=?";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" WHERE \"MANAGER_APPROVAL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -111,17 +111,17 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"DATE\",\"MANAGER_APPROVAL\".\"NAME\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ";
+		return "SELECT \"MANAGER_APPROVAL\".\"ID\",\"MANAGER_APPROVAL\".\"NAME\",\"MANAGER_APPROVAL\".\"DATE\" FROM \"MANAGER_APPROVAL\" \"MANAGER_APPROVAL\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO MANAGER_APPROVAL (\"ID\",\"DATE\",\"NAME\") VALUES (?,?,?)";
+		return "INSERT INTO MANAGER_APPROVAL (\"ID\",\"NAME\",\"DATE\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"MANAGER_APPROVAL\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"MANAGER_APPROVAL\" SET \"NAME\"=?,\"DATE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,9 +138,9 @@ public class ManagerApprovalDAO extends SqlDataAccessObject<ManagerApproval> imp
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDate(rs.getDate("DATE"));
 
 
 			
@@ -153,8 +153,8 @@ nextResult.setName(rs.getString("NAME"));
 	protected void setPreparedStatmentInsertParams(ManagerApproval perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 
 		
 	}
@@ -162,8 +162,8 @@ pstmt.setString(3, perceroObject.getName());
 	@Override
 	protected void setPreparedStatmentUpdateParams(ManagerApproval perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getID());
 
 		
@@ -181,19 +181,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDate)
+if (useName)
 {
 sql += " WHERE ";
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useName)
+if (useDate)
 {
 if (propertyCounter > 0)
 {
@@ -203,8 +203,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 

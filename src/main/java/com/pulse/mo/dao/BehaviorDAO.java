@@ -56,7 +56,7 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\"=?";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\"=?";
 	}
 	
 	@Override
@@ -71,12 +71,12 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\"";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ORDER BY \"BEHAVIOR\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\" IN (?)";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\"." + joinColumnName + "=?";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" WHERE \"BEHAVIOR\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -112,17 +112,17 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ";
+		return "SELECT \"BEHAVIOR\".\"ID\",\"BEHAVIOR\".\"NAME\",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR\" \"BEHAVIOR\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO BEHAVIOR (\"ID\",\"DESCRIPTION\",\"NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?)";
+		return "INSERT INTO BEHAVIOR (\"ID\",\"NAME\",\"DESCRIPTION\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"BEHAVIOR\" SET \"DESCRIPTION\"=?,\"NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"BEHAVIOR\" SET \"NAME\"=?,\"DESCRIPTION\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,9 +139,9 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDescription(rs.getString("DESCRIPTION"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setDescription(rs.getString("DESCRIPTION"));
 
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
@@ -158,8 +158,8 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setPreparedStatmentInsertParams(Behavior perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDescription());
-pstmt.setString(3, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getDescription());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
@@ -177,8 +177,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Behavior perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getDescription());
-pstmt.setString(2, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setString(2, perceroObject.getDescription());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
@@ -206,19 +206,19 @@ pstmt.setString(4, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useDescription)
+if (useName)
 {
 sql += " WHERE ";
-sql += " \"DESCRIPTION\" =? ";
-paramValues.add(theQueryObject.getDescription());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
 
-if (useName)
+if (useDescription)
 {
 if (propertyCounter > 0)
 {
@@ -228,8 +228,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
 propertyCounter++;
 }
 

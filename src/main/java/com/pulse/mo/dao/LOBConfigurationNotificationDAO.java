@@ -139,7 +139,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessObject<LOBConf
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getString("DATE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -170,7 +170,7 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDate());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getMessage());
 pstmt.setString(4, perceroObject.getName());
 pstmt.setString(5, perceroObject.getType());
@@ -211,7 +211,7 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getDate());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(2, perceroObject.getMessage());
 pstmt.setString(3, perceroObject.getName());
 pstmt.setString(4, perceroObject.getType());
@@ -262,7 +262,7 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {

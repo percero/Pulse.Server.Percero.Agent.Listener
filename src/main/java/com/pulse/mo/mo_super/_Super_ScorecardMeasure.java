@@ -430,6 +430,32 @@ public void setObservations(List<Observation> value) {
 	this.observations = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureMonthlyResult.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasureMonthlyResult> scorecardMeasureMonthlyResults;
+public List<ScorecardMeasureMonthlyResult> getScorecardMeasureMonthlyResults() {
+	return this.scorecardMeasureMonthlyResults;
+}
+
+public void setScorecardMeasureMonthlyResults(List<ScorecardMeasureMonthlyResult> value) {
+	this.scorecardMeasureMonthlyResults = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureWeeklyResult.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasureWeeklyResult> scorecardMeasureWeeklyResults;
+public List<ScorecardMeasureWeeklyResult> getScorecardMeasureWeeklyResults() {
+	return this.scorecardMeasureWeeklyResults;
+}
+
+public void setScorecardMeasureWeeklyResults(List<ScorecardMeasureWeeklyResult> value) {
+	this.scorecardMeasureWeeklyResults = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
@@ -885,6 +911,40 @@ objectJson += ",\"observations\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Scorecard Measure of Scorecard Measure Monthly Result relationship
+objectJson += ",\"scorecardMeasureMonthlyResults\":[";
+		
+		if (getScorecardMeasureMonthlyResults() != null) {
+			int scorecardMeasureMonthlyResultsCounter = 0;
+			for(ScorecardMeasureMonthlyResult nextScorecardMeasureMonthlyResults : getScorecardMeasureMonthlyResults()) {
+				if (scorecardMeasureMonthlyResultsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasureMonthlyResults).toEmbeddedJson();
+					scorecardMeasureMonthlyResultsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the Scorecard Measure of Scorecard Measure Weekly Result relationship
+objectJson += ",\"scorecardMeasureWeeklyResults\":[";
+		
+		if (getScorecardMeasureWeeklyResults() != null) {
+			int scorecardMeasureWeeklyResultsCounter = 0;
+			for(ScorecardMeasureWeeklyResult nextScorecardMeasureWeeklyResults : getScorecardMeasureWeeklyResults()) {
+				if (scorecardMeasureWeeklyResultsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasureWeeklyResults).toEmbeddedJson();
+					scorecardMeasureWeeklyResultsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -942,6 +1002,8 @@ objectJson += ",\"observations\":[";
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 		this.developmentPlans = (List<DevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentPlans");
 		this.observations = (List<Observation>) JsonUtils.getJsonListPerceroObject(jsonObject, "observations");
+		this.scorecardMeasureMonthlyResults = (List<ScorecardMeasureMonthlyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureMonthlyResults");
+		this.scorecardMeasureWeeklyResults = (List<ScorecardMeasureWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureWeeklyResults");
 
 
 	}
@@ -955,6 +1017,8 @@ objectJson += ",\"observations\":[";
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "scorecardmeasure"));
 		listSetters.add(MappedClass.getFieldSetters(DevelopmentPlan.class, "scorecardmeasure"));
 		listSetters.add(MappedClass.getFieldSetters(Observation.class, "scorecardmeasure"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureMonthlyResult.class, "scorecardmeasure"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureWeeklyResult.class, "scorecardmeasure"));
 
 		
 		return listSetters;

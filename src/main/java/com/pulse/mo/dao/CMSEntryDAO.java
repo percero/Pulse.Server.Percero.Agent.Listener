@@ -43,7 +43,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE_ID\", '' as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE_ID\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -140,13 +140,13 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setFromTime(rs.getDate("FROM_TIME"));
+			nextResult.setToTime(rs.getString("TO_TIME"));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
-nextResult.setToTime(rs.getString("TO_TIME"));
+nextResult.setFromTime(rs.getDate("FROM_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -185,13 +185,13 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
+		boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
 
-if (useFromTime)
+if (useToTime)
 {
 sql += " WHERE ";
-sql += " FROM_TIME=? ";
-paramValues.add(theQueryObject.getFromTime());
+sql += " TO_TIME=? ";
+paramValues.add(theQueryObject.getToTime());
 propertyCounter++;
 }
 
@@ -229,9 +229,9 @@ paramValues.add(theQueryObject.getEStartProjectName());
 propertyCounter++;
 }
 
-boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
+boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
 
-if (useToTime)
+if (useFromTime)
 {
 if (propertyCounter > 0)
 {
@@ -241,8 +241,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " TO_TIME=? ";
-paramValues.add(theQueryObject.getToTime());
+sql += " FROM_TIME=? ";
+paramValues.add(theQueryObject.getFromTime());
 propertyCounter++;
 }
 
