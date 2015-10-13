@@ -139,15 +139,15 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEndDate(rs.getDate("END_DATE"));
+			nextResult.setShift(rs.getInt("SHIFT"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
 
-nextResult.setEndTime(rs.getDate("END_TIME"));
-
 nextResult.setStartTime(rs.getDate("START_TIME"));
 
-nextResult.setShift(rs.getInt("SHIFT"));
+nextResult.setEndDate(rs.getDate("END_DATE"));
+
+nextResult.setEndTime(rs.getDate("END_TIME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -186,13 +186,13 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+		boolean useShift = theQueryObject.getShift() != null && (excludeProperties == null || !excludeProperties.contains("shift"));
 
-if (useEndDate)
+if (useShift)
 {
 sql += " WHERE ";
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
+sql += " SHIFT=? ";
+paramValues.add(theQueryObject.getShift());
 propertyCounter++;
 }
 
@@ -213,23 +213,6 @@ paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
-
-if (useEndTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_TIME=? ";
-paramValues.add(theQueryObject.getEndTime());
-propertyCounter++;
-}
-
 boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
 
 if (useStartTime)
@@ -247,9 +230,9 @@ paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 
-boolean useShift = theQueryObject.getShift() != null && (excludeProperties == null || !excludeProperties.contains("shift"));
+boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
-if (useShift)
+if (useEndDate)
 {
 if (propertyCounter > 0)
 {
@@ -259,8 +242,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " SHIFT=? ";
-paramValues.add(theQueryObject.getShift());
+sql += " END_DATE=? ";
+paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+
+if (useEndTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " END_TIME=? ";
+paramValues.add(theQueryObject.getEndTime());
 propertyCounter++;
 }
 

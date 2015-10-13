@@ -60,7 +60,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\"=?";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\"=?";
 	}
 	
 	@Override
@@ -75,12 +75,12 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\"";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ORDER BY \"PULSE_USER\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -90,7 +90,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\" IN (?)";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\"." + joinColumnName + "=?";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" WHERE \"PULSE_USER\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -116,17 +116,17 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ";
+		return "SELECT \"PULSE_USER\".\"ID\",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\" FROM \"PULSE_USER\" \"PULSE_USER\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO PULSE_USER (\"ID\",\"USER_ID\",\"EMPLOYEE_ID\",\"FIRST_NAME\",\"LAST_NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO PULSE_USER (\"ID\",\"USER_ID\",\"LAST_NAME\",\"EMPLOYEE_ID\",\"FIRST_NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PULSE_USER\" SET \"USER_ID\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"PULSE_USER\" SET \"USER_ID\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -145,11 +145,11 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 		{
 			nextResult.setUserId(rs.getString("USER_ID"));
 
+nextResult.setLastName(rs.getString("LAST_NAME"));
+
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
-
-nextResult.setLastName(rs.getString("LAST_NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -167,9 +167,9 @@ nextResult.setTeamLeader(teamleader);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getUserId());
-pstmt.setString(3, perceroObject.getEmployeeId());
-pstmt.setString(4, perceroObject.getFirstName());
-pstmt.setString(5, perceroObject.getLastName());
+pstmt.setString(3, perceroObject.getLastName());
+pstmt.setString(4, perceroObject.getEmployeeId());
+pstmt.setString(5, perceroObject.getFirstName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -188,9 +188,9 @@ else
 	protected void setPreparedStatmentUpdateParams(PulseUser perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getUserId());
-pstmt.setString(2, perceroObject.getEmployeeId());
-pstmt.setString(3, perceroObject.getFirstName());
-pstmt.setString(4, perceroObject.getLastName());
+pstmt.setString(2, perceroObject.getLastName());
+pstmt.setString(3, perceroObject.getEmployeeId());
+pstmt.setString(4, perceroObject.getFirstName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -228,6 +228,23 @@ paramValues.add(theQueryObject.getUserId());
 propertyCounter++;
 }
 
+boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+
+if (useLastName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"LAST_NAME\" =? ";
+paramValues.add(theQueryObject.getLastName());
+propertyCounter++;
+}
+
 boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
 
 if (useEmployeeId)
@@ -259,23 +276,6 @@ sql += " WHERE ";
 }
 sql += " \"FIRST_NAME\" =? ";
 paramValues.add(theQueryObject.getFirstName());
-propertyCounter++;
-}
-
-boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
-
-if (useLastName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
 

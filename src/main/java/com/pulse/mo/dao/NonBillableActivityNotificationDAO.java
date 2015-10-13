@@ -54,7 +54,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"=?";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"NON_BILLABLE_ACTVTY_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ";
+		return "SELECT \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\" FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO NON_BILLABLE_ACTVTY_NOTIF (\"ID\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"MESSAGE\",\"NAME\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO NON_BILLABLE_ACTVTY_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"NON_BILLABLE_ACTVTY_NOTIF\" SET \"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"NON_BILLABLE_ACTVTY_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,17 +137,17 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
     	
     	if (!shellOnly) 
 		{
-			nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
+			nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
 
-nextResult.setDate(rs.getString("DATE"));
+nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
-
-nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
-
-nextResult.setType(rs.getString("TYPE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -172,12 +172,12 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(NonBillableActivityNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getAuxCodeEntryName());
-pstmt.setString(3, perceroObject.getDate());
-pstmt.setString(4, perceroObject.getMessage());
-pstmt.setString(5, perceroObject.getName());
-pstmt.setString(6, perceroObject.getTimecardActivityName());
-pstmt.setString(7, perceroObject.getType());
+pstmt.setString(2, perceroObject.getTimecardActivityName());
+pstmt.setString(3, perceroObject.getType());
+pstmt.setString(4, perceroObject.getAuxCodeEntryName());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(6, perceroObject.getMessage());
+pstmt.setString(7, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -215,12 +215,12 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(NonBillableActivityNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getAuxCodeEntryName());
-pstmt.setString(2, perceroObject.getDate());
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setString(5, perceroObject.getTimecardActivityName());
-pstmt.setString(6, perceroObject.getType());
+		pstmt.setString(1, perceroObject.getTimecardActivityName());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setString(3, perceroObject.getAuxCodeEntryName());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(5, perceroObject.getMessage());
+pstmt.setString(6, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -268,17 +268,51 @@ pstmt.setString(10, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
+		boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
+
+if (useTimecardActivityName)
+{
+sql += " WHERE ";
+sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
+paramValues.add(theQueryObject.getTimecardActivityName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
 
 if (useAuxCodeEntryName)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
 paramValues.add(theQueryObject.getAuxCodeEntryName());
 propertyCounter++;
 }
 
-boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
@@ -326,40 +360,6 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
-
-if (useTimecardActivityName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
-paramValues.add(theQueryObject.getTimecardActivityName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

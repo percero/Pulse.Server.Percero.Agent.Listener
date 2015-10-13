@@ -58,7 +58,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
 	}
 	
 	@Override
@@ -73,12 +73,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\" IN (?)";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -99,7 +99,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -114,17 +114,17 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ";
+		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\" FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"CREATED_BY\",\"UPDATED_BY\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"RESPONSE\",\"UPDATED_BY\",\"UPDATED_ON\",\"WEEK_DATE\",\"CREATED_BY\",\"CREATED_ON\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"BEHAVIOR_RESPONSE\" SET \"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"BEHAVIOR_RESPONSE\" SET \"RESPONSE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -141,17 +141,17 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+			nextResult.setResponse(rs.getInt("RESPONSE"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
 
-nextResult.setResponse(rs.getInt("RESPONSE"));
+nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -180,12 +180,12 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setPreparedStatmentInsertParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setInt(2, perceroObject.getResponse());
+pstmt.setString(3, perceroObject.getUpdatedBy());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(5, perceroObject.getResponse());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setString(6, perceroObject.getCreatedBy());
-pstmt.setString(7, perceroObject.getUpdatedBy());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 
 if (perceroObject.getAgent() == null)
 {
@@ -233,12 +233,12 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setInt(1, perceroObject.getResponse());
+pstmt.setString(2, perceroObject.getUpdatedBy());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(4, perceroObject.getResponse());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setString(6, perceroObject.getUpdatedBy());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 
 if (perceroObject.getAgent() == null)
 {
@@ -296,19 +296,19 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+		boolean useResponse = theQueryObject.getResponse() != null && (excludeProperties == null || !excludeProperties.contains("response"));
 
-if (useWeekDate)
+if (useResponse)
 {
 sql += " WHERE ";
-sql += " \"WEEK_DATE\" =? ";
-paramValues.add(theQueryObject.getWeekDate());
+sql += " \"RESPONSE\" =? ";
+paramValues.add(theQueryObject.getResponse());
 propertyCounter++;
 }
 
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
 
-if (useCreatedOn)
+if (useUpdatedBy)
 {
 if (propertyCounter > 0)
 {
@@ -318,8 +318,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"CREATED_ON\" =? ";
-paramValues.add(theQueryObject.getCreatedOn());
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
@@ -340,9 +340,9 @@ paramValues.add(theQueryObject.getUpdatedOn());
 propertyCounter++;
 }
 
-boolean useResponse = theQueryObject.getResponse() != null && (excludeProperties == null || !excludeProperties.contains("response"));
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
 
-if (useResponse)
+if (useWeekDate)
 {
 if (propertyCounter > 0)
 {
@@ -352,8 +352,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"RESPONSE\" =? ";
-paramValues.add(theQueryObject.getResponse());
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 
@@ -374,9 +374,9 @@ paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
 }
 
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useUpdatedBy)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -386,8 +386,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 

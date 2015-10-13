@@ -178,7 +178,7 @@ public void setCMSAuxMode(CMSAuxMode value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
+@JoinColumn(name="EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfCMSEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;

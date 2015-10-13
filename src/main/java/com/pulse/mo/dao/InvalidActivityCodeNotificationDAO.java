@@ -54,7 +54,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ORDER BY \"INV_ACTVTY_CODE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\" IN (?)";
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -110,17 +110,17 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ";
+		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\",\"INV_ACTVTY_CODE_NOTIF\".\"DATE\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO INV_ACTVTY_CODE_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO INV_ACTVTY_CODE_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"INV_ACTVTY_CODE_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"INV_ACTVTY_CODE_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,7 +137,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getString("DATE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -145,13 +145,13 @@ nextResult.setName(rs.getString("NAME"));
 
 nextResult.setType(rs.getString("TYPE"));
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
@@ -172,28 +172,28 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDate());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getMessage());
 pstmt.setString(4, perceroObject.getName());
 pstmt.setString(5, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getAgent().getID());
+		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(7, perceroObject.getAgent().getID());
 }
 
 
@@ -223,28 +223,28 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getDate());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(2, perceroObject.getMessage());
 pstmt.setString(3, perceroObject.getName());
 pstmt.setString(4, perceroObject.getType());
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getAgent().getID());
+		pstmt.setString(5, perceroObject.getLOBConfiguration().getID());
 }
 
 
-if (perceroObject.getLOBConfiguration() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(6, perceroObject.getAgent().getID());
 }
 
 
@@ -284,7 +284,7 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = StringUtils.hasText(theQueryObject.getDate()) && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
@@ -345,23 +345,6 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
 boolean useLOBConfigurationID = theQueryObject.getLOBConfiguration() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfiguration"));
 
 if (useLOBConfigurationID)
@@ -376,6 +359,23 @@ sql += " WHERE ";
 }
 sql += " \"LOB_CONFIGURATION_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfiguration().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

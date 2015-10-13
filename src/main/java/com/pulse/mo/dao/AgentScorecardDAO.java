@@ -19,6 +19,7 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.ScorecardMeasureWeeklyResult;
 import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Agent;
 import com.pulse.mo.Scorecard;
@@ -49,35 +50,42 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getConnectionFactoryName() {
 		return AgentScorecardDAO.CONNECTION_FACTORY_NAME;
 	}
+	
+	private String selectFromStatementNoTableName = "FROM \"AGENT_SCORECARD\",(select ? as \"SQL_ID\" from dual) WHERE \"AGENT_ID\"= SUBSTR(\"SQL_ID\",0,9) AND \"SCORECARD_ID\"=SUBSTR(\"SQL_ID\",INSTR(\"SQL_ID\",'-', 1, 1) + 1,INSTR(\"SQL_ID\",'-', 1, 2)-INSTR(\"SQL_ID\",'-', 1, 1)-1) AND \"WEEK_DATE\"= SUBSTR(\"SQL_ID\",INSTR(\"SQL_ID\",'-', 1, 2) + 1,10)";
+	private String selectFromStatementTableName = "FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\",(select ? as \"SQL_ID\" from dual) WHERE \"AGENT_SCORECARD\".\"AGENT_ID\"= SUBSTR(\"SQL_ID\",0,9) AND \"AGENT_SCORECARD\".\"SCORECARD_ID\"=SUBSTR(\"SQL_ID\",INSTR(\"SQL_ID\",'-', 1, 1) + 1,INSTR(\"SQL_ID\",'-', 1, 2)-INSTR(\"SQL_ID\",'-', 1, 1)-1) AND \"AGENT_SCORECARD\".\"WEEK_DATE\"= SUBSTR(\"SQL_ID\",INSTR(\"SQL_ID\",'-', 1, 2) + 1,10)";
+	private String orderByNoTableName = " ORDER BY \"AGENT_ID\", \"SCORECARD_ID\", \"WEEK_DATE\" ";
+	private String orderByTableName = " ORDER BY \"AGENT_SCORECARD\".\"AGENT_ID\", \"AGENT_SCORECARD\".\"SCORECARD_ID\", \"AGENT_SCORECARD\".\"WEEK_DATE\" ";
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
+//		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
+		return "SELECT * " + selectFromStatementNoTableName;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
+//		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\"=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"ID\"";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" " + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" " + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\"";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" " + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ORDER BY \"AGENT_SCORECARD\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" " + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -85,20 +93,22 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 		return "SELECT COUNT(ID) FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	}
 	
+	private String selectInFrom = " FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT_SCORECARD\".\"AGENT_ID\"= SUBSTR(SQLLIST.column_value,0,9) and \"AGENT_SCORECARD\".\"SCORECARD_ID\"=SUBSTR(SQLLIST.column_value,INSTR(SQLLIST.column_value,'-', 1, 1) + 1,INSTR(SQLLIST.column_value,'-', 1, 2)-INSTR(SQLLIST.column_value,'-', 1, 1)-1) AND \"AGENT_SCORECARD\".\"WEEK_DATE\"= SUBSTR(SQLLIST.column_value,INSTR(SQLLIST.column_value,'-', 1, 2) + 1,10)";
+	
 	@Override
 	protected String getSelectInStarSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\" IN (?)";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" " + selectInFrom;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\".\"ID\" IN (?)";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectInFrom;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -113,22 +123,22 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\" FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\" ";
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO AGENT_SCORECARD (\"ID\",\"WEEK_DATE\",\"AGENT_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?)";
+		return null;
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"AGENT_SCORECARD\" SET \"WEEK_DATE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return null;
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"AGENT_SCORECARD\" WHERE \"ID\"=?";
+		return null;
 	}
 	
 	@Override
@@ -140,7 +150,17 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+			nextResult.setPointsPossible(rs.getDouble("POINTS_POSSIBLE"));
+
+nextResult.setPointsReceived(rs.getDouble("POINTS_RECEIVED"));
+
+nextResult.setQuartile(rs.getInt("QUARTILE"));
+
+nextResult.setScore(rs.getDouble("SCORE"));
+
+nextResult.setGrade(rs.getInt("GRADE"));
+
+nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -161,25 +181,30 @@ nextResult.setScorecard(scorecard);
 	protected void setPreparedStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDouble(2, perceroObject.getPointsPossible());
+pstmt.setDouble(3, perceroObject.getPointsReceived());
+pstmt.setInt(4, perceroObject.getQuartile());
+pstmt.setDouble(5, perceroObject.getScore());
+pstmt.setInt(6, perceroObject.getGrade());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(3, null);
+pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getAgent().getID());
+		pstmt.setString(8, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(4, null);
+pstmt.setString(9, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getScorecard().getID());
+		pstmt.setString(9, perceroObject.getScorecard().getID());
 }
 
 
@@ -189,28 +214,33 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setDouble(1, perceroObject.getPointsPossible());
+pstmt.setDouble(2, perceroObject.getPointsReceived());
+pstmt.setInt(3, perceroObject.getQuartile());
+pstmt.setDouble(4, perceroObject.getScore());
+pstmt.setInt(5, perceroObject.getGrade());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(2, null);
+pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getAgent().getID());
+		pstmt.setString(7, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(3, null);
+pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getScorecard().getID());
+		pstmt.setString(8, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(4, perceroObject.getID());
+pstmt.setString(9, perceroObject.getID());
 
 		
 	}
@@ -227,11 +257,96 @@ pstmt.setString(4, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+		boolean usePointsPossible = theQueryObject.getPointsPossible() != null && (excludeProperties == null || !excludeProperties.contains("pointsPossible"));
+
+if (usePointsPossible)
+{
+sql += " WHERE ";
+sql += " \"POINTS_POSSIBLE\" =? ";
+paramValues.add(theQueryObject.getPointsPossible());
+propertyCounter++;
+}
+
+boolean usePointsReceived = theQueryObject.getPointsReceived() != null && (excludeProperties == null || !excludeProperties.contains("pointsReceived"));
+
+if (usePointsReceived)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"POINTS_RECEIVED\" =? ";
+paramValues.add(theQueryObject.getPointsReceived());
+propertyCounter++;
+}
+
+boolean useQuartile = theQueryObject.getQuartile() != null && (excludeProperties == null || !excludeProperties.contains("quartile"));
+
+if (useQuartile)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"QUARTILE\" =? ";
+paramValues.add(theQueryObject.getQuartile());
+propertyCounter++;
+}
+
+boolean useScore = theQueryObject.getScore() != null && (excludeProperties == null || !excludeProperties.contains("score"));
+
+if (useScore)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORE\" =? ";
+paramValues.add(theQueryObject.getScore());
+propertyCounter++;
+}
+
+boolean useGrade = theQueryObject.getGrade() != null && (excludeProperties == null || !excludeProperties.contains("grade"));
+
+if (useGrade)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"GRADE\" =? ";
+paramValues.add(theQueryObject.getGrade());
+propertyCounter++;
+}
+
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
 
 if (useWeekDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"WEEK_DATE\" =? ";
 paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;

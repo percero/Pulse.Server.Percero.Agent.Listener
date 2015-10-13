@@ -1,13 +1,17 @@
 package com.pulse.auth.service;
 
-import com.percero.agents.auth.services.IAuthProvider;
-import com.percero.agents.auth.vo.BasicAuthCredential;
-import com.percero.agents.auth.vo.ServiceIdentifier;
-import com.percero.agents.auth.vo.ServiceUser;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.auth.vo.PulseUserInfo;
-import com.pulse.mo.TeamLeader;
-import com.pulse.mo.dao.TeamLeaderDAO;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -23,16 +27,14 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.percero.agents.auth.services.IAuthProvider;
+import com.percero.agents.auth.vo.BasicAuthCredential;
+import com.percero.agents.auth.vo.ServiceIdentifier;
+import com.percero.agents.auth.vo.ServiceUser;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.pulse.auth.vo.PulseUserInfo;
+import com.pulse.mo.TeamLeader;
+import com.pulse.mo.dao.TeamLeaderDAO;
 
 /**
  * AuthProvider implementation for Pulse to their http rest endpoint
@@ -68,7 +70,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         }
 
         String endpoint = hostPortAndContext +"/Authenticate";
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("userDomainAndLogin", URLEncoder.encode(cred.getUsername()));
         params.put("userPassword", URLEncoder.encode(cred.getPassword()));
     	String body = makeRequest(endpoint, params);
