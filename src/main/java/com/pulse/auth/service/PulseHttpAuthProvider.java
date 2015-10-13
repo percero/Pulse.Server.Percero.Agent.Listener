@@ -83,7 +83,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
     	 */
     	if(body.contains("true")){
-    		logger.debug("Authentication successful for user " + cred.getUsername());
+    		logger.debug("Authentication successful for user " + cred.getUsername() + (this.insecureMode ? " (dev mode)" : ""));
             PulseUserInfo pulseUserInfo = null;
 
             // If the employeeId is set then we are using the backdoor
