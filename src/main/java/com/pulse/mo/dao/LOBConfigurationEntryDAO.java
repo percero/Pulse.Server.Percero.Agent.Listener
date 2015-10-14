@@ -20,7 +20,6 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.LOBConfigurationEntry;
 import com.pulse.mo.ThresholdExceededNotification;
-import com.pulse.mo.CMSAuxMode;
 import com.pulse.mo.LOBConfiguration;
 import com.pulse.mo.NotificationFrequency;
 import com.pulse.mo.TimecardActivity;

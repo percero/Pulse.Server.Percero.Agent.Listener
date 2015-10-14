@@ -48,8 +48,7 @@ public class ScorecardMeasureWeeklyResultDAO extends SqlDataAccessObject<Scoreca
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"";
 	
-	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQLID From Dual) WHERE SCARD_MEASURE_WEEKLY_RESULT.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCARD_MEASURE_WEEKLY_RESULT.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCARD_MEASURE_WEEKLY_RESULT.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
-	
+	private String joinAgentScorecardIDScorecardMeasureWeeklyResult = ",(select ? As SQLID From Dual) WHERE SCARD_MEASURE_WEEKLY_RESULT.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCARD_MEASURE_WEEKLY_RESULT.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCARD_MEASURE_WEEKLY_RESULT.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 
 	
 	@Override
@@ -109,10 +108,10 @@ public class ScorecardMeasureWeeklyResultDAO extends SqlDataAccessObject<Scoreca
 	{
 		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
 {
-return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDCoachingSession;
+return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDScorecardMeasureWeeklyResult;
 }
-		
-		return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"" +SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SCARD_MEASURE_WEEKLY_RESULT\"." + joinColumnName + "=?";
+
+		return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SCARD_MEASURE_WEEKLY_RESULT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
@@ -120,9 +119,9 @@ return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\"" + SQL_VIEW + " " + select
 	{
 		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
 {
-			return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDCoachingSession;
+return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDScorecardMeasureWeeklyResult;
 }
-		
+
 		return "SELECT \"SCARD_MEASURE_WEEKLY_RESULT\".\"ID\" " + selectFromStatementTableName + " WHERE \"SCARD_MEASURE_WEEKLY_RESULT\"." + joinColumnName + "=?";
 	}
 

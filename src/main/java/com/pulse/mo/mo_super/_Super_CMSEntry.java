@@ -119,6 +119,23 @@ public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
 }/*
+CMSAuxMode
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String cMSAuxMode;
+
+public String getCMSAuxMode() 
+{
+	return this.cMSAuxMode;
+}
+
+public void setCMSAuxMode(String cMSAuxMode)
+{
+	this.cMSAuxMode = cMSAuxMode;
+}/*
 Duration
 Notes:Number of minutes
 */
@@ -163,19 +180,6 @@ public void setToTime(String toTime)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AUXREASON")
-@org.hibernate.annotations.ForeignKey(name="FK_CMSAuxModeOfCMSEntry")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private CMSAuxMode cMSAuxMode;
-public CMSAuxMode getCMSAuxMode() {
-	return this.cMSAuxMode;
-}
-
-public void setCMSAuxMode(CMSAuxMode value) {
-	this.cMSAuxMode = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="EMPLOYEE_ID")
@@ -227,6 +231,27 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getFromTime().getTime();
 		}
+		//Retrieve value of the CMS Aux Mode property
+		objectJson += ",\"cMSAuxMode\":";
+		
+		if (getCMSAuxMode() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCMSAuxMode());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Duration property
 		objectJson += ",\"duration\":";
 		if (getDuration() == null)
@@ -258,18 +283,6 @@ public void setAgent(Agent value) {
 
 				
 		// Source Relationships
-//Retrieve value of the CMS Aux Mode of CMS Entry relationship
-objectJson += ",\"cMSAuxMode\":";
-		if (getCMSAuxMode() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getCMSAuxMode()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Agent of CMS Entry relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
@@ -300,6 +313,8 @@ objectJson += ",\"agent\":";
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+		//From value of the CMS Aux Mode property
+		setCMSAuxMode(JsonUtils.getJsonString(jsonObject, "cMSAuxMode"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the To Time property
@@ -307,7 +322,6 @@ objectJson += ",\"agent\":";
 
 		
 		// Source Relationships
-		this.cMSAuxMode = (CMSAuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "cMSAuxMode");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 
 

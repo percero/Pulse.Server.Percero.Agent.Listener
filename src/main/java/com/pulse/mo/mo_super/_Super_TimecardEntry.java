@@ -263,7 +263,7 @@ public void setAgent(Agent value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="WORKED_ID")
+@JoinColumn(name="TIMECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Timecard timecard;

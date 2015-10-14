@@ -195,20 +195,6 @@ public void setThresholdExceededNotifications(List<ThresholdExceededNotification
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CMS_AUX_MODE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CMSAuxModeOfLOBConfigurationEntry")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private CMSAuxMode cMSAuxMode;
-public CMSAuxMode getCMSAuxMode() {
-	return this.cMSAuxMode;
-}
-
-public void setCMSAuxMode(CMSAuxMode value) 
-{
-	this.cMSAuxMode = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -352,18 +338,6 @@ public void setTimecardActivity(TimecardActivity value)
 
 				
 		// Source Relationships
-//Retrieve value of the CMS Aux Mode of LOB Configuration Entry relationship
-objectJson += ",\"cMSAuxMode\":";
-		if (getCMSAuxMode() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getCMSAuxMode()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
 objectJson += ",\"lOBConfiguration\":";
 		if (getLOBConfiguration() == null)
@@ -444,7 +418,6 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 
 		
 		// Source Relationships
-		this.cMSAuxMode = (CMSAuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "cMSAuxMode");
 		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
 		this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
 		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");

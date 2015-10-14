@@ -204,23 +204,6 @@ public void setExcluded(Integer excluded)
 {
 	this.excluded = excluded;
 }/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
 EndDate
 Notes:
 */
@@ -254,40 +237,6 @@ public String getIntervalType()
 public void setIntervalType(String intervalType)
 {
 	this.intervalType = intervalType;
-}/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
-}/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
 }/*
 MetricUnit
 Notes:
@@ -373,23 +322,6 @@ public String getMetricType()
 public void setMetricType(String metricType)
 {
 	this.metricType = metricType;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
 }/*
 Grade
 Notes:
@@ -563,27 +495,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the End Date property
 		objectJson += ",\"endDate\":";
 		if (getEndDate() == null)
@@ -611,34 +522,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Metric Unit property
 		objectJson += ",\"metricUnit\":";
@@ -716,13 +599,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Grade property
 		objectJson += ",\"grade\":";
@@ -809,16 +685,10 @@ objectJson += ",\"scorecardMeasure\":";
 		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
 		//From value of the Excluded property
 		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
 		//From value of the Interval Type property
 		setIntervalType(JsonUtils.getJsonString(jsonObject, "intervalType"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Metric Unit property
 		setMetricUnit(JsonUtils.getJsonString(jsonObject, "metricUnit"));
 		//From value of the SCM Goal Id property
@@ -829,8 +699,6 @@ objectJson += ",\"scorecardMeasure\":";
 		setMetricResult(JsonUtils.getJsonDouble(jsonObject, "metricResult"));
 		//From value of the Metric Type property
 		setMetricType(JsonUtils.getJsonString(jsonObject, "metricType"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Grade property
 		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Rollup Type property

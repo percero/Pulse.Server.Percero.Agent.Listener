@@ -19,7 +19,6 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.DiscrepancyDetectedNotification;
-import com.pulse.mo.CMSAuxMode;
 import com.pulse.mo.TimecardActivity;
 
 */
