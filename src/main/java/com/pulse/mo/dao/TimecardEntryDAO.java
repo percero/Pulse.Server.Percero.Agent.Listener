@@ -100,11 +100,17 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\"")) {
+			return SQL_VIEW + "  \"TIMECARD_ENTRY\".\"ID\"=?";
+		}
 		return SQL_VIEW + "  \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\"")) {
+			return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"ID\"=?";
+		}
 		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
 	}
 

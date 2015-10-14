@@ -49,7 +49,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
 	
-	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQLID From Dual) WHERE ADHOC_COACHING_SESSION.AGENT_ID= SUBSTR(SQLID,0,9) AND ADHOC_COACHING_SESSION.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND ADHOC_COACHING_SESSION.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQLID From Dual) WHERE ADHOC_COACHING_SESSION.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND ADHOC_COACHING_SESSION.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND ADHOC_COACHING_SESSION.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 	
 
 	
