@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,8 +14,8 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
-import com.pulse.mo.*;
+import com.pulse.mo.Supervisor;
+import com.pulse.mo.TeamLeader;
 
 /*
 import com.pulse.mo.TeamLeader;
@@ -75,8 +75,9 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	}
 	
 	@Override
-	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+	protected String getSelectAllShellOnlySQL() throws SyncException {
+		throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
+//		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
@@ -85,8 +86,9 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	}
 	
 	@Override
-	protected String getSelectAllStarSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+	protected String getSelectAllStarSQL() throws SyncException {
+		throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
+//		return "SELECT \"TEAM_LEADER\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
@@ -379,6 +381,10 @@ propertyCounter++;
 		}
 		
 		*/
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
+		}
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

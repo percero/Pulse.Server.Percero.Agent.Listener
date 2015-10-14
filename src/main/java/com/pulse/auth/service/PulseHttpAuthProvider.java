@@ -86,7 +86,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     		logger.debug("Authentication successful for user " + cred.getUsername() + (this.insecureMode ? " (dev mode)" : ""));
             PulseUserInfo pulseUserInfo = null;
 
-            // If the employeeId is set then we are using the backdoor
+            // If the employeeId is set then we are using the back door
             if(employeeId != null && this.insecureMode){
                 pulseUserInfo = new PulseUserInfo();
                 pulseUserInfo.setEmployeeId(employeeId);
@@ -112,36 +112,33 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     return result;
                 }
             }
-            
-            if (pulseUserInfo == null) {
-            	logger.warn("Invalid UserInfo retrieved from Pulse server: " + (StringUtils.hasText(body) ? body : ""));
-            	return result;
-            }
-            else {
-            	logger.debug("Successfully retrieved Pulse User Info for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
-            }
 
             try {
-            	logger.debug("Retrieving TeamLeader object for employee " + pulseUserInfo.getEmployeeId());
-                TeamLeader example = new TeamLeader();
-                example.setEmployeeId(pulseUserInfo.getEmployeeId());
-                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
-
-                // If we found one
-                if (list.size() > 0) {
-                    TeamLeader teamLeader = list.get(0);
-                    result = new ServiceUser();
-                    result.setId(pulseUserInfo.getEmployeeId());
-                    result.setFirstName(teamLeader.getFirstName());
-                    result.setLastName(teamLeader.getLastName());
-                    result.getRoleNames().add("TeamLeader");
-                    result.setAreRoleNamesAccurate(true);
-                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
-                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
-                }
-                else {
-                	logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
-                }
+            	if ( pulseUserInfo != null && StringUtils.hasText(pulseUserInfo.getEmployeeId()) ) {
+	            	logger.debug("Retrieving TeamLeader object for user/employee " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                TeamLeader example = new TeamLeader();
+	                example.setEmployeeId(pulseUserInfo.getEmployeeId());
+	                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
+	
+	                // If we found one
+	                if (list.size() > 0) {
+	                    TeamLeader teamLeader = list.get(0);
+	                    result = new ServiceUser();
+	                    result.setId(pulseUserInfo.getEmployeeId());
+	                    result.setFirstName(teamLeader.getFirstName());
+	                    result.setLastName(teamLeader.getLastName());
+	                    result.getRoleNames().add("TeamLeader");
+	                    result.setAreRoleNamesAccurate(true);
+	                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
+	                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                }
+	                else {
+	                	logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                }
+            	}
+            	else {
+                	logger.warn("No TeamLeader for logged in user");
+            	}
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);
             }

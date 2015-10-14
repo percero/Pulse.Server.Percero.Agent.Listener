@@ -99,7 +99,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		}
 	}
 	
-	protected String getSelectAllSql(Boolean shellOnly) {
+	protected String getSelectAllSql(Boolean shellOnly) throws SyncException {
 		if (shellOnly) {
 			return getSelectAllShellOnlySQL();
 		}
@@ -125,7 +125,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		return null;
 	}
 
-	protected String getSelectAllStarSQL() {
+	protected String getSelectAllStarSQL() throws SyncException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -135,7 +135,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		return null;
 	}
 
-	protected String getSelectAllShellOnlySQL() {
+	protected String getSelectAllShellOnlySQL() throws SyncException {
 		// TODO Auto-generated method stub
 		return null;
 	}
