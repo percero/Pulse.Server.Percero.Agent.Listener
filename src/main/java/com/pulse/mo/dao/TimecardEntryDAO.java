@@ -55,32 +55,32 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"ID\"=?";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"WORKED_ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD_ENTRY\".ID=?";
+		return SQL_VIEW + " where \"TIMECARD_ENTRY\".\"WORKED_ID\"=?";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY ID";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY \"TIMECARD_ENTRY\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".ID";
+		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\"";
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -90,12 +90,12 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD_ENTRY\".ID IN (?)";
+		return SQL_VIEW + " where \"TIMECARD_ENTRY\".\"WORKED_ID\" IN (?)";
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".ID IN (?)";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"WORKED_ID\" IN (?)";
 	}
 
 	@Override
@@ -166,6 +166,10 @@ nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 nextResult.setFromTime(rs.getString("FROM_TIME"));
+
+Timecard timecard = new Timecard();
+timecard.setID(rs.getString("TIMECARD_ID"));
+nextResult.setTimecard(timecard);
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -348,6 +352,23 @@ sql += " WHERE ";
 sql += " FROM_TIME=? ";
 paramValues.add(theQueryObject.getFromTime());
 propertyCounter++;
+}
+
+boolean useTimecardID = theQueryObject.getTimecard() != null && (excludeProperties == null || !excludeProperties.contains("timecard"));
+
+if (useTimecardID)
+{
+	if (propertyCounter > 0)
+	{
+		sql += " AND ";
+	}
+	else
+	{
+		sql += " WHERE ";
+	}
+	sql += " ID=? ";
+	paramValues.add(theQueryObject.getTimecard().getID());
+	propertyCounter++;
 }
 
 boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
