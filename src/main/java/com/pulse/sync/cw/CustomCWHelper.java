@@ -15,9 +15,12 @@ import com.percero.agents.sync.cw.ChangeWatcherHelper;
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.ClassIDPair;
+import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.Agent;
+import com.pulse.mo.CMSEntry;
 import com.pulse.mo.Notification;
 import com.pulse.mo.TeamLeader;
+import com.pulse.mo.ThresholdExceededNotification;
 
 // This should get picked up by Spring and be auto-wired.
 @Component
@@ -51,10 +54,12 @@ public class CustomCWHelper extends ChangeWatcherHelper {
 	 */
 	public void registerChangeWatchers() {
 		Collection<String> fieldsToWatch = new HashSet<String>();
-		// Listen for changes on ALL TeamLeaders.
-		accessManager.addWatcherField(new ClassIDPair("0", TeamLeader.class.getCanonicalName()), "", fieldsToWatch);
-		// Listen for changes on Agent AGENT_1_ID.
-		accessManager.addWatcherField(new ClassIDPair("AGENT_1_ID", Agent.class.getCanonicalName()), "", fieldsToWatch);
+		// Listen for changes on ALL CMS Entry records.
+		accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", fieldsToWatch);
+//		// Listen for changes on ALL TeamLeaders.
+//		accessManager.addWatcherField(new ClassIDPair("0", TeamLeader.class.getCanonicalName()), "", fieldsToWatch);
+//		// Listen for changes on Agent AGENT_1_ID.
+//		accessManager.addWatcherField(new ClassIDPair("AGENT_1_ID", Agent.class.getCanonicalName()), "", fieldsToWatch);
 
 		// Register the fields. This can always be called again with an updated
 		// list of fields to watch, which would overwrite the list of fields
@@ -77,7 +82,7 @@ public class CustomCWHelper extends ChangeWatcherHelper {
 	public void process(String category, String subCategory, String fieldName, String[] params) {
 		if (fieldName.equalsIgnoreCase("runMyTest")) {
 			try {
-				runMyTestCode(category, subCategory, fieldName);
+				runMyTestCode(category, subCategory, fieldName, params);
 			} catch(Exception e) {
 				log.error("Unable to process runMyTestCode", e);
 			}
@@ -95,18 +100,50 @@ public class CustomCWHelper extends ChangeWatcherHelper {
 	 * @param fieldName
 	 * @throws Exception
 	 */
-	public void runMyTestCode(String category, String subCategory, String fieldName) throws Exception {
+	public void runMyTestCode(String category, String subCategory, String fieldName, String[] params) throws Exception {
 		// This is where the logic would go to create a Notification based on when the data requested above changes.
 		try {
-			TeamLeader teamLeader = (TeamLeader) syncAgentService.systemGetById(new ClassIDPair("TEAM_LEADER_1_ID", TeamLeader.class.getCanonicalName()));
-			if (teamLeader != null && teamLeader.getFullName().equals("Team Leader Name")) {
-				Notification sampleNotification = new Notification();
-				sampleNotification.setTeamLeader(teamLeader);
-				sampleNotification.setDate(new Date());
-				sampleNotification.setID(UUID.randomUUID().toString());
-				sampleNotification.setType("NOTIFICATION_TYPE");
-				sampleNotification.setName("This is only a test");
-				syncAgentService.systemCreateObject(sampleNotification, null);
+			
+			if (params != null && params.length >= 2) {
+				String className = params[0];
+				String classId = params[1];
+				
+				ClassIDPair classIdPair = new ClassIDPair(classId, className);
+				IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
+				
+				if (updatedObject instanceof CMSEntry) {
+					CMSEntry cmsEntry = (CMSEntry) updatedObject;
+					
+					if (cmsEntry.getDuration() != null && cmsEntry.getDuration().doubleValue() >= 15.0) {
+						Agent agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+						if (agent == null) {
+							return;
+						}
+
+						TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
+						if (teamLeader == null) {
+							return;
+						}
+						
+//						ThresholdExceededNotification dtn = new ThresholdExceededNotification();
+//						dtn.setAgent(agent);
+//						dtn.setTeamLeader(teamLeader);
+//						dtn.setDate(new Date());
+//						dtn.setMessage("This only a test. Please ignore.");
+//						dtn.setType("TEST");
+//						dtn.setID(UUID.randomUUID().toString());
+//						dtn.setName("TEST");
+//						syncAgentService.systemCreateObject(dtn, null);
+						
+						Notification sampleNotification = new Notification();
+						sampleNotification.setTeamLeader(teamLeader);
+						sampleNotification.setDate(new Date());
+						sampleNotification.setID(UUID.randomUUID().toString());
+						sampleNotification.setType("NOTIFICATION_TYPE");
+						sampleNotification.setName("This is only a test");
+	//					syncAgentService.systemCreateObject(sampleNotification, null);
+					}
+				}
 			}
 		} catch(Exception e) {
 			// Handle any exception here.
