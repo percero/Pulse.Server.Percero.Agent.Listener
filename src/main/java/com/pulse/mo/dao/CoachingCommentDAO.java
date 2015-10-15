@@ -41,7 +41,14 @@ public class CoachingCommentDAO extends SqlDataAccessObject<CoachingComment> imp
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\"";
+	private String selectFromStatementTableName = " FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\"";
+	private String whereClause = " WHERE \"COACHING_COMMENT\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_COMMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"COACHING_COMMENT\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class CoachingCommentDAO extends SqlDataAccessObject<CoachingComment> imp
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\".\"ID\"=?";
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\".\"ID\"=?";
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ORDER BY \"ID\"";
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ORDER BY \"COACHING_COMMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ORDER BY \"COACHING_COMMENT\".\"ID\"";
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ORDER BY \"COACHING_COMMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\".\"ID\" IN (?)";
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
+		
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ";
+		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\" FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\" ";
+		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

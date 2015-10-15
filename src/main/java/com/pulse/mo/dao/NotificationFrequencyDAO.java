@@ -41,7 +41,14 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"NOTIFICATION_FREQUENCY\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\"";
+	private String whereClause = " WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_FREQUENCY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ORDER BY \"ID\"";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\"";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\".\"ID\" IN (?)";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
+		
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\",\"NOTIFICATION_FREQUENCY\".\"NAME\" FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\" ";
+		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

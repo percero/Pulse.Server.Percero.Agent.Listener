@@ -42,7 +42,9 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -139,15 +141,15 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setShift(rs.getInt("SHIFT"));
+			nextResult.setEndDate(rs.getDate("END_DATE"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
 
+nextResult.setEndTime(rs.getDate("END_TIME"));
+
 nextResult.setStartTime(rs.getDate("START_TIME"));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
-
-nextResult.setEndTime(rs.getDate("END_TIME"));
+nextResult.setShift(rs.getInt("SHIFT"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -186,13 +188,13 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useShift = theQueryObject.getShift() != null && (excludeProperties == null || !excludeProperties.contains("shift"));
+		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
-if (useShift)
+if (useEndDate)
 {
 sql += " WHERE ";
-sql += " SHIFT=? ";
-paramValues.add(theQueryObject.getShift());
+sql += " END_DATE=? ";
+paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
 }
 
@@ -213,6 +215,23 @@ paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
+boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+
+if (useEndTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " END_TIME=? ";
+paramValues.add(theQueryObject.getEndTime());
+propertyCounter++;
+}
+
 boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
 
 if (useStartTime)
@@ -230,9 +249,9 @@ paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+boolean useShift = theQueryObject.getShift() != null && (excludeProperties == null || !excludeProperties.contains("shift"));
 
-if (useEndDate)
+if (useShift)
 {
 if (propertyCounter > 0)
 {
@@ -242,25 +261,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
-propertyCounter++;
-}
-
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
-
-if (useEndTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_TIME=? ";
-paramValues.add(theQueryObject.getEndTime());
+sql += " SHIFT=? ";
+paramValues.add(theQueryObject.getShift());
 propertyCounter++;
 }
 

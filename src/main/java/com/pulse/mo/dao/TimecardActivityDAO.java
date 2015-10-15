@@ -20,9 +20,9 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.TimecardActivity;
 import com.pulse.mo.DiscrepancyDetectedNotification;
-import com.pulse.mo.ChangesNotApprovedNotification;
 import com.pulse.mo.TimecardEntry;
 import com.pulse.mo.LOBConfigurationEntry;
+import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.CVGProject;
 
 */
@@ -46,7 +46,9 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"TIMECARD_ACTIVITY\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"TIMECARD_ACTIVITY\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -143,13 +145,13 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
-
-nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
+			nextResult.setNonBillable(rs.getBoolean("NON_BILLABLE"));
 
 nextResult.setCode(rs.getString("CODE"));
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setName(rs.getString("NAME"));
 
 CVGProject cvgproject = new CVGProject();
 cvgproject.setID(rs.getString("CVG_PROJECT_ID"));
@@ -188,28 +190,11 @@ nextResult.setCVGProject(cvgproject);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-sql += " WHERE ";
-sql += " NAME=? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
+		boolean useNonBillable = theQueryObject.getNonBillable() != null && (excludeProperties == null || !excludeProperties.contains("nonBillable"));
 
 if (useNonBillable)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " NON_BILLABLE=? ";
 paramValues.add(theQueryObject.getNonBillable());
 propertyCounter++;
@@ -246,6 +231,23 @@ sql += " WHERE ";
 }
 sql += " DESCRIPTION=? ";
 paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " NAME=? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

@@ -42,7 +42,14 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\"";
+	private String selectFromStatementTableName = " FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\"";
+	private String whereClause = " WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,78 +58,83 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ORDER BY \"ID\"";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ORDER BY \"QUALITY_EVALUATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ORDER BY \"QUALITY_EVALUATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\".\"ID\" IN (?)";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\" FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\" ";
+		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO QUALITY_EVALUATION (\"ID\",\"PERFORMANCE_SUMMARY_ID\",\"COACHING_SESSION_ID\") VALUES (?,?,?)";
+		return "INSERT INTO QUALITY_EVALUATION (\"ID\",\"COACHING_SESSION_ID\",\"PERFORMANCE_SUMMARY_ID\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"QUALITY_EVALUATION\" SET \"PERFORMANCE_SUMMARY_ID\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"QUALITY_EVALUATION\" SET \"COACHING_SESSION_ID\"=?,\"PERFORMANCE_SUMMARY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,13 +151,13 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
     	
     	if (!shellOnly) 
 		{
-			PerformanceSummary performancesummary = new PerformanceSummary();
-performancesummary.setID(rs.getString("PERFORMANCE_SUMMARY_ID"));
-nextResult.setPerformanceSummary(performancesummary);
-
-CoachingSession coachingsession = new CoachingSession();
+			CoachingSession coachingsession = new CoachingSession();
 coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
 nextResult.setCoachingSession(coachingsession);
+
+PerformanceSummary performancesummary = new PerformanceSummary();
+performancesummary.setID(rs.getString("PERFORMANCE_SUMMARY_ID"));
+nextResult.setPerformanceSummary(performancesummary);
 
 
 			
@@ -159,23 +171,23 @@ nextResult.setCoachingSession(coachingsession);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-if (perceroObject.getPerformanceSummary() == null)
+if (perceroObject.getCoachingSession() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getPerformanceSummary().getID());
+		pstmt.setString(2, perceroObject.getCoachingSession().getID());
 }
 
 
-if (perceroObject.getCoachingSession() == null)
+if (perceroObject.getPerformanceSummary() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getCoachingSession().getID());
+		pstmt.setString(3, perceroObject.getPerformanceSummary().getID());
 }
 
 
@@ -186,23 +198,23 @@ else
 	protected void setPreparedStatmentUpdateParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		
-if (perceroObject.getPerformanceSummary() == null)
+if (perceroObject.getCoachingSession() == null)
 {
 pstmt.setString(1, null);
 }
 else
 {
-		pstmt.setString(1, perceroObject.getPerformanceSummary().getID());
+		pstmt.setString(1, perceroObject.getCoachingSession().getID());
 }
 
 
-if (perceroObject.getCoachingSession() == null)
+if (perceroObject.getPerformanceSummary() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getCoachingSession().getID());
+		pstmt.setString(2, perceroObject.getPerformanceSummary().getID());
 }
 
 pstmt.setString(3, perceroObject.getID());
@@ -222,19 +234,19 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
+		boolean useCoachingSessionID = theQueryObject.getCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("coachingSession"));
 
-if (usePerformanceSummaryID)
+if (useCoachingSessionID)
 {
 sql += " WHERE ";
-sql += " \"PERFORMANCE_SUMMARY_ID\" =? ";
-paramValues.add(theQueryObject.getPerformanceSummary().getID());
+sql += " \"COACHING_SESSION_ID\" =? ";
+paramValues.add(theQueryObject.getCoachingSession().getID());
 propertyCounter++;
 }
 
-boolean useCoachingSessionID = theQueryObject.getCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("coachingSession"));
+boolean usePerformanceSummaryID = theQueryObject.getPerformanceSummary() != null && (excludeProperties == null || !excludeProperties.contains("performanceSummary"));
 
-if (useCoachingSessionID)
+if (usePerformanceSummaryID)
 {
 if (propertyCounter > 0)
 {
@@ -244,8 +256,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"COACHING_SESSION_ID\" =? ";
-paramValues.add(theQueryObject.getCoachingSession().getID());
+sql += " \"PERFORMANCE_SUMMARY_ID\" =? ";
+paramValues.add(theQueryObject.getPerformanceSummary().getID());
 propertyCounter++;
 }
 

@@ -41,7 +41,14 @@ public class TraceLogDAO extends SqlDataAccessObject<TraceLog> implements IDataA
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"TRACE_LOG\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"TRACE_LOG\" \"TRACE_LOG\"";
+	private String whereClause = " WHERE \"TRACE_LOG\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TRACE_LOG\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"TRACE_LOG\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class TraceLogDAO extends SqlDataAccessObject<TraceLog> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\"=?";
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\"=?";
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"ID\"";
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\"";
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ORDER BY \"TRACE_LOG\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"TRACE_LOG\" \"TRACE_LOG\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\".\"ID\" IN (?)";
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
+		
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName + " WHERE \"TRACE_LOG\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ";
+		return "SELECT \"TRACE_LOG\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"TRACE_LOG\".\"ID\",\"TRACE_LOG\".\"NAME\" FROM \"TRACE_LOG\" \"TRACE_LOG\" ";
+		return "SELECT \"TRACE_LOG\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

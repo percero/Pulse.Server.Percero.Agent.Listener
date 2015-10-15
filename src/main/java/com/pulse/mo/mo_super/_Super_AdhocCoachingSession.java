@@ -135,6 +135,40 @@ public String getStatus()
 public void setStatus(String status)
 {
 	this.status = status;
+}/*
+ScorecardId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer scorecardId;
+
+public Integer getScorecardId() 
+{
+	return this.scorecardId;
+}
+
+public void setScorecardId(Integer scorecardId)
+{
+	this.scorecardId = scorecardId;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer employeeId;
+
+public Integer getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(Integer employeeId)
+{
+	this.employeeId = employeeId;
 }
 
 	//////////////////////////////////////////////////////
@@ -174,29 +208,16 @@ public void setAdhocCoachingCategory(AdhocCoachingCategory value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="AGENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfAdhocCoachingSession")
+@JoinColumn(name="AGENT_SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Agent agent;
-public Agent getAgent() {
-	return this.agent;
+private AgentScorecard agentScorecard;
+public AgentScorecard getAgentScorecard() {
+	return this.agentScorecard;
 }
 
-public void setAgent(Agent value) {
-	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="TEAM_LEADER_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAdhocCoachingSession")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TeamLeader teamLeader;
-public TeamLeader getTeamLeader() {
-	return this.teamLeader;
-}
-
-public void setTeamLeader(TeamLeader value) {
-	this.teamLeader = value;
+public void setAgentScorecard(AgentScorecard value) {
+	this.agentScorecard = value;
 }
 
 	
@@ -257,6 +278,48 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Scorecard Id property
+		objectJson += ",\"scorecardId\":";
+		
+		if (getScorecardId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getScorecardId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
@@ -272,25 +335,13 @@ objectJson += ",\"adhocCoachingCategory\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Agent of Adhoc Coaching Session relationship
-objectJson += ",\"agent\":";
-		if (getAgent() == null)
+//Retrieve value of the Agent Scorecard of Adhoc Coaching Session relationship
+objectJson += ",\"agentScorecard\":";
+		if (getAgentScorecard() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Team Leader of Adhoc Coaching Session relationship
-objectJson += ",\"teamLeader\":";
-		if (getTeamLeader() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -333,12 +384,15 @@ objectJson += ",\"coachingComments\":[";
 		setSessionType(JsonUtils.getJsonString(jsonObject, "sessionType"));
 		//From value of the Status property
 		setStatus(JsonUtils.getJsonString(jsonObject, "status"));
+		//From value of the Scorecard Id property
+		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 
 		
 		// Source Relationships
 		this.adhocCoachingCategory = (AdhocCoachingCategory) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingCategory");
-		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
-		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
+		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 
 
 		// Target Relationships

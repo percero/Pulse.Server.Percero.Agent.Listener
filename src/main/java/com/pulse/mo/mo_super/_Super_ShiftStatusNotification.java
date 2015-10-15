@@ -48,9 +48,9 @@ import com.pulse.mo.*;
 /*
 Entity Tags based on semantic requirements
 */
-@SecondaryTable(name="ChangesNotApprovedNotification")
+@SecondaryTable(name="ShiftStatusNotification")
 @MappedSuperclass
-public class _Super_ChangesNotApprovedNotification extends Notification implements Serializable
+public class _Super_ShiftStatusNotification extends Notification implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_ChangesNotApprovedNotification extends Notification implemen
 
 	
 	/*
-	Keys of ChangesNotApprovedNotification
+	Keys of ShiftStatusNotification
 	*/
 	
 	
@@ -70,6 +70,23 @@ public class _Super_ChangesNotApprovedNotification extends Notification implemen
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+InProgressStateCount
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer inProgressStateCount;
+
+public Integer getInProgressStateCount() 
+{
+	return this.inProgressStateCount;
+}
+
+public void setInProgressStateCount(Integer inProgressStateCount)
+{
+	this.inProgressStateCount = inProgressStateCount;
+}/*
 NotYetStartedStateCount
 Notes:
 */
@@ -87,39 +104,22 @@ public void setNotYetStartedStateCount(Integer notYetStartedStateCount)
 {
 	this.notYetStartedStateCount = notYetStartedStateCount;
 }/*
-ApprovedStateCount
+ShiftEndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer approvedStateCount;
+private Date shiftEndDate;
 
-public Integer getApprovedStateCount() 
+public Date getShiftEndDate() 
 {
-	return this.approvedStateCount;
+	return this.shiftEndDate;
 }
 
-public void setApprovedStateCount(Integer approvedStateCount)
+public void setShiftEndDate(Date shiftEndDate)
 {
-	this.approvedStateCount = approvedStateCount;
-}/*
-CompleteStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer completeStateCount;
-
-public Integer getCompleteStateCount() 
-{
-	return this.completeStateCount;
-}
-
-public void setCompleteStateCount(Integer completeStateCount)
-{
-	this.completeStateCount = completeStateCount;
+	this.shiftEndDate = shiftEndDate;
 }/*
 Resolved
 Notes:Flag that determines if the notification has been resolved
@@ -138,39 +138,39 @@ public void setResolved(Boolean resolved)
 {
 	this.resolved = resolved;
 }/*
-InProgressStateCount
+CompleteStateCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer inProgressStateCount;
+private Integer completeStateCount;
 
-public Integer getInProgressStateCount() 
+public Integer getCompleteStateCount() 
 {
-	return this.inProgressStateCount;
+	return this.completeStateCount;
 }
 
-public void setInProgressStateCount(Integer inProgressStateCount)
+public void setCompleteStateCount(Integer completeStateCount)
 {
-	this.inProgressStateCount = inProgressStateCount;
+	this.completeStateCount = completeStateCount;
 }/*
-ShiftEndDate
+ApprovedStateCount
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date shiftEndDate;
+private Integer approvedStateCount;
 
-public Date getShiftEndDate() 
+public Integer getApprovedStateCount() 
 {
-	return this.shiftEndDate;
+	return this.approvedStateCount;
 }
 
-public void setShiftEndDate(Date shiftEndDate)
+public void setApprovedStateCount(Integer approvedStateCount)
 {
-	this.shiftEndDate = shiftEndDate;
+	this.approvedStateCount = approvedStateCount;
 }
 
 	//////////////////////////////////////////////////////
@@ -185,7 +185,7 @@ public void setShiftEndDate(Date shiftEndDate)
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfChangesNotApprovedNotification")
+@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfShiftStatusNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private TimecardActivity timecardActivity;
 public TimecardActivity getTimecardActivity() {
@@ -205,6 +205,27 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the In Progress State Count property
+		objectJson += ",\"inProgressStateCount\":";
+		
+		if (getInProgressStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getInProgressStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Not Yet Started State Count property
 		objectJson += ",\"notYetStartedStateCount\":";
 		
@@ -215,6 +236,41 @@ public void setTimecardActivity(TimecardActivity value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getNotYetStartedStateCount());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Shift End Date property
+		objectJson += ",\"shiftEndDate\":";
+		if (getShiftEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getShiftEndDate().getTime();
+		}
+		//Retrieve value of the Resolved property
+		objectJson += ",\"resolved\":";
+		if (getResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getResolved();
+		}
+		//Retrieve value of the Complete State Count property
+		objectJson += ",\"completeStateCount\":";
+		
+		if (getCompleteStateCount() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCompleteStateCount());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -247,66 +303,10 @@ public void setTimecardActivity(TimecardActivity value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Complete State Count property
-		objectJson += ",\"completeStateCount\":";
-		
-		if (getCompleteStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCompleteStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Resolved property
-		objectJson += ",\"resolved\":";
-		if (getResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getResolved();
-		}
-		//Retrieve value of the In Progress State Count property
-		objectJson += ",\"inProgressStateCount\":";
-		
-		if (getInProgressStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getInProgressStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Shift End Date property
-		objectJson += ",\"shiftEndDate\":";
-		if (getShiftEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getShiftEndDate().getTime();
-		}
 
 				
 		// Source Relationships
-//Retrieve value of the Timecard Activity of Changes Not Approved Notification relationship
+//Retrieve value of the Timecard Activity of Shift Status Notification relationship
 objectJson += ",\"timecardActivity\":";
 		if (getTimecardActivity() == null)
 			objectJson += "null";
@@ -332,18 +332,18 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Not Yet Started State Count property
-		setNotYetStartedStateCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedStateCount"));
-		//From value of the Approved State Count property
-		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
-		//From value of the Complete State Count property
-		setCompleteStateCount(JsonUtils.getJsonInteger(jsonObject, "completeStateCount"));
-		//From value of the Resolved property
-		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
 		//From value of the In Progress State Count property
 		setInProgressStateCount(JsonUtils.getJsonInteger(jsonObject, "inProgressStateCount"));
+		//From value of the Not Yet Started State Count property
+		setNotYetStartedStateCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedStateCount"));
 		//From value of the Shift End Date property
 		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
+		//From value of the Resolved property
+		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
+		//From value of the Complete State Count property
+		setCompleteStateCount(JsonUtils.getJsonInteger(jsonObject, "completeStateCount"));
+		//From value of the Approved State Count property
+		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
 
 		
 		// Source Relationships

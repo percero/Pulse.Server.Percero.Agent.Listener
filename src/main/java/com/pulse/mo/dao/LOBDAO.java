@@ -46,6 +46,8 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"PULSE_CONFIGURATION_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
 	
+
+	
 	@Override
 	protected String getConnectionFactoryName() {
 		return LOBDAO.CONNECTION_FACTORY_NAME;

@@ -41,7 +41,14 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"SETTING\" \"SETTING\"";
+	private String whereClause = " WHERE \"SETTING\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SETTING\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"SETTING\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\"=?";
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\"=?";
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"ID\"";
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\"";
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ORDER BY \"SETTING\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"SETTING\" \"SETTING\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\".\"ID\" IN (?)";
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\"." + joinColumnName + "=?";
+		
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SETTING\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" WHERE \"SETTING\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + " WHERE \"SETTING\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" FROM \"SETTING\" \"SETTING\" ";
+		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SETTING\".\"ID\",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\" FROM \"SETTING\" \"SETTING\" ";
+		return "SELECT \"SETTING\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

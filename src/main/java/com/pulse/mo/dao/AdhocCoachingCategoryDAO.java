@@ -41,7 +41,14 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"ADHOC_COACHING_CATEGORY\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\"";
+	private String whereClause = " WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_CATEGORY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ORDER BY \"ID\"";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\"";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\" IN (?)";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\"." + joinColumnName + "=?";
+		
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_CATEGORY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" WHERE \"ADHOC_COACHING_CATEGORY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_CATEGORY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\",\"ADHOC_COACHING_CATEGORY\".\"NAME\" FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\" ";
+		return "SELECT \"ADHOC_COACHING_CATEGORY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

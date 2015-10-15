@@ -40,7 +40,14 @@ public class PayrollDetailDAO extends SqlDataAccessObject<PayrollDetail> impleme
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\"";
+	private String selectFromStatementTableName = " FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\"";
+	private String whereClause = " WHERE \"PAYROLL_DETAIL\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PAYROLL_DETAIL\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"PAYROLL_DETAIL\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -49,78 +56,83 @@ public class PayrollDetailDAO extends SqlDataAccessObject<PayrollDetail> impleme
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\".\"ID\"=?";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\".\"ID\"=?";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ORDER BY \"ID\"";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ORDER BY \"PAYROLL_DETAIL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ORDER BY \"PAYROLL_DETAIL\".\"ID\"";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ORDER BY \"PAYROLL_DETAIL\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\".\"ID\" IN (?)";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\"." + joinColumnName + "=?";
+		
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"PAYROLL_DETAIL\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" WHERE \"PAYROLL_DETAIL\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName + " WHERE \"PAYROLL_DETAIL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"PAYROLL_DETAIL\".\"ID\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\" FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\" ";
+		return "SELECT \"PAYROLL_DETAIL\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO PAYROLL_DETAIL (\"ID\",\"SHIFT_RULE\",\"SHIFT_START_DATE_TIME\",\"SHIFT_START_END_TIME\",\"ASSUMED_OFF\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO PAYROLL_DETAIL (\"ID\",\"ASSUMED_OFF\",\"SHIFT_START_DATE_TIME\",\"SHIFT_START_END_TIME\",\"SHIFT_RULE\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PAYROLL_DETAIL\" SET \"SHIFT_RULE\"=?,\"SHIFT_START_DATE_TIME\"=?,\"SHIFT_START_END_TIME\"=?,\"ASSUMED_OFF\"=? WHERE \"ID\"=?";
+		return "UPDATE \"PAYROLL_DETAIL\" SET \"ASSUMED_OFF\"=?,\"SHIFT_START_DATE_TIME\"=?,\"SHIFT_START_END_TIME\"=?,\"SHIFT_RULE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,13 +149,13 @@ public class PayrollDetailDAO extends SqlDataAccessObject<PayrollDetail> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setShiftRule(rs.getString("SHIFT_RULE"));
+			nextResult.setAssumedOff(rs.getBoolean("ASSUMED_OFF"));
 
 nextResult.setShiftStartDateTime(rs.getDate("SHIFT_START_DATE_TIME"));
 
 nextResult.setShiftStartEndTime(rs.getDate("SHIFT_START_END_TIME"));
 
-nextResult.setAssumedOff(rs.getBoolean("ASSUMED_OFF"));
+nextResult.setShiftRule(rs.getString("SHIFT_RULE"));
 
 
 			
@@ -156,10 +168,10 @@ nextResult.setAssumedOff(rs.getBoolean("ASSUMED_OFF"));
 	protected void setPreparedStatmentInsertParams(PayrollDetail perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getShiftRule());
+pstmt.setBoolean(2, perceroObject.getAssumedOff());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getShiftStartDateTime()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getShiftStartEndTime()));
-pstmt.setBoolean(5, perceroObject.getAssumedOff());
+pstmt.setString(5, perceroObject.getShiftRule());
 
 		
 	}
@@ -167,10 +179,10 @@ pstmt.setBoolean(5, perceroObject.getAssumedOff());
 	@Override
 	protected void setPreparedStatmentUpdateParams(PayrollDetail perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getShiftRule());
+		pstmt.setBoolean(1, perceroObject.getAssumedOff());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getShiftStartDateTime()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getShiftStartEndTime()));
-pstmt.setBoolean(4, perceroObject.getAssumedOff());
+pstmt.setString(4, perceroObject.getShiftRule());
 pstmt.setString(5, perceroObject.getID());
 
 		
@@ -188,13 +200,13 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useShiftRule = StringUtils.hasText(theQueryObject.getShiftRule()) && (excludeProperties == null || !excludeProperties.contains("shiftRule"));
+		boolean useAssumedOff = theQueryObject.getAssumedOff() != null && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
 
-if (useShiftRule)
+if (useAssumedOff)
 {
 sql += " WHERE ";
-sql += " \"SHIFT_RULE\" =? ";
-paramValues.add(theQueryObject.getShiftRule());
+sql += " \"ASSUMED_OFF\" =? ";
+paramValues.add(theQueryObject.getAssumedOff());
 propertyCounter++;
 }
 
@@ -232,9 +244,9 @@ paramValues.add(theQueryObject.getShiftStartEndTime());
 propertyCounter++;
 }
 
-boolean useAssumedOff = theQueryObject.getAssumedOff() != null && (excludeProperties == null || !excludeProperties.contains("assumedOff"));
+boolean useShiftRule = StringUtils.hasText(theQueryObject.getShiftRule()) && (excludeProperties == null || !excludeProperties.contains("shiftRule"));
 
-if (useAssumedOff)
+if (useShiftRule)
 {
 if (propertyCounter > 0)
 {
@@ -244,8 +256,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"ASSUMED_OFF\" =? ";
-paramValues.add(theQueryObject.getAssumedOff());
+sql += " \"SHIFT_RULE\" =? ";
+paramValues.add(theQueryObject.getShiftRule());
 propertyCounter++;
 }
 

@@ -233,19 +233,6 @@ public void setAlerts(List<Alert> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocCoachingSession> adhocCoachingSessions;
-public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-	return this.adhocCoachingSessions;
-}
-
-public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-	this.adhocCoachingSessions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
 private List<AdhocTask> adhocTasks;
 public List<AdhocTask> getAdhocTasks() {
@@ -545,23 +532,6 @@ objectJson += ",\"alerts\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Team Leader of Adhoc Coaching Session relationship
-objectJson += ",\"adhocCoachingSessions\":[";
-		
-		if (getAdhocCoachingSessions() != null) {
-			int adhocCoachingSessionsCounter = 0;
-			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-				if (adhocCoachingSessionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-					adhocCoachingSessionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Team Leader of Adhoc Task relationship
 objectJson += ",\"adhocTasks\":[";
 		
@@ -697,7 +667,6 @@ objectJson += ",\"userSessions\":[";
 		this.notifications = (List<Notification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
-		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
 		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
 		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.generalComments = (List<GeneralComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "generalComments");
@@ -716,7 +685,6 @@ objectJson += ",\"userSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(Notification.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(GeneralComment.class, "teamleader"));

@@ -40,7 +40,14 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessObject<Occu
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	private String selectFromStatementTableName = " FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\"";
+	private String whereClause = " WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -49,78 +56,83 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessObject<Occu
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ORDER BY \"ID\"";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\"." + joinColumnName + "=?";
+		
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"OCCURRENCE_TOLERANCE_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"OCCURRENCE_TOLERANCE_NOTIF\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"OCCURRENCE_TOLERANCE_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\" FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\" ";
+		return "SELECT \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO OCCURRENCE_TOLERANCE_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"LOB_CONFIGURATION_ID\",\"AGENT_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO OCCURRENCE_TOLERANCE_NOTIF (\"ID\",\"TYPE\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"OCCURRENCE_TOLERANCE_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"LOB_CONFIGURATION_ID\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"OCCURRENCE_TOLERANCE_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -137,29 +149,29 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessObject<Occu
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
 
-nextResult.setType(rs.getString("TYPE"));
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
+TeamLeader teamleader = new TeamLeader();
+teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+nextResult.setTeamLeader(teamleader);
 
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
-
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-nextResult.setTeamLeader(teamleader);
 
 
 			
@@ -172,71 +184,10 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setString(5, perceroObject.getType());
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getLOBConfigurationEntry() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getTeamLeader().getID());
-}
-
-
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getMessage());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getType());
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getLOBConfiguration().getID());
-}
-
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -248,13 +199,13 @@ else
 }
 
 
-if (perceroObject.getLOBConfigurationEntry() == null)
+if (perceroObject.getLOBConfiguration() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getLOBConfigurationEntry().getID());
+		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
 }
 
 
@@ -265,6 +216,67 @@ pstmt.setString(8, null);
 else
 {
 		pstmt.setString(8, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getLOBConfigurationEntry() == null)
+{
+pstmt.setString(9, null);
+}
+else
+{
+		pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
+}
+
+
+		
+	}
+	
+	@Override
+	protected void setPreparedStatmentUpdateParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(5, null);
+}
+else
+{
+		pstmt.setString(5, perceroObject.getAgent().getID());
+}
+
+
+if (perceroObject.getLOBConfiguration() == null)
+{
+pstmt.setString(6, null);
+}
+else
+{
+		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
+}
+
+
+if (perceroObject.getTeamLeader() == null)
+{
+pstmt.setString(7, null);
+}
+else
+{
+		pstmt.setString(7, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getLOBConfigurationEntry() == null)
+{
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
 }
 
 pstmt.setString(9, perceroObject.getID());
@@ -284,11 +296,28 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+sql += " WHERE ";
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -328,9 +357,9 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useType)
+if (useAgentID)
 {
 if (propertyCounter > 0)
 {
@@ -340,8 +369,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
@@ -362,9 +391,9 @@ paramValues.add(theQueryObject.getLOBConfiguration().getID());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
-if (useAgentID)
+if (useTeamLeaderID)
 {
 if (propertyCounter > 0)
 {
@@ -374,8 +403,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
+sql += " \"TEAM_LEADER_ID\" =? ";
+paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 
@@ -393,23 +422,6 @@ sql += " WHERE ";
 }
 sql += " \"LOB_CONFIGURATION_ENTRY_ID\" =? ";
 paramValues.add(theQueryObject.getLOBConfigurationEntry().getID());
-propertyCounter++;
-}
-
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-if (useTeamLeaderID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TEAM_LEADER_ID\" =? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 

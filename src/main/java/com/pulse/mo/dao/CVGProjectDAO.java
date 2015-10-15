@@ -41,7 +41,14 @@ public class CVGProjectDAO extends SqlDataAccessObject<CVGProject> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"CVG_PROJECT\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"CVG_PROJECT\" \"CVG_PROJECT\"";
+	private String whereClause = " WHERE \"CVG_PROJECT\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CVG_PROJECT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"CVG_PROJECT\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class CVGProjectDAO extends SqlDataAccessObject<CVGProject> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\".\"ID\"=?";
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\".\"ID\"=?";
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ORDER BY \"ID\"";
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ORDER BY \"CVG_PROJECT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ORDER BY \"CVG_PROJECT\".\"ID\"";
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ORDER BY \"CVG_PROJECT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CVG_PROJECT\" \"CVG_PROJECT\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\".\"ID\" IN (?)";
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\"." + joinColumnName + "=?";
+		
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"CVG_PROJECT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" WHERE \"CVG_PROJECT\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName + " WHERE \"CVG_PROJECT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ";
+		return "SELECT \"CVG_PROJECT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"CVG_PROJECT\".\"ID\",\"CVG_PROJECT\".\"NAME\" FROM \"CVG_PROJECT\" \"CVG_PROJECT\" ";
+		return "SELECT \"CVG_PROJECT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

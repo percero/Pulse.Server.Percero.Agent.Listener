@@ -19,7 +19,6 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.DiscrepancyDetectedNotification;
-import com.pulse.mo.CMSAuxMode;
 import com.pulse.mo.TimecardActivity;
 
 */
@@ -42,7 +41,14 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\"";
+	private String whereClause = " WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,78 +57,83 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"ID\"";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" IN (?)";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
+		
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"DISCREPANCY_DETECTED_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\" FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\" ";
+		return "SELECT \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DISCREPANCY_DETECTED_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AUX_CODE_ENTRY_NAME\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO DISCREPANCY_DETECTED_NOTIF (\"ID\",\"DATE\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DISCREPANCY_DETECTED_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"DISCREPANCY_DETECTED_NOTIF\" SET \"DATE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,17 +150,17 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
-
-nextResult.setType(rs.getString("TYPE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
-
-nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
+
+nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
+
+nextResult.setType(rs.getString("TYPE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -174,12 +185,12 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getTimecardActivityName());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getAuxCodeEntryName());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(6, perceroObject.getMessage());
-pstmt.setString(7, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getAuxCodeEntryName());
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
+pstmt.setString(6, perceroObject.getTimecardActivityName());
+pstmt.setString(7, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -217,12 +228,12 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getTimecardActivityName());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getAuxCodeEntryName());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(5, perceroObject.getMessage());
-pstmt.setString(6, perceroObject.getName());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(2, perceroObject.getAuxCodeEntryName());
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
+pstmt.setString(5, perceroObject.getTimecardActivityName());
+pstmt.setString(6, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -270,30 +281,13 @@ pstmt.setString(10, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
-if (useTimecardActivityName)
+if (useDate)
 {
 sql += " WHERE ";
-sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
-paramValues.add(theQueryObject.getTimecardActivityName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
@@ -311,23 +305,6 @@ sql += " WHERE ";
 }
 sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
 paramValues.add(theQueryObject.getAuxCodeEntryName());
-propertyCounter++;
-}
-
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
-
-if (useDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
@@ -362,6 +339,40 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
+
+if (useTimecardActivityName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
+paramValues.add(theQueryObject.getTimecardActivityName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

@@ -20,7 +20,6 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.LOBConfigurationEntry;
 import com.pulse.mo.ThresholdExceededNotification;
-import com.pulse.mo.CMSAuxMode;
 import com.pulse.mo.LOBConfiguration;
 import com.pulse.mo.NotificationFrequency;
 import com.pulse.mo.TimecardActivity;
@@ -45,7 +44,14 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCC_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\"";
+	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\"";
+	private String whereClause = " WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_ENTRY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -54,78 +60,83 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ORDER BY \"ID\"";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\"";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\" IN (?)";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
+		
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCCURRENCE_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\" FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\" ";
+		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO LOB_CONFIGURATION_ENTRY (\"ID\",\"DURATION_TOLERANCE\",\"DURATION_TOLERANCE_ENABLED\",\"DURATION_TOLERANCE_INTERVAL\",\"OCCURRENCE_TOLERANCE_INTERVAL\",\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ID\",\"NOTIFICATION_FREQUENCY_ID\") VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO LOB_CONFIGURATION_ENTRY (\"ID\",\"DURATION_TOLERANCE_ENABLED\",\"DURATION_TOLERANCE\",\"DURATION_TOLERANCE_INTERVAL\",\"OCC_TOLERANCE_INTERVAL\",\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ID\",\"NOTIFICATION_FREQUENCY_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"LOB_CONFIGURATION_ENTRY\" SET \"DURATION_TOLERANCE\"=?,\"DURATION_TOLERANCE_ENABLED\"=?,\"DURATION_TOLERANCE_INTERVAL\"=?,\"OCCURRENCE_TOLERANCE_INTERVAL\"=?,\"REMINDER_INTERVAL\"=?,\"LOB_CONFIGURATION_ID\"=?,\"NOTIFICATION_FREQUENCY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"LOB_CONFIGURATION_ENTRY\" SET \"DURATION_TOLERANCE_ENABLED\"=?,\"DURATION_TOLERANCE\"=?,\"DURATION_TOLERANCE_INTERVAL\"=?,\"OCC_TOLERANCE_INTERVAL\"=?,\"REMINDER_INTERVAL\"=?,\"LOB_CONFIGURATION_ID\"=?,\"NOTIFICATION_FREQUENCY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -142,13 +153,13 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDurationTolerance(rs.getInt("DURATION_TOLERANCE"));
+			nextResult.setDurationToleranceEnabled(rs.getBoolean("DURATION_TOLERANCE_ENABLED"));
 
-nextResult.setDurationToleranceEnabled(rs.getBoolean("DURATION_TOLERANCE_ENABLED"));
+nextResult.setDurationTolerance(rs.getInt("DURATION_TOLERANCE"));
 
 nextResult.setDurationToleranceInterval(rs.getInt("DURATION_TOLERANCE_INTERVAL"));
 
-nextResult.setOccurrenceToleranceInterval(rs.getInt("OCCURRENCE_TOLERANCE_INTERVAL"));
+nextResult.setOccurrenceToleranceInterval(rs.getInt("OCC_TOLERANCE_INTERVAL"));
 
 nextResult.setReminderInterval(rs.getInt("REMINDER_INTERVAL"));
 
@@ -171,8 +182,8 @@ nextResult.setNotificationFrequency(notificationfrequency);
 	protected void setPreparedStatmentInsertParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setInt(2, perceroObject.getDurationTolerance());
-pstmt.setBoolean(3, perceroObject.getDurationToleranceEnabled());
+pstmt.setBoolean(2, perceroObject.getDurationToleranceEnabled());
+pstmt.setInt(3, perceroObject.getDurationTolerance());
 pstmt.setInt(4, perceroObject.getDurationToleranceInterval());
 pstmt.setInt(5, perceroObject.getOccurrenceToleranceInterval());
 pstmt.setInt(6, perceroObject.getReminderInterval());
@@ -203,8 +214,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setInt(1, perceroObject.getDurationTolerance());
-pstmt.setBoolean(2, perceroObject.getDurationToleranceEnabled());
+		pstmt.setBoolean(1, perceroObject.getDurationToleranceEnabled());
+pstmt.setInt(2, perceroObject.getDurationTolerance());
 pstmt.setInt(3, perceroObject.getDurationToleranceInterval());
 pstmt.setInt(4, perceroObject.getOccurrenceToleranceInterval());
 pstmt.setInt(5, perceroObject.getReminderInterval());
@@ -245,19 +256,19 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDurationTolerance = theQueryObject.getDurationTolerance() != null && (excludeProperties == null || !excludeProperties.contains("durationTolerance"));
+		boolean useDurationToleranceEnabled = theQueryObject.getDurationToleranceEnabled() != null && (excludeProperties == null || !excludeProperties.contains("durationToleranceEnabled"));
 
-if (useDurationTolerance)
+if (useDurationToleranceEnabled)
 {
 sql += " WHERE ";
-sql += " \"DURATION_TOLERANCE\" =? ";
-paramValues.add(theQueryObject.getDurationTolerance());
+sql += " \"DURATION_TOLERANCE_ENABLED\" =? ";
+paramValues.add(theQueryObject.getDurationToleranceEnabled());
 propertyCounter++;
 }
 
-boolean useDurationToleranceEnabled = theQueryObject.getDurationToleranceEnabled() != null && (excludeProperties == null || !excludeProperties.contains("durationToleranceEnabled"));
+boolean useDurationTolerance = theQueryObject.getDurationTolerance() != null && (excludeProperties == null || !excludeProperties.contains("durationTolerance"));
 
-if (useDurationToleranceEnabled)
+if (useDurationTolerance)
 {
 if (propertyCounter > 0)
 {
@@ -267,8 +278,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DURATION_TOLERANCE_ENABLED\" =? ";
-paramValues.add(theQueryObject.getDurationToleranceEnabled());
+sql += " \"DURATION_TOLERANCE\" =? ";
+paramValues.add(theQueryObject.getDurationTolerance());
 propertyCounter++;
 }
 
@@ -301,7 +312,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"OCCURRENCE_TOLERANCE_INTERVAL\" =? ";
+sql += " \"OCC_TOLERANCE_INTERVAL\" =? ";
 paramValues.add(theQueryObject.getOccurrenceToleranceInterval());
 propertyCounter++;
 }

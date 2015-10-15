@@ -141,20 +141,7 @@ public void setBehaviorResponses(List<BehaviorResponse> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehavior")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMeasure scorecardMeasure;
-public ScorecardMeasure getScorecardMeasure() {
-	return this.scorecardMeasure;
-}
-
-public void setScorecardMeasure(ScorecardMeasure value) {
-	this.scorecardMeasure = value;
-}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -210,18 +197,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Scorecard Measure of Behavior relationship
-objectJson += ",\"scorecardMeasure\":";
-		if (getScorecardMeasure() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
@@ -260,7 +235,6 @@ objectJson += ",\"behaviorResponses\":[";
 
 		
 		// Source Relationships
-		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 
 		// Target Relationships

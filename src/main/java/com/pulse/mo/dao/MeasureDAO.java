@@ -41,7 +41,14 @@ public class MeasureDAO extends SqlDataAccessObject<Measure> implements IDataAcc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"MEASURE\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"MEASURE\" \"MEASURE\"";
+	private String whereClause = " WHERE \"MEASURE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"MEASURE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"MEASURE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,68 +57,73 @@ public class MeasureDAO extends SqlDataAccessObject<Measure> implements IDataAcc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\".\"ID\"=?";
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\".\"ID\"=?";
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" ORDER BY \"ID\"";
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" ORDER BY \"MEASURE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" ORDER BY \"MEASURE\".\"ID\"";
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" ORDER BY \"MEASURE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"MEASURE\" \"MEASURE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\".\"ID\" IN (?)";
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"MEASURE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" WHERE \"MEASURE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName + " WHERE \"MEASURE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"MEASURE\".\"ID\" FROM \"MEASURE\" \"MEASURE\" ";
+		return "SELECT \"MEASURE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"MEASURE\".\"ID\",\"MEASURE\".\"NAME\" FROM \"MEASURE\" \"MEASURE\" ";
+		return "SELECT \"MEASURE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

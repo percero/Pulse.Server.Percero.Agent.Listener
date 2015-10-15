@@ -19,8 +19,8 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.DevelopmentActivity;
-import com.pulse.mo.Agent;
 import com.pulse.mo.DevelopmentPlan;
+import com.pulse.mo.Agent;
 import com.pulse.mo.TeamLeader;
 
 */
@@ -43,7 +43,14 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\"";
+	private String selectFromStatementTableName = " FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\"";
+	private String whereClause = " WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_ACTIVITY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -52,78 +59,83 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\"=?";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\"=?";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ORDER BY \"ID\"";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\"";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\" IN (?)";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\"." + joinColumnName + "=?";
+		
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"DEVELOPMENT_ACTIVITY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" WHERE \"DEVELOPMENT_ACTIVITY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName + " WHERE \"DEVELOPMENT_ACTIVITY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\" FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\" ";
+		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DEVELOPMENT_ACTIVITY (\"ID\",\"NAME\",\"PLAN_ID\",\"STATUS\",\"COMPLETED_ON\",\"CREATED_BY\",\"CREATED_ON\",\"TYPE\",\"UPDATED_BY\",\"UPDATED_ON\",\"WEEK_DATE\",\"DUE_DATE\",\"AGENT_ID\",\"DEVELOPMENT_PLAN_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO DEVELOPMENT_ACTIVITY (\"ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"DUE_DATE\",\"UPDATED_ON\",\"NAME\",\"PLAN_ID\",\"STATUS\",\"TEAM_LEADER_ID\",\"AGENT_ID\",\"DEVELOPMENT_PLAN_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DEVELOPMENT_ACTIVITY\" SET \"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"COMPLETED_ON\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"DUE_DATE\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"DEVELOPMENT_ACTIVITY\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=?,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -140,27 +152,31 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
-
-nextResult.setPlanId(rs.getString("PLAN_ID"));
-
-nextResult.setStatus(rs.getString("STATUS"));
-
-nextResult.setCompletedOn(rs.getDate("COMPLETED_ON"));
-
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
-
 nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
+nextResult.setCompletedOn(rs.getDate("COMPLETED_ON"));
+
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+
 nextResult.setDueDate(rs.getDate("DUE_DATE"));
+
+nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+
+nextResult.setName(rs.getString("NAME"));
+
+nextResult.setPlanId(rs.getString("PLAN_ID"));
+
+nextResult.setStatus(rs.getString("STATUS"));
+
+TeamLeader teamleader = new TeamLeader();
+teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+nextResult.setTeamLeader(teamleader);
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -169,10 +185,6 @@ nextResult.setAgent(agent);
 DevelopmentPlan developmentplan = new DevelopmentPlan();
 developmentplan.setID(rs.getString("DEVELOPMENT_PLAN_ID"));
 nextResult.setDevelopmentPlan(developmentplan);
-
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-nextResult.setTeamLeader(teamleader);
 
 
 			
@@ -185,17 +197,75 @@ nextResult.setTeamLeader(teamleader);
 	protected void setPreparedStatmentInsertParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setString(3, perceroObject.getPlanId());
-pstmt.setString(4, perceroObject.getStatus());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(2, perceroObject.getCreatedBy());
+pstmt.setString(3, perceroObject.getType());
+pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
 pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(8, perceroObject.getType());
-pstmt.setString(9, perceroObject.getUpdatedBy());
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(12, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(10, perceroObject.getName());
+pstmt.setString(11, perceroObject.getPlanId());
+pstmt.setString(12, perceroObject.getStatus());
+
+if (perceroObject.getTeamLeader() == null)
+{
+pstmt.setString(13, null);
+}
+else
+{
+		pstmt.setString(13, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getAgent().getID());
+}
+
+
+if (perceroObject.getDevelopmentPlan() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getDevelopmentPlan().getID());
+}
+
+
+		
+	}
+	
+	@Override
+	protected void setPreparedStatmentUpdateParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getCreatedBy());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setString(3, perceroObject.getUpdatedBy());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(9, perceroObject.getName());
+pstmt.setString(10, perceroObject.getPlanId());
+pstmt.setString(11, perceroObject.getStatus());
+
+if (perceroObject.getTeamLeader() == null)
+{
+pstmt.setString(12, null);
+}
+else
+{
+		pstmt.setString(12, perceroObject.getTeamLeader().getID());
+}
+
 
 if (perceroObject.getAgent() == null)
 {
@@ -216,64 +286,6 @@ else
 		pstmt.setString(14, perceroObject.getDevelopmentPlan().getID());
 }
 
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(15, null);
-}
-else
-{
-		pstmt.setString(15, perceroObject.getTeamLeader().getID());
-}
-
-
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setString(2, perceroObject.getPlanId());
-pstmt.setString(3, perceroObject.getStatus());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(7, perceroObject.getType());
-pstmt.setString(8, perceroObject.getUpdatedBy());
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getDevelopmentPlan() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getDevelopmentPlan().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getTeamLeader().getID());
-}
-
 pstmt.setString(15, perceroObject.getID());
 
 		
@@ -291,11 +303,147 @@ pstmt.setString(15, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+sql += " WHERE ";
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+
+if (useWeekDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
+propertyCounter++;
+}
+
+boolean useCompletedOn = theQueryObject.getCompletedOn() != null && (excludeProperties == null || !excludeProperties.contains("completedOn"));
+
+if (useCompletedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"COMPLETED_ON\" =? ";
+paramValues.add(theQueryObject.getCompletedOn());
+propertyCounter++;
+}
+
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+
+if (useCreatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
+propertyCounter++;
+}
+
+boolean useDueDate = theQueryObject.getDueDate() != null && (excludeProperties == null || !excludeProperties.contains("dueDate"));
+
+if (useDueDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DUE_DATE\" =? ";
+paramValues.add(theQueryObject.getDueDate());
+propertyCounter++;
+}
+
+boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+if (useUpdatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_ON\" =? ";
+paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
@@ -335,9 +483,9 @@ paramValues.add(theQueryObject.getStatus());
 propertyCounter++;
 }
 
-boolean useCompletedOn = theQueryObject.getCompletedOn() != null && (excludeProperties == null || !excludeProperties.contains("completedOn"));
+boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
-if (useCompletedOn)
+if (useTeamLeaderID)
 {
 if (propertyCounter > 0)
 {
@@ -347,127 +495,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"COMPLETED_ON\" =? ";
-paramValues.add(theQueryObject.getCompletedOn());
-propertyCounter++;
-}
-
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
-
-if (useCreatedOn)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_ON\" =? ";
-paramValues.add(theQueryObject.getCreatedOn());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
-
-if (useUpdatedOn)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_ON\" =? ";
-paramValues.add(theQueryObject.getUpdatedOn());
-propertyCounter++;
-}
-
-boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
-
-if (useWeekDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEEK_DATE\" =? ";
-paramValues.add(theQueryObject.getWeekDate());
-propertyCounter++;
-}
-
-boolean useDueDate = theQueryObject.getDueDate() != null && (excludeProperties == null || !excludeProperties.contains("dueDate"));
-
-if (useDueDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DUE_DATE\" =? ";
-paramValues.add(theQueryObject.getDueDate());
+sql += " \"TEAM_LEADER_ID\" =? ";
+paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 
@@ -502,23 +531,6 @@ sql += " WHERE ";
 }
 sql += " \"DEVELOPMENT_PLAN_ID\" =? ";
 paramValues.add(theQueryObject.getDevelopmentPlan().getID());
-propertyCounter++;
-}
-
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-if (useTeamLeaderID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TEAM_LEADER_ID\" =? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 

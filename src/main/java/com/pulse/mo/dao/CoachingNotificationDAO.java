@@ -19,7 +19,6 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.CoachingNotification;
-import com.pulse.mo.Scorecard;
 
 */
 
@@ -41,7 +40,14 @@ public class CoachingNotificationDAO extends SqlDataAccessObject<CoachingNotific
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
+	private String whereClause = " WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -50,78 +56,83 @@ public class CoachingNotificationDAO extends SqlDataAccessObject<CoachingNotific
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ORDER BY \"ID\"";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ORDER BY \"COACHING_NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ORDER BY \"COACHING_NOTIFICATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\".\"ID\" IN (?)";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"WEEKEND_DATE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\" FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\" ";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_NOTIFICATION (\"ID\",\"NAME\",\"PENDING_COACH_STATE_COUNT\",\"PENDING_EMPLOYEE_STATE_COUNT\",\"PENDING_STATE_COUNT\",\"ACKNOWLEDGEMENT_STATE_COUNT\",\"DATE\",\"SKIPPED_STATE_COUNT\",\"SUBMITTED_STATE_COUNT\",\"TYPE\",\"WEEKEND_DATE\",\"TEAM_LEADER_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"DATE\",\"WEEK_DATE\",\"ACKNOWLEDGEMENT_STATE_COUNT\",\"PENDING_COACH_STATE_COUNT\",\"PENDING_EMPLOYEE_STATE_COUNT\",\"PENDING_STATE_COUNT\",\"SKIPPED_STATE_COUNT\",\"SUBMITTED_STATE_COUNT\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"COACHING_NOTIFICATION\" SET \"NAME\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"DATE\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"TYPE\"=?,\"WEEKEND_DATE\"=?,\"TEAM_LEADER_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"COACHING_NOTIFICATION\" SET \"TYPE\"=?,\"DATE\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -138,7 +149,13 @@ public class CoachingNotificationDAO extends SqlDataAccessObject<CoachingNotific
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setDate(rs.getDate("DATE"));
+
+nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+
+nextResult.setAcknowledgementStateCount(rs.getInt("ACKNOWLEDGEMENT_STATE_COUNT"));
 
 nextResult.setPendingCoachStateCount(rs.getInt("PENDING_COACH_STATE_COUNT"));
 
@@ -146,25 +163,15 @@ nextResult.setPendingEmployeeStateCount(rs.getInt("PENDING_EMPLOYEE_STATE_COUNT"
 
 nextResult.setPendingStateCount(rs.getInt("PENDING_STATE_COUNT"));
 
-nextResult.setAcknowledgementStateCount(rs.getInt("ACKNOWLEDGEMENT_STATE_COUNT"));
-
-nextResult.setDate(rs.getDate("DATE"));
-
 nextResult.setSkippedStateCount(rs.getInt("SKIPPED_STATE_COUNT"));
 
 nextResult.setSubmittedStateCount(rs.getInt("SUBMITTED_STATE_COUNT"));
 
-nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setWeekendDate(rs.getDate("WEEKEND_DATE"));
+nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
-
-Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
-nextResult.setScorecard(scorecard);
 
 
 			
@@ -177,16 +184,16 @@ nextResult.setScorecard(scorecard);
 	protected void setPreparedStatmentInsertParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setInt(3, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(4, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(5, perceroObject.getPendingStateCount());
-pstmt.setInt(6, perceroObject.getAcknowledgementStateCount());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setInt(8, perceroObject.getSkippedStateCount());
-pstmt.setInt(9, perceroObject.getSubmittedStateCount());
-pstmt.setString(10, perceroObject.getType());
-pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getWeekendDate()));
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(5, perceroObject.getAcknowledgementStateCount());
+pstmt.setInt(6, perceroObject.getPendingCoachStateCount());
+pstmt.setInt(7, perceroObject.getPendingEmployeeStateCount());
+pstmt.setInt(8, perceroObject.getPendingStateCount());
+pstmt.setInt(9, perceroObject.getSkippedStateCount());
+pstmt.setInt(10, perceroObject.getSubmittedStateCount());
+pstmt.setString(11, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -198,32 +205,22 @@ else
 }
 
 
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getScorecard().getID());
-}
-
-
 		
 	}
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setInt(2, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(3, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(4, perceroObject.getPendingStateCount());
-pstmt.setInt(5, perceroObject.getAcknowledgementStateCount());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setInt(7, perceroObject.getSkippedStateCount());
-pstmt.setInt(8, perceroObject.getSubmittedStateCount());
-pstmt.setString(9, perceroObject.getType());
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekendDate()));
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(4, perceroObject.getAcknowledgementStateCount());
+pstmt.setInt(5, perceroObject.getPendingCoachStateCount());
+pstmt.setInt(6, perceroObject.getPendingEmployeeStateCount());
+pstmt.setInt(7, perceroObject.getPendingStateCount());
+pstmt.setInt(8, perceroObject.getSkippedStateCount());
+pstmt.setInt(9, perceroObject.getSubmittedStateCount());
+pstmt.setString(10, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -234,17 +231,7 @@ else
 		pstmt.setString(11, perceroObject.getTeamLeader().getID());
 }
 
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getScorecard().getID());
-}
-
-pstmt.setString(13, perceroObject.getID());
+pstmt.setString(12, perceroObject.getID());
 
 		
 	}
@@ -261,13 +248,64 @@ pstmt.setString(13, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
 
-if (useName)
+if (useType)
 {
 sql += " WHERE ";
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+
+if (useDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
+propertyCounter++;
+}
+
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+
+if (useWeekDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
+propertyCounter++;
+}
+
+boolean useAcknowledgementStateCount = theQueryObject.getAcknowledgementStateCount() != null && (excludeProperties == null || !excludeProperties.contains("acknowledgementStateCount"));
+
+if (useAcknowledgementStateCount)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"ACKNOWLEDGEMENT_STATE_COUNT\" =? ";
+paramValues.add(theQueryObject.getAcknowledgementStateCount());
 propertyCounter++;
 }
 
@@ -322,40 +360,6 @@ paramValues.add(theQueryObject.getPendingStateCount());
 propertyCounter++;
 }
 
-boolean useAcknowledgementStateCount = theQueryObject.getAcknowledgementStateCount() != null && (excludeProperties == null || !excludeProperties.contains("acknowledgementStateCount"));
-
-if (useAcknowledgementStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"ACKNOWLEDGEMENT_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getAcknowledgementStateCount());
-propertyCounter++;
-}
-
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
-
-if (useDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
-propertyCounter++;
-}
-
 boolean useSkippedStateCount = theQueryObject.getSkippedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("skippedStateCount"));
 
 if (useSkippedStateCount)
@@ -390,9 +394,9 @@ paramValues.add(theQueryObject.getSubmittedStateCount());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useType)
+if (useName)
 {
 if (propertyCounter > 0)
 {
@@ -402,25 +406,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useWeekendDate = theQueryObject.getWeekendDate() != null && (excludeProperties == null || !excludeProperties.contains("weekendDate"));
-
-if (useWeekendDate)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEEKEND_DATE\" =? ";
-paramValues.add(theQueryObject.getWeekendDate());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
@@ -438,23 +425,6 @@ sql += " WHERE ";
 }
 sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
-propertyCounter++;
-}
-
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
-
-if (useScorecardID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SCORECARD_ID\" =? ";
-paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 

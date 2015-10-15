@@ -116,19 +116,6 @@ public void setAuxCodeEntryName(String auxCodeEntryName)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="CMS_AUX_MODE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CMSAuxModeOfDiscrepancyDetectedNotification")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private CMSAuxMode cMSAuxMode;
-public CMSAuxMode getCMSAuxMode() {
-	return this.cMSAuxMode;
-}
-
-public void setCMSAuxMode(CMSAuxMode value) {
-	this.cMSAuxMode = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfDiscrepancyDetectedNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -195,18 +182,6 @@ public void setTimecardActivity(TimecardActivity value) {
 
 				
 		// Source Relationships
-//Retrieve value of the CMS Aux Mode of Discrepancy Detected Notification relationship
-objectJson += ",\"cMSAuxMode\":";
-		if (getCMSAuxMode() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getCMSAuxMode()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Timecard Activity of Discrepancy Detected Notification relationship
 objectJson += ",\"timecardActivity\":";
 		if (getTimecardActivity() == null)
@@ -240,7 +215,6 @@ objectJson += ",\"timecardActivity\":";
 
 		
 		// Source Relationships
-		this.cMSAuxMode = (CMSAuxMode) JsonUtils.getJsonPerceroObject(jsonObject, "cMSAuxMode");
 		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
 
 

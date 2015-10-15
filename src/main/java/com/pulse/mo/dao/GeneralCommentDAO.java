@@ -42,7 +42,14 @@ public class GeneralCommentDAO extends SqlDataAccessObject<GeneralComment> imple
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"AGENT_ID\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\"";
+	private String whereClause = " WHERE \"GENERAL_COMMENT\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"GENERAL_COMMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"GENERAL_COMMENT\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,78 +58,83 @@ public class GeneralCommentDAO extends SqlDataAccessObject<GeneralComment> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\".\"ID\"=?";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\".\"ID\"=?";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ORDER BY \"ID\"";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ORDER BY \"GENERAL_COMMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ORDER BY \"GENERAL_COMMENT\".\"ID\"";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ORDER BY \"GENERAL_COMMENT\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\".\"ID\" IN (?)";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\"." + joinColumnName + "=?";
+		
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"GENERAL_COMMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" WHERE \"GENERAL_COMMENT\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"GENERAL_COMMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"GENERAL_COMMENT\".\"ID\",\"GENERAL_COMMENT\".\"COMMENT\",\"GENERAL_COMMENT\".\"DATE\",\"GENERAL_COMMENT\".\"TEAM_LEADER_ID\",\"GENERAL_COMMENT\".\"AGENT_ID\" FROM \"GENERAL_COMMENT\" \"GENERAL_COMMENT\" ";
+		return "SELECT \"GENERAL_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO GENERAL_COMMENT (\"ID\",\"COMMENT\",\"DATE\",\"TEAM_LEADER_ID\",\"AGENT_ID\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO GENERAL_COMMENT (\"ID\",\"DATE\",\"COMMENT\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"GENERAL_COMMENT\" SET \"COMMENT\"=?,\"DATE\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"GENERAL_COMMENT\" SET \"DATE\"=?,\"COMMENT\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -139,17 +151,17 @@ public class GeneralCommentDAO extends SqlDataAccessObject<GeneralComment> imple
     	
     	if (!shellOnly) 
 		{
-			nextResult.setComment(rs.getString("COMMENT"));
+			nextResult.setDate(rs.getDate("DATE"));
 
-nextResult.setDate(rs.getDate("DATE"));
-
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-nextResult.setTeamLeader(teamleader);
+nextResult.setComment(rs.getString("COMMENT"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
+
+TeamLeader teamleader = new TeamLeader();
+teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+nextResult.setTeamLeader(teamleader);
 
 
 			
@@ -162,26 +174,26 @@ nextResult.setAgent(agent);
 	protected void setPreparedStatmentInsertParams(GeneralComment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getComment());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getComment());
 
-if (perceroObject.getTeamLeader() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getTeamLeader().getID());
+		pstmt.setString(4, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getAgent().getID());
+		pstmt.setString(5, perceroObject.getTeamLeader().getID());
 }
 
 
@@ -191,26 +203,26 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(GeneralComment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getComment());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(2, perceroObject.getComment());
 
-if (perceroObject.getTeamLeader() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getTeamLeader().getID());
+		pstmt.setString(3, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getAgent().getID());
+		pstmt.setString(4, perceroObject.getTeamLeader().getID());
 }
 
 pstmt.setString(5, perceroObject.getID());
@@ -230,36 +242,19 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useComment = StringUtils.hasText(theQueryObject.getComment()) && (excludeProperties == null || !excludeProperties.contains("comment"));
-
-if (useComment)
-{
-sql += " WHERE ";
-sql += " \"COMMENT\" =? ";
-paramValues.add(theQueryObject.getComment());
-propertyCounter++;
-}
-
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
+boolean useComment = StringUtils.hasText(theQueryObject.getComment()) && (excludeProperties == null || !excludeProperties.contains("comment"));
 
-if (useTeamLeaderID)
+if (useComment)
 {
 if (propertyCounter > 0)
 {
@@ -269,8 +264,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TEAM_LEADER_ID\" =? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
+sql += " \"COMMENT\" =? ";
+paramValues.add(theQueryObject.getComment());
 propertyCounter++;
 }
 
@@ -288,6 +283,23 @@ sql += " WHERE ";
 }
 sql += " \"AGENT_ID\" =? ";
 paramValues.add(theQueryObject.getAgent().getID());
+propertyCounter++;
+}
+
+boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
+
+if (useTeamLeaderID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TEAM_LEADER_ID\" =? ";
+paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 

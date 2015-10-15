@@ -26,6 +26,7 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.auth.services.IAuthProvider;
 import com.percero.agents.auth.vo.BasicAuthCredential;
@@ -68,6 +69,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
             cred.setPassword(parts[0]);
             employeeId = parts[1];
         }
+        
+        logger.debug("Autheticating user " + cred.getUsername());
 
         String endpoint = hostPortAndContext +"/Authenticate";
         Map<String, String> params = new HashMap<String, String>();
@@ -80,9 +83,10 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
     	 */
     	if(body.contains("true")){
+    		logger.debug("Authentication successful for user " + cred.getUsername() + (this.insecureMode ? " (dev mode)" : ""));
             PulseUserInfo pulseUserInfo = null;
 
-            // If the employeeId is set then we are using the backdoor
+            // If the employeeId is set then we are using the back door
             if(employeeId != null && this.insecureMode){
                 pulseUserInfo = new PulseUserInfo();
                 pulseUserInfo.setEmployeeId(employeeId);
@@ -102,27 +106,39 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
                 } catch (JsonMappingException jme) {
                     logger.warn(jme.getMessage(), jme);
+                    return result;
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
+                    return result;
                 }
             }
 
             try {
-                TeamLeader example = new TeamLeader();
-                example.setEmployeeId(pulseUserInfo.getEmployeeId());
-                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
-
-                // If we found one
-                if (list.size() > 0) {
-                    TeamLeader teamLeader = list.get(0);
-                    result = new ServiceUser();
-                    result.setId(pulseUserInfo.getEmployeeId());
-                    result.setFirstName(teamLeader.getFirstName());
-                    result.setLastName(teamLeader.getLastName());
-                    result.getRoleNames().add("TeamLeader");
-                    result.setAreRoleNamesAccurate(true);
-                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
-                }
+            	if ( pulseUserInfo != null && StringUtils.hasText(pulseUserInfo.getEmployeeId()) ) {
+	            	logger.debug("Retrieving TeamLeader object for user/employee " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                TeamLeader example = new TeamLeader();
+	                example.setEmployeeId(pulseUserInfo.getEmployeeId());
+	                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
+	
+	                // If we found one
+	                if (list.size() > 0) {
+	                    TeamLeader teamLeader = list.get(0);
+	                    result = new ServiceUser();
+	                    result.setId(pulseUserInfo.getEmployeeId());
+	                    result.setFirstName(teamLeader.getFirstName());
+	                    result.setLastName(teamLeader.getLastName());
+	                    result.getRoleNames().add("TeamLeader");
+	                    result.setAreRoleNamesAccurate(true);
+	                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
+	                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                }
+	                else {
+	                	logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+	                }
+            	}
+            	else {
+                	logger.warn("No TeamLeader for logged in user");
+            	}
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);
             }

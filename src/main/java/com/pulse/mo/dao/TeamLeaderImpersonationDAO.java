@@ -42,7 +42,14 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\"";
+	private String selectFromStatementTableName = " FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\"";
+	private String whereClause = " WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TEAM_LEADER_IMPERSONATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -51,68 +58,73 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ORDER BY \"ID\"";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\"";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\" IN (?)";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
+		
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\" FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\" ";
+		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override

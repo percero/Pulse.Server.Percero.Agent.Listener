@@ -40,7 +40,14 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SQL_VIEW = ",\"ROLE\".\"NAME\"";
+	private String selectFromStatementTableName = " FROM \"ROLE\" \"ROLE\"";
+	private String whereClause = " WHERE \"ROLE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ROLE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"ROLE\".\"ID\"";
 	
+	
+
 	
 	@Override
 	protected String getConnectionFactoryName() {
@@ -49,68 +56,73 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\"=?";
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\"=?";
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ID\"";
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\"";
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ORDER BY \"ROLE\".\"ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
-	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"ROLE\" \"ROLE\"";
+	protected String getCountAllSQL() 
+	{
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
-	protected String getSelectInStarSQL() {
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\" IN (?)";
+	protected String getSelectInStarSQL() 
+	{
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\".\"ID\" IN (?)";
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\"." + joinColumnName + "=?";
+		
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ROLE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" WHERE \"ROLE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + " WHERE \"ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" FROM \"ROLE\" \"ROLE\" ";
+		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"ROLE\".\"ID\",\"ROLE\".\"NAME\" FROM \"ROLE\" \"ROLE\" ";
+		return "SELECT \"ROLE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
