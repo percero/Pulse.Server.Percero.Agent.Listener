@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"COACHING_SESSION\".\"ID\"";
 	
-	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQLID From Dual) WHERE COACHING_SESSION.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND COACHING_SESSION.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND COACHING_SESSION.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQL_ID From Dual) WHERE COACHING_SESSION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND COACHING_SESSION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND COACHING_SESSION.WEEK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
 
 
 	
@@ -145,12 +146,12 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"COACHING_SESSION\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEKLY_OVERALL_SCORE\"=?,\"WKLY_OVRALL_SCORE_STATE_NAME\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CURRENT_MTD_THRESHOLD_GRADE\"=?,\"PREVIOUS_MTD_THRESHOLD_GRADE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_COACHING_SESSION\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEKLY_OVERALL_SCORE\"=?,\"WKLY_OVRALL_SCORE_STATE_NAME\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CURRENT_MTD_THRESHOLD_GRADE\"=?,\"PREVIOUS_MTD_THRESHOLD_GRADE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"COACHING_SESSION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_COACHING_SESSION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -205,8 +206,7 @@ nextResult.setCoachingSessionState(coachingsessionstate);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getCreatedBy());
@@ -245,6 +245,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(CoachingSession perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -288,6 +304,18 @@ pstmt.setString(17, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(CoachingSession perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<CoachingSession> findByExample(CoachingSession theQueryObject,
@@ -594,6 +622,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_COACHING_SESSION(?)}";
+	}
+	
+	
+	
 	
 }
 

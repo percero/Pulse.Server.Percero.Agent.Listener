@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -135,12 +136,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SCORECARD_MEASURE\" SET \"COACHABLE\"=?,\"NAME\"=?,\"WEEKLY_TREND\"=?,\"WEIGHT\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_SCORECARD_MEASURE\" SET \"COACHABLE\"=?,\"NAME\"=?,\"WEEKLY_TREND\"=?,\"WEIGHT\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"SCORECARD_MEASURE\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_SCORECARD_MEASURE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -171,8 +172,7 @@ nextResult.setMeasure(measure);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setBoolean(2, perceroObject.getCoachable());
@@ -191,6 +191,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(ScorecardMeasure perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -214,6 +230,18 @@ pstmt.setString(6, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(ScorecardMeasure perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<ScorecardMeasure> findByExample(ScorecardMeasure theQueryObject,
@@ -333,6 +361,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_SCORECARD_MEASURE(?)}";
+	}
+	
+	
+	
 	
 }
 

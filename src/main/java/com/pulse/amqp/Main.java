@@ -1,7 +1,18 @@
 package com.pulse.amqp;
 
+import java.util.Date;
+import java.util.UUID;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.percero.agents.sync.services.ISyncAgentService;
+import com.percero.agents.sync.services.SyncAgentService;
+import com.percero.agents.sync.vo.ClassIDPair;
+import com.pulse.mo.Agent;
+import com.pulse.mo.LOBConfiguration;
+import com.pulse.mo.TeamLeader;
+import com.pulse.mo.ThresholdExceededNotification;
 /**
  * This class supplies the main method that creates the spring context
  * and then all processing is invoked asynchronously by messaging.
@@ -73,6 +84,42 @@ public class Main{
 //			System.out.println(allPulseUsers.getTotalLength());
 //		} catch (Exception e) {
 //			e.printStackTrace();
+//		}
+		
+		
+//		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
+//		
+//		// 100521449
+//		try {
+//			ClassIDPair cip = new ClassIDPair("100521449", TeamLeader.class.getCanonicalName());
+//			TeamLeader teamLeader = new TeamLeader();
+//			teamLeader.setID("100521449");
+//			
+//			Agent agent = new Agent();
+//			agent.setID("100521449");
+//			
+//			LOBConfiguration lobConfiguration = new LOBConfiguration();
+//			lobConfiguration.setID("ALE");
+//			
+//			ThresholdExceededNotification dtn = new ThresholdExceededNotification();
+//			dtn.setAgent(agent);
+//			dtn.setTeamLeader(teamLeader);
+//			dtn.setDate(new Date());
+//			dtn.setMessage("This only a test. Please ignore.");
+//			dtn.setType("TEST");
+//			dtn.setID(UUID.randomUUID().toString());
+//			dtn.setName("TEST");
+//			dtn.setLOBConfiguration(lobConfiguration);
+//			try {
+//				syncAgentService.systemCreateObject(dtn, null);
+//			} catch(Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+//			dtn.setName("My Other Name");
+//			syncAgentService.systemPutObject(dtn, null, null, null, false);
+//		} catch(Exception e1) {
+//			e1.printStackTrace();
 //		}
 	}
 }

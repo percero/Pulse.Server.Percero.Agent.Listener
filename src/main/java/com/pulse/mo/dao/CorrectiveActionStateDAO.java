@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class CorrectiveActionStateDAO extends SqlDataAccessObject<CorrectiveActi
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"CORRECTIVE_ACTION_STATE\" SET \"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_CORRECTIVE_ACTION_STATE\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"CORRECTIVE_ACTION_STATE\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_CORRECTIVE_ACTION_STATE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,13 +160,28 @@ public class CorrectiveActionStateDAO extends SqlDataAccessObject<CorrectiveActi
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(CorrectiveActionState perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(CorrectiveActionState perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(CorrectiveActionState perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(CorrectiveActionState perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -176,6 +192,18 @@ pstmt.setString(2, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(CorrectiveActionState perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<CorrectiveActionState> findByExample(CorrectiveActionState theQueryObject,
@@ -227,6 +255,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_CORRECTIVE_ACTION_STATE(?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_CORRECTIVE_ACTION_STATE(?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_CORRECTIVE_ACTION_STATE(?)}";
+	}
+	
+	
+	
 	
 }
 

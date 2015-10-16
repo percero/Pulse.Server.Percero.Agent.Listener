@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class SupervisorAcknowledgementDAO extends SqlDataAccessObject<Supervisor
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SUPERVISOR_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_SUPERVISOR_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_SUPERVISOR_ACKNOWLEDGEMENT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -161,14 +162,29 @@ nextResult.setName(rs.getString("NAME"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getName());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(SupervisorAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(SupervisorAcknowledgement perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -180,6 +196,18 @@ pstmt.setString(3, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(SupervisorAcknowledgement perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<SupervisorAcknowledgement> findByExample(SupervisorAcknowledgement theQueryObject,
@@ -248,6 +276,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_SUPERVISOR_ACKNOWLEDGEMENT(?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_SUPERVISOR_ACKNOWLEDGEMENT(?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_SUPERVISOR_ACKNOWLEDGEMENT(?)}";
+	}
+	
+	
+	
 	
 }
 

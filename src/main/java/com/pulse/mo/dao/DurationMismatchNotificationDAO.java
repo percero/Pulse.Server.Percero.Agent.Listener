@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.DurationMismatchNotification;
 */
 
 @Component
-public class DurationMismatchNotificationDAO extends SqlDataAccessObject<DurationMismatchNotification> implements IDataAccessObject<DurationMismatchNotification> {
+public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<DurationMismatchNotification> implements IDataAccessObject<DurationMismatchNotification> {
 
 	static final Logger log = Logger.getLogger(DurationMismatchNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessObject<Duratio
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DURATION_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"END_TIME\"=?,\"START_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_DURATION_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"END_TIME\"=?,\"START_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"DURATION_MISMATCH_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_DURATION_MISMATCH_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -186,8 +187,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getTimecardActivityName());
@@ -231,6 +231,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(DurationMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -279,6 +295,18 @@ pstmt.setString(13, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(DurationMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<DurationMismatchNotification> findByExample(DurationMismatchNotification theQueryObject,
@@ -517,6 +545,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_DURATION_MISMATCH_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

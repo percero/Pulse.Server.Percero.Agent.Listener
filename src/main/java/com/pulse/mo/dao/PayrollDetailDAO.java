@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -132,12 +133,12 @@ public class PayrollDetailDAO extends SqlDataAccessObject<PayrollDetail> impleme
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PAYROLL_DETAIL\" SET \"ASSUMED_OFF\"=?,\"SHIFT_START_DATE_TIME\"=?,\"SHIFT_START_END_TIME\"=?,\"SHIFT_RULE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_PAYROLL_DETAIL\" SET \"ASSUMED_OFF\"=?,\"SHIFT_START_DATE_TIME\"=?,\"SHIFT_START_END_TIME\"=?,\"SHIFT_RULE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"PAYROLL_DETAIL\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_PAYROLL_DETAIL\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -164,8 +165,7 @@ nextResult.setShiftRule(rs.getString("SHIFT_RULE"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(PayrollDetail perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(PayrollDetail perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setBoolean(2, perceroObject.getAssumedOff());
@@ -174,6 +174,22 @@ pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getShiftStartEndTime(
 pstmt.setString(5, perceroObject.getShiftRule());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(PayrollDetail perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(PayrollDetail perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -187,6 +203,18 @@ pstmt.setString(5, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(PayrollDetail perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<PayrollDetail> findByExample(PayrollDetail theQueryObject,
@@ -289,6 +317,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_PAYROLL_DETAIL(?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_PAYROLL_DETAIL(?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_PAYROLL_DETAIL(?)}";
+	}
+	
+	
+	
 	
 }
 

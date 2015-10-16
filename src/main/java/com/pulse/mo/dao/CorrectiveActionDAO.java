@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -139,12 +140,12 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"CORRECTIVE_ACTION\" SET \"CORRECTIVE_ACTION_STATE_NAME\"=?,\"CORRECTIVE_ACTION_TYPE_NAME\"=?,\"LOB_NAME\"=?,\"SUPERVISOR_COMMENT\"=?,\"SUPERVISOR_NAME\"=?,\"COMPLETION_DATE\"=?,\"AGENT_EMPLOYEE_ID\"=?,\"AGENT_FIRST_NAME\"=?,\"AGENT_LAST_NAME\"=?,\"COMPLETION_STATUS\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"MESSAGE\"=?,\"MESSAGE_REASON\"=?,\"NEXT_STEPS_MESSAGE\"=?,\"SUPERVISOR_ACKNOWLEDGEMENT_ID\"=?,\"HR_APPROVAL_ID\"=?,\"EMPLOYEE_ACKNOWLEDGEMENT_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=?,\"AGENT_ID\"=?,\"MANAGER_APPROVAL_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_CORRECTIVE_ACTION\" SET \"CORRECTIVE_ACTION_STATE_NAME\"=?,\"CORRECTIVE_ACTION_TYPE_NAME\"=?,\"LOB_NAME\"=?,\"SUPERVISOR_COMMENT\"=?,\"SUPERVISOR_NAME\"=?,\"COMPLETION_DATE\"=?,\"AGENT_EMPLOYEE_ID\"=?,\"AGENT_FIRST_NAME\"=?,\"AGENT_LAST_NAME\"=?,\"COMPLETION_STATUS\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"MESSAGE\"=?,\"MESSAGE_REASON\"=?,\"NEXT_STEPS_MESSAGE\"=?,\"SUPERVISOR_ACKNOWLEDGEMENT_ID\"=?,\"HR_APPROVAL_ID\"=?,\"EMPLOYEE_ACKNOWLEDGEMENT_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=?,\"AGENT_ID\"=?,\"MANAGER_APPROVAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"CORRECTIVE_ACTION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_CORRECTIVE_ACTION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -221,8 +222,7 @@ nextResult.setManagerApproval(managerapproval);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getCorrectiveActionStateName());
@@ -312,6 +312,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(CorrectiveAction perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -406,6 +422,18 @@ pstmt.setString(23, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(CorrectiveAction perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<CorrectiveAction> findByExample(CorrectiveAction theQueryObject,
@@ -814,6 +842,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_CORRECTIVE_ACTION(?)}";
+	}
+	
+	
+	
 	
 }
 

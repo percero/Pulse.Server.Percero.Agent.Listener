@@ -42,7 +42,12 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ";
+	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
+	private String whereClause = " WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE_ENTRY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"SCHEDULE_ENTRY\".\"ID\"";
+	
 	
 
 	
@@ -53,62 +58,68 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"SCHEDULE_ENTRY\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ORDER BY ID";
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ORDER BY \"SCHEDULE_ENTRY\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"SCHEDULE_ENTRY\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"SCHEDULE_ENTRY\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"SCHEDULE_ENTRY\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" WHERE \"SCHEDULE_ENTRY\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"SCHEDULE_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" WHERE \"SCHEDULE_ENTRY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ";
+		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override

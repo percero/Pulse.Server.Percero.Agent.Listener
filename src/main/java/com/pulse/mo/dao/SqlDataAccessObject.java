@@ -1,5 +1,19 @@
 package com.pulse.mo.dao;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
@@ -11,10 +25,6 @@ import com.percero.framework.vo.IPerceroObject;
 import com.percero.framework.vo.PerceroList;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
-import org.apache.log4j.Logger;
-
-import java.sql.*;
-import java.util.*;
 
 public abstract class SqlDataAccessObject<T extends IPerceroObject> implements IDataAccessObject<T> {
 
@@ -151,6 +161,69 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	
 	
 	
+//	@Override
+//	public T createObject(T perceroObject, String userId)
+//			throws SyncException {
+//		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+//			return null;
+//		}
+//		
+//		long timeStart = System.currentTimeMillis();
+//		
+//		int result = runInsertStoredProcedure(perceroObject);
+//		
+//		long timeEnd = System.currentTimeMillis();
+//		long totalTime = timeEnd - timeStart;
+//		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+//			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + "Insert ThresholdExceededNotification");
+//		}
+//		
+//		if (result > 0) {
+//			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+//		}
+//		else {
+//			return null;
+//		}
+//	}
+//
+//	protected String getUpdateCallableStatementSql() {
+//		return "";
+//	}
+//	protected String getInsertCallableStatementSql() {
+//		return "";
+//	}
+//
+//	protected int runInsertStoredProcedure(T perceroObject) throws ConnectorException {
+//		int result = runStoredProcedure(perceroObject, getInsertCallableStatementSql());
+//		return result;
+//	}
+//	
+//	protected int runUpdateStoredProcedure(T perceroObject) throws ConnectorException {
+//		int result = runStoredProcedure(perceroObject, getUpdateCallableStatementSql());
+//		return result;
+//	}
+//	
+//	protected int runStoredProcedure(T perceroObject, String storedProcedureCallSql) throws ConnectorException {
+//		int result = 0;
+//		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+//		try(Connection conn = connectionFactory.getConnection();
+//				Statement statement = conn.createStatement())
+//				{
+//			CallableStatement cstmt = conn.prepareCall(storedProcedureCallSql);
+//			setCallableStatmentParams(perceroObject, cstmt);
+//			result = cstmt.executeUpdate();
+//				} catch(SQLException e) {
+//					log.error(e.getMessage(), e);
+//					throw new ConnectorException(e);
+//				}
+//		
+//		return result;
+//	}
+//	
+//	protected void setCallableStatmentParams(T perceroObject, CallableStatement cstmt) throws SQLException {
+//		// Do nothing
+//	}
+	
 	@Override
 	public T createObject(T perceroObject, String userId)
 			throws SyncException {
@@ -201,7 +274,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			return null;
 		}
 	}
-
+	
 	protected void setPreparedStatmentInsertParams(T perceroObject, PreparedStatement pstmt) throws SQLException {
 	}
 	
@@ -575,9 +648,34 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		
 	}
 	
+//	public T updateObject(T perceroObject,
+//			Map<ClassIDPair, Collection<MappedField>> changedFields, String userId)
+//			throws SyncException {
+//		if (!hasUpdateAccess(BaseDataObject.toClassIdPair(perceroObject), userId)) {
+//			return null;
+//		}
+//		
+//		long timeStart = System.currentTimeMillis();
+//		
+//		int updateResult = runUpdateStoredProcedure(perceroObject);
+//		
+//		long timeEnd = System.currentTimeMillis();
+//		long totalTime = timeEnd - timeStart;
+//		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+//			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + "Insert ThresholdExceededNotification");
+//		}
+//
+//		T result = null;
+//		if (updateResult > 0) {
+//			result = retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+//		}
+//		
+//		return result;
+//	}
+//
 	public T updateObject(T perceroObject,
 			Map<ClassIDPair, Collection<MappedField>> changedFields, String userId)
-			throws SyncException {
+					throws SyncException {
 		if (!hasUpdateAccess(BaseDataObject.toClassIdPair(perceroObject), userId)) {
 			return null;
 		}
@@ -624,7 +722,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		
 		return result;
 	}
-
+	
 	protected int executeUpdate(String sqlStatement) throws SyncDataException {
 
 		long timeStart = System.currentTimeMillis();
@@ -829,5 +927,23 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	public 	T cleanObjectForUser(T perceroObject,
 			String userId) {
 		return perceroObject;
+	}
+	
+	protected String getUpdateCallableStatementSql() {
+		return "";
+	}
+	protected String getInsertCallableStatementSql() {
+		return "";
+	}
+	protected String getDeleteCallableStatementSql() {
+		return "";
+	}	
+
+	protected void setCallableStatmentInsertParams(T perceroObject, CallableStatement pstmt) throws SQLException {
+
+	}
+	
+	protected void setCallableStatmentUpdateParams(T perceroObject, CallableStatement pstmt) throws SQLException  {
+		
 	}
 }

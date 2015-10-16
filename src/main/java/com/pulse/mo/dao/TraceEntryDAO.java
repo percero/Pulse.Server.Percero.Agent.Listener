@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -134,12 +135,12 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TRACE_ENTRY\" SET \"TIMESTAMP\"=?,\"TRACE_TYPE\"=?,\"LOG_MESSAGE\"=?,\"PULSE_USER_ID\"=?,\"TRACE_LOG_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_TRACE_ENTRY\" SET \"TIMESTAMP\"=?,\"TRACE_TYPE\"=?,\"LOG_MESSAGE\"=?,\"PULSE_USER_ID\"=?,\"TRACE_LOG_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TRACE_ENTRY\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_TRACE_ENTRY\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -172,8 +173,7 @@ nextResult.setTraceLog(tracelog);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(TraceEntry perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(TraceEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getTimestamp()));
@@ -201,6 +201,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(TraceEntry perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(TraceEntry perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -233,6 +249,18 @@ pstmt.setString(6, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(TraceEntry perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<TraceEntry> findByExample(TraceEntry theQueryObject,
@@ -352,6 +380,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_TRACE_ENTRY(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_TRACE_ENTRY(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_TRACE_ENTRY(?)}";
+	}
+	
+	
+	
 	
 }
 

@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,11 +46,14 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	
 	public static final String SQL_VIEW = ",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
-	private String whereClause = " WHERE \"ADHOC_TASK\".\"ID\"=?";
+	private String whereClause = " WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12);";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"ADHOC_TASK\".\"ID\"";
 	
-	
+	private String joinAdhocTaskStateIDAdhocTask = " WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
+private String joinAgentIDAdhocTask = " WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
+private String joinTeamLeaderIDAdhocTask = " WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
+
 
 	
 	@Override
@@ -107,14 +111,38 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
+}
+if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask;
+}
+if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
+}
+
 		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
+}
+if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask;
+}
+if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
+{
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
+}
+
 		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
 	}
 
@@ -135,12 +163,12 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"ADHOC_TASK\" SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_ADHOC_TASK\" SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"ADHOC_TASK\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_ADHOC_TASK\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -191,8 +219,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getUpdatedBy());
@@ -237,6 +264,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(AdhocTask perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -286,6 +329,18 @@ pstmt.setString(14, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(AdhocTask perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<AdhocTask> findByExample(AdhocTask theQueryObject,
@@ -541,6 +596,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_ADHOC_TASK(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_ADHOC_TASK(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_ADHOC_TASK(?)}";
+	}
+	
+	
+	
 	
 }
 

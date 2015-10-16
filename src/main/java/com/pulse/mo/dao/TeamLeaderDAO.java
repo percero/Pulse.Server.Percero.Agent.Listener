@@ -2,11 +2,12 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.percero.util.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,8 +15,8 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.pulse.mo.Supervisor;
-import com.pulse.mo.TeamLeader;
+
+import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.TeamLeader;
@@ -75,9 +76,8 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	}
 	
 	@Override
-	protected String getSelectAllShellOnlySQL() throws SyncException {
-		throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
-//		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+	protected String getSelectAllShellOnlySQL() {
+		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
@@ -86,9 +86,8 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	}
 	
 	@Override
-	protected String getSelectAllStarSQL() throws SyncException {
-		throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
-//		return "SELECT \"TEAM_LEADER\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+	protected String getSelectAllStarSQL() {
+		return "SELECT \"TEAM_LEADER\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
@@ -144,12 +143,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TEAM_LEADER\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"SUPERVISOR_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_TEAM_LEADER\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TEAM_LEADER\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_TEAM_LEADER\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -184,8 +183,7 @@ nextResult.setSupervisor(supervisor);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(TeamLeader perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(TeamLeader perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getEmailAddress());
@@ -206,6 +204,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(TeamLeader perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(TeamLeader perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -231,6 +245,18 @@ pstmt.setString(8, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(TeamLeader perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<TeamLeader> findByExample(TeamLeader theQueryObject,
@@ -381,13 +407,25 @@ propertyCounter++;
 		}
 		
 		*/
-
-		if (propertyCounter == 0) {
-			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
-		}
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_TEAM_LEADER(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_TEAM_LEADER(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_TEAM_LEADER(?)}";
+	}
+	
+	
+	
 	
 }
 

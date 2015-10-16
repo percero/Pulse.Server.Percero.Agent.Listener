@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -132,12 +133,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"COACHING_SESSION_ATTACHMENT\" SET \"FILE_URI\"=?,\"NAME\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_COACHING_SESSION_ATTACHMENT\" SET \"FILE_URI\"=?,\"NAME\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"COACHING_SESSION_ATTACHMENT\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_COACHING_SESSION_ATTACHMENT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -164,8 +165,7 @@ nextResult.setType(rs.getString("TYPE"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getFileUri());
@@ -174,6 +174,22 @@ pstmt.setString(4, perceroObject.getDocumentReferenceId());
 pstmt.setString(5, perceroObject.getType());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(CoachingSessionAttachment perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -187,6 +203,18 @@ pstmt.setString(5, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(CoachingSessionAttachment perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<CoachingSessionAttachment> findByExample(CoachingSessionAttachment theQueryObject,
@@ -289,6 +317,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_COACHING_SESSION_ATTACHMENT(?)}";
+	}
+	
+	
+	
 	
 }
 

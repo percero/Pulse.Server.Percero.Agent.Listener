@@ -44,8 +44,14 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\"";
+	private String whereClause = "WHERE TIMECARD_ENTRY.WORKED_ID=?";
+	private String whereInClause = "Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On TIMECARD_ENTRY.WORKED_ID= SQLLIST.columnvalue";
+	private String orderByTableName = "ORDER BY TIMECARD_ENTRY.WORKED_ID";
 	
+	private String joinTimecardIDTimecardEntry = "WHERE TIMECARD_ENTRY.ID=?";
+
 
 	
 	@Override
@@ -55,68 +61,76 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"WORKED_ID\"=?";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD_ENTRY\".\"WORKED_ID\"=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\"";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\" LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\"";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD_ENTRY\".\"WORKED_ID\" LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD_ENTRY\".\"WORKED_ID\" IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"WORKED_ID\" IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
-		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\"")) {
-			return SQL_VIEW + "  \"TIMECARD_ENTRY\".\"ID\"=?";
-		}
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\""))
+{
+return "SELECT \"TIMECARD_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
+}
+
 		return SQL_VIEW + "  \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\"")) {
-			return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\".\"ID\"=?";
-		}
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" WHERE \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\""))
+{
+return "SELECT \"TIMECARD_ENTRY\".\"ID\" " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
+}
+
+		
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+		return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -149,11 +163,15 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setToTime(rs.getString("TO_TIME"));
+			nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
+
+nextResult.setFromTime(rs.getDate("FROM_TIME"));
+
+nextResult.setToTime(rs.getDate("TO_TIME"));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 
@@ -163,17 +181,17 @@ nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
 
-nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
-nextResult.setFromTime(rs.getString("FROM_TIME"));
+TimecardActivity timecardactivity = new TimecardActivity();
+timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
+nextResult.setTimecardActivity(timecardactivity);
 
 Timecard timecard = new Timecard();
 timecard.setID(rs.getString("TIMECARD_ID"));
 nextResult.setTimecard(timecard);
-
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
 
 
 			
@@ -208,13 +226,13 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
+		boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
 
-if (useToTime)
+if (useEStartProjectName)
 {
 sql += " WHERE ";
-sql += " TO_TIME=? ";
-paramValues.add(theQueryObject.getToTime());
+sql += " ESTART_PROJECT_NAME=? ";
+paramValues.add(theQueryObject.getEStartProjectName());
 propertyCounter++;
 }
 
@@ -249,6 +267,40 @@ sql += " WHERE ";
 }
 sql += " NOTIFICATION_RESOLVED=? ";
 paramValues.add(theQueryObject.getNotificationResolved());
+propertyCounter++;
+}
+
+boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
+
+if (useFromTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " FROM_TIME=? ";
+paramValues.add(theQueryObject.getFromTime());
+propertyCounter++;
+}
+
+boolean useToTime = theQueryObject.getToTime() != null && (excludeProperties == null || !excludeProperties.contains("toTime"));
+
+if (useToTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " TO_TIME=? ";
+paramValues.add(theQueryObject.getToTime());
 propertyCounter++;
 }
 
@@ -320,57 +372,6 @@ paramValues.add(theQueryObject.getActivityName());
 propertyCounter++;
 }
 
-boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
-
-if (useEStartProjectName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " ESTART_PROJECT_NAME=? ";
-paramValues.add(theQueryObject.getEStartProjectName());
-propertyCounter++;
-}
-
-boolean useFromTime = StringUtils.hasText(theQueryObject.getFromTime()) && (excludeProperties == null || !excludeProperties.contains("fromTime"));
-
-if (useFromTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " FROM_TIME=? ";
-paramValues.add(theQueryObject.getFromTime());
-propertyCounter++;
-}
-
-boolean useTimecardID = theQueryObject.getTimecard() != null && (excludeProperties == null || !excludeProperties.contains("timecard"));
-
-if (useTimecardID)
-{
-	if (propertyCounter > 0)
-	{
-		sql += " AND ";
-	}
-	else
-	{
-		sql += " WHERE ";
-	}
-	sql += " ID=? ";
-	paramValues.add(theQueryObject.getTimecard().getID());
-	propertyCounter++;
-}
-
 boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
 if (useAgentID)
@@ -385,6 +386,40 @@ sql += " WHERE ";
 }
 sql += " AGENT_ID=? ";
 paramValues.add(theQueryObject.getAgent().getID());
+propertyCounter++;
+}
+
+boolean useTimecardActivityID = theQueryObject.getTimecardActivity() != null && (excludeProperties == null || !excludeProperties.contains("timecardActivity"));
+
+if (useTimecardActivityID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " TIMECARD_ACTIVITY_ID=? ";
+paramValues.add(theQueryObject.getTimecardActivity().getID());
+propertyCounter++;
+}
+
+boolean useTimecardID = theQueryObject.getTimecard() != null && (excludeProperties == null || !excludeProperties.contains("timecard"));
+
+if (useTimecardID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " TIMECARD_ID=? ";
+paramValues.add(theQueryObject.getTimecard().getID());
 propertyCounter++;
 }
 

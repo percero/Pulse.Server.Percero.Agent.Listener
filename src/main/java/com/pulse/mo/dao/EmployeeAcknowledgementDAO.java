@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class EmployeeAcknowledgementDAO extends SqlDataAccessObject<EmployeeAckn
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"EMPLOYEE_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_EMPLOYEE_ACKNOWLEDGEMENT\" SET \"DATE\"=?,\"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"EMPLOYEE_ACKNOWLEDGEMENT\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_EMPLOYEE_ACKNOWLEDGEMENT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -161,14 +162,29 @@ nextResult.setName(rs.getString("NAME"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(EmployeeAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(EmployeeAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getName());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(EmployeeAcknowledgement perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(EmployeeAcknowledgement perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -180,6 +196,18 @@ pstmt.setString(3, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(EmployeeAcknowledgement perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<EmployeeAcknowledgement> findByExample(EmployeeAcknowledgement theQueryObject,
@@ -248,6 +276,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_EMPLOYEE_ACKNOWLEDGEMENT(?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_EMPLOYEE_ACKNOWLEDGEMENT(?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_EMPLOYEE_ACKNOWLEDGEMENT(?)}";
+	}
+	
+	
+	
 	
 }
 

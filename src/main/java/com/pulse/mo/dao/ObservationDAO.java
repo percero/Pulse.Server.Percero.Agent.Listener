@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -132,12 +133,12 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"OBSERVATION\" SET  WHERE \"ID\"=?";
+		return "UPDATE \"TBL_OBSERVATION\" SET  WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"OBSERVATION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_OBSERVATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -156,12 +157,27 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(Observation perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Observation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(Observation perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(Observation perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -171,6 +187,18 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(Observation perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<Observation> findByExample(Observation theQueryObject,
@@ -212,6 +240,22 @@ public class ObservationDAO extends SqlDataAccessObject<Observation> implements 
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_OBSERVATION(?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_OBSERVATION(?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_OBSERVATION(?)}";
+	}
+	
+	
+	
 	
 }
 

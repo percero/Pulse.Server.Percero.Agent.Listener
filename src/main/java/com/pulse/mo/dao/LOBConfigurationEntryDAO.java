@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -136,12 +137,12 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"LOB_CONFIGURATION_ENTRY\" SET \"DURATION_TOLERANCE_ENABLED\"=?,\"DURATION_TOLERANCE\"=?,\"DURATION_TOLERANCE_INTERVAL\"=?,\"OCC_TOLERANCE_INTERVAL\"=?,\"REMINDER_INTERVAL\"=?,\"LOB_CONFIGURATION_ID\"=?,\"NOTIFICATION_FREQUENCY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_LOB_CONFIGURATION_ENTRY\" SET \"DURATION_TOLERANCE_ENABLED\"=?,\"DURATION_TOLERANCE\"=?,\"DURATION_TOLERANCE_INTERVAL\"=?,\"OCC_TOLERANCE_INTERVAL\"=?,\"REMINDER_INTERVAL\"=?,\"LOB_CONFIGURATION_ID\"=?,\"NOTIFICATION_FREQUENCY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"LOB_CONFIGURATION_ENTRY\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_LOB_CONFIGURATION_ENTRY\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -178,8 +179,7 @@ nextResult.setNotificationFrequency(notificationfrequency);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setBoolean(2, perceroObject.getDurationToleranceEnabled());
@@ -209,6 +209,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(LOBConfigurationEntry perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -243,6 +259,18 @@ pstmt.setString(8, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(LOBConfigurationEntry perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<LOBConfigurationEntry> findByExample(LOBConfigurationEntry theQueryObject,
@@ -396,6 +424,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_LOB_CONFIGURATION_ENTRY(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_LOB_CONFIGURATION_ENTRY(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_LOB_CONFIGURATION_ENTRY(?)}";
+	}
+	
+	
+	
 	
 }
 

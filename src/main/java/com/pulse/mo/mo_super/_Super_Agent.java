@@ -194,45 +194,6 @@ public void setEmployeeId(String employeeId)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=GeneralComment.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<GeneralComment> generalComments;
-public List<GeneralComment> getGeneralComments() {
-	return this.generalComments;
-}
-
-public void setGeneralComments(List<GeneralComment> value) {
-	this.generalComments = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=TimecardEntry.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<TimecardEntry> timecardEntries;
-public List<TimecardEntry> getTimecardEntries() {
-	return this.timecardEntries;
-}
-
-public void setTimecardEntries(List<TimecardEntry> value) {
-	this.timecardEntries = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfigurationNotification.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<LOBConfigurationNotification> lOBConfigurationNotifications;
-public List<LOBConfigurationNotification> getLOBConfigurationNotifications() {
-	return this.lOBConfigurationNotifications;
-}
-
-public void setLOBConfigurationNotifications(List<LOBConfigurationNotification> value) {
-	this.lOBConfigurationNotifications = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<AdhocTask> adhocTasks;
 public List<AdhocTask> getAdhocTasks() {
@@ -319,19 +280,6 @@ public List<Schedule> getSchedules() {
 
 public void setSchedules(List<Schedule> value) {
 	this.schedules = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=BehaviorResponse.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<BehaviorResponse> behaviorResponses;
-public List<BehaviorResponse> getBehaviorResponses() {
-	return this.behaviorResponses;
-}
-
-public void setBehaviorResponses(List<BehaviorResponse> value) {
-	this.behaviorResponses = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -520,57 +468,6 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Agent of General Comment relationship
-objectJson += ",\"generalComments\":[";
-		
-		if (getGeneralComments() != null) {
-			int generalCommentsCounter = 0;
-			for(GeneralComment nextGeneralComments : getGeneralComments()) {
-				if (generalCommentsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextGeneralComments).toEmbeddedJson();
-					generalCommentsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of Timecard Entry relationship
-objectJson += ",\"timecardEntries\":[";
-		
-		if (getTimecardEntries() != null) {
-			int timecardEntriesCounter = 0;
-			for(TimecardEntry nextTimecardEntries : getTimecardEntries()) {
-				if (timecardEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextTimecardEntries).toEmbeddedJson();
-					timecardEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Agent of LOB Configuration Notification relationship
-objectJson += ",\"lOBConfigurationNotifications\":[";
-		
-		if (getLOBConfigurationNotifications() != null) {
-			int lOBConfigurationNotificationsCounter = 0;
-			for(LOBConfigurationNotification nextLOBConfigurationNotifications : getLOBConfigurationNotifications()) {
-				if (lOBConfigurationNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextLOBConfigurationNotifications).toEmbeddedJson();
-					lOBConfigurationNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Adhoc Task relationship
 objectJson += ",\"adhocTasks\":[";
 		
@@ -690,23 +587,6 @@ objectJson += ",\"schedules\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of Behavior Response relationship
-objectJson += ",\"behaviorResponses\":[";
-		
-		if (getBehaviorResponses() != null) {
-			int behaviorResponsesCounter = 0;
-			for(BehaviorResponse nextBehaviorResponses : getBehaviorResponses()) {
-				if (behaviorResponsesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextBehaviorResponses).toEmbeddedJson();
-					behaviorResponsesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of CMS Entry relationship
 objectJson += ",\"cMSEntries\":[";
 		
@@ -754,18 +634,13 @@ objectJson += ",\"cMSEntries\":[";
 
 
 		// Target Relationships
-		this.generalComments = (List<GeneralComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "generalComments");
-		this.timecardEntries = (List<TimecardEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecardEntries");
-		this.lOBConfigurationNotifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationNotifications");
 		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
-
 		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.timecards = (List<Timecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecards");
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 		this.scheduleEntries = (List<ScheduleEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduleEntries");
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
-		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
 
 
@@ -776,9 +651,6 @@ objectJson += ",\"cMSEntries\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(GeneralComment.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "agent"));
@@ -786,7 +658,6 @@ objectJson += ",\"cMSEntries\":[";
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(ScheduleEntry.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Schedule.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));
 
 		

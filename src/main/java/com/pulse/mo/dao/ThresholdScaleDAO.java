@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class ThresholdScaleDAO extends SqlDataAccessObject<ThresholdScale> imple
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"THRESHOLD_SCALE\" SET \"DATE\"=?,\"GOAL\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_THRESHOLD_SCALE\" SET \"DATE\"=?,\"GOAL\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"THRESHOLD_SCALE\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_THRESHOLD_SCALE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -161,14 +162,29 @@ nextResult.setGoal(rs.getInt("GOAL"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(ThresholdScale perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(ThresholdScale perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setInt(3, perceroObject.getGoal());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(ThresholdScale perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(ThresholdScale perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -180,6 +196,18 @@ pstmt.setString(3, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(ThresholdScale perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<ThresholdScale> findByExample(ThresholdScale theQueryObject,
@@ -248,6 +276,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_THRESHOLD_SCALE(?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_THRESHOLD_SCALE(?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_THRESHOLD_SCALE(?)}";
+	}
+	
+	
+	
 	
 }
 

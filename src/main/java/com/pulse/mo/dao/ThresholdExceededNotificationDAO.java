@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import com.pulse.mo.LOBConfigurationEntry;
 */
 
 @Component
-public class ThresholdExceededNotificationDAO extends SqlDataAccessObject<ThresholdExceededNotification> implements IDataAccessObject<ThresholdExceededNotification> {
+public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<ThresholdExceededNotification> implements IDataAccessObject<ThresholdExceededNotification> {
 
 	static final Logger log = Logger.getLogger(ThresholdExceededNotificationDAO.class);
 
@@ -133,12 +134,12 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessObject<Thresh
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"THRSH_EXCEEDED_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_THRSH_EXCEEDED_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"THRSH_EXCEEDED_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_THRSH_EXCEEDED_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -181,8 +182,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
@@ -231,6 +231,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(ThresholdExceededNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -284,6 +300,18 @@ pstmt.setString(9, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(ThresholdExceededNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<ThresholdExceededNotification> findByExample(ThresholdExceededNotification theQueryObject,
@@ -454,6 +482,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_THRSH_EXCEEDED_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_THRSH_EXCEEDED_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_THRSH_EXCEEDED_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

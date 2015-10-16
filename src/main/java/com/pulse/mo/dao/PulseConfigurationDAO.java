@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PULSE_CONFIGURATION\" SET \"DURATION_TOLERANCE\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_PULSE_CONFIGURATION\" SET \"DURATION_TOLERANCE\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"PULSE_CONFIGURATION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_PULSE_CONFIGURATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,13 +160,28 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(PulseConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(PulseConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setInt(2, perceroObject.getDurationTolerance());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(PulseConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(PulseConfiguration perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -176,6 +192,18 @@ pstmt.setString(2, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(PulseConfiguration perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<PulseConfiguration> findByExample(PulseConfiguration theQueryObject,
@@ -227,6 +255,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_PULSE_CONFIGURATION(?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_PULSE_CONFIGURATION(?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_PULSE_CONFIGURATION(?)}";
+	}
+	
+	
+	
 	
 }
 

@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SITE\" SET \"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_SITE\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"SITE\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_SITE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,13 +160,28 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(Site perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Site perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(Site perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(Site perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -176,6 +192,18 @@ pstmt.setString(2, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(Site perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<Site> findByExample(Site theQueryObject,
@@ -227,6 +255,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_SITE(?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_SITE(?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_SITE(?)}";
+	}
+	
+	
+	
 	
 }
 

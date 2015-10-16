@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -134,12 +135,12 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"QUALITY_EVALUATION\" SET \"COACHING_SESSION_ID\"=?,\"PERFORMANCE_SUMMARY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_QUALITY_EVALUATION\" SET \"COACHING_SESSION_ID\"=?,\"PERFORMANCE_SUMMARY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"QUALITY_EVALUATION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_QUALITY_EVALUATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -166,8 +167,7 @@ nextResult.setPerformanceSummary(performancesummary);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 
@@ -192,6 +192,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(QualityEvaluation perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -221,6 +237,18 @@ pstmt.setString(3, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(QualityEvaluation perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<QualityEvaluation> findByExample(QualityEvaluation theQueryObject,
@@ -289,6 +317,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_QUALITY_EVALUATION(?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_QUALITY_EVALUATION(?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_QUALITY_EVALUATION(?)}";
+	}
+	
+	
+	
 	
 }
 

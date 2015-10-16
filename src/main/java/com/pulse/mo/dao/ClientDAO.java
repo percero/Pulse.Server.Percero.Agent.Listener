@@ -44,6 +44,11 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 	
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"CLIENT\".\"ID\" as \"ID\", \"CLIENT\".\"NAME\" as \"NAME\", \"CLIENT\".\"SITE_ID\" as \"SITE_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
+	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\"";
+	private String whereClause = " WHERE \"CLIENT\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CLIENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"CLIENT\".\"ID\"";
+	
 	
 
 	
@@ -54,62 +59,68 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\".\"ID\"=?";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"CLIENT\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ORDER BY ID";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ORDER BY \"CLIENT\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"CLIENT\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"CLIENT\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"CLIENT\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"CLIENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" WHERE \"CLIENT\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CLIENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"CLIENT\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
+		return "SELECT \"CLIENT\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override

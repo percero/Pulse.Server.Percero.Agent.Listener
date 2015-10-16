@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.InvalidActivityCodeNotification;
 */
 
 @Component
-public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<InvalidActivityCodeNotification> implements IDataAccessObject<InvalidActivityCodeNotification> {
+public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<InvalidActivityCodeNotification> implements IDataAccessObject<InvalidActivityCodeNotification> {
 
 	static final Logger log = Logger.getLogger(InvalidActivityCodeNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessObject<Inva
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"INV_ACTVTY_CODE_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_INV_ACTVTY_CODE_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"INV_ACTVTY_CODE_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_INV_ACTVTY_CODE_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -180,8 +181,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
@@ -230,6 +230,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(InvalidActivityCodeNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -283,6 +299,18 @@ pstmt.setString(9, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(InvalidActivityCodeNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<InvalidActivityCodeNotification> findByExample(InvalidActivityCodeNotification theQueryObject,
@@ -453,6 +481,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_INV_ACTVTY_CODE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_INV_ACTVTY_CODE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_INV_ACTVTY_CODE_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

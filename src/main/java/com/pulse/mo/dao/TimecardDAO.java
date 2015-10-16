@@ -43,7 +43,12 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
+	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"TIMECARD\".\"ID\"";
+	
 	
 
 	
@@ -54,62 +59,68 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\".\"ID\"=?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ORDER BY ID";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ORDER BY \"TIMECARD\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"TIMECARD\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"TIMECARD\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"TIMECARD\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" WHERE \"TIMECARD\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\" ";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override

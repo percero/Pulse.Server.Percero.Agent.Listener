@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"USER_ROLE\" SET \"ROLE_NAME\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_USER_ROLE\" SET \"ROLE_NAME\"=?,\"PULSE_USER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"USER_ROLE\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_USER_ROLE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -163,8 +164,7 @@ nextResult.setPulseUser(pulseuser);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getRoleName());
@@ -180,6 +180,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(UserRole perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(UserRole perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -200,6 +216,18 @@ pstmt.setString(3, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(UserRole perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<UserRole> findByExample(UserRole theQueryObject,
@@ -268,6 +296,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_USER_ROLE(?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_USER_ROLE(?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_USER_ROLE(?)}";
+	}
+	
+	
+	
 	
 }
 

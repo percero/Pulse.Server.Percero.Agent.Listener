@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"THRESHOLD_LEVEL\" SET \"COLOR\"=?,\"END_EXPRESSION\"=?,\"END_VALUE\"=?,\"EXPRESSION_OPERATOR\"=?,\"START_EXPRESSION\"=?,\"START_VALUE\"=?,\"THRESHOLD_SCALE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_THRESHOLD_LEVEL\" SET \"COLOR\"=?,\"END_EXPRESSION\"=?,\"END_VALUE\"=?,\"EXPRESSION_OPERATOR\"=?,\"START_EXPRESSION\"=?,\"START_VALUE\"=?,\"THRESHOLD_SCALE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"THRESHOLD_LEVEL\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_THRESHOLD_LEVEL\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -173,8 +174,7 @@ nextResult.setThresholdScale(thresholdscale);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(ThresholdLevel perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(ThresholdLevel perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getColor());
@@ -195,6 +195,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(ThresholdLevel perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(ThresholdLevel perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -220,6 +236,18 @@ pstmt.setString(8, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(ThresholdLevel perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<ThresholdLevel> findByExample(ThresholdLevel theQueryObject,
@@ -373,6 +401,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_THRESHOLD_LEVEL(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_THRESHOLD_LEVEL(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_THRESHOLD_LEVEL(?)}";
+	}
+	
+	
+	
 	
 }
 

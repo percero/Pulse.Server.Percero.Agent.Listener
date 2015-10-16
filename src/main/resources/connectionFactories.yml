@@ -19,4 +19,3 @@ jdbcUrl: jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:15
 username: PULSEUSER
 password: V2PULSEUSER
 ---
-

@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import com.pulse.mo.TimecardActivity;
 */
 
 @Component
-public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<DiscrepancyDetectedNotification> implements IDataAccessObject<DiscrepancyDetectedNotification> {
+public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessProcObject<DiscrepancyDetectedNotification> implements IDataAccessObject<DiscrepancyDetectedNotification> {
 
 	static final Logger log = Logger.getLogger(DiscrepancyDetectedNotificationDAO.class);
 
@@ -133,12 +134,12 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessObject<Disc
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"DISCREPANCY_DETECTED_NOTIF\" SET \"DATE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_DISCREPANCY_DETECTED_NOTIF\" SET \"DATE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"DISCREPANCY_DETECTED_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_DISCREPANCY_DETECTED_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -181,8 +182,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
@@ -223,6 +223,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(DiscrepancyDetectedNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -268,6 +284,18 @@ pstmt.setString(10, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(DiscrepancyDetectedNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<DiscrepancyDetectedNotification> findByExample(DiscrepancyDetectedNotification theQueryObject,
@@ -455,6 +483,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_DISCREPANCY_DETECTED_NOTIF(?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_DISCREPANCY_DETECTED_NOTIF(?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_DISCREPANCY_DETECTED_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

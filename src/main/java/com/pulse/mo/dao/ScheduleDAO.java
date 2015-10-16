@@ -42,7 +42,12 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
+	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"SCHEDULE\".\"ID\"";
+	
 	
 
 	
@@ -53,62 +58,68 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" WHERE \"SCHEDULE\".\"ID\"=?";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"SCHEDULE\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" ORDER BY ID";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" ORDER BY \"SCHEDULE\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"SCHEDULE\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"SCHEDULE\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"SCHEDULE\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" WHERE \"SCHEDULE\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" WHERE \"SCHEDULE\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\" ";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override

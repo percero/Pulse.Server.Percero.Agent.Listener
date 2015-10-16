@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.CoachingNotification;
 */
 
 @Component
-public class CoachingNotificationDAO extends SqlDataAccessObject<CoachingNotification> implements IDataAccessObject<CoachingNotification> {
+public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNotification> implements IDataAccessObject<CoachingNotification> {
 
 	static final Logger log = Logger.getLogger(CoachingNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class CoachingNotificationDAO extends SqlDataAccessObject<CoachingNotific
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"COACHING_NOTIFICATION\" SET \"TYPE\"=?,\"DATE\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_COACHING_NOTIFICATION\" SET \"TYPE\"=?,\"DATE\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"COACHING_NOTIFICATION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_COACHING_NOTIFICATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -180,8 +181,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
@@ -206,6 +206,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(CoachingNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -235,6 +251,18 @@ pstmt.setString(12, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(CoachingNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<CoachingNotification> findByExample(CoachingNotification theQueryObject,
@@ -456,6 +484,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_COACHING_NOTIFICATION(?)}";
+	}
+	
+	
+	
 	
 }
 

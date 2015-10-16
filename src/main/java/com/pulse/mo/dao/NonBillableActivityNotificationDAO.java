@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.NonBillableActivityNotification;
 */
 
 @Component
-public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonBillableActivityNotification> implements IDataAccessObject<NonBillableActivityNotification> {
+public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<NonBillableActivityNotification> implements IDataAccessObject<NonBillableActivityNotification> {
 
 	static final Logger log = Logger.getLogger(NonBillableActivityNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessObject<NonB
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"NON_BILLABLE_ACTVTY_NOTIF\" SET \"DATE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_NON_BILLABLE_ACTVTY_NOTIF\" SET \"DATE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_NON_BILLABLE_ACTVTY_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -180,8 +181,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(NonBillableActivityNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(NonBillableActivityNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
@@ -222,6 +222,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(NonBillableActivityNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(NonBillableActivityNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -267,6 +283,18 @@ pstmt.setString(10, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(NonBillableActivityNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<NonBillableActivityNotification> findByExample(NonBillableActivityNotification theQueryObject,
@@ -454,6 +482,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_NON_BILLABLE_ACTVTY_NOTIF(?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_NON_BILLABLE_ACTVTY_NOTIF(?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_NON_BILLABLE_ACTVTY_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

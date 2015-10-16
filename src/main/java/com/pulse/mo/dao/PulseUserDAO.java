@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -138,12 +139,12 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PULSE_USER\" SET \"USER_ID\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_PULSE_USER\" SET \"USER_ID\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"PULSE_USER\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_PULSE_USER\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -174,8 +175,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(PulseUser perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(PulseUser perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getUserId());
@@ -194,6 +194,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(PulseUser perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(PulseUser perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -217,6 +233,18 @@ pstmt.setString(6, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(PulseUser perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<PulseUser> findByExample(PulseUser theQueryObject,
@@ -336,6 +364,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_PULSE_USER(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_PULSE_USER(?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_PULSE_USER(?)}";
+	}
+	
+	
+	
 	
 }
 

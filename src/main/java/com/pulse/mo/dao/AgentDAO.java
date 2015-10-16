@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,9 +20,6 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Agent;
-import com.pulse.mo.GeneralComment;
-import com.pulse.mo.TimecardEntry;
-import com.pulse.mo.LOBConfigurationNotification;
 import com.pulse.mo.AdhocTask;
 import com.pulse.mo.DevelopmentActivity;
 import com.pulse.mo.Timecard;
@@ -29,7 +27,6 @@ import com.pulse.mo.CorrectiveAction;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.ScheduleEntry;
 import com.pulse.mo.Schedule;
-import com.pulse.mo.BehaviorResponse;
 import com.pulse.mo.CMSEntry;
 import com.pulse.mo.TeamLeader;
 
@@ -145,12 +142,12 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"AGENT\" SET \"EMAIL_ADDRESS\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_AGENT\" SET \"EMAIL_ADDRESS\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"AGENT\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_AGENT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -185,8 +182,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getEmailAddress());
@@ -207,6 +203,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(Agent perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -232,6 +244,18 @@ pstmt.setString(8, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(Agent perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<Agent> findByExample(Agent theQueryObject,
@@ -385,6 +409,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_AGENT(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_AGENT(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_AGENT(?)}";
+	}
+	
+	
+	
 	
 }
 

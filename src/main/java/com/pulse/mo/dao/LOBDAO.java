@@ -45,6 +45,11 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"PULSE_CONFIGURATION_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
+	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\"";
+	private String whereClause = " WHERE \"LOB\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"LOB\".\"ID\"";
+	
 	
 
 	
@@ -55,62 +60,68 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" WHERE \"LOB\".\"ID\"=?";
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"LOB\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" ORDER BY ID";
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" ORDER BY \"LOB\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"LOB\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"LOB\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"LOB\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" WHERE \"LOB\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"LOB\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" WHERE \"LOB\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"LOB\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" ";
+		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -144,6 +155,10 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
     	if (!shellOnly) 
 		{
 			nextResult.setName(rs.getString("NAME"));
+
+Client client = new Client();
+client.setID(rs.getString("CLIENT_ID"));
+nextResult.setClient(client);
 
 PulseConfiguration pulseconfiguration = new PulseConfiguration();
 pulseconfiguration.setID(rs.getString("PULSE_CONFIGURATION_ID"));
@@ -189,6 +204,23 @@ if (useName)
 sql += " WHERE ";
 sql += " NAME=? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useClientID = theQueryObject.getClient() != null && (excludeProperties == null || !excludeProperties.contains("client"));
+
+if (useClientID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CLIENT_ID=? ";
+paramValues.add(theQueryObject.getClient().getID());
 propertyCounter++;
 }
 

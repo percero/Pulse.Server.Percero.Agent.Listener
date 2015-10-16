@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"NOTIFICATION_FREQUENCY\" SET \"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_NOTIFICATION_FREQUENCY\" SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"NOTIFICATION_FREQUENCY\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_NOTIFICATION_FREQUENCY\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,13 +160,28 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(NotificationFrequency perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(NotificationFrequency perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(NotificationFrequency perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(NotificationFrequency perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -176,6 +192,18 @@ pstmt.setString(2, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(NotificationFrequency perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<NotificationFrequency> findByExample(NotificationFrequency theQueryObject,
@@ -227,6 +255,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_NOTIFICATION_FREQUENCY(?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_NOTIFICATION_FREQUENCY(?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_NOTIFICATION_FREQUENCY(?)}";
+	}
+	
+	
+	
 	
 }
 

@@ -42,7 +42,12 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\"";
+	private String whereClause = " WHERE \"CMS_ENTRY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CMS_ENTRY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"CMS_ENTRY\".\"ID\"";
+	
 	
 
 	
@@ -53,62 +58,68 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".\"ID\"=?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return SQL_VIEW + " where \"CMS_ENTRY\".ID=?";
+		return SQL_VIEW   + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ORDER BY ID";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ORDER BY \"CMS_ENTRY\".ID LIMIT ? OFFSET ?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW + " ORDER BY \"CMS_ENTRY\".ID";
+		return SQL_VIEW  +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " ORDER BY \"CMS_ENTRY\".ID LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\"";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getSelectInStarSQL() {
-		return SQL_VIEW + " where \"CMS_ENTRY\".ID IN (?)";
+		return SQL_VIEW + whereInClause;
 	}
 	
 	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\".ID IN (?)";
+	protected String getSelectInShellOnlySQL() 
+	{
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	{
+		
 		return SQL_VIEW + "  \"CMS_ENTRY\"." + joinColumnName + "=?";
 	}
 	
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" WHERE \"CMS_ENTRY\"." + joinColumnName + "=?";
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	{
+		
+		
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override

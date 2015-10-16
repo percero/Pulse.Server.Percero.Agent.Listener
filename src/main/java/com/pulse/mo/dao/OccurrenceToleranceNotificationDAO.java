@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.OccurrenceToleranceNotification;
 */
 
 @Component
-public class OccurrenceToleranceNotificationDAO extends SqlDataAccessObject<OccurrenceToleranceNotification> implements IDataAccessObject<OccurrenceToleranceNotification> {
+public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<OccurrenceToleranceNotification> implements IDataAccessObject<OccurrenceToleranceNotification> {
 
 	static final Logger log = Logger.getLogger(OccurrenceToleranceNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessObject<Occu
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"OCCURRENCE_TOLERANCE_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_OCCURRENCE_TOLERANCE_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_OCCURRENCE_TOLERANCE_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -180,8 +181,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
@@ -230,6 +230,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(OccurrenceToleranceNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -283,6 +299,18 @@ pstmt.setString(9, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(OccurrenceToleranceNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<OccurrenceToleranceNotification> findByExample(OccurrenceToleranceNotification theQueryObject,
@@ -453,6 +481,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_OCCURRENCE_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_OCCURRENCE_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_OCCURRENCE_TOLERANCE_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

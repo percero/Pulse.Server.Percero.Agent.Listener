@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.WorkModeOccurrenceNotification;
 */
 
 @Component
-public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkModeOccurrenceNotification> implements IDataAccessObject<WorkModeOccurrenceNotification> {
+public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<WorkModeOccurrenceNotification> implements IDataAccessObject<WorkModeOccurrenceNotification> {
 
 	static final Logger log = Logger.getLogger(WorkModeOccurrenceNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessObject<WorkM
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"WORK_MODE_OCCURRENCE_NOTIF\" SET \"DATE\"=?,\"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_WORK_MODE_OCCURRENCE_NOTIF\" SET \"DATE\"=?,\"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_WORK_MODE_OCCURRENCE_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -184,8 +185,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
@@ -236,6 +236,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -291,6 +307,18 @@ pstmt.setString(11, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(WorkModeOccurrenceNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<WorkModeOccurrenceNotification> findByExample(WorkModeOccurrenceNotification theQueryObject,
@@ -495,6 +523,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_WORK_MODE_OCCURRENCE_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_WORK_MODE_OCCURRENCE_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_WORK_MODE_OCCURRENCE_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

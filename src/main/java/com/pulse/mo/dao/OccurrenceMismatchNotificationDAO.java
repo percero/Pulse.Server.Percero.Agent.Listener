@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import com.pulse.mo.OccurrenceMismatchNotification;
 */
 
 @Component
-public class OccurrenceMismatchNotificationDAO extends SqlDataAccessObject<OccurrenceMismatchNotification> implements IDataAccessObject<OccurrenceMismatchNotification> {
+public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<OccurrenceMismatchNotification> implements IDataAccessObject<OccurrenceMismatchNotification> {
 
 	static final Logger log = Logger.getLogger(OccurrenceMismatchNotificationDAO.class);
 
@@ -132,12 +133,12 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessObject<Occur
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"OCCURRENCE_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"AUX_MODE_EVENT_COUNT\"=?,\"ACTVTY_CODE_EVENT_COUNT\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_OCCURRENCE_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"AUX_MODE_EVENT_COUNT\"=?,\"ACTVTY_CODE_EVENT_COUNT\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"OCCURRENCE_MISMATCH_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_OCCURRENCE_MISMATCH_NOTIF\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -184,8 +185,7 @@ nextResult.setTeamLeader(teamleader);
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getTimecardActivityName());
@@ -228,6 +228,22 @@ else
 
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(OccurrenceMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -275,6 +291,18 @@ pstmt.setString(12, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(OccurrenceMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<OccurrenceMismatchNotification> findByExample(OccurrenceMismatchNotification theQueryObject,
@@ -496,6 +524,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_OCCURRENCE_MISMATCH_NOTIF(?)}";
+	}
+	
+	
+	
 	
 }
 

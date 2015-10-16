@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"PERFORMANCE_SUMMARY\" SET \"WEEK_DATE\"=?,\"CURRENT_MTD_SCORE\"=?,\"CURRENT_MTD_TREND\"=?,\"PREVIOUS_MTD_SCORE\"=?,\"PREVIOUS_MTD_TREND\"=?,\"WEEKLY_OVERVIEW_SCORE\"=?,\"WEEKLY_TREND\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_PERFORMANCE_SUMMARY\" SET \"WEEK_DATE\"=?,\"CURRENT_MTD_SCORE\"=?,\"CURRENT_MTD_TREND\"=?,\"PREVIOUS_MTD_SCORE\"=?,\"PREVIOUS_MTD_TREND\"=?,\"WEEKLY_OVERVIEW_SCORE\"=?,\"WEEKLY_TREND\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"PERFORMANCE_SUMMARY\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_PERFORMANCE_SUMMARY\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -171,8 +172,7 @@ nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(PerformanceSummary perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(PerformanceSummary perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
@@ -184,6 +184,22 @@ pstmt.setString(7, perceroObject.getWeeklyOverviewScore());
 pstmt.setString(8, perceroObject.getWeeklyTrend());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(PerformanceSummary perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(PerformanceSummary perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -200,6 +216,18 @@ pstmt.setString(8, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(PerformanceSummary perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<PerformanceSummary> findByExample(PerformanceSummary theQueryObject,
@@ -353,6 +381,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_PERFORMANCE_SUMMARY(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_PERFORMANCE_SUMMARY(?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_PERFORMANCE_SUMMARY(?)}";
+	}
+	
+	
+	
 	
 }
 

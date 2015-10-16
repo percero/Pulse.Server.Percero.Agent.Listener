@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -135,12 +136,12 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"LOB_CONFIGURATION\" SET  WHERE \"ID\"=?";
+		return "UPDATE \"TBL_LOB_CONFIGURATION\" SET  WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"LOB_CONFIGURATION\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_LOB_CONFIGURATION\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,12 +160,27 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(LOBConfiguration perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -174,6 +190,18 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(LOBConfiguration perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<LOBConfiguration> findByExample(LOBConfiguration theQueryObject,
@@ -215,6 +243,22 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_LOB_CONFIGURATION(?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_LOB_CONFIGURATION(?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_LOB_CONFIGURATION(?)}";
+	}
+	
+	
+	
 	
 }
 

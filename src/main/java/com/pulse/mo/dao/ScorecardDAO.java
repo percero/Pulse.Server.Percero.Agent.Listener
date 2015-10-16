@@ -2,6 +2,7 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"SCORECARD\" SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=?,\"LOCK_LEVEL\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_SCORECARD\" SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=?,\"LOCK_LEVEL\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"SCORECARD\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_SCORECARD\" WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -177,8 +178,7 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
     	return nextResult;
 	}
 	
-	@Override
-	protected void setPreparedStatmentInsertParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
@@ -193,6 +193,22 @@ pstmt.setString(10, perceroObject.getRegionId());
 pstmt.setString(11, perceroObject.getUpdatedBy());
 
 		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(Scorecard perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(Scorecard perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
 	}
 	
 	@Override
@@ -212,6 +228,18 @@ pstmt.setString(11, perceroObject.getID());
 
 		
 	}
+	
+	
+	@Override
+	protected void setCallableStatmentUpdateParams(Scorecard perceroObject, CallableStatement pstmt) throws SQLException 
+	{
+		
+		//must be in same order as insert
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	}
+	
+	
 
 	@Override
 	public List<Scorecard> findByExample(Scorecard theQueryObject,
@@ -416,6 +444,22 @@ propertyCounter++;
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
+	
+	@Override
+	protected String getUpdateCallableStatementSql() {
+		return "{call UPDATE_SCORECARD(?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getInsertCallableStatementSql() {
+		return "{call CREATE_SCORECARD(?,?,?,?,?,?,?,?,?,?,?)}";
+	}
+	@Override
+	protected String getDeleteCallableStatementSql() {
+		return "{call Delete_SCORECARD(?)}";
+	}
+	
+	
+	
 	
 }
 
