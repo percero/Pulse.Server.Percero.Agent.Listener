@@ -44,11 +44,11 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\"";
+	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\"";
 	private String selectFromStatementTableName = " FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\"";
-	private String whereClause = " WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR_RESPONSE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
+	private String whereClause = "  WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR_RESPONSE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"BEHAVIOR_RESPONSE\".\"ID\"";
 	
 	
 
@@ -131,12 +131,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"WEEK_DATE\",\"CREATED_BY\",\"UPDATED_BY\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO BEHAVIOR_RESPONSE (\"ID\",\"CREATED_BY\",\"UPDATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_BEHAVIOR_RESPONSE\" SET \"WEEK_DATE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_BEHAVIOR_RESPONSE\" SET \"CREATED_BY\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -153,11 +153,11 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
-
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
 nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
@@ -187,9 +187,9 @@ nextResult.setCoachingSession(coachingsession);
 	protected void setBaseStatmentInsertParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setString(2, perceroObject.getCreatedBy());
+pstmt.setString(3, perceroObject.getUpdatedBy());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setInt(7, perceroObject.getResponse());
@@ -246,9 +246,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getUpdatedBy());
+		pstmt.setString(1, perceroObject.getCreatedBy());
+pstmt.setString(2, perceroObject.getUpdatedBy());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setInt(6, perceroObject.getResponse());
@@ -311,28 +311,11 @@ pstmt.setString(10, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
-
-if (useWeekDate)
-{
-sql += " WHERE ";
-sql += " \"WEEK_DATE\" =? ";
-paramValues.add(theQueryObject.getWeekDate());
-propertyCounter++;
-}
-
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+		boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
 if (useCreatedBy)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_BY\" =? ";
 paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
@@ -352,6 +335,23 @@ sql += " WHERE ";
 }
 sql += " \"UPDATED_BY\" =? ";
 paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+
+if (useWeekDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WEEK_DATE\" =? ";
+paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 

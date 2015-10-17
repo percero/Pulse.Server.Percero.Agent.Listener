@@ -44,9 +44,9 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	
 	public static final String SQL_VIEW = ",\"SITE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"SITE\" \"SITE\"";
-	private String whereClause = " WHERE \"SITE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SITE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"SITE\".\"ID\"";
+	private String whereClause = "  WHERE \"SITE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SITE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SITE\".\"ID\"";
 	
 	
 

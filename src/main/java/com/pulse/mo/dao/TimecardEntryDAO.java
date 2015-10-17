@@ -19,9 +19,9 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.TimecardEntry;
+import com.pulse.mo.TimecardActivity;
 import com.pulse.mo.Agent;
 import com.pulse.mo.Timecard;
-import com.pulse.mo.TimecardActivity;
 
 */
 
@@ -44,7 +44,7 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", '' as \"NOTIFICATION_RESOLVED\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"POS\" as \"ACTIVITY_NAME\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", '' as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\"";
 	private String whereClause = "WHERE TIMECARD_ENTRY.WORKED_ID=?";
 	private String whereInClause = "Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On TIMECARD_ENTRY.WORKED_ID= SQLLIST.columnvalue";
@@ -163,9 +163,7 @@ return "SELECT \"TIMECARD_ENTRY\".\"ID\" " + selectFromStatementTableName + join
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
-
-nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
+			nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
 
@@ -181,9 +179,7 @@ nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 nextResult.setActivityName(rs.getString("ACTIVITY_NAME"));
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
+nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 TimecardActivity timecardactivity = new TimecardActivity();
 timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
@@ -192,6 +188,10 @@ nextResult.setTimecardActivity(timecardactivity);
 Timecard timecard = new Timecard();
 timecard.setID(rs.getString("TIMECARD_ID"));
 nextResult.setTimecard(timecard);
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 
 			
@@ -226,28 +226,11 @@ nextResult.setTimecard(timecard);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
-
-if (useEStartProjectName)
-{
-sql += " WHERE ";
-sql += " ESTART_PROJECT_NAME=? ";
-paramValues.add(theQueryObject.getEStartProjectName());
-propertyCounter++;
-}
-
-boolean useNotificationDetected = theQueryObject.getNotificationDetected() != null && (excludeProperties == null || !excludeProperties.contains("notificationDetected"));
+		boolean useNotificationDetected = theQueryObject.getNotificationDetected() != null && (excludeProperties == null || !excludeProperties.contains("notificationDetected"));
 
 if (useNotificationDetected)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " NOTIFICATION_DETECTED=? ";
 paramValues.add(theQueryObject.getNotificationDetected());
 propertyCounter++;
@@ -372,9 +355,9 @@ paramValues.add(theQueryObject.getActivityName());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+boolean useEStartProjectName = StringUtils.hasText(theQueryObject.getEStartProjectName()) && (excludeProperties == null || !excludeProperties.contains("eStartProjectName"));
 
-if (useAgentID)
+if (useEStartProjectName)
 {
 if (propertyCounter > 0)
 {
@@ -384,8 +367,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
-paramValues.add(theQueryObject.getAgent().getID());
+sql += " ESTART_PROJECT_NAME=? ";
+paramValues.add(theQueryObject.getEStartProjectName());
 propertyCounter++;
 }
 
@@ -420,6 +403,23 @@ sql += " WHERE ";
 }
 sql += " TIMECARD_ID=? ";
 paramValues.add(theQueryObject.getTimecard().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " AGENT_ID=? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

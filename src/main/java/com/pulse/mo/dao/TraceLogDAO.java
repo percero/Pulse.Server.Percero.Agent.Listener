@@ -44,9 +44,9 @@ public class TraceLogDAO extends SqlDataAccessObject<TraceLog> implements IDataA
 	
 	public static final String SQL_VIEW = ",\"TRACE_LOG\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"TRACE_LOG\" \"TRACE_LOG\"";
-	private String whereClause = " WHERE \"TRACE_LOG\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TRACE_LOG\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"TRACE_LOG\".\"ID\"";
+	private String whereClause = "  WHERE \"TRACE_LOG\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TRACE_LOG\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"TRACE_LOG\".\"ID\"";
 	
 	
 

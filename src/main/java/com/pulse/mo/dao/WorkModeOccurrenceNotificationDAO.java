@@ -43,9 +43,9 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 	
 	public static final String SQL_VIEW = ",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\"";
-	private String whereClause = " WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"";
 	
 	
 

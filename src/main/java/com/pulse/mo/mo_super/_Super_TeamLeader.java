@@ -259,19 +259,6 @@ public void setDevelopmentActivities(List<DevelopmentActivity> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=GeneralComment.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<GeneralComment> generalComments;
-public List<GeneralComment> getGeneralComments() {
-	return this.generalComments;
-}
-
-public void setGeneralComments(List<GeneralComment> value) {
-	this.generalComments = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Setting.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Setting> settings;
 public List<Setting> getSettings() {
@@ -566,23 +553,6 @@ objectJson += ",\"developmentActivities\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Team Leader of General Comment relationship
-objectJson += ",\"generalComments\":[";
-		
-		if (getGeneralComments() != null) {
-			int generalCommentsCounter = 0;
-			for(GeneralComment nextGeneralComments : getGeneralComments()) {
-				if (generalCommentsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextGeneralComments).toEmbeddedJson();
-					generalCommentsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Team Leader of Setting relationship
 objectJson += ",\"settings\":[";
 		
@@ -669,7 +639,6 @@ objectJson += ",\"userSessions\":[";
 		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
 		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
 		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
-		this.generalComments = (List<GeneralComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "generalComments");
 		this.settings = (List<Setting>) JsonUtils.getJsonListPerceroObject(jsonObject, "settings");
 		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
 		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
@@ -687,7 +656,6 @@ objectJson += ",\"userSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(GeneralComment.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Setting.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamleader"));

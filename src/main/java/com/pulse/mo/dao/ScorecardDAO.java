@@ -44,9 +44,9 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	public static final String SQL_VIEW = ",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD\" \"SCORECARD\"";
-	private String whereClause = " WHERE \"SCORECARD\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"SCORECARD\".\"ID\"";
+	private String whereClause = "  WHERE \"SCORECARD\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SCORECARD\".\"ID\"";
 	
 	
 

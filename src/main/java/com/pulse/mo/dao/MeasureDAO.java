@@ -44,9 +44,9 @@ public class MeasureDAO extends SqlDataAccessObject<Measure> implements IDataAcc
 	
 	public static final String SQL_VIEW = ",\"MEASURE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"MEASURE\" \"MEASURE\"";
-	private String whereClause = " WHERE \"MEASURE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"MEASURE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"MEASURE\".\"ID\"";
+	private String whereClause = "  WHERE \"MEASURE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"MEASURE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"MEASURE\".\"ID\"";
 	
 	
 

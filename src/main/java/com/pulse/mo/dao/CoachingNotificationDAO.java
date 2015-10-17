@@ -41,11 +41,11 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"DATE\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
-	private String whereClause = " WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
+	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
 	
 	
 
@@ -128,12 +128,12 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"DATE\",\"WEEK_DATE\",\"ACKNOWLEDGEMENT_STATE_COUNT\",\"PENDING_COACH_STATE_COUNT\",\"PENDING_EMPLOYEE_STATE_COUNT\",\"PENDING_STATE_COUNT\",\"SKIPPED_STATE_COUNT\",\"SUBMITTED_STATE_COUNT\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO COACHING_NOTIFICATION (\"ID\",\"DATE\",\"WEEK_DATE\",\"ACKNOWLEDGEMENT_STATE_COUNT\",\"PENDING_COACH_STATE_COUNT\",\"PENDING_EMPLOYEE_STATE_COUNT\",\"PENDING_STATE_COUNT\",\"SKIPPED_STATE_COUNT\",\"SUBMITTED_STATE_COUNT\",\"NAME\",\"TYPE\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_COACHING_NOTIFICATION\" SET \"TYPE\"=?,\"DATE\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_COACHING_NOTIFICATION\" SET \"DATE\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TYPE\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,9 +150,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
     	
     	if (!shellOnly) 
 		{
-			nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
@@ -170,6 +168,8 @@ nextResult.setSubmittedStateCount(rs.getInt("SUBMITTED_STATE_COUNT"));
 
 nextResult.setName(rs.getString("NAME"));
 
+nextResult.setType(rs.getString("TYPE"));
+
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
@@ -184,16 +184,16 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(5, perceroObject.getAcknowledgementStateCount());
-pstmt.setInt(6, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(7, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(8, perceroObject.getPendingStateCount());
-pstmt.setInt(9, perceroObject.getSkippedStateCount());
-pstmt.setInt(10, perceroObject.getSubmittedStateCount());
-pstmt.setString(11, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(4, perceroObject.getAcknowledgementStateCount());
+pstmt.setInt(5, perceroObject.getPendingCoachStateCount());
+pstmt.setInt(6, perceroObject.getPendingEmployeeStateCount());
+pstmt.setInt(7, perceroObject.getPendingStateCount());
+pstmt.setInt(8, perceroObject.getSkippedStateCount());
+pstmt.setInt(9, perceroObject.getSubmittedStateCount());
+pstmt.setString(10, perceroObject.getName());
+pstmt.setString(11, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -227,16 +227,16 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(4, perceroObject.getAcknowledgementStateCount());
-pstmt.setInt(5, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(6, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(7, perceroObject.getPendingStateCount());
-pstmt.setInt(8, perceroObject.getSkippedStateCount());
-pstmt.setInt(9, perceroObject.getSubmittedStateCount());
-pstmt.setString(10, perceroObject.getName());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setInt(3, perceroObject.getAcknowledgementStateCount());
+pstmt.setInt(4, perceroObject.getPendingCoachStateCount());
+pstmt.setInt(5, perceroObject.getPendingEmployeeStateCount());
+pstmt.setInt(6, perceroObject.getPendingStateCount());
+pstmt.setInt(7, perceroObject.getSkippedStateCount());
+pstmt.setInt(8, perceroObject.getSubmittedStateCount());
+pstmt.setString(9, perceroObject.getName());
+pstmt.setString(10, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -276,28 +276,11 @@ pstmt.setString(12, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-sql += " WHERE ";
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -436,6 +419,23 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

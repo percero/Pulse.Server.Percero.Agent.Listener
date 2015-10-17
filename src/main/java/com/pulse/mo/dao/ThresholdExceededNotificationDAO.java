@@ -44,9 +44,9 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	
 	public static final String SQL_VIEW = ",\"THRSH_EXCEEDED_NOTIF\".\"TYPE\",\"THRSH_EXCEEDED_NOTIF\".\"DATE\",\"THRSH_EXCEEDED_NOTIF\".\"MESSAGE\",\"THRSH_EXCEEDED_NOTIF\".\"NAME\",\"THRSH_EXCEEDED_NOTIF\".\"AGENT_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"THRSH_EXCEEDED_NOTIF\".\"TEAM_LEADER_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"THRSH_EXCEEDED_NOTIF\" \"THRSH_EXCEEDED_NOTIF\"";
-	private String whereClause = " WHERE \"THRSH_EXCEEDED_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRSH_EXCEEDED_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"THRSH_EXCEEDED_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"THRSH_EXCEEDED_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRSH_EXCEEDED_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"THRSH_EXCEEDED_NOTIF\".\"ID\"";
 	
 	
 

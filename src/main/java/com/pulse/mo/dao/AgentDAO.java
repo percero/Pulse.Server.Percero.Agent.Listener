@@ -52,9 +52,9 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	public static final String SQL_VIEW = ",\"AGENT\".\"EMAIL_ADDRESS\",\"AGENT\".\"LAST_NAME\",\"AGENT\".\"EMPLOYEE_ID\",\"AGENT\".\"FIRST_NAME\",\"AGENT\".\"FULL_NAME\",\"AGENT\".\"PHOTO_URI\",\"AGENT\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT\" \"AGENT\"";
-	private String whereClause = " WHERE \"AGENT\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"AGENT\".\"ID\"";
+	private String whereClause = "  WHERE \"AGENT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"AGENT\".\"ID\"";
 	
 	
 

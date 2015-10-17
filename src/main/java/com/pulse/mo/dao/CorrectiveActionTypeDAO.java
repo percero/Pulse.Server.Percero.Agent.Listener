@@ -42,11 +42,11 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION_TYPE\".\"NAME\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION_TYPE\".\"NAME\",\"CORRECTIVE_ACTION_TYPE\".\"DESCRIPTION\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION_TYPE\" \"CORRECTIVE_ACTION_TYPE\"";
-	private String whereClause = " WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION_TYPE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\"";
+	private String whereClause = "  WHERE \"CORRECTIVE_ACTION_TYPE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION_TYPE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION_TYPE\".\"ID\"";
 	
 	
 
@@ -129,12 +129,12 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO CORRECTIVE_ACTION_TYPE (\"ID\",\"NAME\") VALUES (?,?)";
+		return "INSERT INTO CORRECTIVE_ACTION_TYPE (\"ID\",\"NAME\",\"DESCRIPTION\") VALUES (?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_CORRECTIVE_ACTION_TYPE\" SET \"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_CORRECTIVE_ACTION_TYPE\" SET \"NAME\"=?,\"DESCRIPTION\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -153,6 +153,8 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 		{
 			nextResult.setName(rs.getString("NAME"));
 
+nextResult.setDescription(rs.getString("DESCRIPTION"));
+
 
 			
     	}
@@ -164,6 +166,7 @@ public class CorrectiveActionTypeDAO extends SqlDataAccessObject<CorrectiveActio
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getDescription());
 
 		
 	}
@@ -188,7 +191,8 @@ pstmt.setString(2, perceroObject.getName());
 	protected void setPreparedStatmentUpdateParams(CorrectiveActionType perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getName());
-pstmt.setString(2, perceroObject.getID());
+pstmt.setString(2, perceroObject.getDescription());
+pstmt.setString(3, perceroObject.getID());
 
 		
 	}
@@ -227,6 +231,23 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+
+if (useDescription)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
 
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
@@ -258,11 +279,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_CORRECTIVE_ACTION_TYPE(?,?)}";
+		return "{call UPDATE_CORRECTIVE_ACTION_TYPE(?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_CORRECTIVE_ACTION_TYPE(?,?)}";
+		return "{call CREATE_CORRECTIVE_ACTION_TYPE(?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

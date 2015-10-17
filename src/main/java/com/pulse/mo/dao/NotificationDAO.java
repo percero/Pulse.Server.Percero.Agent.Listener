@@ -44,9 +44,9 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
-	private String whereClause = " WHERE \"NOTIFICATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"NOTIFICATION\".\"ID\"";
+	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"ID\"";
 	
 	
 

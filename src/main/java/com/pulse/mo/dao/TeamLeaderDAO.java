@@ -25,7 +25,6 @@ import com.pulse.mo.Agent;
 import com.pulse.mo.Alert;
 import com.pulse.mo.AdhocTask;
 import com.pulse.mo.DevelopmentActivity;
-import com.pulse.mo.GeneralComment;
 import com.pulse.mo.Setting;
 import com.pulse.mo.TeamLeaderImpersonation;
 import com.pulse.mo.UserSession;
@@ -53,9 +52,9 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	public static final String SQL_VIEW = ",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\"";
 	private String selectFromStatementTableName = " FROM \"TEAM_LEADER\" \"TEAM_LEADER\"";
-	private String whereClause = " WHERE \"TEAM_LEADER\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TEAM_LEADER\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"TEAM_LEADER\".\"ID\"";
+	private String whereClause = "  WHERE \"TEAM_LEADER\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TEAM_LEADER\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"TEAM_LEADER\".\"ID\"";
 	
 	
 

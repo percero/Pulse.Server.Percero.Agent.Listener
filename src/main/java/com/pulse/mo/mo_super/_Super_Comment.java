@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_CoachingComment extends BaseDataObject implements Serializable
+public class _Super_Comment extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_CoachingComment extends BaseDataObject implements Serializab
 
 	
 	/*
-	Keys of CoachingComment
+	Keys of Comment
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,22 +85,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Comment
+Date
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String comment;
+private Date date;
 
-public String getComment() 
+public Date getDate() 
 {
-	return this.comment;
+	return this.date;
 }
 
-public void setComment(String comment)
+public void setDate(Date date)
 {
-	this.comment = comment;
+	this.date = date;
+}/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
 }
 
 	//////////////////////////////////////////////////////
@@ -115,7 +132,7 @@ public void setComment(String comment)
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="ADHOC_COACHING_SESSION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfCoachingComment")
+@org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfComment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private AdhocCoachingSession adhocCoachingSession;
 public AdhocCoachingSession getAdhocCoachingSession() {
@@ -135,16 +152,23 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Comment property
-		objectJson += ",\"comment\":";
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
+		}
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
 		
-		if (getComment() == null)
+		if (getDescription() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getComment());
+				objectJson += objectMapper.writeValueAsString(getDescription());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -159,7 +183,7 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Adhoc Coaching Session of Coaching Comment relationship
+//Retrieve value of the Adhoc Coaching Session of Comment relationship
 objectJson += ",\"adhocCoachingSession\":";
 		if (getAdhocCoachingSession() == null)
 			objectJson += "null";
@@ -185,8 +209,10 @@ objectJson += ",\"adhocCoachingSession\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Comment property
-		setComment(JsonUtils.getJsonString(jsonObject, "comment"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 
 		
 		// Source Relationships

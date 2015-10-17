@@ -45,9 +45,9 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	
 	public static final String SQL_VIEW = ",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\"";
-	private String whereClause = " WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TEAM_LEADER_IMPERSONATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\"";
+	private String whereClause = "  WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TEAM_LEADER_IMPERSONATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"TEAM_LEADER_IMPERSONATION\".\"ID\"";
 	
 	
 

@@ -44,9 +44,9 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	
 	public static final String SQL_VIEW = ",\"PULSE_CONFIGURATION\".\"DURATION_TOLERANCE\"";
 	private String selectFromStatementTableName = " FROM \"PULSE_CONFIGURATION\" \"PULSE_CONFIGURATION\"";
-	private String whereClause = " WHERE \"PULSE_CONFIGURATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PULSE_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"PULSE_CONFIGURATION\".\"ID\"";
+	private String whereClause = "  WHERE \"PULSE_CONFIGURATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PULSE_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"PULSE_CONFIGURATION\".\"ID\"";
 	
 	
 

@@ -21,9 +21,9 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.LOBConfigurationEntry;
 import com.pulse.mo.ThresholdExceededNotification;
+import com.pulse.mo.TimecardActivity;
 import com.pulse.mo.LOBConfiguration;
 import com.pulse.mo.NotificationFrequency;
-import com.pulse.mo.TimecardActivity;
 
 */
 
@@ -47,9 +47,9 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	
 	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCC_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\"";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\"";
-	private String whereClause = " WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_ENTRY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\"";
+	private String whereClause = "  WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_ENTRY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"LOB_CONFIGURATION_ENTRY\".\"ID\"";
 	
 	
 

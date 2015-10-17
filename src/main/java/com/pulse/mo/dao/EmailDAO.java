@@ -44,9 +44,9 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	public static final String SQL_VIEW = ",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\"";
 	private String selectFromStatementTableName = " FROM \"EMAIL\" \"EMAIL\"";
-	private String whereClause = " WHERE \"EMAIL\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"EMAIL\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"EMAIL\".\"ID\"";
+	private String whereClause = "  WHERE \"EMAIL\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"EMAIL\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"EMAIL\".\"ID\"";
 	
 	
 

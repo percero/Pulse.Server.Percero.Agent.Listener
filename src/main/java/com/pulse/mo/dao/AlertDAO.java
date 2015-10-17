@@ -44,9 +44,9 @@ public class AlertDAO extends SqlDataAccessObject<Alert> implements IDataAccessO
 	
 	public static final String SQL_VIEW = ",\"ALERT\".\"DATE\",\"ALERT\".\"HAS_BEEN_READ\",\"ALERT\".\"NAME\",\"ALERT\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"ALERT\" \"ALERT\"";
-	private String whereClause = " WHERE \"ALERT\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ALERT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"ALERT\".\"ID\"";
+	private String whereClause = "  WHERE \"ALERT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ALERT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ALERT\".\"ID\"";
 	
 	
 

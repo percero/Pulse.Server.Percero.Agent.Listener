@@ -46,9 +46,9 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	public static final String SQL_VIEW = ",\"DEVELOPMENT_ACTIVITY\".\"CREATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"TYPE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_BY\",\"DEVELOPMENT_ACTIVITY\".\"WEEK_DATE\",\"DEVELOPMENT_ACTIVITY\".\"COMPLETED_ON\",\"DEVELOPMENT_ACTIVITY\".\"CREATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"DUE_DATE\",\"DEVELOPMENT_ACTIVITY\".\"UPDATED_ON\",\"DEVELOPMENT_ACTIVITY\".\"NAME\",\"DEVELOPMENT_ACTIVITY\".\"PLAN_ID\",\"DEVELOPMENT_ACTIVITY\".\"STATUS\",\"DEVELOPMENT_ACTIVITY\".\"TEAM_LEADER_ID\",\"DEVELOPMENT_ACTIVITY\".\"AGENT_ID\",\"DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_PLAN_ID\"";
 	private String selectFromStatementTableName = " FROM \"DEVELOPMENT_ACTIVITY\" \"DEVELOPMENT_ACTIVITY\"";
-	private String whereClause = " WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_ACTIVITY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\"";
+	private String whereClause = "  WHERE \"DEVELOPMENT_ACTIVITY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_ACTIVITY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"DEVELOPMENT_ACTIVITY\".\"ID\"";
 	
 	
 

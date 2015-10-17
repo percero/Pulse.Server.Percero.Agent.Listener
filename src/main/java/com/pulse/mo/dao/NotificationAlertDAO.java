@@ -43,9 +43,9 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	
 	public static final String SQL_VIEW = ",\"NOTIFICATION_ALERT\".\"DATE\",\"NOTIFICATION_ALERT\".\"HAS_BEEN_READ\",\"NOTIFICATION_ALERT\".\"NAME\",\"NOTIFICATION_ALERT\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION_ALERT\" \"NOTIFICATION_ALERT\"";
-	private String whereClause = " WHERE \"NOTIFICATION_ALERT\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_ALERT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"NOTIFICATION_ALERT\".\"ID\"";
+	private String whereClause = "  WHERE \"NOTIFICATION_ALERT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_ALERT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"NOTIFICATION_ALERT\".\"ID\"";
 	
 	
 

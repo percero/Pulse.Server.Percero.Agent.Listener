@@ -44,9 +44,9 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
 	
 	public static final String SQL_VIEW = ",\"ADHOC_COACHING_CATEGORY\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\"";
-	private String whereClause = " WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_CATEGORY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\"";
+	private String whereClause = "  WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_CATEGORY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ADHOC_COACHING_CATEGORY\".\"ID\"";
 	
 	
 

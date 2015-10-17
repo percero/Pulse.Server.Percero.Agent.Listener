@@ -44,9 +44,9 @@ public class ThresholdLevelDAO extends SqlDataAccessObject<ThresholdLevel> imple
 	
 	public static final String SQL_VIEW = ",\"THRESHOLD_LEVEL\".\"COLOR\",\"THRESHOLD_LEVEL\".\"END_EXPRESSION\",\"THRESHOLD_LEVEL\".\"END_VALUE\",\"THRESHOLD_LEVEL\".\"EXPRESSION_OPERATOR\",\"THRESHOLD_LEVEL\".\"START_EXPRESSION\",\"THRESHOLD_LEVEL\".\"START_VALUE\",\"THRESHOLD_LEVEL\".\"THRESHOLD_SCALE_ID\"";
 	private String selectFromStatementTableName = " FROM \"THRESHOLD_LEVEL\" \"THRESHOLD_LEVEL\"";
-	private String whereClause = " WHERE \"THRESHOLD_LEVEL\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRESHOLD_LEVEL\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"THRESHOLD_LEVEL\".\"ID\"";
+	private String whereClause = "  WHERE \"THRESHOLD_LEVEL\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRESHOLD_LEVEL\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"THRESHOLD_LEVEL\".\"ID\"";
 	
 	
 

@@ -43,9 +43,9 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 	
 	public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"DATE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\"";
-	private String whereClause = " WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
 	
 	
 

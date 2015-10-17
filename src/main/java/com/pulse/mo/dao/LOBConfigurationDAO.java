@@ -46,9 +46,9 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	public static final String SQL_VIEW = "";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\"";
-	private String whereClause = " WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION\".\"ID\"";
+	private String whereClause = "  WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"LOB_CONFIGURATION\".\"ID\"";
 	
 	
 

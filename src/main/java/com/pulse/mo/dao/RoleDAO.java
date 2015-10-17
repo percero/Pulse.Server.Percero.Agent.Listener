@@ -43,9 +43,9 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	
 	public static final String SQL_VIEW = ",\"ROLE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"ROLE\" \"ROLE\"";
-	private String whereClause = " WHERE \"ROLE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ROLE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"ROLE\".\"ID\"";
+	private String whereClause = "  WHERE \"ROLE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ROLE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ROLE\".\"ID\"";
 	
 	
 

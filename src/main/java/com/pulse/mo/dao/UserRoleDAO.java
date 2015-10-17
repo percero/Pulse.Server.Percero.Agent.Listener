@@ -44,9 +44,9 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	public static final String SQL_VIEW = ",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\"";
 	private String selectFromStatementTableName = " FROM \"USER_ROLE\" \"USER_ROLE\"";
-	private String whereClause = " WHERE \"USER_ROLE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_ROLE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"USER_ROLE\".\"ID\"";
+	private String whereClause = "  WHERE \"USER_ROLE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_ROLE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"USER_ROLE\".\"ID\"";
 	
 	
 

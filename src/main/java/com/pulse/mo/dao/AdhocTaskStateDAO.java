@@ -44,9 +44,9 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	
 	public static final String SQL_VIEW = ",\"ADHOC_TASK_STATE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\"";
-	private String whereClause = " WHERE \"ADHOC_TASK_STATE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK_STATE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"ADHOC_TASK_STATE\".\"ID\"";
+	private String whereClause = "  WHERE \"ADHOC_TASK_STATE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK_STATE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ADHOC_TASK_STATE\".\"ID\"";
 	
 	
 

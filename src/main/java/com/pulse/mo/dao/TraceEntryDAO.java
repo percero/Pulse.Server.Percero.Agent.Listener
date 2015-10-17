@@ -45,9 +45,9 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	public static final String SQL_VIEW = ",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\"";
 	private String selectFromStatementTableName = " FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\"";
-	private String whereClause = " WHERE \"TRACE_ENTRY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TRACE_ENTRY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"TRACE_ENTRY\".\"ID\"";
+	private String whereClause = "  WHERE \"TRACE_ENTRY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TRACE_ENTRY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"TRACE_ENTRY\".\"ID\"";
 	
 	
 

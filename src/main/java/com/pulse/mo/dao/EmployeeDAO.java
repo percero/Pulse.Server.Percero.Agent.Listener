@@ -19,23 +19,21 @@ import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.mo.*;
 
 /*
-import com.pulse.mo.Supervisor;
-import com.pulse.mo.TeamLeader;
+import com.pulse.mo.Employee;
 import com.pulse.mo.CorrectiveAction;
-import com.pulse.mo.Supervisor;
 
 */
 
 @Component
-public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements IDataAccessObject<Supervisor> {
+public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataAccessObject<Employee> {
 
-	static final Logger log = Logger.getLogger(SupervisorDAO.class);
+	static final Logger log = Logger.getLogger(EmployeeDAO.class);
 
 	
-	public SupervisorDAO() {
+	public EmployeeDAO() {
 		super();
 		
-		DAORegistry.getInstance().registerDataAccessObject(Supervisor.class.getCanonicalName(), this);
+		DAORegistry.getInstance().registerDataAccessObject(Employee.class.getCanonicalName(), this);
 	}
 
 	
@@ -44,48 +42,48 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\"";
-	private String selectFromStatementTableName = " FROM \"SUPERVISOR\" \"SUPERVISOR\"";
-	private String whereClause = "  WHERE \"SUPERVISOR\".\"ID\"=?";
-	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SUPERVISOR\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"SUPERVISOR\".\"ID\"";
+	public static final String SQL_VIEW = ",\"EMPLOYEE\".\"EMAIL_ADDRESS\",\"EMPLOYEE\".\"FIRST_NAME\",\"EMPLOYEE\".\"FULL_NAME\",\"EMPLOYEE\".\"LAST_NAME\",\"EMPLOYEE\".\"PHOTO_URI\"";
+	private String selectFromStatementTableName = " FROM \"EMPLOYEE\" \"EMPLOYEE\"";
+	private String whereClause = "  WHERE \"EMPLOYEE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"EMPLOYEE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"EMPLOYEE\".\"ID\"";
 	
 	
 
 	
 	@Override
 	protected String getConnectionFactoryName() {
-		return SupervisorDAO.CONNECTION_FACTORY_NAME;
+		return EmployeeDAO.CONNECTION_FACTORY_NAME;
 	}
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -97,56 +95,56 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	@Override
 	protected String getSelectInStarSQL() 
 	{
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"EMPLOYEE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + " WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + " WHERE \"EMPLOYEE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+		return "SELECT \"EMPLOYEE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"LAST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO EMPLOYEE (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"FULL_NAME\",\"LAST_NAME\",\"PHOTO_URI\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_SUPERVISOR\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_EMPLOYEE\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"LAST_NAME\"=?,\"PHOTO_URI\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_SUPERVISOR\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_EMPLOYEE\" WHERE \"ID\"=?";
 	}
 	
 	@Override
-	protected Supervisor extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Supervisor nextResult = new Supervisor();
+	protected Employee extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
+    	Employee nextResult = new Employee();
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
@@ -157,15 +155,11 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
 
-nextResult.setLastName(rs.getString("LAST_NAME"));
-
 nextResult.setFullName(rs.getString("FULL_NAME"));
 
-nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
+nextResult.setLastName(rs.getString("LAST_NAME"));
 
-Supervisor managersupervisor = new Supervisor();
-managersupervisor.setID(rs.getString("MANAGER_SUPERVISOR_ID"));
-nextResult.setManagerSupervisor(managersupervisor);
+nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
 			
@@ -174,37 +168,27 @@ nextResult.setManagerSupervisor(managersupervisor);
     	return nextResult;
 	}
 	
-	protected void setBaseStatmentInsertParams(Supervisor perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Employee perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getEmailAddress());
 pstmt.setString(3, perceroObject.getFirstName());
-pstmt.setString(4, perceroObject.getLastName());
-pstmt.setString(5, perceroObject.getFullName());
+pstmt.setString(4, perceroObject.getFullName());
+pstmt.setString(5, perceroObject.getLastName());
 pstmt.setString(6, perceroObject.getPhotoUri());
-
-if (perceroObject.getManagerSupervisor() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getManagerSupervisor().getID());
-}
-
 
 		
 	}
 	
 	@Override
-	protected void setPreparedStatmentInsertParams(Supervisor perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentInsertParams(Employee perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		setBaseStatmentInsertParams(perceroObject,pstmt);
 		
 	}
 	
 	@Override
-	protected void setCallableStatmentInsertParams(Supervisor perceroObject, CallableStatement pstmt) throws SQLException {
+	protected void setCallableStatmentInsertParams(Employee perceroObject, CallableStatement pstmt) throws SQLException {
 		
 		setBaseStatmentInsertParams(perceroObject,pstmt);
 			
@@ -213,31 +197,21 @@ else
 	}
 	
 	@Override
-	protected void setPreparedStatmentUpdateParams(Supervisor perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentUpdateParams(Employee perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getEmailAddress());
 pstmt.setString(2, perceroObject.getFirstName());
-pstmt.setString(3, perceroObject.getLastName());
-pstmt.setString(4, perceroObject.getFullName());
+pstmt.setString(3, perceroObject.getFullName());
+pstmt.setString(4, perceroObject.getLastName());
 pstmt.setString(5, perceroObject.getPhotoUri());
-
-if (perceroObject.getManagerSupervisor() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getManagerSupervisor().getID());
-}
-
-pstmt.setString(7, perceroObject.getID());
+pstmt.setString(6, perceroObject.getID());
 
 		
 	}
 	
 	
 	@Override
-	protected void setCallableStatmentUpdateParams(Supervisor perceroObject, CallableStatement pstmt) throws SQLException 
+	protected void setCallableStatmentUpdateParams(Employee perceroObject, CallableStatement pstmt) throws SQLException 
 	{
 		
 		//must be in same order as insert
@@ -248,7 +222,7 @@ pstmt.setString(7, perceroObject.getID());
 	
 
 	@Override
-	public List<Supervisor> findByExample(Supervisor theQueryObject,
+	public List<Employee> findByExample(Employee theQueryObject,
 			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
 		{
 			
@@ -286,23 +260,6 @@ paramValues.add(theQueryObject.getFirstName());
 propertyCounter++;
 }
 
-boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
-
-if (useLastName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getLastName());
-propertyCounter++;
-}
-
 boolean useFullName = StringUtils.hasText(theQueryObject.getFullName()) && (excludeProperties == null || !excludeProperties.contains("fullName"));
 
 if (useFullName)
@@ -320,6 +277,23 @@ paramValues.add(theQueryObject.getFullName());
 propertyCounter++;
 }
 
+boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+
+if (useLastName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"LAST_NAME\" =? ";
+paramValues.add(theQueryObject.getLastName());
+propertyCounter++;
+}
+
 boolean usePhotoUri = StringUtils.hasText(theQueryObject.getPhotoUri()) && (excludeProperties == null || !excludeProperties.contains("photoUri"));
 
 if (usePhotoUri)
@@ -334,23 +308,6 @@ sql += " WHERE ";
 }
 sql += " \"PHOTO_URI\" =? ";
 paramValues.add(theQueryObject.getPhotoUri());
-propertyCounter++;
-}
-
-boolean useManagerSupervisorID = theQueryObject.getManagerSupervisor() != null && (excludeProperties == null || !excludeProperties.contains("managerSupervisor"));
-
-if (useManagerSupervisorID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"MANAGER_SUPERVISOR_ID\" =? ";
-paramValues.add(theQueryObject.getManagerSupervisor().getID());
 propertyCounter++;
 }
 
@@ -385,15 +342,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SUPERVISOR(?,?,?,?,?,?,?)}";
+		return "{call UPDATE_EMPLOYEE(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SUPERVISOR(?,?,?,?,?,?,?)}";
+		return "{call CREATE_EMPLOYEE(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_SUPERVISOR(?)}";
+		return "{call Delete_EMPLOYEE(?)}";
 	}
 	
 	

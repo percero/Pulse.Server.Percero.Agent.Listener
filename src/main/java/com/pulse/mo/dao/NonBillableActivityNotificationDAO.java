@@ -43,9 +43,9 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
 	
 	public static final String SQL_VIEW = ",\"NON_BILLABLE_ACTVTY_NOTIF\".\"DATE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\"";
-	private String whereClause = " WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"";
 	
 	
 

@@ -42,7 +42,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
 	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value";

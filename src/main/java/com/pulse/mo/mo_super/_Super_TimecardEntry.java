@@ -250,6 +250,19 @@ public void setActionCode(String actionCode)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="TIMECARD_ACTIVITY_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfTimecardEntry")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private TimecardActivity timecardActivity;
+public TimecardActivity getTimecardActivity() {
+	return this.timecardActivity;
+}
+
+public void setTimecardActivity(TimecardActivity value) {
+	this.timecardActivity = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -273,19 +286,6 @@ public Timecard getTimecard() {
 
 public void setTimecard(Timecard value) {
 	this.timecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="TIMECARD_ACTIVITY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfTimecardEntry")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TimecardActivity timecardActivity;
-public TimecardActivity getTimecardActivity() {
-	return this.timecardActivity;
-}
-
-public void setTimecardActivity(TimecardActivity value) {
-	this.timecardActivity = value;
 }
 
 	
@@ -419,6 +419,18 @@ public void setTimecardActivity(TimecardActivity value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Timecard Activity of Timecard Entry relationship
+objectJson += ",\"timecardActivity\":";
+		if (getTimecardActivity() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getTimecardActivity()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Agent of Timecard Entry relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
@@ -438,18 +450,6 @@ objectJson += ",\"timecard\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getTimecard()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Timecard Activity of Timecard Entry relationship
-objectJson += ",\"timecardActivity\":";
-		if (getTimecardActivity() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getTimecardActivity()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -490,9 +490,9 @@ objectJson += ",\"timecardActivity\":";
 
 		
 		// Source Relationships
+		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.timecard = (Timecard) JsonUtils.getJsonPerceroObject(jsonObject, "timecard");
-		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
 
 
 		// Target Relationships

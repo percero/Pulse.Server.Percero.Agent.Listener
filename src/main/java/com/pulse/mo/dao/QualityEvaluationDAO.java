@@ -45,9 +45,9 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	public static final String SQL_VIEW = ",\"QUALITY_EVALUATION\".\"COACHING_SESSION_ID\",\"QUALITY_EVALUATION\".\"PERFORMANCE_SUMMARY_ID\"";
 	private String selectFromStatementTableName = " FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\"";
-	private String whereClause = " WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
+	private String whereClause = "  WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
 	
 	
 

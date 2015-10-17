@@ -43,9 +43,9 @@ public class CoachingSessionStateDAO extends SqlDataAccessObject<CoachingSession
 	
 	public static final String SQL_VIEW = ",\"COACHING_SESSION_STATE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_SESSION_STATE\" \"COACHING_SESSION_STATE\"";
-	private String whereClause = " WHERE \"COACHING_SESSION_STATE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION_STATE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"COACHING_SESSION_STATE\".\"ID\"";
+	private String whereClause = "  WHERE \"COACHING_SESSION_STATE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION_STATE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"COACHING_SESSION_STATE\".\"ID\"";
 	
 	
 

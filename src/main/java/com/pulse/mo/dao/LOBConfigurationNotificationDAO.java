@@ -43,11 +43,11 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"DATE\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
-	private String whereClause = " WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"LOB_CONFIGURATION_NOTIF\".\"ID\"";
 	
 	
 
@@ -130,12 +130,12 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO LOB_CONFIGURATION_NOTIF (\"ID\",\"DATE\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO LOB_CONFIGURATION_NOTIF (\"ID\",\"TYPE\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_LOB_CONFIGURATION_NOTIF\" SET \"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_LOB_CONFIGURATION_NOTIF\" SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -152,13 +152,13 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 nextResult.setName(rs.getString("NAME"));
-
-nextResult.setType(rs.getString("TYPE"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -182,10 +182,10 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setString(5, perceroObject.getType());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -239,10 +239,10 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfigurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setString(2, perceroObject.getMessage());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getType());
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -302,11 +302,28 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+sql += " WHERE ";
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"DATE\" =? ";
 paramValues.add(theQueryObject.getDate());
 propertyCounter++;
@@ -343,23 +360,6 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

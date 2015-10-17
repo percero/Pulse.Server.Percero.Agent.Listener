@@ -42,11 +42,11 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"IN_PROGRESS_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"NOT_YET_STARTED_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"APPROVED_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"COMPLETE_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"APPROVED_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"COMPLETE_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"IN_PROGRESS_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"NOT_YET_STARTED_STATE_COUNT\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"SHIFT_STATUS_NOTIFICATION\" \"SHIFT_STATUS_NOTIFICATION\"";
-	private String whereClause = " WHERE \"SHIFT_STATUS_NOTIFICATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SHIFT_STATUS_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"SHIFT_STATUS_NOTIFICATION\".\"ID\"";
+	private String whereClause = "  WHERE \"SHIFT_STATUS_NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SHIFT_STATUS_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SHIFT_STATUS_NOTIFICATION\".\"ID\"";
 	
 	
 
@@ -129,12 +129,12 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SHIFT_STATUS_NOTIFICATION (\"ID\",\"RESOLVED\",\"TYPE\",\"IN_PROGRESS_STATE_COUNT\",\"NOT_YET_STARTED_STATE_COUNT\",\"NAME\",\"DATE\",\"SHIFT_END_DATE\",\"APPROVED_STATE_COUNT\",\"COMPLETE_STATE_COUNT\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO SHIFT_STATUS_NOTIFICATION (\"ID\",\"RESOLVED\",\"TYPE\",\"DATE\",\"SHIFT_END_DATE\",\"APPROVED_STATE_COUNT\",\"COMPLETE_STATE_COUNT\",\"IN_PROGRESS_STATE_COUNT\",\"NOT_YET_STARTED_STATE_COUNT\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_SHIFT_STATUS_NOTIFICATION\" SET \"RESOLVED\"=?,\"TYPE\"=?,\"IN_PROGRESS_STATE_COUNT\"=?,\"NOT_YET_STARTED_STATE_COUNT\"=?,\"NAME\"=?,\"DATE\"=?,\"SHIFT_END_DATE\"=?,\"APPROVED_STATE_COUNT\"=?,\"COMPLETE_STATE_COUNT\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_SHIFT_STATUS_NOTIFICATION\" SET \"RESOLVED\"=?,\"TYPE\"=?,\"DATE\"=?,\"SHIFT_END_DATE\"=?,\"APPROVED_STATE_COUNT\"=?,\"COMPLETE_STATE_COUNT\"=?,\"IN_PROGRESS_STATE_COUNT\"=?,\"NOT_YET_STARTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -155,12 +155,6 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 
 nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setInProgressStateCount(rs.getInt("IN_PROGRESS_STATE_COUNT"));
-
-nextResult.setNotYetStartedStateCount(rs.getInt("NOT_YET_STARTED_STATE_COUNT"));
-
-nextResult.setName(rs.getString("NAME"));
-
 nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setShiftEndDate(rs.getDate("SHIFT_END_DATE"));
@@ -168,6 +162,12 @@ nextResult.setShiftEndDate(rs.getDate("SHIFT_END_DATE"));
 nextResult.setApprovedStateCount(rs.getInt("APPROVED_STATE_COUNT"));
 
 nextResult.setCompleteStateCount(rs.getInt("COMPLETE_STATE_COUNT"));
+
+nextResult.setInProgressStateCount(rs.getInt("IN_PROGRESS_STATE_COUNT"));
+
+nextResult.setNotYetStartedStateCount(rs.getInt("NOT_YET_STARTED_STATE_COUNT"));
+
+nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
@@ -185,13 +185,13 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setBoolean(2, perceroObject.getResolved());
 pstmt.setString(3, perceroObject.getType());
-pstmt.setInt(4, perceroObject.getInProgressStateCount());
-pstmt.setInt(5, perceroObject.getNotYetStartedStateCount());
-pstmt.setString(6, perceroObject.getName());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
-pstmt.setInt(9, perceroObject.getApprovedStateCount());
-pstmt.setInt(10, perceroObject.getCompleteStateCount());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
+pstmt.setInt(6, perceroObject.getApprovedStateCount());
+pstmt.setInt(7, perceroObject.getCompleteStateCount());
+pstmt.setInt(8, perceroObject.getInProgressStateCount());
+pstmt.setInt(9, perceroObject.getNotYetStartedStateCount());
+pstmt.setString(10, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -227,13 +227,13 @@ else
 		
 		pstmt.setBoolean(1, perceroObject.getResolved());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setInt(3, perceroObject.getInProgressStateCount());
-pstmt.setInt(4, perceroObject.getNotYetStartedStateCount());
-pstmt.setString(5, perceroObject.getName());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
-pstmt.setInt(8, perceroObject.getApprovedStateCount());
-pstmt.setInt(9, perceroObject.getCompleteStateCount());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
+pstmt.setInt(5, perceroObject.getApprovedStateCount());
+pstmt.setInt(6, perceroObject.getCompleteStateCount());
+pstmt.setInt(7, perceroObject.getInProgressStateCount());
+pstmt.setInt(8, perceroObject.getNotYetStartedStateCount());
+pstmt.setString(9, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -297,57 +297,6 @@ sql += " WHERE ";
 }
 sql += " \"TYPE\" =? ";
 paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useInProgressStateCount = theQueryObject.getInProgressStateCount() != null && (excludeProperties == null || !excludeProperties.contains("inProgressStateCount"));
-
-if (useInProgressStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"IN_PROGRESS_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getInProgressStateCount());
-propertyCounter++;
-}
-
-boolean useNotYetStartedStateCount = theQueryObject.getNotYetStartedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("notYetStartedStateCount"));
-
-if (useNotYetStartedStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NOT_YET_STARTED_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getNotYetStartedStateCount());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
@@ -416,6 +365,57 @@ sql += " WHERE ";
 }
 sql += " \"COMPLETE_STATE_COUNT\" =? ";
 paramValues.add(theQueryObject.getCompleteStateCount());
+propertyCounter++;
+}
+
+boolean useInProgressStateCount = theQueryObject.getInProgressStateCount() != null && (excludeProperties == null || !excludeProperties.contains("inProgressStateCount"));
+
+if (useInProgressStateCount)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"IN_PROGRESS_STATE_COUNT\" =? ";
+paramValues.add(theQueryObject.getInProgressStateCount());
+propertyCounter++;
+}
+
+boolean useNotYetStartedStateCount = theQueryObject.getNotYetStartedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("notYetStartedStateCount"));
+
+if (useNotYetStartedStateCount)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NOT_YET_STARTED_STATE_COUNT\" =? ";
+paramValues.add(theQueryObject.getNotYetStartedStateCount());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 

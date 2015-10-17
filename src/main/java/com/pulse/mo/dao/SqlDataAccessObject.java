@@ -31,6 +31,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	static final Logger log = Logger.getLogger(SqlDataAccessObject.class);
 	
 	public static long LONG_RUNNING_QUERY_TIME = 2500;
+	public static int QUERY_TIMEOUT = 30;
 	
 	public SqlDataAccessObject() {
 		super();
@@ -242,6 +243,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			conn = connectionFactory.getConnection();
 			sql = getInsertIntoSQL();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			setPreparedStatmentInsertParams(perceroObject, pstmt);
 			result = pstmt.executeUpdate();
@@ -320,6 +322,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 
 			int counter = 1;	// PreparedStatement index starts at 1.
 			Iterator<String> itrIds = classIdPairs.getIds().iterator();
@@ -391,6 +394,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
+			stmt.setQueryTimeout(QUERY_TIMEOUT);
 //			String queryString = overlayReadQuery(className, userId,
 //					selectQueryString);
 			
@@ -438,6 +442,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(selectQueryString);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			pstmt.setString(1, id);
 			
 			ResultSet rs = pstmt.executeQuery();
@@ -484,6 +489,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(selectQueryString);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			for(int i=0; i<paramValues.length; i++) {
 				pstmt.setObject(i+1, paramValues[i]);
@@ -551,6 +557,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			if (useLimit) {
 				pstmt.setInt(1, pageSize);
@@ -611,6 +618,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
+			stmt.setQueryTimeout(QUERY_TIMEOUT);
 //			String queryString = overlayReadQuery(className, userId,
 //					selectQueryString);
 			
@@ -691,6 +699,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			conn = connectionFactory.getConnection();
 			sql = getUpdateSet();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			setPreparedStatmentUpdateParams(perceroObject, pstmt);
 			int updateResult = pstmt.executeUpdate();
@@ -734,6 +743,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
+			stmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 	        result = stmt.executeUpdate(sqlStatement);
 			

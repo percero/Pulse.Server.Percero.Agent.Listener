@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
+}/*
 Name
 Notes:
 */
@@ -135,6 +152,27 @@ public void setCorrectiveActions(List<CorrectiveAction> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
+		
+		if (getDescription() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDescription());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
 		
@@ -190,6 +228,8 @@ objectJson += ",\"correctiveActions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 

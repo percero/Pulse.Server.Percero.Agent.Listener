@@ -43,9 +43,9 @@ public class PayrollDetailDAO extends SqlDataAccessObject<PayrollDetail> impleme
 	
 	public static final String SQL_VIEW = ",\"PAYROLL_DETAIL\".\"ASSUMED_OFF\",\"PAYROLL_DETAIL\".\"SHIFT_START_DATE_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_START_END_TIME\",\"PAYROLL_DETAIL\".\"SHIFT_RULE\"";
 	private String selectFromStatementTableName = " FROM \"PAYROLL_DETAIL\" \"PAYROLL_DETAIL\"";
-	private String whereClause = " WHERE \"PAYROLL_DETAIL\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PAYROLL_DETAIL\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"PAYROLL_DETAIL\".\"ID\"";
+	private String whereClause = "  WHERE \"PAYROLL_DETAIL\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PAYROLL_DETAIL\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"PAYROLL_DETAIL\".\"ID\"";
 	
 	
 

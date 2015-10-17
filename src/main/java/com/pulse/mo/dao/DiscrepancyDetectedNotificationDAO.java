@@ -44,9 +44,9 @@ public class DiscrepancyDetectedNotificationDAO extends SqlDataAccessProcObject<
 	
 	public static final String SQL_VIEW = ",\"DISCREPANCY_DETECTED_NOTIF\".\"DATE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"MESSAGE\",\"DISCREPANCY_DETECTED_NOTIF\".\"NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DISCREPANCY_DETECTED_NOTIF\".\"TYPE\",\"DISCREPANCY_DETECTED_NOTIF\".\"AGENT_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DISCREPANCY_DETECTED_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"DISCREPANCY_DETECTED_NOTIF\" \"DISCREPANCY_DETECTED_NOTIF\"";
-	private String whereClause = " WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"DISCREPANCY_DETECTED_NOTIF\".\"ID\"";
 	
 	
 

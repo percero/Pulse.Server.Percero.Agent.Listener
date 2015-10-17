@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Supervisor extends BaseDataObject implements Serializable
+public class _Super_Employee extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Supervisor extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Supervisor
+	Keys of Employee
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+FirstName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String firstName;
+
+public String getFirstName() 
+{
+	return this.firstName;
+}
+
+public void setFirstName(String firstName)
+{
+	this.firstName = firstName;
+}/*
 PhotoUri
 Notes:
 */
@@ -101,23 +118,6 @@ public String getPhotoUri()
 public void setPhotoUri(String photoUri)
 {
 	this.photoUri = photoUri;
-}/*
-FullName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String fullName;
-
-public String getFullName() 
-{
-	return this.fullName;
-}
-
-public void setFullName(String fullName)
-{
-	this.fullName = fullName;
 }/*
 LastName
 Notes:
@@ -153,22 +153,22 @@ public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
 }/*
-FirstName
+FullName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String firstName;
+private String fullName;
 
-public String getFirstName() 
+public String getFullName() 
 {
-	return this.firstName;
+	return this.fullName;
 }
 
-public void setFirstName(String firstName)
+public void setFullName(String fullName)
 {
-	this.firstName = firstName;
+	this.fullName = fullName;
 }
 
 	//////////////////////////////////////////////////////
@@ -177,41 +177,40 @@ public void setFirstName(String firstName)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=TeamLeader.class, mappedBy="supervisor", cascade=javax.persistence.CascadeType.REMOVE)
-private List<TeamLeader> teamLeaders;
-public List<TeamLeader> getTeamLeaders() {
-	return this.teamLeaders;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="managerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CorrectiveAction> managerCorrectiveActions;
+public List<CorrectiveAction> getManagerCorrectiveActions() {
+	return this.managerCorrectiveActions;
 }
 
-public void setTeamLeaders(List<TeamLeader> value) {
-	this.teamLeaders = value;
-}
-
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@com.percero.agents.sync.metadata.annotations.Externalize
-@OneToOne(fetch=FetchType.LAZY, mappedBy="supervisor", cascade=javax.persistence.CascadeType.REMOVE)
-private CorrectiveAction correctiveAction;
-public CorrectiveAction getCorrectiveAction() {
-	return this.correctiveAction;
-}
-
-public void setCorrectiveAction(CorrectiveAction value) 
-{
-	this.correctiveAction = value;
+public void setManagerCorrectiveActions(List<CorrectiveAction> value) {
+	this.managerCorrectiveActions = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Supervisor.class, mappedBy="managerSupervisor", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Supervisor> subordinateSupervisors;
-public List<Supervisor> getSubordinateSupervisors() {
-	return this.subordinateSupervisors;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="supervisorManagerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CorrectiveAction> supervisorCorrectiveActions;
+public List<CorrectiveAction> getSupervisorCorrectiveActions() {
+	return this.supervisorCorrectiveActions;
 }
 
-public void setSubordinateSupervisors(List<Supervisor> value) {
-	this.subordinateSupervisors = value;
+public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
+	this.supervisorCorrectiveActions = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="hREmployee", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CorrectiveAction> hRCorrectiveActions;
+public List<CorrectiveAction> getHRCorrectiveActions() {
+	return this.hRCorrectiveActions;
+}
+
+public void setHRCorrectiveActions(List<CorrectiveAction> value) {
+	this.hRCorrectiveActions = value;
 }
 
 
@@ -219,20 +218,7 @@ public void setSubordinateSupervisors(List<Supervisor> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="MANAGER_SUPERVISOR_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ManagerSupervisorOfSubordinateSupervisor")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Supervisor managerSupervisor;
-public Supervisor getManagerSupervisor() {
-	return this.managerSupervisor;
-}
-
-public void setManagerSupervisor(Supervisor value) {
-	this.managerSupervisor = value;
-}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -243,16 +229,16 @@ public void setManagerSupervisor(Supervisor value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Photo Uri property
-		objectJson += ",\"photoUri\":";
+		//Retrieve value of the First Name property
+		objectJson += ",\"firstName\":";
 		
-		if (getPhotoUri() == null)
+		if (getFirstName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getPhotoUri());
+				objectJson += objectMapper.writeValueAsString(getFirstName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -264,16 +250,16 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Full Name property
-		objectJson += ",\"fullName\":";
+		//Retrieve value of the Photo Uri property
+		objectJson += ",\"photoUri\":";
 		
-		if (getFullName() == null)
+		if (getPhotoUri() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getFullName());
+				objectJson += objectMapper.writeValueAsString(getPhotoUri());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -327,16 +313,16 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the First Name property
-		objectJson += ",\"firstName\":";
+		//Retrieve value of the Full Name property
+		objectJson += ",\"fullName\":";
 		
-		if (getFirstName() == null)
+		if (getFullName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getFirstName());
+				objectJson += objectMapper.writeValueAsString(getFullName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -351,51 +337,54 @@ public void setManagerSupervisor(Supervisor value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Manager Supervisor of Subordinate Supervisor relationship
-objectJson += ",\"managerSupervisor\":";
-		if (getManagerSupervisor() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getManagerSupervisor()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
-//Retrieve value of the Supervisor of Team Leader relationship
-objectJson += ",\"teamLeaders\":[";
+//Retrieve value of the Manager Employee of Manager Corrective Action relationship
+objectJson += ",\"managerCorrectiveActions\":[";
 		
-		if (getTeamLeaders() != null) {
-			int teamLeadersCounter = 0;
-			for(TeamLeader nextTeamLeaders : getTeamLeaders()) {
-				if (teamLeadersCounter > 0)
+		if (getManagerCorrectiveActions() != null) {
+			int managerCorrectiveActionsCounter = 0;
+			for(CorrectiveAction nextManagerCorrectiveActions : getManagerCorrectiveActions()) {
+				if (managerCorrectiveActionsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextTeamLeaders).toEmbeddedJson();
-					teamLeadersCounter++;
+					objectJson += ((BaseDataObject) nextManagerCorrectiveActions).toEmbeddedJson();
+					managerCorrectiveActionsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Supervisor of Corrective Action relationship
-
-//Retrieve value of the Manager Supervisor of Subordinate Supervisor relationship
-objectJson += ",\"subordinateSupervisors\":[";
+//Retrieve value of the Supervisor Manager Employee of Supervisor Corrective Action relationship
+objectJson += ",\"supervisorCorrectiveActions\":[";
 		
-		if (getSubordinateSupervisors() != null) {
-			int subordinateSupervisorsCounter = 0;
-			for(Supervisor nextSubordinateSupervisors : getSubordinateSupervisors()) {
-				if (subordinateSupervisorsCounter > 0)
+		if (getSupervisorCorrectiveActions() != null) {
+			int supervisorCorrectiveActionsCounter = 0;
+			for(CorrectiveAction nextSupervisorCorrectiveActions : getSupervisorCorrectiveActions()) {
+				if (supervisorCorrectiveActionsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextSubordinateSupervisors).toEmbeddedJson();
-					subordinateSupervisorsCounter++;
+					objectJson += ((BaseDataObject) nextSupervisorCorrectiveActions).toEmbeddedJson();
+					supervisorCorrectiveActionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the HR Employee of HR Corrective Action relationship
+objectJson += ",\"hRCorrectiveActions\":[";
+		
+		if (getHRCorrectiveActions() != null) {
+			int hRCorrectiveActionsCounter = 0;
+			for(CorrectiveAction nextHRCorrectiveActions : getHRCorrectiveActions()) {
+				if (hRCorrectiveActionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextHRCorrectiveActions).toEmbeddedJson();
+					hRCorrectiveActionsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -413,26 +402,25 @@ objectJson += ",\"subordinateSupervisors\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the First Name property
+		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
-		//From value of the Full Name property
-		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
 		//From value of the Last Name property
 		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
 		//From value of the Email Address property
 		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the First Name property
-		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
+		//From value of the Full Name property
+		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
 
 		
 		// Source Relationships
-		this.managerSupervisor = (Supervisor) JsonUtils.getJsonPerceroObject(jsonObject, "managerSupervisor");
 
 
 		// Target Relationships
-		this.teamLeaders = (List<TeamLeader>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaders");
-		this.correctiveAction = (CorrectiveAction) JsonUtils.getJsonPerceroObject(jsonObject, "correctiveAction");
-		this.subordinateSupervisors = (List<Supervisor>) JsonUtils.getJsonListPerceroObject(jsonObject, "subordinateSupervisors");
+		this.managerCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "managerCorrectiveActions");
+		this.supervisorCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "supervisorCorrectiveActions");
+		this.hRCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "hRCorrectiveActions");
 
 
 	}
@@ -442,8 +430,9 @@ objectJson += ",\"subordinateSupervisors\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(TeamLeader.class, "supervisor"));
-		listSetters.add(MappedClass.getFieldSetters(Supervisor.class, "supervisor"));
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
 
 		
 		return listSetters;

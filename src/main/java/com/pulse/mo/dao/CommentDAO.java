@@ -19,21 +19,21 @@ import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.mo.*;
 
 /*
-import com.pulse.mo.CoachingComment;
+import com.pulse.mo.Comment;
 import com.pulse.mo.AdhocCoachingSession;
 
 */
 
 @Component
-public class CoachingCommentDAO extends SqlDataAccessObject<CoachingComment> implements IDataAccessObject<CoachingComment> {
+public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAccessObject<Comment> {
 
-	static final Logger log = Logger.getLogger(CoachingCommentDAO.class);
+	static final Logger log = Logger.getLogger(CommentDAO.class);
 
 	
-	public CoachingCommentDAO() {
+	public CommentDAO() {
 		super();
 		
-		DAORegistry.getInstance().registerDataAccessObject(CoachingComment.class.getCanonicalName(), this);
+		DAORegistry.getInstance().registerDataAccessObject(Comment.class.getCanonicalName(), this);
 	}
 
 	
@@ -42,48 +42,48 @@ public class CoachingCommentDAO extends SqlDataAccessObject<CoachingComment> imp
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_COMMENT\".\"COMMENT\",\"COACHING_COMMENT\".\"ADHOC_COACHING_SESSION_ID\"";
-	private String selectFromStatementTableName = " FROM \"COACHING_COMMENT\" \"COACHING_COMMENT\"";
-	private String whereClause = " WHERE \"COACHING_COMMENT\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_COMMENT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"COACHING_COMMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"COMMENT\".\"DESCRIPTION\",\"COMMENT\".\"DATE\",\"COMMENT\".\"ADHOC_COACHING_SESSION_ID\"";
+	private String selectFromStatementTableName = " FROM \"COMMENT\" \"COMMENT\"";
+	private String whereClause = "  WHERE \"COMMENT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COMMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"COMMENT\".\"ID\"";
 	
 	
 
 	
 	@Override
 	protected String getConnectionFactoryName() {
-		return CoachingCommentDAO.CONNECTION_FACTORY_NAME;
+		return CommentDAO.CONNECTION_FACTORY_NAME;
 	}
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -95,63 +95,65 @@ public class CoachingCommentDAO extends SqlDataAccessObject<CoachingComment> imp
 	@Override
 	protected String getSelectInStarSQL() 
 	{
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_COMMENT\"." + joinColumnName + "=?";
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_COMMENT (\"ID\",\"COMMENT\",\"ADHOC_COACHING_SESSION_ID\") VALUES (?,?,?)";
+		return "INSERT INTO COMMENT (\"ID\",\"DESCRIPTION\",\"DATE\",\"ADHOC_COACHING_SESSION_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_COACHING_COMMENT\" SET \"COMMENT\"=?,\"ADHOC_COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_COMMENT\" SET \"DESCRIPTION\"=?,\"DATE\"=?,\"ADHOC_COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_COACHING_COMMENT\" WHERE \"ID\"=?";
+		return "DELETE FROM \"TBL_COMMENT\" WHERE \"ID\"=?";
 	}
 	
 	@Override
-	protected CoachingComment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	CoachingComment nextResult = new CoachingComment();
+	protected Comment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
+    	Comment nextResult = new Comment();
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			nextResult.setComment(rs.getString("COMMENT"));
+			nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setDate(rs.getDate("DATE"));
 
 AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
 adhoccoachingsession.setID(rs.getString("ADHOC_COACHING_SESSION_ID"));
@@ -164,10 +166,46 @@ nextResult.setAdhocCoachingSession(adhoccoachingsession);
     	return nextResult;
 	}
 	
-	protected void setBaseStatmentInsertParams(CoachingComment perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getComment());
+pstmt.setString(2, perceroObject.getDescription());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+
+if (perceroObject.getAdhocCoachingSession() == null)
+{
+pstmt.setString(4, null);
+}
+else
+{
+		pstmt.setString(4, perceroObject.getAdhocCoachingSession().getID());
+}
+
+
+		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(Comment perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
+	}
+	
+	@Override
+	protected void setPreparedStatmentUpdateParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getDescription());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 
 if (perceroObject.getAdhocCoachingSession() == null)
 {
@@ -178,48 +216,14 @@ else
 		pstmt.setString(3, perceroObject.getAdhocCoachingSession().getID());
 }
 
-
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentInsertParams(CoachingComment perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-		
-	}
-	
-	@Override
-	protected void setCallableStatmentInsertParams(CoachingComment perceroObject, CallableStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	
-
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(CoachingComment perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getComment());
-
-if (perceroObject.getAdhocCoachingSession() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getAdhocCoachingSession().getID());
-}
-
-pstmt.setString(3, perceroObject.getID());
+pstmt.setString(4, perceroObject.getID());
 
 		
 	}
 	
 	
 	@Override
-	protected void setCallableStatmentUpdateParams(CoachingComment perceroObject, CallableStatement pstmt) throws SQLException 
+	protected void setCallableStatmentUpdateParams(Comment perceroObject, CallableStatement pstmt) throws SQLException 
 	{
 		
 		//must be in same order as insert
@@ -230,7 +234,7 @@ pstmt.setString(3, perceroObject.getID());
 	
 
 	@Override
-	public List<CoachingComment> findByExample(CoachingComment theQueryObject,
+	public List<Comment> findByExample(Comment theQueryObject,
 			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
 		{
 			
@@ -241,13 +245,30 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useComment = StringUtils.hasText(theQueryObject.getComment()) && (excludeProperties == null || !excludeProperties.contains("comment"));
+		boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
 
-if (useComment)
+if (useDescription)
 {
 sql += " WHERE ";
-sql += " \"COMMENT\" =? ";
-paramValues.add(theQueryObject.getComment());
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+
+if (useDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DATE\" =? ";
+paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
@@ -299,15 +320,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_COMMENT(?,?,?)}";
+		return "{call UPDATE_COMMENT(?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_COMMENT(?,?,?)}";
+		return "{call CREATE_COMMENT(?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_COACHING_COMMENT(?)}";
+		return "{call Delete_COMMENT(?)}";
 	}
 	
 	

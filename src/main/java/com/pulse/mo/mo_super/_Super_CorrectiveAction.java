@@ -102,40 +102,6 @@ public void setSupervisorComment(String supervisorComment)
 {
 	this.supervisorComment = supervisorComment;
 }/*
-CorrectiveActionTypeName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String correctiveActionTypeName;
-
-public String getCorrectiveActionTypeName() 
-{
-	return this.correctiveActionTypeName;
-}
-
-public void setCorrectiveActionTypeName(String correctiveActionTypeName)
-{
-	this.correctiveActionTypeName = correctiveActionTypeName;
-}/*
-CorrectiveActionStateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String correctiveActionStateName;
-
-public String getCorrectiveActionStateName() 
-{
-	return this.correctiveActionStateName;
-}
-
-public void setCorrectiveActionStateName(String correctiveActionStateName)
-{
-	this.correctiveActionStateName = correctiveActionStateName;
-}/*
 CompletionDate
 Notes:
 */
@@ -169,57 +135,6 @@ public String getEmployeeComment()
 public void setEmployeeComment(String employeeComment)
 {
 	this.employeeComment = employeeComment;
-}/*
-NextStepsMessage
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String nextStepsMessage;
-
-public String getNextStepsMessage() 
-{
-	return this.nextStepsMessage;
-}
-
-public void setNextStepsMessage(String nextStepsMessage)
-{
-	this.nextStepsMessage = nextStepsMessage;
-}/*
-AgentFirstName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String agentFirstName;
-
-public String getAgentFirstName() 
-{
-	return this.agentFirstName;
-}
-
-public void setAgentFirstName(String agentFirstName)
-{
-	this.agentFirstName = agentFirstName;
-}/*
-MessageReason
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String messageReason;
-
-public String getMessageReason() 
-{
-	return this.messageReason;
-}
-
-public void setMessageReason(String messageReason)
-{
-	this.messageReason = messageReason;
 }/*
 Details
 Notes:
@@ -255,39 +170,39 @@ public void setCompletionStatus(String completionStatus)
 {
 	this.completionStatus = completionStatus;
 }/*
-AgentLastName
+ManagerApprovalDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String agentLastName;
+private Date managerApprovalDate;
 
-public String getAgentLastName() 
+public Date getManagerApprovalDate() 
 {
-	return this.agentLastName;
+	return this.managerApprovalDate;
 }
 
-public void setAgentLastName(String agentLastName)
+public void setManagerApprovalDate(Date managerApprovalDate)
 {
-	this.agentLastName = agentLastName;
+	this.managerApprovalDate = managerApprovalDate;
 }/*
-LOBName
+SupervisorACKDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String lOBName;
+private Date supervisorACKDate;
 
-public String getLOBName() 
+public Date getSupervisorACKDate() 
 {
-	return this.lOBName;
+	return this.supervisorACKDate;
 }
 
-public void setLOBName(String lOBName)
+public void setSupervisorACKDate(Date supervisorACKDate)
 {
-	this.lOBName = lOBName;
+	this.supervisorACKDate = supervisorACKDate;
 }/*
 SupervisorName
 Notes:
@@ -306,39 +221,22 @@ public void setSupervisorName(String supervisorName)
 {
 	this.supervisorName = supervisorName;
 }/*
-AgentEmployeeId
+HRApprovalDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String agentEmployeeId;
+private Date hRApprovalDate;
 
-public String getAgentEmployeeId() 
+public Date getHRApprovalDate() 
 {
-	return this.agentEmployeeId;
+	return this.hRApprovalDate;
 }
 
-public void setAgentEmployeeId(String agentEmployeeId)
+public void setHRApprovalDate(Date hRApprovalDate)
 {
-	this.agentEmployeeId = agentEmployeeId;
-}/*
-Message
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String message;
-
-public String getMessage() 
-{
-	return this.message;
-}
-
-public void setMessage(String message)
-{
-	this.message = message;
+	this.hRApprovalDate = hRApprovalDate;
 }
 
 	//////////////////////////////////////////////////////
@@ -391,59 +289,56 @@ public void setAgent(Agent value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="EMPLOYEE_ACKNOWLEDGEMENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_EmployeeAcknowledgementOfCorrectiveAction")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private EmployeeAcknowledgement employeeAcknowledgement;
-public EmployeeAcknowledgement getEmployeeAcknowledgement() {
-	return this.employeeAcknowledgement;
+@JoinColumn(name="MANAGER_EMPLOYEE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ManagerEmployeeOfManagerCorrectiveAction")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Employee managerEmployee;
+public Employee getManagerEmployee() {
+	return this.managerEmployee;
 }
 
-public void setEmployeeAcknowledgement(EmployeeAcknowledgement value) 
-{
-	this.employeeAcknowledgement = value;
+public void setManagerEmployee(Employee value) {
+	this.managerEmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="HR_APPROVAL_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_HRApprovalOfCorrectiveAction")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private HRApproval hRApproval;
-public HRApproval getHRApproval() {
-	return this.hRApproval;
+@JoinColumn(name="SUPERVISORMANAGER_EMPLOYEE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_SupervisorManagerEmployeeOfSupervisorCorrectiveAction")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Employee supervisorManagerEmployee;
+public Employee getSupervisorManagerEmployee() {
+	return this.supervisorManagerEmployee;
 }
 
-public void setHRApproval(HRApproval value) 
-{
-	this.hRApproval = value;
+public void setSupervisorManagerEmployee(Employee value) {
+	this.supervisorManagerEmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="MANAGER_APPROVAL_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ManagerApprovalOfCorrectiveAction")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private ManagerApproval managerApproval;
-public ManagerApproval getManagerApproval() {
-	return this.managerApproval;
+@JoinColumn(name="HR_EMPLOYEE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_HREmployeeOfHRCorrectiveAction")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Employee hREmployee;
+public Employee getHREmployee() {
+	return this.hREmployee;
 }
 
-public void setManagerApproval(ManagerApproval value) 
-{
-	this.managerApproval = value;
+public void setHREmployee(Employee value) {
+	this.hREmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="SUPERVISOR_ACKNOWLEDGEMENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_SupervisorAcknowledgementOfCorrectiveAction")
+@JoinColumn(name="SUPERVISOR_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_SupervisorOfCorrectiveAction")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
-private SupervisorAcknowledgement supervisorAcknowledgement;
-public SupervisorAcknowledgement getSupervisorAcknowledgement() {
-	return this.supervisorAcknowledgement;
+private Supervisor supervisor;
+public Supervisor getSupervisor() {
+	return this.supervisor;
 }
 
-public void setSupervisorAcknowledgement(SupervisorAcknowledgement value) 
+public void setSupervisor(Supervisor value) 
 {
-	this.supervisorAcknowledgement = value;
+	this.supervisor = value;
 }
 
 	
@@ -476,48 +371,6 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Corrective Action Type Name property
-		objectJson += ",\"correctiveActionTypeName\":";
-		
-		if (getCorrectiveActionTypeName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCorrectiveActionTypeName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Corrective Action State Name property
-		objectJson += ",\"correctiveActionStateName\":";
-		
-		if (getCorrectiveActionStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCorrectiveActionStateName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Completion Date property
 		objectJson += ",\"completionDate\":";
 		if (getCompletionDate() == null)
@@ -535,69 +388,6 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEmployeeComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Next Steps Message property
-		objectJson += ",\"nextStepsMessage\":";
-		
-		if (getNextStepsMessage() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getNextStepsMessage());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Agent First Name property
-		objectJson += ",\"agentFirstName\":";
-		
-		if (getAgentFirstName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAgentFirstName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Message Reason property
-		objectJson += ",\"messageReason\":";
-		
-		if (getMessageReason() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getMessageReason());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -651,47 +441,19 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Agent Last Name property
-		objectJson += ",\"agentLastName\":";
-		
-		if (getAgentLastName() == null)
+		//Retrieve value of the Manager Approval Date property
+		objectJson += ",\"managerApprovalDate\":";
+		if (getManagerApprovalDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAgentLastName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getManagerApprovalDate().getTime();
 		}
-		//Retrieve value of the LOB Name property
-		objectJson += ",\"lOBName\":";
-		
-		if (getLOBName() == null)
+		//Retrieve value of the Supervisor ACK Date property
+		objectJson += ",\"supervisorACKDate\":";
+		if (getSupervisorACKDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLOBName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getSupervisorACKDate().getTime();
 		}
 		//Retrieve value of the Supervisor Name property
 		objectJson += ",\"supervisorName\":";
@@ -714,47 +476,12 @@ public void setSupervisorAcknowledgement(SupervisorAcknowledgement value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Agent Employee Id property
-		objectJson += ",\"agentEmployeeId\":";
-		
-		if (getAgentEmployeeId() == null)
+		//Retrieve value of the HR Approval Date property
+		objectJson += ",\"hRApprovalDate\":";
+		if (getHRApprovalDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAgentEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Message property
-		objectJson += ",\"message\":";
-		
-		if (getMessage() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getMessage());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getHRApprovalDate().getTime();
 		}
 
 				
@@ -795,49 +522,49 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Employee Acknowledgement of Corrective Action relationship
-objectJson += ",\"employeeAcknowledgement\":";
-		if (getEmployeeAcknowledgement() == null)
+//Retrieve value of the Manager Employee of Manager Corrective Action relationship
+objectJson += ",\"managerEmployee\":";
+		if (getManagerEmployee() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getEmployeeAcknowledgement()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getManagerEmployee()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the HR Approval of Corrective Action relationship
-objectJson += ",\"hRApproval\":";
-		if (getHRApproval() == null)
+//Retrieve value of the Supervisor Manager Employee of Supervisor Corrective Action relationship
+objectJson += ",\"supervisorManagerEmployee\":";
+		if (getSupervisorManagerEmployee() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getHRApproval()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getSupervisorManagerEmployee()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Manager Approval of Corrective Action relationship
-objectJson += ",\"managerApproval\":";
-		if (getManagerApproval() == null)
+//Retrieve value of the HR Employee of HR Corrective Action relationship
+objectJson += ",\"hREmployee\":";
+		if (getHREmployee() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getManagerApproval()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getHREmployee()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Supervisor Acknowledgement of Corrective Action relationship
-objectJson += ",\"supervisorAcknowledgement\":";
-		if (getSupervisorAcknowledgement() == null)
+//Retrieve value of the Supervisor of Corrective Action relationship
+objectJson += ",\"supervisor\":";
+		if (getSupervisor() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getSupervisorAcknowledgement()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getSupervisor()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -859,44 +586,32 @@ objectJson += ",\"supervisorAcknowledgement\":";
 		// Properties
 		//From value of the Supervisor Comment property
 		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
-		//From value of the Corrective Action Type Name property
-		setCorrectiveActionTypeName(JsonUtils.getJsonString(jsonObject, "correctiveActionTypeName"));
-		//From value of the Corrective Action State Name property
-		setCorrectiveActionStateName(JsonUtils.getJsonString(jsonObject, "correctiveActionStateName"));
 		//From value of the Completion Date property
 		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
 		//From value of the Employee Comment property
 		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
-		//From value of the Next Steps Message property
-		setNextStepsMessage(JsonUtils.getJsonString(jsonObject, "nextStepsMessage"));
-		//From value of the Agent First Name property
-		setAgentFirstName(JsonUtils.getJsonString(jsonObject, "agentFirstName"));
-		//From value of the Message Reason property
-		setMessageReason(JsonUtils.getJsonString(jsonObject, "messageReason"));
 		//From value of the Details property
 		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
 		//From value of the Completion Status property
 		setCompletionStatus(JsonUtils.getJsonString(jsonObject, "completionStatus"));
-		//From value of the Agent Last Name property
-		setAgentLastName(JsonUtils.getJsonString(jsonObject, "agentLastName"));
-		//From value of the LOB Name property
-		setLOBName(JsonUtils.getJsonString(jsonObject, "lOBName"));
+		//From value of the Manager Approval Date property
+		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
+		//From value of the Supervisor ACK Date property
+		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
 		//From value of the Supervisor Name property
 		setSupervisorName(JsonUtils.getJsonString(jsonObject, "supervisorName"));
-		//From value of the Agent Employee Id property
-		setAgentEmployeeId(JsonUtils.getJsonString(jsonObject, "agentEmployeeId"));
-		//From value of the Message property
-		setMessage(JsonUtils.getJsonString(jsonObject, "message"));
+		//From value of the HR Approval Date property
+		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
 
 		
 		// Source Relationships
 		this.correctiveActionState = (CorrectiveActionState) JsonUtils.getJsonPerceroObject(jsonObject, "correctiveActionState");
 		this.correctiveActionType = (CorrectiveActionType) JsonUtils.getJsonPerceroObject(jsonObject, "correctiveActionType");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
-		this.employeeAcknowledgement = (EmployeeAcknowledgement) JsonUtils.getJsonPerceroObject(jsonObject, "employeeAcknowledgement");
-		this.hRApproval = (HRApproval) JsonUtils.getJsonPerceroObject(jsonObject, "hRApproval");
-		this.managerApproval = (ManagerApproval) JsonUtils.getJsonPerceroObject(jsonObject, "managerApproval");
-		this.supervisorAcknowledgement = (SupervisorAcknowledgement) JsonUtils.getJsonPerceroObject(jsonObject, "supervisorAcknowledgement");
+		this.managerEmployee = (Employee) JsonUtils.getJsonPerceroObject(jsonObject, "managerEmployee");
+		this.supervisorManagerEmployee = (Employee) JsonUtils.getJsonPerceroObject(jsonObject, "supervisorManagerEmployee");
+		this.hREmployee = (Employee) JsonUtils.getJsonPerceroObject(jsonObject, "hREmployee");
+		this.supervisor = (Supervisor) JsonUtils.getJsonPerceroObject(jsonObject, "supervisor");
 
 
 		// Target Relationships

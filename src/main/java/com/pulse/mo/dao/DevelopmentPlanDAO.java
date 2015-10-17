@@ -44,9 +44,9 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	public static final String SQL_VIEW = ",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\"";
-	private String whereClause = " WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_PLAN\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"DEVELOPMENT_PLAN\".\"ID\"";
+	private String whereClause = "  WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_PLAN\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"DEVELOPMENT_PLAN\".\"ID\"";
 	
 	
 

@@ -43,9 +43,9 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	
 	public static final String SQL_VIEW = ",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"DATE\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\"";
-	private String whereClause = " WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_DURATION_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\"";
+	private String whereClause = "  WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_DURATION_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"WORK_DURATION_NOTIFICATION\".\"ID\"";
 	
 	
 

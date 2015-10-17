@@ -44,9 +44,9 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	
 	public static final String SQL_VIEW = ",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"SETTING\" \"SETTING\"";
-	private String whereClause = " WHERE \"SETTING\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SETTING\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"SETTING\".\"ID\"";
+	private String whereClause = "  WHERE \"SETTING\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SETTING\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SETTING\".\"ID\"";
 	
 	
 

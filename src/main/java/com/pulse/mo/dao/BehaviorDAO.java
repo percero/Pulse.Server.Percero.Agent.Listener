@@ -44,9 +44,9 @@ public class BehaviorDAO extends SqlDataAccessObject<Behavior> implements IDataA
 	
 	public static final String SQL_VIEW = ",\"BEHAVIOR\".\"DESCRIPTION\",\"BEHAVIOR\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"BEHAVIOR\" \"BEHAVIOR\"";
-	private String whereClause = " WHERE \"BEHAVIOR\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"BEHAVIOR\".\"ID\"";
+	private String whereClause = "  WHERE \"BEHAVIOR\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"BEHAVIOR\".\"ID\"";
 	
 	
 

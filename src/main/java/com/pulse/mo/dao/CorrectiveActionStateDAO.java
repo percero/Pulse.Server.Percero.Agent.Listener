@@ -44,9 +44,9 @@ public class CorrectiveActionStateDAO extends SqlDataAccessObject<CorrectiveActi
 	
 	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION_STATE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION_STATE\" \"CORRECTIVE_ACTION_STATE\"";
-	private String whereClause = " WHERE \"CORRECTIVE_ACTION_STATE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION_STATE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"CORRECTIVE_ACTION_STATE\".\"ID\"";
+	private String whereClause = "  WHERE \"CORRECTIVE_ACTION_STATE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION_STATE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION_STATE\".\"ID\"";
 	
 	
 

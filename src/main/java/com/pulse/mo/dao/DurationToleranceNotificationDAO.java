@@ -43,9 +43,9 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 	
 	public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"DATE\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_TOLERANCE_NOTIF\" \"DURATION_TOLERANCE_NOTIF\"";
-	private String whereClause = " WHERE \"DURATION_TOLERANCE_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"DURATION_TOLERANCE_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"DURATION_TOLERANCE_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"DURATION_TOLERANCE_NOTIF\".\"ID\"";
 	
 	
 

@@ -44,9 +44,9 @@ public class PerformanceSummaryDAO extends SqlDataAccessObject<PerformanceSummar
 	
 	public static final String SQL_VIEW = ",\"PERFORMANCE_SUMMARY\".\"WEEK_DATE\",\"PERFORMANCE_SUMMARY\".\"CURRENT_MTD_SCORE\",\"PERFORMANCE_SUMMARY\".\"CURRENT_MTD_TREND\",\"PERFORMANCE_SUMMARY\".\"PREVIOUS_MTD_SCORE\",\"PERFORMANCE_SUMMARY\".\"PREVIOUS_MTD_TREND\",\"PERFORMANCE_SUMMARY\".\"WEEKLY_OVERVIEW_SCORE\",\"PERFORMANCE_SUMMARY\".\"WEEKLY_TREND\"";
 	private String selectFromStatementTableName = " FROM \"PERFORMANCE_SUMMARY\" \"PERFORMANCE_SUMMARY\"";
-	private String whereClause = " WHERE \"PERFORMANCE_SUMMARY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PERFORMANCE_SUMMARY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"PERFORMANCE_SUMMARY\".\"ID\"";
+	private String whereClause = "  WHERE \"PERFORMANCE_SUMMARY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PERFORMANCE_SUMMARY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"PERFORMANCE_SUMMARY\".\"ID\"";
 	
 	
 

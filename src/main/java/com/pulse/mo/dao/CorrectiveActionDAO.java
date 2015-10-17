@@ -23,10 +23,8 @@ import com.pulse.mo.CorrectiveAction;
 import com.pulse.mo.CorrectiveActionState;
 import com.pulse.mo.CorrectiveActionType;
 import com.pulse.mo.Agent;
-import com.pulse.mo.EmployeeAcknowledgement;
-import com.pulse.mo.HRApproval;
-import com.pulse.mo.ManagerApproval;
-import com.pulse.mo.SupervisorAcknowledgement;
+import com.pulse.mo.Employee;
+import com.pulse.mo.Supervisor;
 
 */
 
@@ -48,11 +46,11 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_NAME\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_NAME\",\"CORRECTIVE_ACTION\".\"LOB_NAME\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_COMMENT\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_NAME\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"AGENT_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_FIRST_NAME\",\"CORRECTIVE_ACTION\".\"AGENT_LAST_NAME\",\"CORRECTIVE_ACTION\".\"COMPLETION_STATUS\",\"CORRECTIVE_ACTION\".\"DETAILS\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_COMMENT\",\"CORRECTIVE_ACTION\".\"MESSAGE\",\"CORRECTIVE_ACTION\".\"MESSAGE_REASON\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS_MESSAGE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACKNOWLEDGEMENT_ID\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_ID\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_ACKNOWLEDGEMENT_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_ID\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"SUPERVISOR_NAME\",\"CORRECTIVE_ACTION\".\"COMPLETION_STATUS\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_COMMENT\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"DETAILS\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_COMMENT\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISORMANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION\" \"CORRECTIVE_ACTION\"";
-	private String whereClause = " WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"CORRECTIVE_ACTION\".\"ID\"";
+	private String whereClause = "  WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION\".\"ID\"";
 	
 	
 
@@ -135,12 +133,12 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO CORRECTIVE_ACTION (\"ID\",\"CORRECTIVE_ACTION_STATE_NAME\",\"CORRECTIVE_ACTION_TYPE_NAME\",\"LOB_NAME\",\"SUPERVISOR_COMMENT\",\"SUPERVISOR_NAME\",\"COMPLETION_DATE\",\"AGENT_EMPLOYEE_ID\",\"AGENT_FIRST_NAME\",\"AGENT_LAST_NAME\",\"COMPLETION_STATUS\",\"DETAILS\",\"EMPLOYEE_COMMENT\",\"MESSAGE\",\"MESSAGE_REASON\",\"NEXT_STEPS_MESSAGE\",\"SUPERVISOR_ACKNOWLEDGEMENT_ID\",\"HR_APPROVAL_ID\",\"EMPLOYEE_ACKNOWLEDGEMENT_ID\",\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION_TYPE_ID\",\"AGENT_ID\",\"MANAGER_APPROVAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO CORRECTIVE_ACTION (\"ID\",\"SUPERVISOR_NAME\",\"COMPLETION_STATUS\",\"SUPERVISOR_COMMENT\",\"HR_APPROVAL_DATE\",\"MANAGER_APPROVAL_DATE\",\"SUPERVISOR_ACK_DATE\",\"COMPLETION_DATE\",\"DETAILS\",\"EMPLOYEE_COMMENT\",\"HR_EMPLOYEE_ID\",\"MANAGER_EMPLOYEE_ID\",\"AGENT_ID\",\"SUPERVISOR_ID\",\"SUPERVISORMANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION_TYPE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_CORRECTIVE_ACTION\" SET \"CORRECTIVE_ACTION_STATE_NAME\"=?,\"CORRECTIVE_ACTION_TYPE_NAME\"=?,\"LOB_NAME\"=?,\"SUPERVISOR_COMMENT\"=?,\"SUPERVISOR_NAME\"=?,\"COMPLETION_DATE\"=?,\"AGENT_EMPLOYEE_ID\"=?,\"AGENT_FIRST_NAME\"=?,\"AGENT_LAST_NAME\"=?,\"COMPLETION_STATUS\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"MESSAGE\"=?,\"MESSAGE_REASON\"=?,\"NEXT_STEPS_MESSAGE\"=?,\"SUPERVISOR_ACKNOWLEDGEMENT_ID\"=?,\"HR_APPROVAL_ID\"=?,\"EMPLOYEE_ACKNOWLEDGEMENT_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=?,\"AGENT_ID\"=?,\"MANAGER_APPROVAL_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"TBL_CORRECTIVE_ACTION\" SET \"SUPERVISOR_NAME\"=?,\"COMPLETION_STATUS\"=?,\"SUPERVISOR_COMMENT\"=?,\"HR_APPROVAL_DATE\"=?,\"MANAGER_APPROVAL_DATE\"=?,\"SUPERVISOR_ACK_DATE\"=?,\"COMPLETION_DATE\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"HR_EMPLOYEE_ID\"=?,\"MANAGER_EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"SUPERVISOR_ID\"=?,\"SUPERVISORMANAGER_EMPLOYEE_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -157,47 +155,43 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCorrectiveActionStateName(rs.getString("CORRECTIVE_ACTION_STATE_NAME"));
+			nextResult.setSupervisorName(rs.getString("SUPERVISOR_NAME"));
 
-nextResult.setCorrectiveActionTypeName(rs.getString("CORRECTIVE_ACTION_TYPE_NAME"));
-
-nextResult.setLOBName(rs.getString("LOB_NAME"));
+nextResult.setCompletionStatus(rs.getString("COMPLETION_STATUS"));
 
 nextResult.setSupervisorComment(rs.getString("SUPERVISOR_COMMENT"));
 
-nextResult.setSupervisorName(rs.getString("SUPERVISOR_NAME"));
+nextResult.setHRApprovalDate(rs.getDate("HR_APPROVAL_DATE"));
+
+nextResult.setManagerApprovalDate(rs.getDate("MANAGER_APPROVAL_DATE"));
+
+nextResult.setSupervisorACKDate(rs.getDate("SUPERVISOR_ACK_DATE"));
 
 nextResult.setCompletionDate(rs.getDate("COMPLETION_DATE"));
-
-nextResult.setAgentEmployeeId(rs.getString("AGENT_EMPLOYEE_ID"));
-
-nextResult.setAgentFirstName(rs.getString("AGENT_FIRST_NAME"));
-
-nextResult.setAgentLastName(rs.getString("AGENT_LAST_NAME"));
-
-nextResult.setCompletionStatus(rs.getString("COMPLETION_STATUS"));
 
 nextResult.setDetails(rs.getString("DETAILS"));
 
 nextResult.setEmployeeComment(rs.getString("EMPLOYEE_COMMENT"));
 
-nextResult.setMessage(rs.getString("MESSAGE"));
+Employee hremployee = new Employee();
+hremployee.setID(rs.getString("HR_EMPLOYEE_ID"));
+nextResult.setHREmployee(hremployee);
 
-nextResult.setMessageReason(rs.getString("MESSAGE_REASON"));
+Employee manageremployee = new Employee();
+manageremployee.setID(rs.getString("MANAGER_EMPLOYEE_ID"));
+nextResult.setManagerEmployee(manageremployee);
 
-nextResult.setNextStepsMessage(rs.getString("NEXT_STEPS_MESSAGE"));
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
-SupervisorAcknowledgement supervisoracknowledgement = new SupervisorAcknowledgement();
-supervisoracknowledgement.setID(rs.getString("SUPERVISOR_ACKNOWLEDGEMENT_ID"));
-nextResult.setSupervisorAcknowledgement(supervisoracknowledgement);
+Supervisor supervisor = new Supervisor();
+supervisor.setID(rs.getString("SUPERVISOR_ID"));
+nextResult.setSupervisor(supervisor);
 
-HRApproval hrapproval = new HRApproval();
-hrapproval.setID(rs.getString("HR_APPROVAL_ID"));
-nextResult.setHRApproval(hrapproval);
-
-EmployeeAcknowledgement employeeacknowledgement = new EmployeeAcknowledgement();
-employeeacknowledgement.setID(rs.getString("EMPLOYEE_ACKNOWLEDGEMENT_ID"));
-nextResult.setEmployeeAcknowledgement(employeeacknowledgement);
+Employee supervisormanageremployee = new Employee();
+supervisormanageremployee.setID(rs.getString("SUPERVISORMANAGER_EMPLOYEE_ID"));
+nextResult.setSupervisorManagerEmployee(supervisormanageremployee);
 
 CorrectiveActionState correctiveactionstate = new CorrectiveActionState();
 correctiveactionstate.setID(rs.getString("CORRECTIVE_ACTION_STATE_ID"));
@@ -206,14 +200,6 @@ nextResult.setCorrectiveActionState(correctiveactionstate);
 CorrectiveActionType correctiveactiontype = new CorrectiveActionType();
 correctiveactiontype.setID(rs.getString("CORRECTIVE_ACTION_TYPE_ID"));
 nextResult.setCorrectiveActionType(correctiveactiontype);
-
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
-
-ManagerApproval managerapproval = new ManagerApproval();
-managerapproval.setID(rs.getString("MANAGER_APPROVAL_ID"));
-nextResult.setManagerApproval(managerapproval);
 
 
 			
@@ -225,89 +211,83 @@ nextResult.setManagerApproval(managerapproval);
 	protected void setBaseStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCorrectiveActionStateName());
-pstmt.setString(3, perceroObject.getCorrectiveActionTypeName());
-pstmt.setString(4, perceroObject.getLOBName());
-pstmt.setString(5, perceroObject.getSupervisorComment());
-pstmt.setString(6, perceroObject.getSupervisorName());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
-pstmt.setString(8, perceroObject.getAgentEmployeeId());
-pstmt.setString(9, perceroObject.getAgentFirstName());
-pstmt.setString(10, perceroObject.getAgentLastName());
-pstmt.setString(11, perceroObject.getCompletionStatus());
-pstmt.setString(12, perceroObject.getDetails());
-pstmt.setString(13, perceroObject.getEmployeeComment());
-pstmt.setString(14, perceroObject.getMessage());
-pstmt.setString(15, perceroObject.getMessageReason());
-pstmt.setString(16, perceroObject.getNextStepsMessage());
+pstmt.setString(2, perceroObject.getSupervisorName());
+pstmt.setString(3, perceroObject.getCompletionStatus());
+pstmt.setString(4, perceroObject.getSupervisorComment());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getHRApprovalDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getManagerApprovalDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getSupervisorACKDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
+pstmt.setString(9, perceroObject.getDetails());
+pstmt.setString(10, perceroObject.getEmployeeComment());
 
-if (perceroObject.getSupervisorAcknowledgement() == null)
+if (perceroObject.getHREmployee() == null)
 {
-pstmt.setString(17, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(17, perceroObject.getSupervisorAcknowledgement().getID());
+		pstmt.setString(11, perceroObject.getHREmployee().getID());
 }
 
 
-if (perceroObject.getHRApproval() == null)
+if (perceroObject.getManagerEmployee() == null)
 {
-pstmt.setString(18, null);
-}
-else
-{
-		pstmt.setString(18, perceroObject.getHRApproval().getID());
-}
-
-
-if (perceroObject.getEmployeeAcknowledgement() == null)
-{
-pstmt.setString(19, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(19, perceroObject.getEmployeeAcknowledgement().getID());
-}
-
-
-if (perceroObject.getCorrectiveActionState() == null)
-{
-pstmt.setString(20, null);
-}
-else
-{
-		pstmt.setString(20, perceroObject.getCorrectiveActionState().getID());
-}
-
-
-if (perceroObject.getCorrectiveActionType() == null)
-{
-pstmt.setString(21, null);
-}
-else
-{
-		pstmt.setString(21, perceroObject.getCorrectiveActionType().getID());
+		pstmt.setString(12, perceroObject.getManagerEmployee().getID());
 }
 
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(22, null);
+pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(22, perceroObject.getAgent().getID());
+		pstmt.setString(13, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getManagerApproval() == null)
+if (perceroObject.getSupervisor() == null)
 {
-pstmt.setString(23, null);
+pstmt.setString(14, null);
 }
 else
 {
-		pstmt.setString(23, perceroObject.getManagerApproval().getID());
+		pstmt.setString(14, perceroObject.getSupervisor().getID());
+}
+
+
+if (perceroObject.getSupervisorManagerEmployee() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getSupervisorManagerEmployee().getID());
+}
+
+
+if (perceroObject.getCorrectiveActionState() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getCorrectiveActionState().getID());
+}
+
+
+if (perceroObject.getCorrectiveActionType() == null)
+{
+pstmt.setString(17, null);
+}
+else
+{
+		pstmt.setString(17, perceroObject.getCorrectiveActionType().getID());
 }
 
 
@@ -333,92 +313,86 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getCorrectiveActionStateName());
-pstmt.setString(2, perceroObject.getCorrectiveActionTypeName());
-pstmt.setString(3, perceroObject.getLOBName());
-pstmt.setString(4, perceroObject.getSupervisorComment());
-pstmt.setString(5, perceroObject.getSupervisorName());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
-pstmt.setString(7, perceroObject.getAgentEmployeeId());
-pstmt.setString(8, perceroObject.getAgentFirstName());
-pstmt.setString(9, perceroObject.getAgentLastName());
-pstmt.setString(10, perceroObject.getCompletionStatus());
-pstmt.setString(11, perceroObject.getDetails());
-pstmt.setString(12, perceroObject.getEmployeeComment());
-pstmt.setString(13, perceroObject.getMessage());
-pstmt.setString(14, perceroObject.getMessageReason());
-pstmt.setString(15, perceroObject.getNextStepsMessage());
+		pstmt.setString(1, perceroObject.getSupervisorName());
+pstmt.setString(2, perceroObject.getCompletionStatus());
+pstmt.setString(3, perceroObject.getSupervisorComment());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getHRApprovalDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getManagerApprovalDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getSupervisorACKDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
+pstmt.setString(8, perceroObject.getDetails());
+pstmt.setString(9, perceroObject.getEmployeeComment());
 
-if (perceroObject.getSupervisorAcknowledgement() == null)
+if (perceroObject.getHREmployee() == null)
 {
-pstmt.setString(16, null);
+pstmt.setString(10, null);
 }
 else
 {
-		pstmt.setString(16, perceroObject.getSupervisorAcknowledgement().getID());
+		pstmt.setString(10, perceroObject.getHREmployee().getID());
 }
 
 
-if (perceroObject.getHRApproval() == null)
+if (perceroObject.getManagerEmployee() == null)
 {
-pstmt.setString(17, null);
-}
-else
-{
-		pstmt.setString(17, perceroObject.getHRApproval().getID());
-}
-
-
-if (perceroObject.getEmployeeAcknowledgement() == null)
-{
-pstmt.setString(18, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(18, perceroObject.getEmployeeAcknowledgement().getID());
-}
-
-
-if (perceroObject.getCorrectiveActionState() == null)
-{
-pstmt.setString(19, null);
-}
-else
-{
-		pstmt.setString(19, perceroObject.getCorrectiveActionState().getID());
-}
-
-
-if (perceroObject.getCorrectiveActionType() == null)
-{
-pstmt.setString(20, null);
-}
-else
-{
-		pstmt.setString(20, perceroObject.getCorrectiveActionType().getID());
+		pstmt.setString(11, perceroObject.getManagerEmployee().getID());
 }
 
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(21, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(21, perceroObject.getAgent().getID());
+		pstmt.setString(12, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getManagerApproval() == null)
+if (perceroObject.getSupervisor() == null)
 {
-pstmt.setString(22, null);
+pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(22, perceroObject.getManagerApproval().getID());
+		pstmt.setString(13, perceroObject.getSupervisor().getID());
 }
 
-pstmt.setString(23, perceroObject.getID());
+
+if (perceroObject.getSupervisorManagerEmployee() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getSupervisorManagerEmployee().getID());
+}
+
+
+if (perceroObject.getCorrectiveActionState() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getCorrectiveActionState().getID());
+}
+
+
+if (perceroObject.getCorrectiveActionType() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getCorrectiveActionType().getID());
+}
+
+pstmt.setString(17, perceroObject.getID());
 
 		
 	}
@@ -447,19 +421,19 @@ pstmt.setString(23, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCorrectiveActionStateName = StringUtils.hasText(theQueryObject.getCorrectiveActionStateName()) && (excludeProperties == null || !excludeProperties.contains("correctiveActionStateName"));
+		boolean useSupervisorName = StringUtils.hasText(theQueryObject.getSupervisorName()) && (excludeProperties == null || !excludeProperties.contains("supervisorName"));
 
-if (useCorrectiveActionStateName)
+if (useSupervisorName)
 {
 sql += " WHERE ";
-sql += " \"CORRECTIVE_ACTION_STATE_NAME\" =? ";
-paramValues.add(theQueryObject.getCorrectiveActionStateName());
+sql += " \"SUPERVISOR_NAME\" =? ";
+paramValues.add(theQueryObject.getSupervisorName());
 propertyCounter++;
 }
 
-boolean useCorrectiveActionTypeName = StringUtils.hasText(theQueryObject.getCorrectiveActionTypeName()) && (excludeProperties == null || !excludeProperties.contains("correctiveActionTypeName"));
+boolean useCompletionStatus = StringUtils.hasText(theQueryObject.getCompletionStatus()) && (excludeProperties == null || !excludeProperties.contains("completionStatus"));
 
-if (useCorrectiveActionTypeName)
+if (useCompletionStatus)
 {
 if (propertyCounter > 0)
 {
@@ -469,25 +443,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"CORRECTIVE_ACTION_TYPE_NAME\" =? ";
-paramValues.add(theQueryObject.getCorrectiveActionTypeName());
-propertyCounter++;
-}
-
-boolean useLOBName = StringUtils.hasText(theQueryObject.getLOBName()) && (excludeProperties == null || !excludeProperties.contains("lOBName"));
-
-if (useLOBName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LOB_NAME\" =? ";
-paramValues.add(theQueryObject.getLOBName());
+sql += " \"COMPLETION_STATUS\" =? ";
+paramValues.add(theQueryObject.getCompletionStatus());
 propertyCounter++;
 }
 
@@ -508,9 +465,9 @@ paramValues.add(theQueryObject.getSupervisorComment());
 propertyCounter++;
 }
 
-boolean useSupervisorName = StringUtils.hasText(theQueryObject.getSupervisorName()) && (excludeProperties == null || !excludeProperties.contains("supervisorName"));
+boolean useHRApprovalDate = theQueryObject.getHRApprovalDate() != null && (excludeProperties == null || !excludeProperties.contains("hRApprovalDate"));
 
-if (useSupervisorName)
+if (useHRApprovalDate)
 {
 if (propertyCounter > 0)
 {
@@ -520,8 +477,42 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"SUPERVISOR_NAME\" =? ";
-paramValues.add(theQueryObject.getSupervisorName());
+sql += " \"HR_APPROVAL_DATE\" =? ";
+paramValues.add(theQueryObject.getHRApprovalDate());
+propertyCounter++;
+}
+
+boolean useManagerApprovalDate = theQueryObject.getManagerApprovalDate() != null && (excludeProperties == null || !excludeProperties.contains("managerApprovalDate"));
+
+if (useManagerApprovalDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"MANAGER_APPROVAL_DATE\" =? ";
+paramValues.add(theQueryObject.getManagerApprovalDate());
+propertyCounter++;
+}
+
+boolean useSupervisorACKDate = theQueryObject.getSupervisorACKDate() != null && (excludeProperties == null || !excludeProperties.contains("supervisorACKDate"));
+
+if (useSupervisorACKDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SUPERVISOR_ACK_DATE\" =? ";
+paramValues.add(theQueryObject.getSupervisorACKDate());
 propertyCounter++;
 }
 
@@ -539,74 +530,6 @@ sql += " WHERE ";
 }
 sql += " \"COMPLETION_DATE\" =? ";
 paramValues.add(theQueryObject.getCompletionDate());
-propertyCounter++;
-}
-
-boolean useAgentEmployeeId = StringUtils.hasText(theQueryObject.getAgentEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("agentEmployeeId"));
-
-if (useAgentEmployeeId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_EMPLOYEE_ID\" =? ";
-paramValues.add(theQueryObject.getAgentEmployeeId());
-propertyCounter++;
-}
-
-boolean useAgentFirstName = StringUtils.hasText(theQueryObject.getAgentFirstName()) && (excludeProperties == null || !excludeProperties.contains("agentFirstName"));
-
-if (useAgentFirstName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_FIRST_NAME\" =? ";
-paramValues.add(theQueryObject.getAgentFirstName());
-propertyCounter++;
-}
-
-boolean useAgentLastName = StringUtils.hasText(theQueryObject.getAgentLastName()) && (excludeProperties == null || !excludeProperties.contains("agentLastName"));
-
-if (useAgentLastName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getAgentLastName());
-propertyCounter++;
-}
-
-boolean useCompletionStatus = StringUtils.hasText(theQueryObject.getCompletionStatus()) && (excludeProperties == null || !excludeProperties.contains("completionStatus"));
-
-if (useCompletionStatus)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"COMPLETION_STATUS\" =? ";
-paramValues.add(theQueryObject.getCompletionStatus());
 propertyCounter++;
 }
 
@@ -644,9 +567,9 @@ paramValues.add(theQueryObject.getEmployeeComment());
 propertyCounter++;
 }
 
-boolean useMessage = StringUtils.hasText(theQueryObject.getMessage()) && (excludeProperties == null || !excludeProperties.contains("message"));
+boolean useHREmployeeID = theQueryObject.getHREmployee() != null && (excludeProperties == null || !excludeProperties.contains("hREmployee"));
 
-if (useMessage)
+if (useHREmployeeID)
 {
 if (propertyCounter > 0)
 {
@@ -656,14 +579,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"MESSAGE\" =? ";
-paramValues.add(theQueryObject.getMessage());
+sql += " \"HR_EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getHREmployee().getID());
 propertyCounter++;
 }
 
-boolean useMessageReason = StringUtils.hasText(theQueryObject.getMessageReason()) && (excludeProperties == null || !excludeProperties.contains("messageReason"));
+boolean useManagerEmployeeID = theQueryObject.getManagerEmployee() != null && (excludeProperties == null || !excludeProperties.contains("managerEmployee"));
 
-if (useMessageReason)
+if (useManagerEmployeeID)
 {
 if (propertyCounter > 0)
 {
@@ -673,14 +596,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"MESSAGE_REASON\" =? ";
-paramValues.add(theQueryObject.getMessageReason());
+sql += " \"MANAGER_EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getManagerEmployee().getID());
 propertyCounter++;
 }
 
-boolean useNextStepsMessage = StringUtils.hasText(theQueryObject.getNextStepsMessage()) && (excludeProperties == null || !excludeProperties.contains("nextStepsMessage"));
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useNextStepsMessage)
+if (useAgentID)
 {
 if (propertyCounter > 0)
 {
@@ -690,14 +613,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NEXT_STEPS_MESSAGE\" =? ";
-paramValues.add(theQueryObject.getNextStepsMessage());
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
-boolean useSupervisorAcknowledgementID = theQueryObject.getSupervisorAcknowledgement() != null && (excludeProperties == null || !excludeProperties.contains("supervisorAcknowledgement"));
+boolean useSupervisorID = theQueryObject.getSupervisor() != null && (excludeProperties == null || !excludeProperties.contains("supervisor"));
 
-if (useSupervisorAcknowledgementID)
+if (useSupervisorID)
 {
 if (propertyCounter > 0)
 {
@@ -707,14 +630,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"SUPERVISOR_ACKNOWLEDGEMENT_ID\" =? ";
-paramValues.add(theQueryObject.getSupervisorAcknowledgement().getID());
+sql += " \"SUPERVISOR_ID\" =? ";
+paramValues.add(theQueryObject.getSupervisor().getID());
 propertyCounter++;
 }
 
-boolean useHRApprovalID = theQueryObject.getHRApproval() != null && (excludeProperties == null || !excludeProperties.contains("hRApproval"));
+boolean useSupervisorManagerEmployeeID = theQueryObject.getSupervisorManagerEmployee() != null && (excludeProperties == null || !excludeProperties.contains("supervisorManagerEmployee"));
 
-if (useHRApprovalID)
+if (useSupervisorManagerEmployeeID)
 {
 if (propertyCounter > 0)
 {
@@ -724,25 +647,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"HR_APPROVAL_ID\" =? ";
-paramValues.add(theQueryObject.getHRApproval().getID());
-propertyCounter++;
-}
-
-boolean useEmployeeAcknowledgementID = theQueryObject.getEmployeeAcknowledgement() != null && (excludeProperties == null || !excludeProperties.contains("employeeAcknowledgement"));
-
-if (useEmployeeAcknowledgementID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"EMPLOYEE_ACKNOWLEDGEMENT_ID\" =? ";
-paramValues.add(theQueryObject.getEmployeeAcknowledgement().getID());
+sql += " \"SUPERVISORMANAGER_EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getSupervisorManagerEmployee().getID());
 propertyCounter++;
 }
 
@@ -780,40 +686,6 @@ paramValues.add(theQueryObject.getCorrectiveActionType().getID());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
-propertyCounter++;
-}
-
-boolean useManagerApprovalID = theQueryObject.getManagerApproval() != null && (excludeProperties == null || !excludeProperties.contains("managerApproval"));
-
-if (useManagerApprovalID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"MANAGER_APPROVAL_ID\" =? ";
-paramValues.add(theQueryObject.getManagerApproval().getID());
-propertyCounter++;
-}
-
 
 		/*
 		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
@@ -845,11 +717,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

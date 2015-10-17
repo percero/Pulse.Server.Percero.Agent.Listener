@@ -46,13 +46,13 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	
 	public static final String SQL_VIEW = ",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
-	private String whereClause = " WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12);";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"ADHOC_TASK\".\"ID\"";
+	private String whereClause = " Where ADHOC_TASK.COMPLETED_ON Is Null And ADHOC_TASK.CREATED_ON > Add_months(sysdate,-12)";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"ID\"";
 	
-	private String joinAdhocTaskStateIDAdhocTask = " WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
-private String joinAgentIDAdhocTask = " WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
-private String joinTeamLeaderIDAdhocTask = " WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > ADD_MONTHS(sysdate,-12)";
+	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
+private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
+private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 
 
 	

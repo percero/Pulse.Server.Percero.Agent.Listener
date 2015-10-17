@@ -46,9 +46,9 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"WEIGHT\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\"";
-	private String whereClause = " WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MEASURE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"SCORECARD_MEASURE\".\"ID\"";
+	private String whereClause = "  WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MEASURE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SCORECARD_MEASURE\".\"ID\"";
 	
 	
 

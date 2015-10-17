@@ -47,9 +47,9 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 	
 	public static final String SQL_VIEW = ",\"COACHING_SESSION\".\"CREATED_BY\",\"COACHING_SESSION\".\"TYPE\",\"COACHING_SESSION\".\"UPDATED_BY\",\"COACHING_SESSION\".\"WEEKLY_OVERALL_SCORE\",\"COACHING_SESSION\".\"WKLY_OVRALL_SCORE_STATE_NAME\",\"COACHING_SESSION\".\"IS_REQUIRED\",\"COACHING_SESSION\".\"CLOSED_ON\",\"COACHING_SESSION\".\"CREATED_ON\",\"COACHING_SESSION\".\"UPDATED_ON\",\"COACHING_SESSION\".\"WEEK_DATE\",\"COACHING_SESSION\".\"CURRENT_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"PREVIOUS_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"EMPLOYEE_ID\",\"COACHING_SESSION\".\"SCORECARD_ID\",\"COACHING_SESSION\".\"AGENT_SCORECARD_ID\",\"COACHING_SESSION\".\"COACHING_SESSION_STATE_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_SESSION\" \"COACHING_SESSION\"";
-	private String whereClause = " WHERE \"COACHING_SESSION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"COACHING_SESSION\".\"ID\"";
+	private String whereClause = "  WHERE \"COACHING_SESSION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"COACHING_SESSION\".\"ID\"";
 	
 	private String joinAgentScorecardIDCoachingSession = ",(select ? As SQL_ID From Dual) WHERE COACHING_SESSION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND COACHING_SESSION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND COACHING_SESSION.WEEK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
 

@@ -177,14 +177,14 @@ public void setEmployeeId(Integer employeeId)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingComment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CoachingComment> coachingComments;
-public List<CoachingComment> getCoachingComments() {
-	return this.coachingComments;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=Comment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<Comment> comments;
+public List<Comment> getComments() {
+	return this.comments;
 }
 
-public void setCoachingComments(List<CoachingComment> value) {
-	this.coachingComments = value;
+public void setComments(List<Comment> value) {
+	this.comments = value;
 }
 
 
@@ -350,17 +350,17 @@ objectJson += ",\"agentScorecard\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Adhoc Coaching Session of Coaching Comment relationship
-objectJson += ",\"coachingComments\":[";
+//Retrieve value of the Adhoc Coaching Session of Comment relationship
+objectJson += ",\"comments\":[";
 		
-		if (getCoachingComments() != null) {
-			int coachingCommentsCounter = 0;
-			for(CoachingComment nextCoachingComments : getCoachingComments()) {
-				if (coachingCommentsCounter > 0)
+		if (getComments() != null) {
+			int commentsCounter = 0;
+			for(Comment nextComments : getComments()) {
+				if (commentsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextCoachingComments).toEmbeddedJson();
-					coachingCommentsCounter++;
+					objectJson += ((BaseDataObject) nextComments).toEmbeddedJson();
+					commentsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -396,7 +396,7 @@ objectJson += ",\"coachingComments\":[";
 
 
 		// Target Relationships
-		this.coachingComments = (List<CoachingComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingComments");
+		this.comments = (List<Comment>) JsonUtils.getJsonListPerceroObject(jsonObject, "comments");
 
 
 	}
@@ -406,7 +406,7 @@ objectJson += ",\"coachingComments\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CoachingComment.class, "adhoccoachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(Comment.class, "adhoccoachingsession"));
 
 		
 		return listSetters;

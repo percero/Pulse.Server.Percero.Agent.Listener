@@ -45,9 +45,9 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	
 	public static final String SQL_VIEW = ",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"USER_SESSION\" \"USER_SESSION\"";
-	private String whereClause = " WHERE \"USER_SESSION\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_SESSION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"USER_SESSION\".\"ID\"";
+	private String whereClause = "  WHERE \"USER_SESSION\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"USER_SESSION\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"USER_SESSION\".\"ID\"";
 	
 	
 
@@ -162,9 +162,9 @@ PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
 
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("CURRENT_TEAM_LEADER_ID"));
-nextResult.setCurrentTeamLeader(teamleader);
+TeamLeader currentteamleader = new TeamLeader();
+currentteamleader.setID(rs.getString("CURRENT_TEAM_LEADER_ID"));
+nextResult.setCurrentTeamLeader(currentteamleader);
 
 
 			

@@ -49,9 +49,9 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	public static final String SQL_VIEW = ",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"PULSE_USER\" \"PULSE_USER\"";
-	private String whereClause = " WHERE \"PULSE_USER\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PULSE_USER\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"PULSE_USER\".\"ID\"";
+	private String whereClause = "  WHERE \"PULSE_USER\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"PULSE_USER\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"PULSE_USER\".\"ID\"";
 	
 	
 

@@ -43,9 +43,9 @@ public class ThresholdGradeScaleDAO extends SqlDataAccessObject<ThresholdGradeSc
 	
 	public static final String SQL_VIEW = "";
 	private String selectFromStatementTableName = " FROM \"THRESHOLD_GRADE_SCALE\" \"THRESHOLD_GRADE_SCALE\"";
-	private String whereClause = " WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRESHOLD_GRADE_SCALE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"THRESHOLD_GRADE_SCALE\".\"ID\"";
+	private String whereClause = "  WHERE \"THRESHOLD_GRADE_SCALE\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRESHOLD_GRADE_SCALE\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"THRESHOLD_GRADE_SCALE\".\"ID\"";
 	
 	
 

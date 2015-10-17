@@ -44,9 +44,9 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	public static final String SQL_VIEW = ",\"NOTIFICATION_FREQUENCY\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\"";
-	private String whereClause = " WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_FREQUENCY\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\"";
+	private String whereClause = "  WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_FREQUENCY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"NOTIFICATION_FREQUENCY\".\"ID\"";
 	
 	
 

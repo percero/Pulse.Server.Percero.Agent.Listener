@@ -19,11 +19,10 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.TimecardActivity;
-import com.pulse.mo.DiscrepancyDetectedNotification;
 import com.pulse.mo.TimecardEntry;
 import com.pulse.mo.LOBConfigurationEntry;
+import com.pulse.mo.DiscrepancyDetectedNotification;
 import com.pulse.mo.ShiftStatusNotification;
-import com.pulse.mo.CVGProject;
 
 */
 
@@ -46,7 +45,7 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"CENTRE\" as \"CVG_PROJECT_ID\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\"";
 	private String whereClause = " WHERE \"TIMECARD_ACTIVITY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD_ACTIVITY\".\"ID\"= SQLLIST.column_value";
@@ -164,10 +163,6 @@ nextResult.setDescription(rs.getString("DESCRIPTION"));
 
 nextResult.setName(rs.getString("NAME"));
 
-CVGProject cvgproject = new CVGProject();
-cvgproject.setID(rs.getString("CVG_PROJECT_ID"));
-nextResult.setCVGProject(cvgproject);
-
 
 			
     	}
@@ -259,23 +254,6 @@ sql += " WHERE ";
 }
 sql += " NAME=? ";
 paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useCVGProjectID = theQueryObject.getCVGProject() != null && (excludeProperties == null || !excludeProperties.contains("cVGProject"));
-
-if (useCVGProjectID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " CVG_PROJECT_ID=? ";
-paramValues.add(theQueryObject.getCVGProject().getID());
 propertyCounter++;
 }
 

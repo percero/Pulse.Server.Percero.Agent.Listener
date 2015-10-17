@@ -43,9 +43,9 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 	
 	public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"DATE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_MODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"ACTVTY_CODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"OCCURRENCE_MISMATCH_NOTIF\" \"OCCURRENCE_MISMATCH_NOTIF\"";
-	private String whereClause = " WHERE \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"";
+	private String whereClause = "  WHERE \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"";
 	
 	
 
