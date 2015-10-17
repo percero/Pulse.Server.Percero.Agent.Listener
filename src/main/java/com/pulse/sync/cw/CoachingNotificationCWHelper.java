@@ -59,14 +59,24 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 	 * for all objects of a particular type, use the ID "0".
 	 */
 	public void registerChangeWatchers() {
+		
+		// Agent Scorecard
 		Collection<String> fieldsToWatch = new HashSet<String>();
 		// Listen for changes on ALL AgentScorecard records.
 		accessManager.addWatcherField(new ClassIDPair("0", AgentScorecard.class.getCanonicalName()), "", fieldsToWatch);
-
 		// Register the fields. This can always be called again with an updated
 		// list of fields to watch, which would overwrite the list of fields
 		// that trigger this change watcher code.
 		accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "agentScorecard", fieldsToWatch);
+
+		// CMS Entry Notification
+		Collection<String> cmsEntryFieldsToWatch = new HashSet<String>();
+		// Listen for changes on ALL CMSEntry records.
+		accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
+		// Register the fields. This can always be called again with an updated
+		// list of fields to watch, which would overwrite the list of fields
+		// that trigger this change watcher code.
+		accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleCmsEntryNotication", cmsEntryFieldsToWatch);
 	}
 
 	/* (non-Javadoc)
@@ -87,6 +97,13 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 				handleNewAgentScorecard(category, subCategory, fieldName, params);
 			} catch(Exception e) {
 				log.error("Unable to process handleNewAgentScorecard", e);
+			}
+		}
+		else if (fieldName.equalsIgnoreCase("handleCmsEntryNotication")) {
+			try {
+				handleCmsEntryNotication(category, subCategory, fieldName, params);
+			} catch(Exception e) {
+				log.error("Unable to process handleCmsEntryNotication", e);
 			}
 		}
 		else {
@@ -175,6 +192,35 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 	}
 	
 	
+	
+	/**
+	 * 
+	 * @param category
+	 * @param subCategory
+	 * @param fieldName
+	 * @throws Exception
+	 */
+	private void handleCmsEntryNotication(String category, String subCategory, String fieldName, String[] params) throws Exception {
+		// This is where the logic would go to create a Notification based on when the data requested above changes.
+		try {
+			
+			if (params != null && params.length >= 2) {
+				String className = params[0];
+				String classId = params[1];
+				
+				ClassIDPair classIdPair = new ClassIDPair(classId, className);
+				IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
+				
+				if (updatedObject instanceof CMSEntry) {
+					CMSEntry cmsEntry = (CMSEntry) updatedObject;
+					
+					// TODO: Handle createion of notification here.
+				}
+			}
+		} catch(Exception e) {
+			// Handle exception
+		}
+	}
 	
 	
 
