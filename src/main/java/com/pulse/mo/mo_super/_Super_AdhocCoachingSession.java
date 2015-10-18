@@ -396,6 +396,7 @@ objectJson += ",\"comments\":[";
 
 
 		// Target Relationships
+
 		this.comments = (List<Comment>) JsonUtils.getJsonListPerceroObject(jsonObject, "comments");
 
 

@@ -117,7 +117,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 							if (existingCoachingNotification == null) {
 								existingCoachingNotification = new CoachingNotification();
 								existingCoachingNotification.setID(UUID.randomUUID().toString());
-								existingCoachingNotification.setDate(new Date());
+								existingCoachingNotification.setCreatedOn(new Date());
 								existingCoachingNotification.setName("Available for Coaching");
 								existingCoachingNotification.setType("CoachingNotification");
 								existingCoachingNotification.setTeamLeader(teamLeader);

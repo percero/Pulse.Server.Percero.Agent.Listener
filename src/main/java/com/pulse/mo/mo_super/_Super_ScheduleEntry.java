@@ -176,14 +176,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date startTime;
+private String startTime;
 
-public Date getStartTime() 
+public String getStartTime() 
 {
 	return this.startTime;
 }
 
-public void setStartTime(Date startTime)
+public void setStartTime(String startTime)
 {
 	this.startTime = startTime;
 }/*
@@ -260,6 +260,19 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="SCHEDULE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScheduleOfScheduleEntry")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Schedule schedule;
+public Schedule getSchedule() {
+	return this.schedule;
+}
+
+public void setSchedule(Schedule value) {
+	this.schedule = value;
 }
 
 	
@@ -336,10 +349,24 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Start Time property
 		objectJson += ",\"startTime\":";
+		
 		if (getStartTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getStartTime().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartTime());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Position property
 		objectJson += ",\"position\":";
@@ -391,6 +418,18 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Schedule of Schedule Entry relationship
+objectJson += ",\"schedule\":";
+		if (getSchedule() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getSchedule()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -416,7 +455,7 @@ objectJson += ",\"agent\":";
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		setStartTime(JsonUtils.getJsonString(jsonObject, "startTime"));
 		//From value of the Position property
 		setPosition(JsonUtils.getJsonString(jsonObject, "position"));
 		//From value of the Modified Timestamp property
@@ -427,6 +466,7 @@ objectJson += ",\"agent\":";
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.schedule = (Schedule) JsonUtils.getJsonPerceroObject(jsonObject, "schedule");
 
 
 		// Target Relationships

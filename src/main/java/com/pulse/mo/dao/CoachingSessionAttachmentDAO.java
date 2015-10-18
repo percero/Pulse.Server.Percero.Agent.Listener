@@ -41,11 +41,11 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"CREATED_ON\",\"COACHING_SESSION_ATTACHMENT\".\"UPDATED_ON\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\",\"COACHING_SESSION_ATTACHMENT\".\"CREATED_BY\",\"COACHING_SESSION_ATTACHMENT\".\"DESCRIPTION\",\"COACHING_SESSION_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"UPDATED_BY\",\"COACHING_SESSION_ATTACHMENT\".\"VERSION\"";
-	private String selectFromStatementTableName = " FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\"";
-	private String whereClause = "  WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\"=?";
-	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COACHING_SESSION_ATTACHMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"ADHOC_ATTACHMENT\".\"NAME\",\"ADHOC_ATTACHMENT\".\"CREATED_ON\",\"ADHOC_ATTACHMENT\".\"UPDATED_ON\",\"ADHOC_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"ADHOC_ATTACHMENT\".\"CREATED_BY\",\"ADHOC_ATTACHMENT\".\"DESCRIPTION\",\"ADHOC_ATTACHMENT\".\"EMPLOYEE_ID\",\"ADHOC_ATTACHMENT\".\"TEMP_STORE_ID\",\"ADHOC_ATTACHMENT\".\"TYPE\",\"ADHOC_ATTACHMENT\".\"UPDATED_BY\",\"ADHOC_ATTACHMENT\".\"VERSION\"";
+	private String selectFromStatementTableName = " FROM \"ADHOC_ATTACHMENT\" \"ADHOC_ATTACHMENT\"";
+	private String whereClause = "  WHERE \"ADHOC_ATTACHMENT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"ADHOC_ATTACHMENT\".\"ID\"";
 	
 	
 
@@ -57,32 +57,32 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -94,51 +94,51 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	@Override
 	protected String getSelectInStarSQL() 
 	{
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_SESSION_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_SESSION_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACHING_SESSION_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACHING_SESSION_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"DOCUMENT_REFERENCE_ID\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_ADHOC_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"DOCUMENT_REFERENCE_ID\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"TYPE\",\"UPDATED_BY\",\"VERSION\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACHING_SESSION_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"VERSION\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TBL_COACHING_SESSION_ATTACHMENT WHERE \"ID\"=?";
+		return "DELETE FROM TBL_ADHOC_ATTACHMENT WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -158,8 +158,6 @@ nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
 
 nextResult.setDocumentReferenceId(rs.getInt("DOCUMENT_REFERENCE_ID"));
 
-nextResult.setType(rs.getInt("TYPE"));
-
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
@@ -167,6 +165,8 @@ nextResult.setDescription(rs.getString("DESCRIPTION"));
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
+
+nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
@@ -186,11 +186,11 @@ pstmt.setString(2, perceroObject.getName());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setInt(5, perceroObject.getDocumentReferenceId());
-pstmt.setInt(6, perceroObject.getType());
-pstmt.setString(7, perceroObject.getCreatedBy());
-pstmt.setString(8, perceroObject.getDescription());
-pstmt.setString(9, perceroObject.getEmployeeId());
-pstmt.setString(10, perceroObject.getTempStoreId());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(7, perceroObject.getDescription());
+pstmt.setString(8, perceroObject.getEmployeeId());
+pstmt.setString(9, perceroObject.getTempStoreId());
+pstmt.setString(10, perceroObject.getType());
 pstmt.setString(11, perceroObject.getUpdatedBy());
 pstmt.setString(12, perceroObject.getVersion());
 
@@ -220,11 +220,11 @@ pstmt.setString(12, perceroObject.getVersion());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setInt(4, perceroObject.getDocumentReferenceId());
-pstmt.setInt(5, perceroObject.getType());
-pstmt.setString(6, perceroObject.getCreatedBy());
-pstmt.setString(7, perceroObject.getDescription());
-pstmt.setString(8, perceroObject.getEmployeeId());
-pstmt.setString(9, perceroObject.getTempStoreId());
+pstmt.setString(5, perceroObject.getCreatedBy());
+pstmt.setString(6, perceroObject.getDescription());
+pstmt.setString(7, perceroObject.getEmployeeId());
+pstmt.setString(8, perceroObject.getTempStoreId());
+pstmt.setString(9, perceroObject.getType());
 pstmt.setString(10, perceroObject.getUpdatedBy());
 pstmt.setString(11, perceroObject.getVersion());
 pstmt.setString(12, perceroObject.getID());
@@ -317,23 +317,6 @@ paramValues.add(theQueryObject.getDocumentReferenceId());
 propertyCounter++;
 }
 
-boolean useType = theQueryObject.getType() != null && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
 boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
 if (useCreatedBy)
@@ -402,6 +385,23 @@ paramValues.add(theQueryObject.getTempStoreId());
 propertyCounter++;
 }
 
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
 boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
 
 if (useUpdatedBy)
@@ -447,15 +447,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_ADHOC_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_ADHOC_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_COACHING_SESSION_ATTACHMENT(?)}";
+		return "{call Delete_ADHOC_ATTACHMENT(?)}";
 	}
 	
 	

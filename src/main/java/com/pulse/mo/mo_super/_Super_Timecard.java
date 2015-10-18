@@ -187,6 +187,23 @@ public void setEndDate(Date endDate)
 {
 	this.endDate = endDate;
 }/*
+Approved
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String approved;
+
+public String getApproved() 
+{
+	return this.approved;
+}
+
+public void setApproved(String approved)
+{
+	this.approved = approved;
+}/*
 TotalTime
 Notes:
 */
@@ -368,6 +385,27 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getEndDate().getTime();
 		}
+		//Retrieve value of the Approved property
+		objectJson += ",\"approved\":";
+		
+		if (getApproved() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getApproved());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Total Time property
 		objectJson += ",\"totalTime\":";
 		if (getTotalTime() == null)
@@ -475,6 +513,8 @@ objectJson += ",\"timecardEntries\":[";
 		setAssumedOff(JsonUtils.getJsonString(jsonObject, "assumedOff"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Approved property
+		setApproved(JsonUtils.getJsonString(jsonObject, "approved"));
 		//From value of the Total Time property
 		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 		//From value of the Local Time Code property

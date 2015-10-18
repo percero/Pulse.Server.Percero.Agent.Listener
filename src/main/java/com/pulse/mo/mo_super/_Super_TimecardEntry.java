@@ -102,6 +102,23 @@ public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
 }/*
+EWA1
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String eWA1;
+
+public String getEWA1() 
+{
+	return this.eWA1;
+}
+
+public void setEWA1(String eWA1)
+{
+	this.eWA1 = eWA1;
+}/*
 NotificationResolved
 Notes:
 */
@@ -135,6 +152,23 @@ public Date getToTime()
 public void setToTime(Date toTime)
 {
 	this.toTime = toTime;
+}/*
+CodeType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer codeType;
+
+public Integer getCodeType() 
+{
+	return this.codeType;
+}
+
+public void setCodeType(Integer codeType)
+{
+	this.codeType = codeType;
 }/*
 EStartProjectName
 Notes:
@@ -170,6 +204,23 @@ public void setDuration(Double duration)
 {
 	this.duration = duration;
 }/*
+EWA2
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String eWA2;
+
+public String getEWA2() 
+{
+	return this.eWA2;
+}
+
+public void setEWA2(String eWA2)
+{
+	this.eWA2 = eWA2;
+}/*
 ActionName
 Notes:
 */
@@ -187,22 +238,39 @@ public void setActionName(String actionName)
 {
 	this.actionName = actionName;
 }/*
-ActivityName
+Note
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String activityName;
+private String note;
 
-public String getActivityName() 
+public String getNote() 
 {
-	return this.activityName;
+	return this.note;
 }
 
-public void setActivityName(String activityName)
+public void setNote(String note)
 {
-	this.activityName = activityName;
+	this.note = note;
+}/*
+Minutes
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer minutes;
+
+public Integer getMinutes() 
+{
+	return this.minutes;
+}
+
+public void setMinutes(Integer minutes)
+{
+	this.minutes = minutes;
 }/*
 NotificationDetected
 Notes:
@@ -304,6 +372,27 @@ public void setTimecard(Timecard value) {
 		else {
 			objectJson += getFromTime().getTime();
 		}
+		//Retrieve value of the EWA 1 property
+		objectJson += ",\"eWA1\":";
+		
+		if (getEWA1() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEWA1());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Notification Resolved property
 		objectJson += ",\"notificationResolved\":";
 		if (getNotificationResolved() == null)
@@ -317,6 +406,27 @@ public void setTimecard(Timecard value) {
 			objectJson += "null";
 		else {
 			objectJson += getToTime().getTime();
+		}
+		//Retrieve value of the Code Type property
+		objectJson += ",\"codeType\":";
+		
+		if (getCodeType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCodeType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
@@ -346,6 +456,27 @@ public void setTimecard(Timecard value) {
 		else {
 			objectJson += getDuration();
 		}
+		//Retrieve value of the EWA 2 property
+		objectJson += ",\"eWA2\":";
+		
+		if (getEWA2() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEWA2());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Action Name property
 		objectJson += ",\"actionName\":";
 		
@@ -367,16 +498,37 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Activity Name property
-		objectJson += ",\"activityName\":";
+		//Retrieve value of the Note property
+		objectJson += ",\"note\":";
 		
-		if (getActivityName() == null)
+		if (getNote() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActivityName());
+				objectJson += objectMapper.writeValueAsString(getNote());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Minutes property
+		objectJson += ",\"minutes\":";
+		
+		if (getMinutes() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getMinutes());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -471,18 +623,26 @@ objectJson += ",\"timecard\":";
 		// Properties
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+		//From value of the EWA 1 property
+		setEWA1(JsonUtils.getJsonString(jsonObject, "eWA1"));
 		//From value of the Notification Resolved property
 		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
 		//From value of the To Time property
 		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		//From value of the Code Type property
+		setCodeType(JsonUtils.getJsonInteger(jsonObject, "codeType"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+		//From value of the EWA 2 property
+		setEWA2(JsonUtils.getJsonString(jsonObject, "eWA2"));
 		//From value of the Action Name property
 		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
-		//From value of the Activity Name property
-		setActivityName(JsonUtils.getJsonString(jsonObject, "activityName"));
+		//From value of the Note property
+		setNote(JsonUtils.getJsonString(jsonObject, "note"));
+		//From value of the Minutes property
+		setMinutes(JsonUtils.getJsonInteger(jsonObject, "minutes"));
 		//From value of the Notification Detected property
 		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
 		//From value of the Action Code property

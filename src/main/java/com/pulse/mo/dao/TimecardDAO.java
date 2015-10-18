@@ -43,7 +43,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", '' as \"APPROVED\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
 	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value";
@@ -159,6 +159,8 @@ nextResult.setEndDate(rs.getDate("END_DATE"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
 
+nextResult.setApproved(rs.getString("APPROVED"));
+
 nextResult.setAssumedOff(rs.getString("ASSUMED_OFF"));
 
 nextResult.setIsHoliday(rs.getString("IS_HOLIDAY"));
@@ -247,6 +249,23 @@ sql += " WHERE ";
 }
 sql += " START_DATE=? ";
 paramValues.add(theQueryObject.getStartDate());
+propertyCounter++;
+}
+
+boolean useApproved = StringUtils.hasText(theQueryObject.getApproved()) && (excludeProperties == null || !excludeProperties.contains("approved"));
+
+if (useApproved)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " APPROVED=? ";
+paramValues.add(theQueryObject.getApproved());
 propertyCounter++;
 }
 

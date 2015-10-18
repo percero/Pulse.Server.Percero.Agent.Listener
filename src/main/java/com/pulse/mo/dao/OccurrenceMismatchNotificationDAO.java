@@ -41,7 +41,7 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"DATE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_MODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"ACTVTY_CODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_MODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"ACTVTY_CODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"OCCURRENCE_MISMATCH_NOTIF\" \"OCCURRENCE_MISMATCH_NOTIF\"";
 	private String whereClause = "  WHERE \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_OCCURRENCE_MISMATCH_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"DATE\",\"AUX_MODE_EVENT_COUNT\",\"ACTVTY_CODE_EVENT_COUNT\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_OCCURRENCE_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"AUX_MODE_EVENT_COUNT\",\"ACTVTY_CODE_EVENT_COUNT\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_OCCURRENCE_MISMATCH_NOTIF SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"AUX_MODE_EVENT_COUNT\"=?,\"ACTVTY_CODE_EVENT_COUNT\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_OCCURRENCE_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"AUX_MODE_EVENT_COUNT\"=?,\"ACTVTY_CODE_EVENT_COUNT\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,11 +150,9 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTimecardActivityName(rs.getString("TIMECARD_ACTIVITY_NAME"));
+			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setAuxModeEventCount(rs.getInt("AUX_MODE_EVENT_COUNT"));
 
@@ -188,70 +186,8 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getTimecardActivityName());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setInt(5, perceroObject.getAuxModeEventCount());
-pstmt.setInt(6, perceroObject.getTimecardActivityEventCount());
-pstmt.setString(7, perceroObject.getAuxCodeEntryName());
-pstmt.setString(8, perceroObject.getMessage());
-pstmt.setString(9, perceroObject.getName());
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getTeamLeader().getID());
-}
-
-
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-		
-	}
-	
-	@Override
-	protected void setCallableStatmentInsertParams(OccurrenceMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	
-
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getTimecardActivityName());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setInt(4, perceroObject.getAuxModeEventCount());
 pstmt.setInt(5, perceroObject.getTimecardActivityEventCount());
 pstmt.setString(6, perceroObject.getAuxCodeEntryName());
@@ -287,7 +223,67 @@ else
 		pstmt.setString(11, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(12, perceroObject.getID());
+
+		
+	}
+	
+	@Override
+	protected void setPreparedStatmentInsertParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+		
+	}
+	
+	@Override
+	protected void setCallableStatmentInsertParams(OccurrenceMismatchNotification perceroObject, CallableStatement pstmt) throws SQLException {
+		
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+			
+	
+
+	}
+	
+	@Override
+	protected void setPreparedStatmentUpdateParams(OccurrenceMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setInt(3, perceroObject.getAuxModeEventCount());
+pstmt.setInt(4, perceroObject.getTimecardActivityEventCount());
+pstmt.setString(5, perceroObject.getAuxCodeEntryName());
+pstmt.setString(6, perceroObject.getMessage());
+pstmt.setString(7, perceroObject.getName());
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getAgent().getID());
+}
+
+
+if (perceroObject.getLOBConfiguration() == null)
+{
+pstmt.setString(9, null);
+}
+else
+{
+		pstmt.setString(9, perceroObject.getLOBConfiguration().getID());
+}
+
+
+if (perceroObject.getTeamLeader() == null)
+{
+pstmt.setString(10, null);
+}
+else
+{
+		pstmt.setString(10, perceroObject.getTeamLeader().getID());
+}
+
+pstmt.setString(11, perceroObject.getID());
 
 		
 	}
@@ -316,36 +312,19 @@ pstmt.setString(12, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useTimecardActivityName = StringUtils.hasText(theQueryObject.getTimecardActivityName()) && (excludeProperties == null || !excludeProperties.contains("timecardActivityName"));
-
-if (useTimecardActivityName)
-{
-sql += " WHERE ";
-sql += " \"TIMECARD_ACTIVITY_NAME\" =? ";
-paramValues.add(theQueryObject.getTimecardActivityName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
 
 if (useType)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"TYPE\" =? ";
 paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useDate)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -355,8 +334,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 
@@ -507,11 +486,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

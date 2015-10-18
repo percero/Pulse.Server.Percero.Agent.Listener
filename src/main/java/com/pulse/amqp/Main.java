@@ -17,6 +17,8 @@ import com.pulse.mo.LOBConfiguration;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.ThresholdExceededNotification;
+
+import com.pulse.mo.*;
 /**
  * This class supplies the main method that creates the spring context
  * and then all processing is invoked asynchronously by messaging.
@@ -162,5 +164,34 @@ public class Main{
 //		} catch(Exception e1) {
 //			e1.printStackTrace();
 //		}
+
+		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
+
+		Agent agent = new Agent();
+		agent.setID("100351668");
+
+		TeamLeader teamLeader = new TeamLeader();
+		teamLeader.setID("100351667");
+
+		AdhocTaskState adhockTaskState = new AdhocTaskState();
+		adhockTaskState.setID("2");
+
+		AdhocTask adhocTask= new AdhocTask();
+		adhocTask.setAdhocTaskState(adhockTaskState);
+		adhocTask.setTaskDetail("new adhock task 123");
+		adhocTask.setTeamLeader(teamLeader);
+		adhocTask.setWeekDate(new Date());
+		adhocTask.setAgent(agent);
+		adhocTask.setDueDate(new Date());
+		adhocTask.setCreatedOn(new Date());
+		adhocTask.setUpdatedBy(teamLeader.getID());
+		adhocTask.setUpdatedOn(new Date());
+		try {
+			System.out.println("==================================");
+			syncAgentService.systemCreateObject(adhocTask, null);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

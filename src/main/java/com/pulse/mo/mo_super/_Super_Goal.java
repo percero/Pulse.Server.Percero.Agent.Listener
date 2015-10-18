@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_Goal extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Scorecard
+	Keys of Goal
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,90 +85,107 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-GroupId
+UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String groupId;
+private Date updatedOn;
 
-public String getGroupId() 
+public Date getUpdatedOn() 
 {
-	return this.groupId;
+	return this.updatedOn;
 }
 
-public void setGroupId(String groupId)
+public void setUpdatedOn(Date updatedOn)
 {
-	this.groupId = groupId;
+	this.updatedOn = updatedOn;
 }/*
-Description
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String description;
+private Date endDate;
 
-public String getDescription() 
+public Date getEndDate() 
 {
-	return this.description;
+	return this.endDate;
 }
 
-public void setDescription(String description)
+public void setEndDate(Date endDate)
 {
-	this.description = description;
+	this.endDate = endDate;
 }/*
-RegionId
+DurationTo
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String regionId;
+private Integer durationTo;
 
-public String getRegionId() 
+public Integer getDurationTo() 
 {
-	return this.regionId;
+	return this.durationTo;
 }
 
-public void setRegionId(String regionId)
+public void setDurationTo(Integer durationTo)
 {
-	this.regionId = regionId;
+	this.durationTo = durationTo;
 }/*
-CreatedOn
+GoalValue
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private Integer goalValue;
 
-public Date getCreatedOn() 
+public Integer getGoalValue() 
 {
-	return this.createdOn;
+	return this.goalValue;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setGoalValue(Integer goalValue)
 {
-	this.createdOn = createdOn;
+	this.goalValue = goalValue;
 }/*
-Name
+GoalTypeName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String name;
+private String goalTypeName;
 
-public String getName() 
+public String getGoalTypeName() 
 {
-	return this.name;
+	return this.goalTypeName;
 }
 
-public void setName(String name)
+public void setGoalTypeName(String goalTypeName)
 {
-	this.name = name;
+	this.goalTypeName = goalTypeName;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
 }/*
 CreatedBy
 Notes:
@@ -187,6 +204,57 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
+DurationFrom
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationFrom;
+
+public Integer getDurationFrom() 
+{
+	return this.durationFrom;
+}
+
+public void setDurationFrom(Integer durationFrom)
+{
+	this.durationFrom = durationFrom;
+}/*
+GoalType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer goalType;
+
+public Integer getGoalType() 
+{
+	return this.goalType;
+}
+
+public void setGoalType(Integer goalType)
+{
+	this.goalType = goalType;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
 UpdatedBy
 Notes:
 */
@@ -203,57 +271,6 @@ public String getUpdatedBy()
 public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
-}/*
-ECoachingLOBId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String eCoachingLOBId;
-
-public String getECoachingLOBId() 
-{
-	return this.eCoachingLOBId;
-}
-
-public void setECoachingLOBId(String eCoachingLOBId)
-{
-	this.eCoachingLOBId = eCoachingLOBId;
-}/*
-LockLevel
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String lockLevel;
-
-public String getLockLevel() 
-{
-	return this.lockLevel;
-}
-
-public void setLockLevel(String lockLevel)
-{
-	this.lockLevel = lockLevel;
-}/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -262,27 +279,14 @@ public void setUpdatedOn(Date updatedOn)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasure> scorecardMeasures;
-public List<ScorecardMeasure> getScorecardMeasures() {
-	return this.scorecardMeasures;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=GradeScale.class, mappedBy="goal", cascade=javax.persistence.CascadeType.REMOVE)
+private List<GradeScale> gradeScales;
+public List<GradeScale> getGradeScales() {
+	return this.gradeScales;
 }
 
-public void setScorecardMeasures(List<ScorecardMeasure> value) {
-	this.scorecardMeasures = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentScorecard.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AgentScorecard> agentScorecards;
-public List<AgentScorecard> getAgentScorecards() {
-	return this.agentScorecards;
-}
-
-public void setAgentScorecards(List<AgentScorecard> value) {
-	this.agentScorecards = value;
+public void setGradeScales(List<GradeScale> value) {
+	this.gradeScales = value;
 }
 
 
@@ -301,16 +305,30 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Group Id property
-		objectJson += ",\"groupId\":";
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Duration To property
+		objectJson += ",\"durationTo\":";
 		
-		if (getGroupId() == null)
+		if (getDurationTo() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGroupId());
+				objectJson += objectMapper.writeValueAsString(getDurationTo());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -322,16 +340,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
+		//Retrieve value of the Goal Value property
+		objectJson += ",\"goalValue\":";
 		
-		if (getDescription() == null)
+		if (getGoalValue() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
+				objectJson += objectMapper.writeValueAsString(getGoalValue());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -343,16 +361,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Region Id property
-		objectJson += ",\"regionId\":";
+		//Retrieve value of the Goal Type Name property
+		objectJson += ",\"goalTypeName\":";
 		
-		if (getRegionId() == null)
+		if (getGoalTypeName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getRegionId());
+				objectJson += objectMapper.writeValueAsString(getGoalTypeName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -364,33 +382,12 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
@@ -413,6 +410,55 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Duration From property
+		objectJson += ",\"durationFrom\":";
+		
+		if (getDurationFrom() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDurationFrom());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Goal Type property
+		objectJson += ",\"goalType\":";
+		
+		if (getGoalType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getGoalType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
 		
@@ -434,89 +480,23 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the ECoaching LOB Id property
-		objectJson += ",\"eCoachingLOBId\":";
-		
-		if (getECoachingLOBId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getECoachingLOBId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Lock Level property
-		objectJson += ",\"lockLevel\":";
-		
-		if (getLockLevel() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLockLevel());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
 
 				
 		// Source Relationships
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard of Scorecard Measure relationship
-objectJson += ",\"scorecardMeasures\":[";
+//Retrieve value of the Goal of Grade Scale relationship
+objectJson += ",\"gradeScales\":[";
 		
-		if (getScorecardMeasures() != null) {
-			int scorecardMeasuresCounter = 0;
-			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
-				if (scorecardMeasuresCounter > 0)
+		if (getGradeScales() != null) {
+			int gradeScalesCounter = 0;
+			for(GradeScale nextGradeScales : getGradeScales()) {
+				if (gradeScalesCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
-					scorecardMeasuresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Scorecard of Agent Scorecard relationship
-objectJson += ",\"agentScorecards\":[";
-		
-		if (getAgentScorecards() != null) {
-			int agentScorecardsCounter = 0;
-			for(AgentScorecard nextAgentScorecards : getAgentScorecards()) {
-				if (agentScorecardsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAgentScorecards).toEmbeddedJson();
-					agentScorecardsCounter++;
+					objectJson += ((BaseDataObject) nextGradeScales).toEmbeddedJson();
+					gradeScalesCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -534,34 +514,35 @@ objectJson += ",\"agentScorecards\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Group Id property
-		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Region Id property
-		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the ECoaching LOB Id property
-		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
-		//From value of the Lock Level property
-		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Duration To property
+		setDurationTo(JsonUtils.getJsonInteger(jsonObject, "durationTo"));
+		//From value of the Goal Value property
+		setGoalValue(JsonUtils.getJsonInteger(jsonObject, "goalValue"));
+		//From value of the Goal Type Name property
+		setGoalTypeName(JsonUtils.getJsonString(jsonObject, "goalTypeName"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Duration From property
+		setDurationFrom(JsonUtils.getJsonInteger(jsonObject, "durationFrom"));
+		//From value of the Goal Type property
+		setGoalType(JsonUtils.getJsonInteger(jsonObject, "goalType"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 
 		
 		// Source Relationships
 
 
 		// Target Relationships
-		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
-		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
+		this.gradeScales = (List<GradeScale>) JsonUtils.getJsonListPerceroObject(jsonObject, "gradeScales");
 
 
 	}
@@ -571,8 +552,7 @@ objectJson += ",\"agentScorecards\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
-		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
+		listSetters.add(MappedClass.getFieldSetters(GradeScale.class, "goal"));
 
 		
 		return listSetters;

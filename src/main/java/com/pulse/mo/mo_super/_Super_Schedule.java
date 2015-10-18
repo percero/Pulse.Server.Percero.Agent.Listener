@@ -108,14 +108,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date startTime;
+private String startTime;
 
-public Date getStartTime() 
+public String getStartTime() 
 {
 	return this.startTime;
 }
 
-public void setStartTime(Date startTime)
+public void setStartTime(String startTime)
 {
 	this.startTime = startTime;
 }/*
@@ -208,7 +208,20 @@ public void setTotalTime(Double totalTime)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScheduleEntry.class, mappedBy="schedule", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScheduleEntry> scheduleEntries;
+public List<ScheduleEntry> getScheduleEntries() {
+	return this.scheduleEntries;
+}
+
+public void setScheduleEntries(List<ScheduleEntry> value) {
+	this.scheduleEntries = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -246,10 +259,24 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Start Time property
 		objectJson += ",\"startTime\":";
+		
 		if (getStartTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getStartTime().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartTime());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Shift property
 		objectJson += ",\"shift\":";
@@ -332,6 +359,23 @@ objectJson += ",\"agent\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Schedule of Schedule Entry relationship
+objectJson += ",\"scheduleEntries\":[";
+		
+		if (getScheduleEntries() != null) {
+			int scheduleEntriesCounter = 0;
+			for(ScheduleEntry nextScheduleEntries : getScheduleEntries()) {
+				if (scheduleEntriesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScheduleEntries).toEmbeddedJson();
+					scheduleEntriesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -346,7 +390,7 @@ objectJson += ",\"agent\":";
 		//From value of the End Time property
 		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
 		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		setStartTime(JsonUtils.getJsonString(jsonObject, "startTime"));
 		//From value of the Shift property
 		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
 		//From value of the End Date property
@@ -364,6 +408,7 @@ objectJson += ",\"agent\":";
 
 
 		// Target Relationships
+		this.scheduleEntries = (List<ScheduleEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduleEntries");
 
 
 	}
@@ -373,6 +418,7 @@ objectJson += ",\"agent\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(ScheduleEntry.class, "schedule"));
 
 		
 		return listSetters;

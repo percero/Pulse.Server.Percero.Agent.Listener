@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -22,9 +23,9 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-
 @Component
 public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> implements IDataAccessObject<AdhocTaskState> {
+
 
 	static final Logger log = Logger.getLogger(AdhocTaskStateDAO.class);
 
@@ -158,13 +159,13 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
     	
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocTaskState perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getName());
 
-		
+
 	}
 	
 	@Override
@@ -252,4 +253,4 @@ propertyCounter++;
 	
 	
 }
-
+

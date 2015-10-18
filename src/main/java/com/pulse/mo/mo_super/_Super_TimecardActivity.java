@@ -157,60 +157,7 @@ public void setCode(String code)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=TimecardEntry.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
-private List<TimecardEntry> timecardEntries;
-public List<TimecardEntry> getTimecardEntries() {
-	return this.timecardEntries;
-}
-
-public void setTimecardEntries(List<TimecardEntry> value) {
-	this.timecardEntries = value;
-}
-
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@com.percero.agents.sync.metadata.annotations.Externalize
-@OneToOne(fetch=FetchType.LAZY, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
-private LOBConfigurationEntry lOBConfigurationEntry;
-public LOBConfigurationEntry getLOBConfigurationEntry() {
-	return this.lOBConfigurationEntry;
-}
-
-public void setLOBConfigurationEntry(LOBConfigurationEntry value) 
-{
-	this.lOBConfigurationEntry = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=DiscrepancyDetectedNotification.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
-private List<DiscrepancyDetectedNotification> discrepancyDetectedNotifications;
-public List<DiscrepancyDetectedNotification> getDiscrepancyDetectedNotifications() {
-	return this.discrepancyDetectedNotifications;
-}
-
-public void setDiscrepancyDetectedNotifications(List<DiscrepancyDetectedNotification> value) {
-	this.discrepancyDetectedNotifications = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ShiftStatusNotification.class, mappedBy="timecardActivity", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ShiftStatusNotification> shiftStatusNotifications;
-public List<ShiftStatusNotification> getShiftStatusNotifications() {
-	return this.shiftStatusNotifications;
-}
-
-public void setShiftStatusNotifications(List<ShiftStatusNotification> value) {
-	this.shiftStatusNotifications = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -302,59 +249,6 @@ public void setShiftStatusNotifications(List<ShiftStatusNotification> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Timecard Activity of Timecard Entry relationship
-objectJson += ",\"timecardEntries\":[";
-		
-		if (getTimecardEntries() != null) {
-			int timecardEntriesCounter = 0;
-			for(TimecardEntry nextTimecardEntries : getTimecardEntries()) {
-				if (timecardEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextTimecardEntries).toEmbeddedJson();
-					timecardEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Timecard Activity of LOB Configuration Entry relationship
-
-//Retrieve value of the Timecard Activity of Discrepancy Detected Notification relationship
-objectJson += ",\"discrepancyDetectedNotifications\":[";
-		
-		if (getDiscrepancyDetectedNotifications() != null) {
-			int discrepancyDetectedNotificationsCounter = 0;
-			for(DiscrepancyDetectedNotification nextDiscrepancyDetectedNotifications : getDiscrepancyDetectedNotifications()) {
-				if (discrepancyDetectedNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextDiscrepancyDetectedNotifications).toEmbeddedJson();
-					discrepancyDetectedNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Timecard Activity of Shift Status Notification relationship
-objectJson += ",\"shiftStatusNotifications\":[";
-		
-		if (getShiftStatusNotifications() != null) {
-			int shiftStatusNotificationsCounter = 0;
-			for(ShiftStatusNotification nextShiftStatusNotifications : getShiftStatusNotifications()) {
-				if (shiftStatusNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextShiftStatusNotifications).toEmbeddedJson();
-					shiftStatusNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -380,10 +274,6 @@ objectJson += ",\"shiftStatusNotifications\":[";
 
 
 		// Target Relationships
-		this.timecardEntries = (List<TimecardEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecardEntries");
-		this.lOBConfigurationEntry = (LOBConfigurationEntry) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationEntry");
-		this.discrepancyDetectedNotifications = (List<DiscrepancyDetectedNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "discrepancyDetectedNotifications");
-		this.shiftStatusNotifications = (List<ShiftStatusNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "shiftStatusNotifications");
 
 
 	}
@@ -393,9 +283,6 @@ objectJson += ",\"shiftStatusNotifications\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "timecardactivity"));
-		listSetters.add(MappedClass.getFieldSetters(DiscrepancyDetectedNotification.class, "timecardactivity"));
-		listSetters.add(MappedClass.getFieldSetters(ShiftStatusNotification.class, "timecardactivity"));
 
 		
 		return listSetters;

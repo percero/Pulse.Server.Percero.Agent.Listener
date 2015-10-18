@@ -70,23 +70,6 @@ public class _Super_DiscrepancyDetectedNotification extends LOBConfigurationNoti
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-TimecardActivityName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String timecardActivityName;
-
-public String getTimecardActivityName() 
-{
-	return this.timecardActivityName;
-}
-
-public void setTimecardActivityName(String timecardActivityName)
-{
-	this.timecardActivityName = timecardActivityName;
-}/*
 AuxCodeEntryName
 Notes:
 */
@@ -137,27 +120,6 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Timecard Activity Name property
-		objectJson += ",\"timecardActivityName\":";
-		
-		if (getTimecardActivityName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getTimecardActivityName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Aux Code Entry Name property
 		objectJson += ",\"auxCodeEntryName\":";
 		
@@ -208,8 +170,6 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Timecard Activity Name property
-		setTimecardActivityName(JsonUtils.getJsonString(jsonObject, "timecardActivityName"));
 		//From value of the Aux Code Entry Name property
 		setAuxCodeEntryName(JsonUtils.getJsonString(jsonObject, "auxCodeEntryName"));
 

@@ -41,7 +41,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"DATE\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"CREATED_ON\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_TOLERANCE_NOTIF\" \"DURATION_TOLERANCE_NOTIF\"";
 	private String whereClause = "  WHERE \"DURATION_TOLERANCE_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DURATION_TOLERANCE_NOTIF (\"ID\",\"TYPE\",\"DATE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DURATION_TOLERANCE_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DURATION_TOLERANCE_NOTIF SET \"TYPE\"=?,\"DATE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DURATION_TOLERANCE_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -152,7 +152,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -185,7 +185,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(4, perceroObject.getMessage());
 pstmt.setString(5, perceroObject.getName());
 
@@ -252,7 +252,7 @@ else
 	protected void setPreparedStatmentUpdateParams(DurationToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(3, perceroObject.getMessage());
 pstmt.setString(4, perceroObject.getName());
 
@@ -334,9 +334,9 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useDate)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -346,8 +346,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 

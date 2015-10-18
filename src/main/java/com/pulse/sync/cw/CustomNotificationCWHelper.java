@@ -141,7 +141,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 								DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
 								durationToleranceNotification.setID(UUID.randomUUID().toString());
 								durationToleranceNotification.setAgent(agent);
-								durationToleranceNotification.setDate(new Date());
+								durationToleranceNotification.setCreatedOn(new Date());
 								durationToleranceNotification.setTeamLeader(teamLeader);
 								syncAgentService.systemCreateObject(durationToleranceNotification, null);
 							}

@@ -119,22 +119,22 @@ public void setName(String name)
 {
 	this.name = name;
 }/*
-Date
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date date;
+private Date createdOn;
 
-public Date getDate() 
+public Date getCreatedOn() 
 {
-	return this.date;
+	return this.createdOn;
 }
 
-public void setDate(Date date)
+public void setCreatedOn(Date createdOn)
 {
-	this.date = date;
+	this.createdOn = createdOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -211,12 +211,12 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getDate().getTime();
+			objectJson += getCreatedOn().getTime();
 		}
 
 				
@@ -251,8 +251,8 @@ objectJson += ",\"teamLeader\":";
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 
 		
 		// Source Relationships

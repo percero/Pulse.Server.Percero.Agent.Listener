@@ -20,6 +20,7 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.ScheduleEntry;
 import com.pulse.mo.Agent;
+import com.pulse.mo.Schedule;
 
 */
 
@@ -42,7 +43,7 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", '' as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
 	private String whereClause = " WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE_ENTRY\".\"ID\"= SQLLIST.column_value";
@@ -152,7 +153,9 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
     	
     	if (!shellOnly) 
 		{
-			nextResult.setPosition(rs.getString("POSITION"));
+			nextResult.setStartTime(rs.getString("START_TIME"));
+
+nextResult.setPosition(rs.getString("POSITION"));
 
 nextResult.setProject(rs.getString("PROJECT"));
 
@@ -164,8 +167,6 @@ nextResult.setEndTime(rs.getDate("END_TIME"));
 
 nextResult.setModifiedTimestamp(rs.getDate("MODIFIED_TIMESTAMP"));
 
-nextResult.setStartTime(rs.getDate("START_TIME"));
-
 nextResult.setDuration(rs.getDouble("DURATION"));
 
 nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
@@ -173,6 +174,10 @@ nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
+
+Schedule schedule = new Schedule();
+schedule.setID(rs.getString("SCHEDULE_ID"));
+nextResult.setSchedule(schedule);
 
 
 			
@@ -207,11 +212,28 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
+		boolean useStartTime = StringUtils.hasText(theQueryObject.getStartTime()) && (excludeProperties == null || !excludeProperties.contains("startTime"));
+
+if (useStartTime)
+{
+sql += " WHERE ";
+sql += " START_TIME=? ";
+paramValues.add(theQueryObject.getStartTime());
+propertyCounter++;
+}
+
+boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
 
 if (usePosition)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " POSITION=? ";
 paramValues.add(theQueryObject.getPosition());
 propertyCounter++;
@@ -302,23 +324,6 @@ paramValues.add(theQueryObject.getModifiedTimestamp());
 propertyCounter++;
 }
 
-boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
-
-if (useStartTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
-propertyCounter++;
-}
-
 boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
 
 if (useDuration)
@@ -367,6 +372,23 @@ sql += " WHERE ";
 }
 sql += " AGENT_ID=? ";
 paramValues.add(theQueryObject.getAgent().getID());
+propertyCounter++;
+}
+
+boolean useScheduleID = theQueryObject.getSchedule() != null && (excludeProperties == null || !excludeProperties.contains("schedule"));
+
+if (useScheduleID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " SCHEDULE_ID=? ";
+paramValues.add(theQueryObject.getSchedule().getID());
 propertyCounter++;
 }
 

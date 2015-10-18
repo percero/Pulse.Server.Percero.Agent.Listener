@@ -70,23 +70,6 @@ public class _Super_DurationMismatchNotification extends DiscrepancyDetectedNoti
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-StartTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startTime;
-
-public Date getStartTime() 
-{
-	return this.startTime;
-}
-
-public void setStartTime(Date startTime)
-{
-	this.startTime = startTime;
-}/*
 Duration
 Notes:
 */
@@ -141,13 +124,6 @@ public void setEndTime(Date endTime)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Start Time property
-		objectJson += ",\"startTime\":";
-		if (getStartTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartTime().getTime();
-		}
 		//Retrieve value of the Duration property
 		objectJson += ",\"duration\":";
 		if (getDuration() == null)
@@ -179,8 +155,6 @@ public void setEndTime(Date endTime)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the End Time property

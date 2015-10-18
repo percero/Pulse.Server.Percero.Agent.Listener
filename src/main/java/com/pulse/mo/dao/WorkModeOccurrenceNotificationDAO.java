@@ -41,7 +41,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"WORK_MODE_OCCURRENCE_NOTIF\".\"DATE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	public static final String SQL_VIEW = ",\"WORK_MODE_OCCURRENCE_NOTIF\".\"CREATED_ON\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGIN_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOGOUT_COUNT\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"MESSAGE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"NAME\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TYPE\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"AGENT_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"TEAM_LEADER_ID\",\"WORK_MODE_OCCURRENCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"WORK_MODE_OCCURRENCE_NOTIF\" \"WORK_MODE_OCCURRENCE_NOTIF\"";
 	private String whereClause = "  WHERE \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_MODE_OCCURRENCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_WORK_MODE_OCCURRENCE_NOTIF (\"ID\",\"DATE\",\"LOGIN_COUNT\",\"LOGOUT_COUNT\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_WORK_MODE_OCCURRENCE_NOTIF (\"ID\",\"CREATED_ON\",\"LOGIN_COUNT\",\"LOGOUT_COUNT\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_WORK_MODE_OCCURRENCE_NOTIF SET \"DATE\"=?,\"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_WORK_MODE_OCCURRENCE_NOTIF SET \"CREATED_ON\"=?,\"LOGIN_COUNT\"=?,\"LOGOUT_COUNT\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,7 +150,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setLoginCount(rs.getInt("LOGIN_COUNT"));
 
@@ -188,7 +188,7 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 	protected void setBaseStatmentInsertParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setInt(3, perceroObject.getLoginCount());
 pstmt.setInt(4, perceroObject.getLogoutCount());
 pstmt.setString(5, perceroObject.getMessage());
@@ -257,7 +257,7 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setInt(2, perceroObject.getLoginCount());
 pstmt.setInt(3, perceroObject.getLogoutCount());
 pstmt.setString(4, perceroObject.getMessage());
@@ -332,13 +332,13 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useDate)
+if (useCreatedOn)
 {
 sql += " WHERE ";
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 

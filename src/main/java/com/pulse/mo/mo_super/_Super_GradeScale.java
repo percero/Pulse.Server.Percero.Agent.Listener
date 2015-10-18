@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_GradeScale extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Scorecard
+	Keys of GradeScale
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,90 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-GroupId
+Grade
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String groupId;
+private Integer grade;
 
-public String getGroupId() 
+public Integer getGrade() 
 {
-	return this.groupId;
+	return this.grade;
 }
 
-public void setGroupId(String groupId)
+public void setGrade(Integer grade)
 {
-	this.groupId = groupId;
-}/*
-Description
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String description;
-
-public String getDescription() 
-{
-	return this.description;
-}
-
-public void setDescription(String description)
-{
-	this.description = description;
-}/*
-RegionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String regionId;
-
-public String getRegionId() 
-{
-	return this.regionId;
-}
-
-public void setRegionId(String regionId)
-{
-	this.regionId = regionId;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
+	this.grade = grade;
 }/*
 CreatedBy
 Notes:
@@ -187,6 +119,57 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
+}/*
+ANDOR
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String aNDOR;
+
+public String getANDOR() 
+{
+	return this.aNDOR;
+}
+
+public void setANDOR(String aNDOR)
+{
+	this.aNDOR = aNDOR;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
 UpdatedBy
 Notes:
 */
@@ -204,39 +187,22 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-ECoachingLOBId
+EndExpression
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String eCoachingLOBId;
+private String endExpression;
 
-public String getECoachingLOBId() 
+public String getEndExpression() 
 {
-	return this.eCoachingLOBId;
+	return this.endExpression;
 }
 
-public void setECoachingLOBId(String eCoachingLOBId)
+public void setEndExpression(String endExpression)
 {
-	this.eCoachingLOBId = eCoachingLOBId;
-}/*
-LockLevel
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String lockLevel;
-
-public String getLockLevel() 
-{
-	return this.lockLevel;
-}
-
-public void setLockLevel(String lockLevel)
-{
-	this.lockLevel = lockLevel;
+	this.endExpression = endExpression;
 }/*
 UpdatedOn
 Notes:
@@ -254,43 +220,132 @@ public Date getUpdatedOn()
 public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
+}/*
+StartExp
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String startExp;
+
+public String getStartExp() 
+{
+	return this.startExp;
+}
+
+public void setStartExp(String startExp)
+{
+	this.startExp = startExp;
+}/*
+Color
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String color;
+
+public String getColor() 
+{
+	return this.color;
+}
+
+public void setColor(String color)
+{
+	this.color = color;
+}/*
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
+}/*
+EndValue
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer endValue;
+
+public Integer getEndValue() 
+{
+	return this.endValue;
+}
+
+public void setEndValue(Integer endValue)
+{
+	this.endValue = endValue;
+}/*
+SCMGoalId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer sCMGoalId;
+
+public Integer getSCMGoalId() 
+{
+	return this.sCMGoalId;
+}
+
+public void setSCMGoalId(Integer sCMGoalId)
+{
+	this.sCMGoalId = sCMGoalId;
+}/*
+Custom
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer custom;
+
+public Integer getCustom() 
+{
+	return this.custom;
+}
+
+public void setCustom(Integer custom)
+{
+	this.custom = custom;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasure> scorecardMeasures;
-public List<ScorecardMeasure> getScorecardMeasures() {
-	return this.scorecardMeasures;
-}
-
-public void setScorecardMeasures(List<ScorecardMeasure> value) {
-	this.scorecardMeasures = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentScorecard.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AgentScorecard> agentScorecards;
-public List<AgentScorecard> getAgentScorecards() {
-	return this.agentScorecards;
-}
-
-public void setAgentScorecards(List<AgentScorecard> value) {
-	this.agentScorecards = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="GOAL_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_GoalOfGradeScale")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Goal goal;
+public Goal getGoal() {
+	return this.goal;
+}
+
+public void setGoal(Goal value) {
+	this.goal = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -301,86 +356,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Group Id property
-		objectJson += ",\"groupId\":";
+		//Retrieve value of the Grade property
+		objectJson += ",\"grade\":";
 		
-		if (getGroupId() == null)
+		if (getGrade() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGroupId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
-		
-		if (getDescription() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Region Id property
-		objectJson += ",\"regionId\":";
-		
-		if (getRegionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getRegionId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getGrade());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -413,6 +398,41 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the AND OR property
+		objectJson += ",\"aNDOR\":";
+		
+		if (getANDOR() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getANDOR());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
 		
@@ -434,37 +454,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the ECoaching LOB Id property
-		objectJson += ",\"eCoachingLOBId\":";
+		//Retrieve value of the End Expression property
+		objectJson += ",\"endExpression\":";
 		
-		if (getECoachingLOBId() == null)
+		if (getEndExpression() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getECoachingLOBId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Lock Level property
-		objectJson += ",\"lockLevel\":";
-		
-		if (getLockLevel() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLockLevel());
+				objectJson += objectMapper.writeValueAsString(getEndExpression());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -483,46 +482,136 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 		else {
 			objectJson += getUpdatedOn().getTime();
 		}
+		//Retrieve value of the Start Exp property
+		objectJson += ",\"startExp\":";
+		
+		if (getStartExp() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartExp());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Color property
+		objectJson += ",\"color\":";
+		
+		if (getColor() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getColor());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the End Value property
+		objectJson += ",\"endValue\":";
+		
+		if (getEndValue() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEndValue());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the SCM Goal Id property
+		objectJson += ",\"sCMGoalId\":";
+		
+		if (getSCMGoalId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSCMGoalId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Custom property
+		objectJson += ",\"custom\":";
+		
+		if (getCustom() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCustom());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
+//Retrieve value of the Goal of Grade Scale relationship
+objectJson += ",\"goal\":";
+		if (getGoal() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getGoal()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard of Scorecard Measure relationship
-objectJson += ",\"scorecardMeasures\":[";
-		
-		if (getScorecardMeasures() != null) {
-			int scorecardMeasuresCounter = 0;
-			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
-				if (scorecardMeasuresCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
-					scorecardMeasuresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Scorecard of Agent Scorecard relationship
-objectJson += ",\"agentScorecards\":[";
-		
-		if (getAgentScorecards() != null) {
-			int agentScorecardsCounter = 0;
-			for(AgentScorecard nextAgentScorecards : getAgentScorecards()) {
-				if (agentScorecardsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAgentScorecards).toEmbeddedJson();
-					agentScorecardsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -534,34 +623,41 @@ objectJson += ",\"agentScorecards\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Group Id property
-		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Region Id property
-		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the AND OR property
+		setANDOR(JsonUtils.getJsonString(jsonObject, "aNDOR"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the ECoaching LOB Id property
-		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
-		//From value of the Lock Level property
-		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
+		//From value of the End Expression property
+		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Start Exp property
+		setStartExp(JsonUtils.getJsonString(jsonObject, "startExp"));
+		//From value of the Color property
+		setColor(JsonUtils.getJsonString(jsonObject, "color"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the End Value property
+		setEndValue(JsonUtils.getJsonInteger(jsonObject, "endValue"));
+		//From value of the SCM Goal Id property
+		setSCMGoalId(JsonUtils.getJsonInteger(jsonObject, "sCMGoalId"));
+		//From value of the Custom property
+		setCustom(JsonUtils.getJsonInteger(jsonObject, "custom"));
 
 		
 		// Source Relationships
+		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 
 
 		// Target Relationships
-		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
-		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 
 
 	}
@@ -571,8 +667,6 @@ objectJson += ",\"agentScorecards\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
-		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
 
 		
 		return listSetters;

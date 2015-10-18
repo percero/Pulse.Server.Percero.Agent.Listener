@@ -119,7 +119,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 							if (existingShiftStatusNotification == null) {
 								existingShiftStatusNotification = new ShiftStatusNotification();
 								existingShiftStatusNotification.setID(UUID.randomUUID().toString());
-								existingShiftStatusNotification.setDate(new Date());
+								existingShiftStatusNotification.setCreatedOn(new Date());
 								existingShiftStatusNotification.setName("Shift Status");
 								existingShiftStatusNotification.setType("ShiftStatusNotification");
 								existingShiftStatusNotification.setTeamLeader(teamLeader);

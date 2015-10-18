@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-GoalId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer goalId;
-
-public Integer getGoalId() 
-{
-	return this.goalId;
-}
-
-public void setGoalId(Integer goalId)
-{
-	this.goalId = goalId;
-}/*
 PercentageAttainment
 Notes:
 */
@@ -118,23 +101,6 @@ public Double getPercentageAttainment()
 public void setPercentageAttainment(Double percentageAttainment)
 {
 	this.percentageAttainment = percentageAttainment;
-}/*
-Goal
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double goal;
-
-public Double getGoal() 
-{
-	return this.goal;
-}
-
-public void setGoal(Double goal)
-{
-	this.goal = goal;
 }/*
 Result
 Notes:
@@ -433,6 +399,19 @@ public void setAgentScorecard(AgentScorecard value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="GOAL_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_GoalOfScorecardMeasureWeeklyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Goal goal;
+public Goal getGoal() {
+	return this.goal;
+}
+
+public void setGoal(Goal value) {
+	this.goal = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfScorecardMeasureWeeklyResult")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -454,40 +433,12 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Goal Id property
-		objectJson += ",\"goalId\":";
-		
-		if (getGoalId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getGoalId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Percentage Attainment property
 		objectJson += ",\"percentageAttainment\":";
 		if (getPercentageAttainment() == null)
 			objectJson += "null";
 		else {
 			objectJson += getPercentageAttainment();
-		}
-		//Retrieve value of the Goal property
-		objectJson += ",\"goal\":";
-		if (getGoal() == null)
-			objectJson += "null";
-		else {
-			objectJson += getGoal();
 		}
 		//Retrieve value of the Result property
 		objectJson += ",\"result\":";
@@ -756,6 +707,18 @@ objectJson += ",\"agentScorecard\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Goal of Scorecard Measure Weekly Result relationship
+objectJson += ",\"goal\":";
+		if (getGoal() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getGoal()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Scorecard Measure of Scorecard Measure Weekly Result relationship
 objectJson += ",\"scorecardMeasure\":";
 		if (getScorecardMeasure() == null)
@@ -782,12 +745,8 @@ objectJson += ",\"scorecardMeasure\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Goal Id property
-		setGoalId(JsonUtils.getJsonInteger(jsonObject, "goalId"));
 		//From value of the Percentage Attainment property
 		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
-		//From value of the Goal property
-		setGoal(JsonUtils.getJsonDouble(jsonObject, "goal"));
 		//From value of the Result property
 		setResult(JsonUtils.getJsonDouble(jsonObject, "result"));
 		//From value of the Points Possible property
@@ -824,6 +783,7 @@ objectJson += ",\"scorecardMeasure\":";
 		
 		// Source Relationships
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
+		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 

@@ -135,23 +135,6 @@ public Boolean getCoachable()
 public void setCoachable(Boolean coachable)
 {
 	this.coachable = coachable;
-}/*
-Weight
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weight;
-
-public String getWeight() 
-{
-	return this.weight;
-}
-
-public void setWeight(String weight)
-{
-	this.weight = weight;
 }
 
 	//////////////////////////////////////////////////////
@@ -248,27 +231,6 @@ public void setScorecard(Scorecard value) {
 		else {
 			objectJson += getCoachable();
 		}
-		//Retrieve value of the Weight property
-		objectJson += ",\"weight\":";
-		
-		if (getWeight() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeight());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -316,8 +278,6 @@ objectJson += ",\"scorecard\":";
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Coachable property
 		setCoachable(JsonUtils.getJsonBoolean(jsonObject, "coachable"));
-		//From value of the Weight property
-		setWeight(JsonUtils.getJsonString(jsonObject, "weight"));
 
 		
 		// Source Relationships

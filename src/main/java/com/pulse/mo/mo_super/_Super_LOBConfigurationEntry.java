@@ -195,20 +195,6 @@ public void setThresholdExceededNotifications(List<ThresholdExceededNotification
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="TIMECARD_ACTIVITY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfLOBConfigurationEntry")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private TimecardActivity timecardActivity;
-public TimecardActivity getTimecardActivity() {
-	return this.timecardActivity;
-}
-
-public void setTimecardActivity(TimecardActivity value) 
-{
-	this.timecardActivity = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -338,18 +324,6 @@ public void setNotificationFrequency(NotificationFrequency value)
 
 				
 		// Source Relationships
-//Retrieve value of the Timecard Activity of LOB Configuration Entry relationship
-objectJson += ",\"timecardActivity\":";
-		if (getTimecardActivity() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getTimecardActivity()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
 objectJson += ",\"lOBConfiguration\":";
 		if (getLOBConfiguration() == null)
@@ -418,7 +392,6 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 
 		
 		// Source Relationships
-		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
 		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
 		this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
 

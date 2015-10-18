@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Scorecard extends BaseDataObject implements Serializable
+public class _Super_AdhocCoachingSessionAttachment extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Scorecard extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Scorecard
+	Keys of AdhocCoachingSessionAttachment
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,90 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-GroupId
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String groupId;
+private String updatedBy;
 
-public String getGroupId() 
+public String getUpdatedBy() 
 {
-	return this.groupId;
+	return this.updatedBy;
 }
 
-public void setGroupId(String groupId)
+public void setUpdatedBy(String updatedBy)
 {
-	this.groupId = groupId;
-}/*
-Description
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String description;
-
-public String getDescription() 
-{
-	return this.description;
-}
-
-public void setDescription(String description)
-{
-	this.description = description;
-}/*
-RegionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String regionId;
-
-public String getRegionId() 
-{
-	return this.regionId;
-}
-
-public void setRegionId(String regionId)
-{
-	this.regionId = regionId;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
+	this.updatedBy = updatedBy;
 }/*
 CreatedBy
 Notes:
@@ -187,56 +119,141 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
-UpdatedBy
+Type
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String updatedBy;
+private String type;
 
-public String getUpdatedBy() 
+public String getType() 
 {
-	return this.updatedBy;
+	return this.type;
 }
 
-public void setUpdatedBy(String updatedBy)
+public void setType(String type)
 {
-	this.updatedBy = updatedBy;
+	this.type = type;
 }/*
-ECoachingLOBId
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String eCoachingLOBId;
+private String name;
 
-public String getECoachingLOBId() 
+public String getName() 
 {
-	return this.eCoachingLOBId;
+	return this.name;
 }
 
-public void setECoachingLOBId(String eCoachingLOBId)
+public void setName(String name)
 {
-	this.eCoachingLOBId = eCoachingLOBId;
+	this.name = name;
 }/*
-LockLevel
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String lockLevel;
+private String employeeId;
 
-public String getLockLevel() 
+public String getEmployeeId() 
 {
-	return this.lockLevel;
+	return this.employeeId;
 }
 
-public void setLockLevel(String lockLevel)
+public void setEmployeeId(String employeeId)
 {
-	this.lockLevel = lockLevel;
+	this.employeeId = employeeId;
+}/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
+}/*
+Version
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String version;
+
+public String getVersion() 
+{
+	return this.version;
+}
+
+public void setVersion(String version)
+{
+	this.version = version;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdOn;
+
+public String getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(String createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+TempStoreId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String tempStoreId;
+
+public String getTempStoreId() 
+{
+	return this.tempStoreId;
+}
+
+public void setTempStoreId(String tempStoreId)
+{
+	this.tempStoreId = tempStoreId;
+}/*
+DocumentReferenceId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String documentReferenceId;
+
+public String getDocumentReferenceId() 
+{
+	return this.documentReferenceId;
+}
+
+public void setDocumentReferenceId(String documentReferenceId)
+{
+	this.documentReferenceId = documentReferenceId;
 }/*
 UpdatedOn
 Notes:
@@ -244,14 +261,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date updatedOn;
+private String updatedOn;
 
-public Date getUpdatedOn() 
+public String getUpdatedOn() 
 {
 	return this.updatedOn;
 }
 
-public void setUpdatedOn(Date updatedOn)
+public void setUpdatedOn(String updatedOn)
 {
 	this.updatedOn = updatedOn;
 }
@@ -259,33 +276,7 @@ public void setUpdatedOn(Date updatedOn)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasure> scorecardMeasures;
-public List<ScorecardMeasure> getScorecardMeasures() {
-	return this.scorecardMeasures;
-}
-
-public void setScorecardMeasures(List<ScorecardMeasure> value) {
-	this.scorecardMeasures = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentScorecard.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AgentScorecard> agentScorecards;
-public List<AgentScorecard> getAgentScorecards() {
-	return this.agentScorecards;
-}
-
-public void setAgentScorecards(List<AgentScorecard> value) {
-	this.agentScorecards = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -301,86 +292,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Group Id property
-		objectJson += ",\"groupId\":";
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
 		
-		if (getGroupId() == null)
+		if (getUpdatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGroupId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
-		
-		if (getDescription() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Region Id property
-		objectJson += ",\"regionId\":";
-		
-		if (getRegionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getRegionId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -413,16 +334,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
 		
-		if (getUpdatedBy() == null)
+		if (getType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -434,16 +355,16 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the ECoaching LOB Id property
-		objectJson += ",\"eCoachingLOBId\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getECoachingLOBId() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getECoachingLOBId());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -455,16 +376,121 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Lock Level property
-		objectJson += ",\"lockLevel\":";
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
 		
-		if (getLockLevel() == null)
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLockLevel());
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
+		
+		if (getDescription() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDescription());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Version property
+		objectJson += ",\"version\":";
+		
+		if (getVersion() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getVersion());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedOn());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Temp Store Id property
+		objectJson += ",\"tempStoreId\":";
+		
+		if (getTempStoreId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTempStoreId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Document Reference Id property
+		objectJson += ",\"documentReferenceId\":";
+		
+		if (getDocumentReferenceId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDocumentReferenceId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -478,10 +504,24 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
+		
 		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getUpdatedOn().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -489,40 +529,6 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard of Scorecard Measure relationship
-objectJson += ",\"scorecardMeasures\":[";
-		
-		if (getScorecardMeasures() != null) {
-			int scorecardMeasuresCounter = 0;
-			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
-				if (scorecardMeasuresCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
-					scorecardMeasuresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Scorecard of Agent Scorecard relationship
-objectJson += ",\"agentScorecards\":[";
-		
-		if (getAgentScorecards() != null) {
-			int agentScorecardsCounter = 0;
-			for(AgentScorecard nextAgentScorecards : getAgentScorecards()) {
-				if (agentScorecardsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAgentScorecards).toEmbeddedJson();
-					agentScorecardsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -534,34 +540,34 @@ objectJson += ",\"agentScorecards\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Group Id property
-		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Region Id property
-		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the ECoaching LOB Id property
-		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
-		//From value of the Lock Level property
-		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Version property
+		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonString(jsonObject, "createdOn"));
+		//From value of the Temp Store Id property
+		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
+		//From value of the Document Reference Id property
+		setDocumentReferenceId(JsonUtils.getJsonString(jsonObject, "documentReferenceId"));
 		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
 
 		
 		// Source Relationships
 
 
 		// Target Relationships
-		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
-		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 
 
 	}
@@ -571,8 +577,6 @@ objectJson += ",\"agentScorecards\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
-		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
 
 		
 		return listSetters;

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -15,6 +16,7 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import com.percero.agents.sync.vo.BaseDataObject;
 
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
@@ -152,10 +154,10 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_TASK (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"TASK_DETAIL\",\"DUE_DATE\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"PLAN_ID\",\"TYPE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -215,52 +217,103 @@ nextResult.setTeamLeader(teamleader);
     	
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getTaskDetail());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(10, perceroObject.getPlanId());
-pstmt.setInt(11, perceroObject.getType());
 
-if (perceroObject.getAdhocTaskState() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAdhocTaskState().getID());
-}
+		pstmt.setString(1, perceroObject.getTaskDetail());
+
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(2, null);
+		}
+		else
+		{
+			pstmt.setString(2, perceroObject.getAgent().getID());
+		}
+
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+		pstmt.setString(4, perceroObject.getAdhocTaskState().getID());
+
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+			pstmt.setString(6, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+			pstmt.setString(6, perceroObject.getTeamLeader().getID());
+		}
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setString(10, null);
+		pstmt.setString(11, perceroObject.getID());
+		pstmt.setInt(12, 2); //Adhoc task
+	}
+
+	public AdhocTask createObject(AdhocTask perceroObject, String userId)
+			throws SyncException {
+		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+			return null;
+		}
+
+		long timeStart = System.currentTimeMillis();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		Statement stmt = null;
+		String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
+		String sql = null;
+		String insertedId = "0";
+		int result = 0;
+		try {
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+			conn = connectionFactory.getConnection();
+			conn.setAutoCommit(false);
+
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				insertedId = rs.getString(1);
+			}
+			perceroObject.setID(insertedId);
+			sql = getInsertIntoSQL();
+			pstmt = conn.prepareStatement(sql);
 
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getAgent().getID());
-}
+			setPreparedStatmentInsertParams(perceroObject, pstmt);
+			result = pstmt.executeUpdate();
+			conn.commit();
+		} catch(Exception e) {
+			log.error("Unable to executeUpdate\n" + sql, e);
+			throw new SyncDataException(e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.setAutoCommit(true);
+					conn.close();
+				}
+			} catch (Exception e) {
+				log.error("Error closing database statement/connection", e);
+			}
+		}
 
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getTeamLeader().getID());
-}
-
-
-		
+		if (result > 0) {
+			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+		}
+		else {
+			return null;
+		}
 	}
 	
 	@Override
@@ -591,4 +644,4 @@ propertyCounter++;
 	
 	
 }
-
+

@@ -41,7 +41,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"DATE\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"CREATED_ON\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
 	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_NOTIFICATION (\"ID\",\"TYPE\",\"DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO TBL_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_NOTIFICATION SET \"TYPE\"=?,\"DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -152,7 +152,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setDate(rs.getDate("DATE"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setName(rs.getString("NAME"));
 
@@ -171,7 +171,7 @@ nextResult.setTeamLeader(teamleader);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
@@ -207,7 +207,7 @@ else
 	protected void setPreparedStatmentUpdateParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(3, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
@@ -258,9 +258,9 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useDate)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -270,8 +270,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"DATE\" =? ";
-paramValues.add(theQueryObject.getDate());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 
