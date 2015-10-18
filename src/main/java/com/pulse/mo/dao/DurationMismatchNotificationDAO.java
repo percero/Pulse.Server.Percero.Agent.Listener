@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,10 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.DurationMismatchNotification;
-
-*/
 
 @Component
 public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<DurationMismatchNotification> implements IDataAccessObject<DurationMismatchNotification> {
@@ -41,7 +41,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"DATE\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"START_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
 	private String whereClause = "  WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,17 +128,17 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO DURATION_MISMATCH_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"DATE\",\"END_TIME\",\"START_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DURATION_MISMATCH_NOTIF (\"ID\",\"TIMECARD_ACTIVITY_NAME\",\"TYPE\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"DATE\",\"END_TIME\",\"START_TIME\",\"DURATION\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_DURATION_MISMATCH_NOTIF\" SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"DATE\"=?,\"END_TIME\"=?,\"START_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DURATION_MISMATCH_NOTIF SET \"TIMECARD_ACTIVITY_NAME\"=?,\"TYPE\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"DATE\"=?,\"END_TIME\"=?,\"START_TIME\"=?,\"DURATION\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_DURATION_MISMATCH_NOTIF\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_DURATION_MISMATCH_NOTIF WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -154,6 +154,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 
 nextResult.setType(rs.getString("TYPE"));
 
+nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
+
+nextResult.setMessage(rs.getString("MESSAGE"));
+
+nextResult.setName(rs.getString("NAME"));
+
 nextResult.setDate(rs.getDate("DATE"));
 
 nextResult.setEndTime(rs.getDate("END_TIME"));
@@ -161,12 +167,6 @@ nextResult.setEndTime(rs.getDate("END_TIME"));
 nextResult.setStartTime(rs.getDate("START_TIME"));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
-
-nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
-
-nextResult.setMessage(rs.getString("MESSAGE"));
-
-nextResult.setName(rs.getString("NAME"));
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
@@ -192,13 +192,13 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getTimecardActivityName());
 pstmt.setString(3, perceroObject.getType());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
-pstmt.setDouble(7, perceroObject.getDuration());
-pstmt.setString(8, perceroObject.getAuxCodeEntryName());
-pstmt.setString(9, perceroObject.getMessage());
-pstmt.setString(10, perceroObject.getName());
+pstmt.setString(4, perceroObject.getAuxCodeEntryName());
+pstmt.setString(5, perceroObject.getMessage());
+pstmt.setString(6, perceroObject.getName());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDouble(10, perceroObject.getDuration());
 
 if (perceroObject.getAgent() == null)
 {
@@ -254,13 +254,13 @@ else
 		
 		pstmt.setString(1, perceroObject.getTimecardActivityName());
 pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
-pstmt.setDouble(6, perceroObject.getDuration());
-pstmt.setString(7, perceroObject.getAuxCodeEntryName());
-pstmt.setString(8, perceroObject.getMessage());
-pstmt.setString(9, perceroObject.getName());
+pstmt.setString(3, perceroObject.getAuxCodeEntryName());
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getStartTime()));
+pstmt.setDouble(9, perceroObject.getDuration());
 
 if (perceroObject.getAgent() == null)
 {
@@ -347,6 +347,57 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
+boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
+
+if (useAuxCodeEntryName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
+paramValues.add(theQueryObject.getAuxCodeEntryName());
+propertyCounter++;
+}
+
+boolean useMessage = StringUtils.hasText(theQueryObject.getMessage()) && (excludeProperties == null || !excludeProperties.contains("message"));
+
+if (useMessage)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"MESSAGE\" =? ";
+paramValues.add(theQueryObject.getMessage());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+if (useName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
 boolean useDate = theQueryObject.getDate() != null && (excludeProperties == null || !excludeProperties.contains("date"));
 
 if (useDate)
@@ -415,57 +466,6 @@ paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 
-boolean useAuxCodeEntryName = StringUtils.hasText(theQueryObject.getAuxCodeEntryName()) && (excludeProperties == null || !excludeProperties.contains("auxCodeEntryName"));
-
-if (useAuxCodeEntryName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AUX_CODE_ENTRY_NAME\" =? ";
-paramValues.add(theQueryObject.getAuxCodeEntryName());
-propertyCounter++;
-}
-
-boolean useMessage = StringUtils.hasText(theQueryObject.getMessage()) && (excludeProperties == null || !excludeProperties.contains("message"));
-
-if (useMessage)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"MESSAGE\" =? ";
-paramValues.add(theQueryObject.getMessage());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
 boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
 if (useAgentID)
@@ -518,30 +518,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

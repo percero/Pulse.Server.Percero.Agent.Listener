@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,14 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.CoachingSession;
-import com.pulse.mo.BehaviorResponse;
-import com.pulse.mo.QualityEvaluation;
-import com.pulse.mo.CoachingSessionState;
-import com.pulse.mo.AgentScorecard;
-
-*/
 
 @Component
 public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> implements IDataAccessObject<CoachingSession> {
@@ -45,7 +41,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_SESSION\".\"CREATED_BY\",\"COACHING_SESSION\".\"TYPE\",\"COACHING_SESSION\".\"UPDATED_BY\",\"COACHING_SESSION\".\"WEEKLY_OVERALL_SCORE\",\"COACHING_SESSION\".\"WKLY_OVRALL_SCORE_STATE_NAME\",\"COACHING_SESSION\".\"IS_REQUIRED\",\"COACHING_SESSION\".\"CLOSED_ON\",\"COACHING_SESSION\".\"CREATED_ON\",\"COACHING_SESSION\".\"UPDATED_ON\",\"COACHING_SESSION\".\"WEEK_DATE\",\"COACHING_SESSION\".\"CURRENT_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"PREVIOUS_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"EMPLOYEE_ID\",\"COACHING_SESSION\".\"SCORECARD_ID\",\"COACHING_SESSION\".\"AGENT_SCORECARD_ID\",\"COACHING_SESSION\".\"COACHING_SESSION_STATE_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_SESSION\".\"IS_REQUIRED\",\"COACHING_SESSION\".\"CLOSED_ON\",\"COACHING_SESSION\".\"CREATED_ON\",\"COACHING_SESSION\".\"UPDATED_ON\",\"COACHING_SESSION\".\"WEEK_DATE\",\"COACHING_SESSION\".\"CURRENT_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"PREVIOUS_MTD_THRESHOLD_GRADE\",\"COACHING_SESSION\".\"EMPLOYEE_ID\",\"COACHING_SESSION\".\"SCORECARD_ID\",\"COACHING_SESSION\".\"CREATED_BY\",\"COACHING_SESSION\".\"TYPE\",\"COACHING_SESSION\".\"UPDATED_BY\",\"COACHING_SESSION\".\"WEEKLY_OVERALL_SCORE\",\"COACHING_SESSION\".\"WKLY_OVRALL_SCORE_STATE_NAME\",\"COACHING_SESSION\".\"AGENT_SCORECARD_ID\",\"COACHING_SESSION\".\"COACHING_SESSION_STATE_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_SESSION\" \"COACHING_SESSION\"";
 	private String whereClause = "  WHERE \"COACHING_SESSION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
@@ -141,17 +137,17 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_SESSION (\"ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEKLY_OVERALL_SCORE\",\"WKLY_OVRALL_SCORE_STATE_NAME\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"CURRENT_MTD_THRESHOLD_GRADE\",\"PREVIOUS_MTD_THRESHOLD_GRADE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"AGENT_SCORECARD_ID\",\"COACHING_SESSION_STATE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACHING_SESSION (\"ID\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"CURRENT_MTD_THRESHOLD_GRADE\",\"PREVIOUS_MTD_THRESHOLD_GRADE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEKLY_OVERALL_SCORE\",\"WKLY_OVRALL_SCORE_STATE_NAME\",\"AGENT_SCORECARD_ID\",\"COACHING_SESSION_STATE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_COACHING_SESSION\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEKLY_OVERALL_SCORE\"=?,\"WKLY_OVRALL_SCORE_STATE_NAME\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CURRENT_MTD_THRESHOLD_GRADE\"=?,\"PREVIOUS_MTD_THRESHOLD_GRADE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACHING_SESSION SET \"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"CURRENT_MTD_THRESHOLD_GRADE\"=?,\"PREVIOUS_MTD_THRESHOLD_GRADE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEKLY_OVERALL_SCORE\"=?,\"WKLY_OVRALL_SCORE_STATE_NAME\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_COACHING_SESSION\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_COACHING_SESSION WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -163,17 +159,7 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
-
-nextResult.setWeeklyOverallScore(rs.getString("WEEKLY_OVERALL_SCORE"));
-
-nextResult.setWeeklyOverallScoreStateName(rs.getString("WKLY_OVRALL_SCORE_STATE_NAME"));
-
-nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
+			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
 nextResult.setClosedOn(rs.getDate("CLOSED_ON"));
 
@@ -190,6 +176,16 @@ nextResult.setPreviousMTDThresholdGrade(rs.getDouble("PREVIOUS_MTD_THRESHOLD_GRA
 nextResult.setEmployeeId(rs.getInt("EMPLOYEE_ID"));
 
 nextResult.setScorecardId(rs.getInt("SCORECARD_ID"));
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setWeeklyOverallScore(rs.getString("WEEKLY_OVERALL_SCORE"));
+
+nextResult.setWeeklyOverallScoreStateName(rs.getString("WKLY_OVRALL_SCORE_STATE_NAME"));
 
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
@@ -209,20 +205,20 @@ nextResult.setCoachingSessionState(coachingsessionstate);
 	protected void setBaseStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-pstmt.setString(5, perceroObject.getWeeklyOverallScore());
-pstmt.setString(6, perceroObject.getWeeklyOverallScoreStateName());
-pstmt.setBoolean(7, perceroObject.getIsRequired());
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDouble(12, perceroObject.getCurrentMTDThresholdGrade());
-pstmt.setDouble(13, perceroObject.getPreviousMTDThresholdGrade());
-pstmt.setInt(14, perceroObject.getEmployeeId());
-pstmt.setInt(15, perceroObject.getScorecardId());
+pstmt.setBoolean(2, perceroObject.getIsRequired());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDouble(7, perceroObject.getCurrentMTDThresholdGrade());
+pstmt.setDouble(8, perceroObject.getPreviousMTDThresholdGrade());
+pstmt.setInt(9, perceroObject.getEmployeeId());
+pstmt.setInt(10, perceroObject.getScorecardId());
+pstmt.setString(11, perceroObject.getCreatedBy());
+pstmt.setString(12, perceroObject.getType());
+pstmt.setString(13, perceroObject.getUpdatedBy());
+pstmt.setString(14, perceroObject.getWeeklyOverallScore());
+pstmt.setString(15, perceroObject.getWeeklyOverallScoreStateName());
 
 if (perceroObject.getAgentScorecard() == null)
 {
@@ -266,20 +262,20 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getCreatedBy());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setString(4, perceroObject.getWeeklyOverallScore());
-pstmt.setString(5, perceroObject.getWeeklyOverallScoreStateName());
-pstmt.setBoolean(6, perceroObject.getIsRequired());
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDouble(11, perceroObject.getCurrentMTDThresholdGrade());
-pstmt.setDouble(12, perceroObject.getPreviousMTDThresholdGrade());
-pstmt.setInt(13, perceroObject.getEmployeeId());
-pstmt.setInt(14, perceroObject.getScorecardId());
+		pstmt.setBoolean(1, perceroObject.getIsRequired());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDouble(6, perceroObject.getCurrentMTDThresholdGrade());
+pstmt.setDouble(7, perceroObject.getPreviousMTDThresholdGrade());
+pstmt.setInt(8, perceroObject.getEmployeeId());
+pstmt.setInt(9, perceroObject.getScorecardId());
+pstmt.setString(10, perceroObject.getCreatedBy());
+pstmt.setString(11, perceroObject.getType());
+pstmt.setString(12, perceroObject.getUpdatedBy());
+pstmt.setString(13, perceroObject.getWeeklyOverallScore());
+pstmt.setString(14, perceroObject.getWeeklyOverallScoreStateName());
 
 if (perceroObject.getAgentScorecard() == null)
 {
@@ -329,96 +325,11 @@ pstmt.setString(17, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-sql += " WHERE ";
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useWeeklyOverallScore = StringUtils.hasText(theQueryObject.getWeeklyOverallScore()) && (excludeProperties == null || !excludeProperties.contains("weeklyOverallScore"));
-
-if (useWeeklyOverallScore)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WEEKLY_OVERALL_SCORE\" =? ";
-paramValues.add(theQueryObject.getWeeklyOverallScore());
-propertyCounter++;
-}
-
-boolean useWeeklyOverallScoreStateName = StringUtils.hasText(theQueryObject.getWeeklyOverallScoreStateName()) && (excludeProperties == null || !excludeProperties.contains("weeklyOverallScoreStateName"));
-
-if (useWeeklyOverallScoreStateName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"WKLY_OVRALL_SCORE_STATE_NAME\" =? ";
-paramValues.add(theQueryObject.getWeeklyOverallScoreStateName());
-propertyCounter++;
-}
-
-boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
+		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
 
 if (useIsRequired)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"IS_REQUIRED\" =? ";
 paramValues.add(theQueryObject.getIsRequired());
 propertyCounter++;
@@ -560,6 +471,91 @@ paramValues.add(theQueryObject.getScorecardId());
 propertyCounter++;
 }
 
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useWeeklyOverallScore = StringUtils.hasText(theQueryObject.getWeeklyOverallScore()) && (excludeProperties == null || !excludeProperties.contains("weeklyOverallScore"));
+
+if (useWeeklyOverallScore)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WEEKLY_OVERALL_SCORE\" =? ";
+paramValues.add(theQueryObject.getWeeklyOverallScore());
+propertyCounter++;
+}
+
+boolean useWeeklyOverallScoreStateName = StringUtils.hasText(theQueryObject.getWeeklyOverallScoreStateName()) && (excludeProperties == null || !excludeProperties.contains("weeklyOverallScoreStateName"));
+
+if (useWeeklyOverallScoreStateName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"WKLY_OVRALL_SCORE_STATE_NAME\" =? ";
+paramValues.add(theQueryObject.getWeeklyOverallScoreStateName());
+propertyCounter++;
+}
+
 boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
 
 if (useAgentScorecardID)
@@ -595,30 +591,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

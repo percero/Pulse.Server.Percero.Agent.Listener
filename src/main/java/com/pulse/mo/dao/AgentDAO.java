@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,19 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.Agent;
-import com.pulse.mo.AdhocTask;
-import com.pulse.mo.DevelopmentActivity;
-import com.pulse.mo.Timecard;
-import com.pulse.mo.CorrectiveAction;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.ScheduleEntry;
-import com.pulse.mo.Schedule;
-import com.pulse.mo.CMSEntry;
-import com.pulse.mo.TeamLeader;
-
-*/
 
 @Component
 public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessObject<Agent> {
@@ -50,7 +41,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"AGENT\".\"EMAIL_ADDRESS\",\"AGENT\".\"LAST_NAME\",\"AGENT\".\"EMPLOYEE_ID\",\"AGENT\".\"FIRST_NAME\",\"AGENT\".\"FULL_NAME\",\"AGENT\".\"PHOTO_URI\",\"AGENT\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"AGENT\".\"LAST_NAME\",\"AGENT\".\"EMAIL_ADDRESS\",\"AGENT\".\"EMPLOYEE_ID\",\"AGENT\".\"FIRST_NAME\",\"AGENT\".\"FULL_NAME\",\"AGENT\".\"PHOTO_URI\",\"AGENT\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT\" \"AGENT\"";
 	private String whereClause = "  WHERE \"AGENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT\".\"ID\"= SQLLIST.column_value";
@@ -137,17 +128,17 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO AGENT (\"ID\",\"EMAIL_ADDRESS\",\"LAST_NAME\",\"EMPLOYEE_ID\",\"FIRST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_AGENT (\"ID\",\"LAST_NAME\",\"EMAIL_ADDRESS\",\"EMPLOYEE_ID\",\"FIRST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_AGENT\" SET \"EMAIL_ADDRESS\"=?,\"LAST_NAME\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_AGENT SET \"LAST_NAME\"=?,\"EMAIL_ADDRESS\"=?,\"EMPLOYEE_ID\"=?,\"FIRST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_AGENT\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_AGENT WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -159,9 +150,9 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
+			nextResult.setLastName(rs.getString("LAST_NAME"));
 
-nextResult.setLastName(rs.getString("LAST_NAME"));
+nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
@@ -185,8 +176,8 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getEmailAddress());
-pstmt.setString(3, perceroObject.getLastName());
+pstmt.setString(2, perceroObject.getLastName());
+pstmt.setString(3, perceroObject.getEmailAddress());
 pstmt.setString(4, perceroObject.getEmployeeId());
 pstmt.setString(5, perceroObject.getFirstName());
 pstmt.setString(6, perceroObject.getFullName());
@@ -224,8 +215,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getEmailAddress());
-pstmt.setString(2, perceroObject.getLastName());
+		pstmt.setString(1, perceroObject.getLastName());
+pstmt.setString(2, perceroObject.getEmailAddress());
 pstmt.setString(3, perceroObject.getEmployeeId());
 pstmt.setString(4, perceroObject.getFirstName());
 pstmt.setString(5, perceroObject.getFullName());
@@ -269,19 +260,19 @@ pstmt.setString(8, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
+		boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
 
-if (useEmailAddress)
+if (useLastName)
 {
 sql += " WHERE ";
-sql += " \"EMAIL_ADDRESS\" =? ";
-paramValues.add(theQueryObject.getEmailAddress());
+sql += " \"LAST_NAME\" =? ";
+paramValues.add(theQueryObject.getLastName());
 propertyCounter++;
 }
 
-boolean useLastName = StringUtils.hasText(theQueryObject.getLastName()) && (excludeProperties == null || !excludeProperties.contains("lastName"));
+boolean useEmailAddress = StringUtils.hasText(theQueryObject.getEmailAddress()) && (excludeProperties == null || !excludeProperties.contains("emailAddress"));
 
-if (useLastName)
+if (useEmailAddress)
 {
 if (propertyCounter > 0)
 {
@@ -291,8 +282,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"LAST_NAME\" =? ";
-paramValues.add(theQueryObject.getLastName());
+sql += " \"EMAIL_ADDRESS\" =? ";
+paramValues.add(theQueryObject.getEmailAddress());
 propertyCounter++;
 }
 
@@ -382,30 +373,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

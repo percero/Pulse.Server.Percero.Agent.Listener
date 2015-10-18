@@ -22,11 +22,11 @@ import com.percero.agents.sync.vo.ClassIDPair;
 import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.CMSEntry;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.Notification;
+import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
-import com.pulse.mo.ThresholdExceededNotification;
+import com.pulse.mo.Timecard;
 
 // This should get picked up by Spring and be auto-wired.
 @Component
@@ -62,17 +62,17 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 		
 		// Agent Scorecard
 		Collection<String> fieldsToWatch = new HashSet<String>();
-		// Listen for changes on ALL AgentScorecard records.
-		accessManager.addWatcherField(new ClassIDPair("0", AgentScorecard.class.getCanonicalName()), "", fieldsToWatch);
-		// Register the fields. This can always be called again with an updated
-		// list of fields to watch, which would overwrite the list of fields
-		// that trigger this change watcher code.
-		accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "agentScorecard", fieldsToWatch);
+//		// Listen for changes on ALL AgentScorecard records.
+//		accessManager.addWatcherField(new ClassIDPair("0", AgentScorecard.class.getCanonicalName()), "", fieldsToWatch);
+//		// Register the fields. This can always be called again with an updated
+//		// list of fields to watch, which would overwrite the list of fields
+//		// that trigger this change watcher code.
+//		accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "agentScorecard", fieldsToWatch);
 
 		// CMS Entry Notification
 		Collection<String> cmsEntryFieldsToWatch = new HashSet<String>();
-		// Listen for changes on ALL CMSEntry records.
-		accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
+		// Listen for changes on ALL Timecard records.
+		accessManager.addWatcherField(new ClassIDPair("0", Timecard.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
 		// Register the fields. This can always be called again with an updated
 		// list of fields to watch, which would overwrite the list of fields
 		// that trigger this change watcher code.
@@ -178,10 +178,10 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 								existingCoachingNotification.setTeamLeader(teamLeader);
 								existingCoachingNotification.setWeekDate(agentScorecard.getWeekDate());
 								existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
+								
+//								agentScorecard.setCoachingNotification(existingCoachingNotification);
+//								syncAgentService.systemPutObject(agentScorecard, null, null, null, true);
 							}
-							
-//							agentScorecard.setCoachingNotification(existingCoachingNotification);
-							syncAgentService.systemPutObject(agentScorecard, null, null, null, true);
 						}
 					}
 				}
@@ -211,10 +211,81 @@ public class CoachingNotificationCWHelper extends ChangeWatcherHelper {
 				ClassIDPair classIdPair = new ClassIDPair(classId, className);
 				IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 				
-				if (updatedObject instanceof CMSEntry) {
-					CMSEntry cmsEntry = (CMSEntry) updatedObject;
-					
-					// TODO: Handle createion of notification here.
+				if (updatedObject instanceof Timecard) {
+					Timecard timecard = (Timecard) updatedObject;
+
+					if (timecard != null) {
+						Date currentDate = new Date();
+						DateTime currentDateTime = new DateTime(currentDate);
+
+						DateTime timecardDateTime = new DateTime(timecard.getDate());
+						DateTime timecardEndDateTime = new DateTime(timecard.getEndDate());
+						int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, currentDateTime).getDays());
+
+						// If the Timecard.date < 3 days old
+						if ( daysBetweem < 3) {
+							// Check to see if there is already a shiftStatusNotification created.
+							Agent agent = syncAgentService.systemGetByObject(timecard.getAgent());
+							if (agent == null) return;
+
+							TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
+							if (teamLeader == null) {
+								return;
+							}
+
+							ShiftStatusNotification existingShiftStatusNotification = null;
+							Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
+							while (itrNotifications.hasNext()) {
+								Notification nextNotification = itrNotifications.next();
+								if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
+									ShiftStatusNotification nextshiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
+
+									if (nextshiftStatusNotification == null) {
+										continue;
+									}
+
+									DateTime nextCoachingNotificationWeekDate = new DateTime(nextshiftStatusNotification.getShiftEndDate());
+									// Timecard.endDate = ShiftStatusNotification.shiftStartDate, we found a match.
+									if (DateTimeComparator.getDateOnlyInstance().compare(timecardEndDateTime, nextCoachingNotificationWeekDate) == 0) {
+										existingShiftStatusNotification = nextshiftStatusNotification;
+
+										break;
+									}
+								}
+							}
+
+							if (existingShiftStatusNotification == null) {
+								existingShiftStatusNotification = new ShiftStatusNotification();
+								existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+								existingShiftStatusNotification.setDate(new Date());
+								existingShiftStatusNotification.setName("Shift Status");
+								existingShiftStatusNotification.setType("ShiftStatusNotification");
+								existingShiftStatusNotification.setTeamLeader(teamLeader);
+								existingShiftStatusNotification.setShiftEndDate(timecard.getEndDate());
+								existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+							}
+
+
+							if (timecard.getTimecardEntries().size() <=0 ){
+								existingShiftStatusNotification.setNotYetStartedStateCount(1);
+								existingShiftStatusNotification.setNotYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
+							}
+							else if (timecard.getTimecardState().equals("Approved")) {
+								existingShiftStatusNotification.setApprovedStateCount(existingShiftStatusNotification.getApprovedStateCount() + 1);
+							}
+							else if (timecard.getTimecardState().equals("Completed")){
+								existingShiftStatusNotification.setCompleteStateCount(existingShiftStatusNotification.getCompleteStateCount() + 1);
+							}
+							else{
+								existingShiftStatusNotification.setInProgressStateCount(existingShiftStatusNotification.getInProgressStateCount());
+							}
+
+
+							//						cmsEntry.setCoachingNotification(existingCoachingNotification);
+							syncAgentService.systemPutObject(timecard, null, null, null, true);
+						}
+					}
+
 				}
 			}
 		} catch(Exception e) {

@@ -233,32 +233,6 @@ public void setAlerts(List<Alert> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocTask> adhocTasks;
-public List<AdhocTask> getAdhocTasks() {
-	return this.adhocTasks;
-}
-
-public void setAdhocTasks(List<AdhocTask> value) {
-	this.adhocTasks = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentActivity.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<DevelopmentActivity> developmentActivities;
-public List<DevelopmentActivity> getDevelopmentActivities() {
-	return this.developmentActivities;
-}
-
-public void setDevelopmentActivities(List<DevelopmentActivity> value) {
-	this.developmentActivities = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Setting.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Setting> settings;
 public List<Setting> getSettings() {
@@ -519,40 +493,6 @@ objectJson += ",\"alerts\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Team Leader of Adhoc Task relationship
-objectJson += ",\"adhocTasks\":[";
-		
-		if (getAdhocTasks() != null) {
-			int adhocTasksCounter = 0;
-			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
-				if (adhocTasksCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
-					adhocTasksCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Team Leader of Development Activity relationship
-objectJson += ",\"developmentActivities\":[";
-		
-		if (getDevelopmentActivities() != null) {
-			int developmentActivitiesCounter = 0;
-			for(DevelopmentActivity nextDevelopmentActivities : getDevelopmentActivities()) {
-				if (developmentActivitiesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextDevelopmentActivities).toEmbeddedJson();
-					developmentActivitiesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Team Leader of Setting relationship
 objectJson += ",\"settings\":[";
 		
@@ -637,8 +577,6 @@ objectJson += ",\"userSessions\":[";
 		this.notifications = (List<Notification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
-		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
-		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.settings = (List<Setting>) JsonUtils.getJsonListPerceroObject(jsonObject, "settings");
 		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
 		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
@@ -654,8 +592,6 @@ objectJson += ",\"userSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(Notification.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Setting.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamleader"));

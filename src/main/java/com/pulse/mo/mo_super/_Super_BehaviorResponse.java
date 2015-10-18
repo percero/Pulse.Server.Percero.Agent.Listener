@@ -225,6 +225,19 @@ public void setAgent(Agent value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
+}
+
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="COACHING_SESSION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -357,6 +370,18 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Scorecard Measure of Behavior Response relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Coaching Session of Behavior Response relationship
 objectJson += ",\"coachingSession\":";
 		if (getCoachingSession() == null)
@@ -400,6 +425,7 @@ objectJson += ",\"coachingSession\":";
 		// Source Relationships
 		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 
 

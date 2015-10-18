@@ -153,23 +153,6 @@ public void setDetails(String details)
 {
 	this.details = details;
 }/*
-CompletionStatus
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String completionStatus;
-
-public String getCompletionStatus() 
-{
-	return this.completionStatus;
-}
-
-public void setCompletionStatus(String completionStatus)
-{
-	this.completionStatus = completionStatus;
-}/*
 ManagerApprovalDate
 Notes:
 */
@@ -204,23 +187,6 @@ public void setSupervisorACKDate(Date supervisorACKDate)
 {
 	this.supervisorACKDate = supervisorACKDate;
 }/*
-SupervisorName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String supervisorName;
-
-public String getSupervisorName() 
-{
-	return this.supervisorName;
-}
-
-public void setSupervisorName(String supervisorName)
-{
-	this.supervisorName = supervisorName;
-}/*
 HRApprovalDate
 Notes:
 */
@@ -242,7 +208,20 @@ public void setHRApprovalDate(Date hRApprovalDate)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveActionAttachment.class, mappedBy="correctiveAction", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CorrectiveActionAttachment> correctiveActionAttachments;
+public List<CorrectiveActionAttachment> getCorrectiveActionAttachments() {
+	return this.correctiveActionAttachments;
+}
+
+public void setCorrectiveActionAttachments(List<CorrectiveActionAttachment> value) {
+	this.correctiveActionAttachments = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -420,27 +399,6 @@ public void setSupervisor(Supervisor value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Completion Status property
-		objectJson += ",\"completionStatus\":";
-		
-		if (getCompletionStatus() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCompletionStatus());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Manager Approval Date property
 		objectJson += ",\"managerApprovalDate\":";
 		if (getManagerApprovalDate() == null)
@@ -454,27 +412,6 @@ public void setSupervisor(Supervisor value)
 			objectJson += "null";
 		else {
 			objectJson += getSupervisorACKDate().getTime();
-		}
-		//Retrieve value of the Supervisor Name property
-		objectJson += ",\"supervisorName\":";
-		
-		if (getSupervisorName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the HR Approval Date property
 		objectJson += ",\"hRApprovalDate\":";
@@ -573,6 +510,23 @@ objectJson += ",\"supervisor\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Corrective Action of Corrective Action Attachment relationship
+objectJson += ",\"correctiveActionAttachments\":[";
+		
+		if (getCorrectiveActionAttachments() != null) {
+			int correctiveActionAttachmentsCounter = 0;
+			for(CorrectiveActionAttachment nextCorrectiveActionAttachments : getCorrectiveActionAttachments()) {
+				if (correctiveActionAttachmentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCorrectiveActionAttachments).toEmbeddedJson();
+					correctiveActionAttachmentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -592,14 +546,10 @@ objectJson += ",\"supervisor\":";
 		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
 		//From value of the Details property
 		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
-		//From value of the Completion Status property
-		setCompletionStatus(JsonUtils.getJsonString(jsonObject, "completionStatus"));
 		//From value of the Manager Approval Date property
 		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
 		//From value of the Supervisor ACK Date property
 		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
-		//From value of the Supervisor Name property
-		setSupervisorName(JsonUtils.getJsonString(jsonObject, "supervisorName"));
 		//From value of the HR Approval Date property
 		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
 
@@ -615,6 +565,7 @@ objectJson += ",\"supervisor\":";
 
 
 		// Target Relationships
+		this.correctiveActionAttachments = (List<CorrectiveActionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActionAttachments");
 
 
 	}
@@ -624,6 +575,7 @@ objectJson += ",\"supervisor\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveActionAttachment.class, "correctiveaction"));
 
 		
 		return listSetters;

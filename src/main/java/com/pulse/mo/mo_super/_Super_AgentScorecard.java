@@ -220,6 +220,19 @@ public void setScorecardMeasureWeeklyResults(List<ScorecardMeasureWeeklyResult> 
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<QualityEvaluation> qualityEvaluations;
+public List<QualityEvaluation> getQualityEvaluations() {
+	return this.qualityEvaluations;
+}
+
+public void setQualityEvaluations(List<QualityEvaluation> value) {
+	this.qualityEvaluations = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSession.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CoachingSession> coachingSessions;
 public List<CoachingSession> getCoachingSessions() {
@@ -228,6 +241,19 @@ public List<CoachingSession> getCoachingSessions() {
 
 public void setCoachingSessions(List<CoachingSession> value) {
 	this.coachingSessions = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureMonthlyResult.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasureMonthlyResult> scorecardMeasureMonthlyResults;
+public List<ScorecardMeasureMonthlyResult> getScorecardMeasureMonthlyResults() {
+	return this.scorecardMeasureMonthlyResults;
+}
+
+public void setScorecardMeasureMonthlyResults(List<ScorecardMeasureMonthlyResult> value) {
+	this.scorecardMeasureMonthlyResults = value;
 }
 
 
@@ -406,6 +432,23 @@ objectJson += ",\"scorecardMeasureWeeklyResults\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Agent Scorecard of Quality Evaluation relationship
+objectJson += ",\"qualityEvaluations\":[";
+		
+		if (getQualityEvaluations() != null) {
+			int qualityEvaluationsCounter = 0;
+			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
+				if (qualityEvaluationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
+					qualityEvaluationsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Agent Scorecard of Coaching Session relationship
 objectJson += ",\"coachingSessions\":[";
 		
@@ -417,6 +460,23 @@ objectJson += ",\"coachingSessions\":[";
 				try {
 					objectJson += ((BaseDataObject) nextCoachingSessions).toEmbeddedJson();
 					coachingSessionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the Agent Scorecard of Scorecard Measure Monthly Result relationship
+objectJson += ",\"scorecardMeasureMonthlyResults\":[";
+		
+		if (getScorecardMeasureMonthlyResults() != null) {
+			int scorecardMeasureMonthlyResultsCounter = 0;
+			for(ScorecardMeasureMonthlyResult nextScorecardMeasureMonthlyResults : getScorecardMeasureMonthlyResults()) {
+				if (scorecardMeasureMonthlyResultsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasureMonthlyResults).toEmbeddedJson();
+					scorecardMeasureMonthlyResultsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -456,7 +516,9 @@ objectJson += ",\"coachingSessions\":[";
 		// Target Relationships
 		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
 		this.scorecardMeasureWeeklyResults = (List<ScorecardMeasureWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureWeeklyResults");
+		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
+		this.scorecardMeasureMonthlyResults = (List<ScorecardMeasureMonthlyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureMonthlyResults");
 
 
 	}
@@ -468,7 +530,9 @@ objectJson += ",\"coachingSessions\":[";
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureWeeklyResult.class, "agentscorecard"));
+		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureMonthlyResult.class, "agentscorecard"));
 
 		
 		return listSetters;

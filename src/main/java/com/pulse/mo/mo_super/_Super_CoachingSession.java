@@ -340,19 +340,6 @@ public void setBehaviorResponses(List<BehaviorResponse> value) {
 	this.behaviorResponses = value;
 }
 
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<QualityEvaluation> qualityEvaluations;
-public List<QualityEvaluation> getQualityEvaluations() {
-	return this.qualityEvaluations;
-}
-
-public void setQualityEvaluations(List<QualityEvaluation> value) {
-	this.qualityEvaluations = value;
-}
-
 
 
 	//////////////////////////////////////////////////////
@@ -638,23 +625,6 @@ objectJson += ",\"behaviorResponses\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Coaching Session of Quality Evaluation relationship
-objectJson += ",\"qualityEvaluations\":[";
-		
-		if (getQualityEvaluations() != null) {
-			int qualityEvaluationsCounter = 0;
-			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
-				if (qualityEvaluationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
-					qualityEvaluationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -704,7 +674,6 @@ objectJson += ",\"qualityEvaluations\":[";
 		// Target Relationships
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
 
-		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 
 
 	}
@@ -715,7 +684,6 @@ objectJson += ",\"qualityEvaluations\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "coachingsession"));
-		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "coachingsession"));
 
 		
 		return listSetters;

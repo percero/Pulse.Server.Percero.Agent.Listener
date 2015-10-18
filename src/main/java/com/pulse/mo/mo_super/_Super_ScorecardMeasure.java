@@ -157,33 +157,7 @@ public void setWeight(String weight)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureMonthlyResult.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasureMonthlyResult> scorecardMeasureMonthlyResults;
-public List<ScorecardMeasureMonthlyResult> getScorecardMeasureMonthlyResults() {
-	return this.scorecardMeasureMonthlyResults;
-}
-
-public void setScorecardMeasureMonthlyResults(List<ScorecardMeasureMonthlyResult> value) {
-	this.scorecardMeasureMonthlyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureWeeklyResult.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasureWeeklyResult> scorecardMeasureWeeklyResults;
-public List<ScorecardMeasureWeeklyResult> getScorecardMeasureWeeklyResults() {
-	return this.scorecardMeasureWeeklyResults;
-}
-
-public void setScorecardMeasureWeeklyResults(List<ScorecardMeasureWeeklyResult> value) {
-	this.scorecardMeasureWeeklyResults = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -201,6 +175,19 @@ public Measure getMeasure() {
 
 public void setMeasure(Measure value) {
 	this.measure = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfScorecardMeasure")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
+}
+
+public void setScorecard(Scorecard value) {
+	this.scorecard = value;
 }
 
 	
@@ -297,43 +284,21 @@ objectJson += ",\"measure\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Scorecard of Scorecard Measure relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard Measure of Scorecard Measure Monthly Result relationship
-objectJson += ",\"scorecardMeasureMonthlyResults\":[";
-		
-		if (getScorecardMeasureMonthlyResults() != null) {
-			int scorecardMeasureMonthlyResultsCounter = 0;
-			for(ScorecardMeasureMonthlyResult nextScorecardMeasureMonthlyResults : getScorecardMeasureMonthlyResults()) {
-				if (scorecardMeasureMonthlyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasureMonthlyResults).toEmbeddedJson();
-					scorecardMeasureMonthlyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Scorecard Measure of Scorecard Measure Weekly Result relationship
-objectJson += ",\"scorecardMeasureWeeklyResults\":[";
-		
-		if (getScorecardMeasureWeeklyResults() != null) {
-			int scorecardMeasureWeeklyResultsCounter = 0;
-			for(ScorecardMeasureWeeklyResult nextScorecardMeasureWeeklyResults : getScorecardMeasureWeeklyResults()) {
-				if (scorecardMeasureWeeklyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasureWeeklyResults).toEmbeddedJson();
-					scorecardMeasureWeeklyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -357,11 +322,10 @@ objectJson += ",\"scorecardMeasureWeeklyResults\":[";
 		
 		// Source Relationships
 		this.measure = (Measure) JsonUtils.getJsonPerceroObject(jsonObject, "measure");
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 
 
 		// Target Relationships
-		this.scorecardMeasureMonthlyResults = (List<ScorecardMeasureMonthlyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureMonthlyResults");
-		this.scorecardMeasureWeeklyResults = (List<ScorecardMeasureWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureWeeklyResults");
 
 
 	}
@@ -371,8 +335,6 @@ objectJson += ",\"scorecardMeasureWeeklyResults\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureMonthlyResult.class, "scorecardmeasure"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureWeeklyResult.class, "scorecardmeasure"));
 
 		
 		return listSetters;

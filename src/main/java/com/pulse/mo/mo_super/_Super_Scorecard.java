@@ -381,6 +381,19 @@ public void setUpdatedOn(Date updatedOn)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMeasure> scorecardMeasures;
+public List<ScorecardMeasure> getScorecardMeasures() {
+	return this.scorecardMeasures;
+}
+
+public void setScorecardMeasures(List<ScorecardMeasure> value) {
+	this.scorecardMeasures = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=AgentScorecard.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<AgentScorecard> agentScorecards;
 public List<AgentScorecard> getAgentScorecards() {
@@ -742,6 +755,23 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 
 		
 		// Target Relationships
+//Retrieve value of the Scorecard of Scorecard Measure relationship
+objectJson += ",\"scorecardMeasures\":[";
+		
+		if (getScorecardMeasures() != null) {
+			int scorecardMeasuresCounter = 0;
+			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
+				if (scorecardMeasuresCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
+					scorecardMeasuresCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Scorecard of Agent Scorecard relationship
 objectJson += ",\"agentScorecards\":[";
 		
@@ -810,6 +840,7 @@ objectJson += ",\"agentScorecards\":[";
 
 
 		// Target Relationships
+		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 
 
@@ -820,6 +851,7 @@ objectJson += ",\"agentScorecards\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
 
 		

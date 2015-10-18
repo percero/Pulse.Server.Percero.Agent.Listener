@@ -259,19 +259,6 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScheduleEntry.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScheduleEntry> scheduleEntries;
-public List<ScheduleEntry> getScheduleEntries() {
-	return this.scheduleEntries;
-}
-
-public void setScheduleEntries(List<ScheduleEntry> value) {
-	this.scheduleEntries = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Schedule.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Schedule> schedules;
 public List<Schedule> getSchedules() {
@@ -553,23 +540,6 @@ objectJson += ",\"agentScorecards\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of Schedule Entry relationship
-objectJson += ",\"scheduleEntries\":[";
-		
-		if (getScheduleEntries() != null) {
-			int scheduleEntriesCounter = 0;
-			for(ScheduleEntry nextScheduleEntries : getScheduleEntries()) {
-				if (scheduleEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScheduleEntries).toEmbeddedJson();
-					scheduleEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Schedule relationship
 objectJson += ",\"schedules\":[";
 		
@@ -639,7 +609,6 @@ objectJson += ",\"cMSEntries\":[";
 		this.timecards = (List<Timecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecards");
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
-		this.scheduleEntries = (List<ScheduleEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "scheduleEntries");
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
 		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
 
@@ -656,7 +625,6 @@ objectJson += ",\"cMSEntries\":[";
 		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(ScheduleEntry.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Schedule.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));
 

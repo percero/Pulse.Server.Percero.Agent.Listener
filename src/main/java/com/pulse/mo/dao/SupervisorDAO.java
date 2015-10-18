@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,13 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.Supervisor;
-import com.pulse.mo.TeamLeader;
-import com.pulse.mo.CorrectiveAction;
-import com.pulse.mo.Supervisor;
-
-*/
 
 @Component
 public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements IDataAccessObject<Supervisor> {
@@ -131,17 +128,17 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SUPERVISOR (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"LAST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SUPERVISOR (\"ID\",\"EMAIL_ADDRESS\",\"FIRST_NAME\",\"LAST_NAME\",\"FULL_NAME\",\"PHOTO_URI\",\"MANAGER_SUPERVISOR_ID\") VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_SUPERVISOR\" SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SUPERVISOR SET \"EMAIL_ADDRESS\"=?,\"FIRST_NAME\"=?,\"LAST_NAME\"=?,\"FULL_NAME\"=?,\"PHOTO_URI\"=?,\"MANAGER_SUPERVISOR_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_SUPERVISOR\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_SUPERVISOR WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -355,30 +352,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

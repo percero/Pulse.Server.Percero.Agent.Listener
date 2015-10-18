@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,13 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.AdhocTask;
-import com.pulse.mo.AdhocTaskState;
-import com.pulse.mo.Agent;
-import com.pulse.mo.TeamLeader;
-
-*/
 
 @Component
 public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDataAccessObject<AdhocTask> {
@@ -46,7 +43,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	
 	public static final String SQL_VIEW = ",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
-	private String whereClause = " Where ADHOC_TASK.COMPLETED_ON Is Null And ADHOC_TASK.CREATED_ON > Add_months(sysdate,-12)";
+	private String whereClause = "  WHERE \"ADHOC_TASK\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"ID\"";
 	
@@ -158,17 +155,17 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO ADHOC_TASK (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"TASK_DETAIL\",\"DUE_DATE\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"PLAN_ID\",\"TYPE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_ADHOC_TASK (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"TASK_DETAIL\",\"DUE_DATE\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"PLAN_ID\",\"TYPE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_ADHOC_TASK\" SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_ADHOC_TASK\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_ADHOC_TASK WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -569,30 +566,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

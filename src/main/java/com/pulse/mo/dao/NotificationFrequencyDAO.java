@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,11 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.NotificationFrequency;
-import com.pulse.mo.LOBConfigurationEntry;
-
-*/
 
 @Component
 public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFrequency> implements IDataAccessObject<NotificationFrequency> {
@@ -129,17 +128,17 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO NOTIFICATION_FREQUENCY (\"ID\",\"NAME\") VALUES (?,?)";
+		return "INSERT INTO TBL_NOTIFICATION_FREQUENCY (\"ID\",\"NAME\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_NOTIFICATION_FREQUENCY\" SET \"NAME\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_NOTIFICATION_FREQUENCY SET \"NAME\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_NOTIFICATION_FREQUENCY\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_NOTIFICATION_FREQUENCY WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -228,30 +227,10 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}

@@ -85,22 +85,56 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-FileUri
+Description
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String fileUri;
+private String description;
 
-public String getFileUri() 
+public String getDescription() 
 {
-	return this.fileUri;
+	return this.description;
 }
 
-public void setFileUri(String fileUri)
+public void setDescription(String description)
 {
-	this.fileUri = fileUri;
+	this.description = description;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
+}/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
 }/*
 DocumentReferenceId
 Notes:
@@ -108,14 +142,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String documentReferenceId;
+private Integer documentReferenceId;
 
-public String getDocumentReferenceId() 
+public Integer getDocumentReferenceId() 
 {
 	return this.documentReferenceId;
 }
 
-public void setDocumentReferenceId(String documentReferenceId)
+public void setDocumentReferenceId(Integer documentReferenceId)
 {
 	this.documentReferenceId = documentReferenceId;
 }/*
@@ -136,33 +170,107 @@ public void setName(String name)
 {
 	this.name = name;
 }/*
-Type
-Notes:Unknown = 7201,
-               XLS = 7202,
-               DOC = 7203,
-               PDF = 7204,
-               CSV = 7205,
-               GIF = 7206,
-               JPEG = 7207,
-               BMP = 7208,
-               WAV = 7209,
-               PNG = 7210,
-               PPT = 7211,
-               TXT = 7231
+Version
+Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private String version;
 
-public String getType() 
+public String getVersion() 
+{
+	return this.version;
+}
+
+public void setVersion(String version)
+{
+	this.version = version;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String employeeId;
+
+public String getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(String employeeId)
+{
+	this.employeeId = employeeId;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer type;
+
+public Integer getType() 
 {
 	return this.type;
 }
 
-public void setType(String type)
+public void setType(Integer type)
 {
 	this.type = type;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
+TempStoreId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String tempStoreId;
+
+public String getTempStoreId() 
+{
+	return this.tempStoreId;
+}
+
+public void setTempStoreId(String tempStoreId)
+{
+	this.tempStoreId = tempStoreId;
 }
 
 	//////////////////////////////////////////////////////
@@ -184,16 +292,44 @@ public void setType(String type)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the File Uri property
-		objectJson += ",\"fileUri\":";
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
 		
-		if (getFileUri() == null)
+		if (getDescription() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getFileUri());
+				objectJson += objectMapper.writeValueAsString(getDescription());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -247,6 +383,55 @@ public void setType(String type)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Version property
+		objectJson += ",\"version\":";
+		
+		if (getVersion() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getVersion());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
 		//Retrieve value of the Type property
 		objectJson += ",\"type\":";
 		
@@ -257,6 +442,48 @@ public void setType(String type)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Temp Store Id property
+		objectJson += ",\"tempStoreId\":";
+		
+		if (getTempStoreId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTempStoreId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -285,14 +512,28 @@ public void setType(String type)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the File Uri property
-		setFileUri(JsonUtils.getJsonString(jsonObject, "fileUri"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Document Reference Id property
-		setDocumentReferenceId(JsonUtils.getJsonString(jsonObject, "documentReferenceId"));
+		setDocumentReferenceId(JsonUtils.getJsonInteger(jsonObject, "documentReferenceId"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Version property
+		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Temp Store Id property
+		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
 
 		
 		// Source Relationships

@@ -2,12 +2,16 @@
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,10 +22,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.CoachingSessionAttachment;
-
-*/
 
 @Component
 public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSessionAttachment> implements IDataAccessObject<CoachingSessionAttachment> {
@@ -41,7 +41,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_SESSION_ATTACHMENT\".\"FILE_URI\",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\"";
+	public static final String SQL_VIEW = ",\"COACHING_SESSION_ATTACHMENT\".\"NAME\",\"COACHING_SESSION_ATTACHMENT\".\"CREATED_ON\",\"COACHING_SESSION_ATTACHMENT\".\"UPDATED_ON\",\"COACHING_SESSION_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TYPE\",\"COACHING_SESSION_ATTACHMENT\".\"CREATED_BY\",\"COACHING_SESSION_ATTACHMENT\".\"DESCRIPTION\",\"COACHING_SESSION_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACHING_SESSION_ATTACHMENT\".\"UPDATED_BY\",\"COACHING_SESSION_ATTACHMENT\".\"VERSION\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_SESSION_ATTACHMENT\" \"COACHING_SESSION_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"COACHING_SESSION_ATTACHMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
@@ -128,17 +128,17 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO COACHING_SESSION_ATTACHMENT (\"ID\",\"FILE_URI\",\"NAME\",\"DOCUMENT_REFERENCE_ID\",\"TYPE\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO TBL_COACHING_SESSION_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"DOCUMENT_REFERENCE_ID\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_COACHING_SESSION_ATTACHMENT\" SET \"FILE_URI\"=?,\"NAME\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACHING_SESSION_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_COACHING_SESSION_ATTACHMENT\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_COACHING_SESSION_ATTACHMENT WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,13 +150,27 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
     	
     	if (!shellOnly) 
 		{
-			nextResult.setFileUri(rs.getString("FILE_URI"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setName(rs.getString("NAME"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
-nextResult.setDocumentReferenceId(rs.getString("DOCUMENT_REFERENCE_ID"));
+nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
 
-nextResult.setType(rs.getString("TYPE"));
+nextResult.setDocumentReferenceId(rs.getInt("DOCUMENT_REFERENCE_ID"));
+
+nextResult.setType(rs.getInt("TYPE"));
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
+nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setVersion(rs.getString("VERSION"));
 
 
 			
@@ -168,10 +182,17 @@ nextResult.setType(rs.getString("TYPE"));
 	protected void setBaseStatmentInsertParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getFileUri());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getDocumentReferenceId());
-pstmt.setString(5, perceroObject.getType());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(5, perceroObject.getDocumentReferenceId());
+pstmt.setInt(6, perceroObject.getType());
+pstmt.setString(7, perceroObject.getCreatedBy());
+pstmt.setString(8, perceroObject.getDescription());
+pstmt.setString(9, perceroObject.getEmployeeId());
+pstmt.setString(10, perceroObject.getTempStoreId());
+pstmt.setString(11, perceroObject.getUpdatedBy());
+pstmt.setString(12, perceroObject.getVersion());
 
 		
 	}
@@ -195,11 +216,18 @@ pstmt.setString(5, perceroObject.getType());
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSessionAttachment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getFileUri());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setString(3, perceroObject.getDocumentReferenceId());
-pstmt.setString(4, perceroObject.getType());
-pstmt.setString(5, perceroObject.getID());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setInt(4, perceroObject.getDocumentReferenceId());
+pstmt.setInt(5, perceroObject.getType());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(7, perceroObject.getDescription());
+pstmt.setString(8, perceroObject.getEmployeeId());
+pstmt.setString(9, perceroObject.getTempStoreId());
+pstmt.setString(10, perceroObject.getUpdatedBy());
+pstmt.setString(11, perceroObject.getVersion());
+pstmt.setString(12, perceroObject.getID());
 
 		
 	}
@@ -228,19 +256,19 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useFileUri = StringUtils.hasText(theQueryObject.getFileUri()) && (excludeProperties == null || !excludeProperties.contains("fileUri"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
-if (useFileUri)
+if (useName)
 {
 sql += " WHERE ";
-sql += " \"FILE_URI\" =? ";
-paramValues.add(theQueryObject.getFileUri());
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useName)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -250,12 +278,29 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 
-boolean useDocumentReferenceId = StringUtils.hasText(theQueryObject.getDocumentReferenceId()) && (excludeProperties == null || !excludeProperties.contains("documentReferenceId"));
+boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+if (useUpdatedOn)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_ON\" =? ";
+paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useDocumentReferenceId = theQueryObject.getDocumentReferenceId() != null && (excludeProperties == null || !excludeProperties.contains("documentReferenceId"));
 
 if (useDocumentReferenceId)
 {
@@ -272,7 +317,7 @@ paramValues.add(theQueryObject.getDocumentReferenceId());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useType = theQueryObject.getType() != null && (excludeProperties == null || !excludeProperties.contains("type"));
 
 if (useType)
 {
@@ -289,42 +334,124 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+
+if (useDescription)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+if (useEmployeeId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getEmployeeId());
+propertyCounter++;
+}
+
+boolean useTempStoreId = StringUtils.hasText(theQueryObject.getTempStoreId()) && (excludeProperties == null || !excludeProperties.contains("tempStoreId"));
+
+if (useTempStoreId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TEMP_STORE_ID\" =? ";
+paramValues.add(theQueryObject.getTempStoreId());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useVersion = StringUtils.hasText(theQueryObject.getVersion()) && (excludeProperties == null || !excludeProperties.contains("version"));
+
+if (useVersion)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"VERSION\" =? ";
+paramValues.add(theQueryObject.getVersion());
+propertyCounter++;
+}
+
+
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?)}";
+		return "{call UPDATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?)}";
+		return "{call CREATE_COACHING_SESSION_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

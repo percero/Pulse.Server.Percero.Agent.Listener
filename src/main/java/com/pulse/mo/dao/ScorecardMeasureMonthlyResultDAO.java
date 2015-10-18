@@ -1,13 +1,18 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,11 +23,6 @@ import com.percero.agents.sync.exceptions.SyncException;
 
 import com.pulse.mo.*;
 
-/*
-import com.pulse.mo.ScorecardMeasureMonthlyResult;
-import com.pulse.mo.ScorecardMeasure;
-
-*/
 
 @Component
 public class ScorecardMeasureMonthlyResultDAO extends SqlDataAccessObject<ScorecardMeasureMonthlyResult> implements IDataAccessObject<ScorecardMeasureMonthlyResult> {
@@ -42,13 +42,14 @@ public class ScorecardMeasureMonthlyResultDAO extends SqlDataAccessObject<Scorec
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SCARD_MEASURE_MONTHLY_RESULT\".\"END_DATE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"START_DATE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_RESULT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"PERCENTAGE_ATTAINMENT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"POINTS_POSSIBLE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"POINTS_RECEIVED\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"EXCLUDED\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"GRADE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"ROLLUP_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCM_GOAL_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"TENURE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"EMPLOYEE_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"INTERVAL_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_UNIT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCORECARD_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCORECARD_MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"SCARD_MEASURE_MONTHLY_RESULT\".\"EMPLOYEE_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"INTERVAL_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_UNIT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCORECARD_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"END_DATE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"START_DATE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"METRIC_RESULT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"PERCENTAGE_ATTAINMENT\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"POINTS_POSSIBLE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"POINTS_RECEIVED\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"EXCLUDED\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"GRADE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"ROLLUP_TYPE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCM_GOAL_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"TENURE\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"AGENT_SCORECARD_ID\",\"SCARD_MEASURE_MONTHLY_RESULT\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCARD_MEASURE_MONTHLY_RESULT\" \"SCARD_MEASURE_MONTHLY_RESULT\"";
 	private String whereClause = "  WHERE \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\"";
 	
-	
+	private String joinAgentScorecardIDScorecardMeasureMonthlyResult = ",(select ? As SQLID From Dual) WHERE SCARD_MEASURE_MONTHLY_RESULT.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCARD_MEASURE_MONTHLY_RESULT.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1)AND SCARD_MEASURE_MONTHLY_RESULT.END_DATE<= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10) AND SCARD_MEASURE_MONTHLY_RESULT.START_DATE>= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+
 
 	
 	@Override
@@ -106,14 +107,22 @@ public class ScorecardMeasureMonthlyResultDAO extends SqlDataAccessObject<Scorec
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDScorecardMeasureMonthlyResult;
+}
+
 		return "SELECT \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SCARD_MEASURE_MONTHLY_RESULT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDScorecardMeasureMonthlyResult;
+}
+
 		return "SELECT \"SCARD_MEASURE_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName + " WHERE \"SCARD_MEASURE_MONTHLY_RESULT\"." + joinColumnName + "=?";
 	}
 
@@ -129,17 +138,17 @@ public class ScorecardMeasureMonthlyResultDAO extends SqlDataAccessObject<Scorec
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO SCARD_MEASURE_MONTHLY_RESULT (\"ID\",\"END_DATE\",\"START_DATE\",\"METRIC_RESULT\",\"PERCENTAGE_ATTAINMENT\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"EXCLUDED\",\"GRADE\",\"ROLLUP_TYPE\",\"SCM_GOAL_ID\",\"TENURE\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"METRIC_TYPE\",\"METRIC_UNIT\",\"SCORECARD_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCARD_MEASURE_MONTHLY_RESULT (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"METRIC_TYPE\",\"METRIC_UNIT\",\"SCORECARD_ID\",\"END_DATE\",\"START_DATE\",\"METRIC_RESULT\",\"PERCENTAGE_ATTAINMENT\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"EXCLUDED\",\"GRADE\",\"ROLLUP_TYPE\",\"SCM_GOAL_ID\",\"TENURE\",\"AGENT_SCORECARD_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"TBL_SCARD_MEASURE_MONTHLY_RESULT\" SET \"END_DATE\"=?,\"START_DATE\"=?,\"METRIC_RESULT\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"EXCLUDED\"=?,\"GRADE\"=?,\"ROLLUP_TYPE\"=?,\"SCM_GOAL_ID\"=?,\"TENURE\"=?,\"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"METRIC_TYPE\"=?,\"METRIC_UNIT\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCARD_MEASURE_MONTHLY_RESULT SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"METRIC_TYPE\"=?,\"METRIC_UNIT\"=?,\"SCORECARD_ID\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"METRIC_RESULT\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"EXCLUDED\"=?,\"GRADE\"=?,\"ROLLUP_TYPE\"=?,\"SCM_GOAL_ID\"=?,\"TENURE\"=?,\"AGENT_SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM \"TBL_SCARD_MEASURE_MONTHLY_RESULT\" WHERE \"ID\"=?";
+		return "DELETE FROM TBL_SCARD_MEASURE_MONTHLY_RESULT WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -151,7 +160,17 @@ public class ScorecardMeasureMonthlyResultDAO extends SqlDataAccessObject<Scorec
     	
     	if (!shellOnly) 
 		{
-			nextResult.setEndDate(rs.getDate("END_DATE"));
+			nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
+nextResult.setIntervalType(rs.getString("INTERVAL_TYPE"));
+
+nextResult.setMetricType(rs.getString("METRIC_TYPE"));
+
+nextResult.setMetricUnit(rs.getString("METRIC_UNIT"));
+
+nextResult.setScorecardId(rs.getString("SCORECARD_ID"));
+
+nextResult.setEndDate(rs.getDate("END_DATE"));
 
 nextResult.setStartDate(rs.getDate("START_DATE"));
 
@@ -173,15 +192,9 @@ nextResult.setSCMGoalId(rs.getInt("SCM_GOAL_ID"));
 
 nextResult.setTenure(rs.getInt("TENURE"));
 
-nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
-
-nextResult.setIntervalType(rs.getString("INTERVAL_TYPE"));
-
-nextResult.setMetricType(rs.getString("METRIC_TYPE"));
-
-nextResult.setMetricUnit(rs.getString("METRIC_UNIT"));
-
-nextResult.setScorecardId(rs.getString("SCORECARD_ID"));
+AgentScorecard agentscorecard = new AgentScorecard();
+agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
+nextResult.setAgentScorecard(agentscorecard);
 
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
@@ -197,30 +210,40 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setBaseStatmentInsertParams(ScorecardMeasureMonthlyResult perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDouble(4, perceroObject.getMetricResult());
-pstmt.setDouble(5, perceroObject.getPercentageAttainment());
-pstmt.setDouble(6, perceroObject.getPointsPossible());
-pstmt.setDouble(7, perceroObject.getPointsReceived());
-pstmt.setInt(8, perceroObject.getExcluded());
-pstmt.setInt(9, perceroObject.getGrade());
-pstmt.setInt(10, perceroObject.getRollupType());
-pstmt.setInt(11, perceroObject.getSCMGoalId());
-pstmt.setInt(12, perceroObject.getTenure());
-pstmt.setString(13, perceroObject.getEmployeeId());
-pstmt.setString(14, perceroObject.getIntervalType());
-pstmt.setString(15, perceroObject.getMetricType());
-pstmt.setString(16, perceroObject.getMetricUnit());
-pstmt.setString(17, perceroObject.getScorecardId());
+pstmt.setString(2, perceroObject.getEmployeeId());
+pstmt.setString(3, perceroObject.getIntervalType());
+pstmt.setString(4, perceroObject.getMetricType());
+pstmt.setString(5, perceroObject.getMetricUnit());
+pstmt.setString(6, perceroObject.getScorecardId());
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDouble(9, perceroObject.getMetricResult());
+pstmt.setDouble(10, perceroObject.getPercentageAttainment());
+pstmt.setDouble(11, perceroObject.getPointsPossible());
+pstmt.setDouble(12, perceroObject.getPointsReceived());
+pstmt.setInt(13, perceroObject.getExcluded());
+pstmt.setInt(14, perceroObject.getGrade());
+pstmt.setInt(15, perceroObject.getRollupType());
+pstmt.setInt(16, perceroObject.getSCMGoalId());
+pstmt.setInt(17, perceroObject.getTenure());
 
-if (perceroObject.getScorecardMeasure() == null)
+if (perceroObject.getAgentScorecard() == null)
 {
 pstmt.setString(18, null);
 }
 else
 {
-		pstmt.setString(18, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(18, perceroObject.getAgentScorecard().getID());
+}
+
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(19, null);
+}
+else
+{
+		pstmt.setString(19, perceroObject.getScorecardMeasure().getID());
 }
 
 
@@ -246,33 +269,43 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasureMonthlyResult perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDouble(3, perceroObject.getMetricResult());
-pstmt.setDouble(4, perceroObject.getPercentageAttainment());
-pstmt.setDouble(5, perceroObject.getPointsPossible());
-pstmt.setDouble(6, perceroObject.getPointsReceived());
-pstmt.setInt(7, perceroObject.getExcluded());
-pstmt.setInt(8, perceroObject.getGrade());
-pstmt.setInt(9, perceroObject.getRollupType());
-pstmt.setInt(10, perceroObject.getSCMGoalId());
-pstmt.setInt(11, perceroObject.getTenure());
-pstmt.setString(12, perceroObject.getEmployeeId());
-pstmt.setString(13, perceroObject.getIntervalType());
-pstmt.setString(14, perceroObject.getMetricType());
-pstmt.setString(15, perceroObject.getMetricUnit());
-pstmt.setString(16, perceroObject.getScorecardId());
+		pstmt.setString(1, perceroObject.getEmployeeId());
+pstmt.setString(2, perceroObject.getIntervalType());
+pstmt.setString(3, perceroObject.getMetricType());
+pstmt.setString(4, perceroObject.getMetricUnit());
+pstmt.setString(5, perceroObject.getScorecardId());
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDouble(8, perceroObject.getMetricResult());
+pstmt.setDouble(9, perceroObject.getPercentageAttainment());
+pstmt.setDouble(10, perceroObject.getPointsPossible());
+pstmt.setDouble(11, perceroObject.getPointsReceived());
+pstmt.setInt(12, perceroObject.getExcluded());
+pstmt.setInt(13, perceroObject.getGrade());
+pstmt.setInt(14, perceroObject.getRollupType());
+pstmt.setInt(15, perceroObject.getSCMGoalId());
+pstmt.setInt(16, perceroObject.getTenure());
 
-if (perceroObject.getScorecardMeasure() == null)
+if (perceroObject.getAgentScorecard() == null)
 {
 pstmt.setString(17, null);
 }
 else
 {
-		pstmt.setString(17, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(17, perceroObject.getAgentScorecard().getID());
 }
 
-pstmt.setString(18, perceroObject.getID());
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(18, null);
+}
+else
+{
+		pstmt.setString(18, perceroObject.getScorecardMeasure().getID());
+}
+
+pstmt.setString(19, perceroObject.getID());
 
 		
 	}
@@ -301,11 +334,96 @@ pstmt.setString(18, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+		boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+if (useEmployeeId)
+{
+sql += " WHERE ";
+sql += " \"EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getEmployeeId());
+propertyCounter++;
+}
+
+boolean useIntervalType = StringUtils.hasText(theQueryObject.getIntervalType()) && (excludeProperties == null || !excludeProperties.contains("intervalType"));
+
+if (useIntervalType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"INTERVAL_TYPE\" =? ";
+paramValues.add(theQueryObject.getIntervalType());
+propertyCounter++;
+}
+
+boolean useMetricType = StringUtils.hasText(theQueryObject.getMetricType()) && (excludeProperties == null || !excludeProperties.contains("metricType"));
+
+if (useMetricType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"METRIC_TYPE\" =? ";
+paramValues.add(theQueryObject.getMetricType());
+propertyCounter++;
+}
+
+boolean useMetricUnit = StringUtils.hasText(theQueryObject.getMetricUnit()) && (excludeProperties == null || !excludeProperties.contains("metricUnit"));
+
+if (useMetricUnit)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"METRIC_UNIT\" =? ";
+paramValues.add(theQueryObject.getMetricUnit());
+propertyCounter++;
+}
+
+boolean useScorecardId = StringUtils.hasText(theQueryObject.getScorecardId()) && (excludeProperties == null || !excludeProperties.contains("scorecardId"));
+
+if (useScorecardId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardId());
+propertyCounter++;
+}
+
+boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
 if (useEndDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"END_DATE\" =? ";
 paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
@@ -481,9 +599,9 @@ paramValues.add(theQueryObject.getTenure());
 propertyCounter++;
 }
 
-boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
 
-if (useEmployeeId)
+if (useAgentScorecardID)
 {
 if (propertyCounter > 0)
 {
@@ -493,76 +611,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"EMPLOYEE_ID\" =? ";
-paramValues.add(theQueryObject.getEmployeeId());
-propertyCounter++;
-}
-
-boolean useIntervalType = StringUtils.hasText(theQueryObject.getIntervalType()) && (excludeProperties == null || !excludeProperties.contains("intervalType"));
-
-if (useIntervalType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"INTERVAL_TYPE\" =? ";
-paramValues.add(theQueryObject.getIntervalType());
-propertyCounter++;
-}
-
-boolean useMetricType = StringUtils.hasText(theQueryObject.getMetricType()) && (excludeProperties == null || !excludeProperties.contains("metricType"));
-
-if (useMetricType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"METRIC_TYPE\" =? ";
-paramValues.add(theQueryObject.getMetricType());
-propertyCounter++;
-}
-
-boolean useMetricUnit = StringUtils.hasText(theQueryObject.getMetricUnit()) && (excludeProperties == null || !excludeProperties.contains("metricUnit"));
-
-if (useMetricUnit)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"METRIC_UNIT\" =? ";
-paramValues.add(theQueryObject.getMetricUnit());
-propertyCounter++;
-}
-
-boolean useScorecardId = StringUtils.hasText(theQueryObject.getScorecardId()) && (excludeProperties == null || !excludeProperties.contains("scorecardId"));
-
-if (useScorecardId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SCORECARD_ID\" =? ";
-paramValues.add(theQueryObject.getScorecardId());
+sql += " \"AGENT_SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getAgentScorecard().getID());
 propertyCounter++;
 }
 
@@ -584,41 +634,21 @@ propertyCounter++;
 }
 
 
-		/*
-		boolean useValue = StringUtils.hasText(theQueryObject.getValue()) && (excludeProperties == null || !excludeProperties.contains("value"));
-		
-		if (useValue) {
-			sql += " WHERE value=? ";
-			paramValues.add(theQueryObject.getValue());
-			propertyCounter++;
+
+		if (propertyCounter == 0) {
+			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		boolean usePersonId = theQueryObject.getPerson() != null && (excludeProperties == null || !excludeProperties.contains("person"));
-		
-		if (usePersonId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			}
-			else {
-				sql += " WHERE ";
-			}
-			sql += " person_ID=? ";
-			paramValues.add(theQueryObject.getPerson().getID());
-			propertyCounter++;
-		}
-		
-		*/
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCARD_MEASURE_MONTHLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SCARD_MEASURE_MONTHLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCARD_MEASURE_MONTHLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SCARD_MEASURE_MONTHLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -629,4 +659,4 @@ propertyCounter++;
 	
 	
 }
-
+

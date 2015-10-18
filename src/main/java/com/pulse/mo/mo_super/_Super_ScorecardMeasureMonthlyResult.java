@@ -369,6 +369,19 @@ public void setRollupType(Integer rollupType)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@JoinColumn(name="AGENT_SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfScorecardMeasureMonthlyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private AgentScorecard agentScorecard;
+public AgentScorecard getAgentScorecard() {
+	return this.agentScorecard;
+}
+
+public void setAgentScorecard(AgentScorecard value) {
+	this.agentScorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfScorecardMeasureMonthlyResult")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -645,6 +658,18 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Agent Scorecard of Scorecard Measure Monthly Result relationship
+objectJson += ",\"agentScorecard\":";
+		if (getAgentScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Scorecard Measure of Scorecard Measure Monthly Result relationship
 objectJson += ",\"scorecardMeasure\":";
 		if (getScorecardMeasure() == null)
@@ -706,6 +731,7 @@ objectJson += ",\"scorecardMeasure\":";
 
 		
 		// Source Relationships
+		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 
