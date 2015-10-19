@@ -79,7 +79,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 				int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
 
 				// If the Timecard.date < 3 days old
-				if ( daysBetweem < 3 || true) {
+				if ( daysBetweem < 3) {
 					// Re-trigger this change watcher when AgentScorecard.agent changes.
 					accessManager.addWatcherField(pair, "agent", fieldsToWatch);
 

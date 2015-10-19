@@ -77,7 +77,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 				int daysBetweem = Math.abs(Days.daysBetween(scorecardDateTime, currentDateTime).getDays());
 				
 				// If agentScorecard < 4 weeks old
-				if ( daysBetweem < 7 * 4 || true) {
+				if ( daysBetweem < 7 * 4) {
 					// Re-trigger this change watcher when AgentScorecard.agent changes.
 					accessManager.addWatcherField(pair, "agent", fieldsToWatch);
 
