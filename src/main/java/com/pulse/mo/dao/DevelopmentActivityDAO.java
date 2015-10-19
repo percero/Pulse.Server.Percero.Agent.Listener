@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -191,53 +192,46 @@ nextResult.setDevelopmentPlan(developmentplan);
     	
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(10, perceroObject.getName());
-pstmt.setString(11, perceroObject.getPlanId());
-pstmt.setString(12, perceroObject.getStatus());
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getDevelopmentPlan() == null)
+		{
+			pstmt.setString(1, null);
+		}
+		else
+		{
+			pstmt.setString(1, perceroObject.getDevelopmentPlan().getID());
+		}
 
+		pstmt.setString(2, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(3, null);
+		}
+		else
+		{
+			pstmt.setString(3, perceroObject.getAgent().getID());
+		}
 
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+		pstmt.setString(5, perceroObject.getStatus());
 
-if (perceroObject.getDevelopmentPlan() == null)
-{
-pstmt.setString(15, null);
-}
-else
-{
-		pstmt.setString(15, perceroObject.getDevelopmentPlan().getID());
-}
-
-
-		
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(6, null);
+			pstmt.setString(7, null);
+		}
+		else
+		{
+			pstmt.setString(6, perceroObject.getTeamLeader().getID());
+			pstmt.setString(7, perceroObject.getTeamLeader().getID());
+		}
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setString(11, perceroObject.getID());
 	}
 	
 	@Override
@@ -650,4 +644,4 @@ propertyCounter++;
 		}
 	}
 }
-
+

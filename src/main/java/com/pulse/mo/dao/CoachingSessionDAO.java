@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -198,52 +199,27 @@ nextResult.setComment(comment);
     	
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-JdbcHelper.setBoolean(pstmt,5, perceroObject.getIsRequired());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,10, perceroObject.getEmployeeId());
-JdbcHelper.setInt(pstmt,11, perceroObject.getScorecardId());
 
-if (perceroObject.getAgentScorecard() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgentScorecard().getID());
-}
+		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
+		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
+		pstmt.setInt(4, perceroObject.getScorecardId()); // follow up  session  SCORECARD_ID
+		pstmt.setInt(5, 2); //Followup Coaching session - TYPE
+		pstmt.setInt(6, 1);  //STATUS    TODO  Fix this
+
+		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(8, perceroObject.getUpdatedBy());	//UPDATED_BY
+
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));  //CREATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));  //UPDATED_ON
+		pstmt.setInt(11, 0); //IS_REQUIRED
+		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH
+
+		pstmt.setInt(13, 0);  //CATEGORY_ID  - For follow up it is 0.
 
 
-if (perceroObject.getCoachingSessionState() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getCoachingSessionState().getID());
-}
-
-
-if (perceroObject.getComment() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getComment().getID());
-}
-
-
-		
 	}
 	
 	@Override
@@ -638,4 +614,4 @@ propertyCounter++;
 		}
 	}
 }
-
+

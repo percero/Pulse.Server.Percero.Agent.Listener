@@ -133,7 +133,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 							accessManager.addWatcherField(pair, "timecardState", fieldsToWatch);
 
 							if (host.getTimecardEntries().size() <=0 ){
-								existingShiftStatusNotification.setNotYetStartedStateCount(1);
 								existingShiftStatusNotification.setNotYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
 							}
 							else if (host.getTimecardState().equals("Approved")) {
@@ -145,7 +144,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 							else{
 								existingShiftStatusNotification.setInProgressStateCount(existingShiftStatusNotification.getInProgressStateCount());
 							}
-							
+
 							// Save the ExistingShiftStatusNotification.
 							syncAgentService.systemPutObject(existingShiftStatusNotification, null, null, null, true);
 

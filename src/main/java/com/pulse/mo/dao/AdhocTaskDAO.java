@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -153,7 +154,7 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
 		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -216,49 +217,9 @@ nextResult.setTeamLeader(teamleader);
     	
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-//		pstmt.setString(1, perceroObject.getID());
-//pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-//pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-//pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-//pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-//pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-//JdbcHelper.setInt(pstmt,7, perceroObject.getPlanId());
-//JdbcHelper.setInt(pstmt,8, perceroObject.getType());
-//pstmt.setString(9, perceroObject.getCreatedBy());
-//pstmt.setString(10, perceroObject.getTaskDetail());
-//pstmt.setString(11, perceroObject.getUpdatedBy());
-//
-//if (perceroObject.getTeamLeader() == null)
-//{
-//pstmt.setString(12, null);
-//}
-//else
-//{
-//		pstmt.setString(12, perceroObject.getTeamLeader().getID());
-//}
-//
-//
-//if (perceroObject.getAdhocTaskState() == null)
-//{
-//pstmt.setString(13, null);
-//}
-//else
-//{
-//		pstmt.setString(13, perceroObject.getAdhocTaskState().getID());
-//}
-//
-//
-//if (perceroObject.getAgent() == null)
-//{
-//pstmt.setString(14, null);
-//}
-//else
-//{
-//		pstmt.setString(14, perceroObject.getAgent().getID());
-//}
+
 		pstmt.setString(1, perceroObject.getTaskDetail());
 
 		if (perceroObject.getAgent() == null)
@@ -291,7 +252,7 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setInt(12, 2); //Adhoc task
 
 
-		
+
 	}
 	
 	@Override
@@ -607,10 +568,10 @@ propertyCounter++;
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_ADHOC_TASK(?)}";
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public AdhocTask createObject(AdhocTask perceroObject, String userId)
 			throws SyncException {
@@ -676,4 +637,4 @@ propertyCounter++;
 		}
 	}
 }
-
+

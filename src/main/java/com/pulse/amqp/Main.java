@@ -165,33 +165,64 @@ public class Main{
 //			e1.printStackTrace();
 //		}
 
-		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
+//		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
+//
+//		Agent agent = new Agent();
+//		agent.setID("100351668");
+//
+//		TeamLeader teamLeader = new TeamLeader();
+//		teamLeader.setID("100351667");
+//
+//		AdhocTaskState adhockTaskState = new AdhocTaskState();
+//		adhockTaskState.setID("2");
+//
+//		AdhocTask adhocTask= new AdhocTask();
+//		adhocTask.setAdhocTaskState(adhockTaskState);
+//		adhocTask.setTaskDetail("new adhock task 123");
+//		adhocTask.setTeamLeader(teamLeader);
+//		adhocTask.setWeekDate(new Date());
+//		adhocTask.setAgent(agent);
+//		adhocTask.setDueDate(new Date());
+//		adhocTask.setCreatedOn(new Date());
+//		adhocTask.setUpdatedBy(teamLeader.getID());
+//		adhocTask.setUpdatedOn(new Date());
+//		try {
+//			System.out.println("==================================");
+//			syncAgentService.systemCreateObject(adhocTask, null);
+//
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 
-		Agent agent = new Agent();
-		agent.setID("100351668");
+//		Date jdkDate = new java.sql.Date();
+//		System.out.println(jdkDate);
 
-		TeamLeader teamLeader = new TeamLeader();
-		teamLeader.setID("100351667");
-
-		AdhocTaskState adhockTaskState = new AdhocTaskState();
-		adhockTaskState.setID("2");
-
-		AdhocTask adhocTask= new AdhocTask();
-		adhocTask.setAdhocTaskState(adhockTaskState);
-		adhocTask.setTaskDetail("new adhock task 123");
-		adhocTask.setTeamLeader(teamLeader);
-		adhocTask.setWeekDate(new Date());
-		adhocTask.setAgent(agent);
-		adhocTask.setDueDate(new Date());
-		adhocTask.setCreatedOn(new Date());
-		adhocTask.setUpdatedBy(teamLeader.getID());
-		adhocTask.setUpdatedOn(new Date());
-		try {
-			System.out.println("==================================");
-			syncAgentService.systemCreateObject(adhocTask, null);
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
+//
+//		Agent agent = new Agent();
+//		agent.setID("RANDOM_ID");
+//
+//		TeamLeader teamLeader = new TeamLeader();
+//		teamLeader.setID("100351667");
+//
+//		DevelopmentPlan developmentPlan = new DevelopmentPlan();
+//		developmentPlan.setID("2");
+//
+//		DevelopmentActivity developmentActivity = new DevelopmentActivity();
+//		developmentActivity.setDevelopmentPlan(developmentPlan);
+//		developmentActivity.setName("test task 123");
+//		developmentActivity.setTeamLeader(teamLeader);
+//		developmentActivity.setDueDate(new Date());
+//		developmentActivity.setStatus("2");
+//		developmentActivity.setAgent(agent);
+//		developmentActivity.setCreatedOn(new Date());
+//		developmentActivity.setType("DevelopmentActivity");
+//		developmentActivity.setUpdatedBy(teamLeader.getID());
+//		developmentActivity.setUpdatedOn(new Date());
+//		try {
+//			syncAgentService.systemCreateObject(developmentActivity, null);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -15,11 +16,6 @@ import org.springframework.stereotype.Component;
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.Agent;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.CoachingNotification;
-import com.pulse.mo.Notification;
-import com.pulse.mo.TeamLeader;
 
 @Component
 public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
@@ -71,13 +67,15 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
 			
 			if (host != null) {
+				log.debug("[CoachingNotification]");
 				Date currentDate = new Date();
 				DateTime currentDateTime = new DateTime(currentDate);
 				DateTime scorecardDateTime = new DateTime(host.getWeekDate());
-				int daysBetweem = Math.abs(Days.daysBetween(scorecardDateTime, currentDateTime).getDays());
+				int daysBetween = Math.abs(Days.daysBetween(scorecardDateTime, currentDateTime).getDays());
 				
 				// If agentScorecard < 4 weeks old
-				if ( daysBetweem < 7 * 4) {
+				log.debug("[CoachingNotification]  daysBetween" + daysBetween);
+				if ( daysBetween < 7 * 4) {
 					// Re-trigger this change watcher when AgentScorecard.agent changes.
 					accessManager.addWatcherField(pair, "agent", fieldsToWatch);
 
@@ -106,6 +104,10 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 									accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextCoachingNotification), "weekDate", fieldsToWatch);
 
 									DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
+									log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
+									log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
+									log.debug("[CoachingNotification]  AgentScoreCard DateTime" + scorecardDateTime);
+									log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
 									// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
 									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, nextCoachingNotificationWeekDate) == 0) {
 										existingCoachingNotification = nextCoachingNotification;
@@ -124,7 +126,65 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 								existingCoachingNotification.setWeekDate(host.getWeekDate());
 								existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
 							}
-							
+
+							Integer pendingStateCount 			= null;
+							Integer submittedStateCount			= null;
+							Integer pendingCoachStateCount		= null;
+							Integer pendingEmployeeStateCount	= null;
+							Integer acknowledgementStateCount	= null;
+							Integer skippedStateCount			= null;
+
+							Iterator<CoachingSession> itrCoachingSession  = host.getCoachingSessions().iterator();
+
+							while (itrCoachingSession.hasNext()) {
+								CoachingSession nextCoachingSession = itrCoachingSession.next();
+								if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
+									String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
+
+									if (coachingSessionStateID.equals("1") || coachingSessionStateID.equals("8")) {
+										pendingStateCount =  existingCoachingNotification.getPendingStateCount();
+										if (pendingStateCount == null) {
+											pendingStateCount = 0;
+										}
+										existingCoachingNotification.setPendingStateCount(pendingStateCount + 1);
+									} else if (coachingSessionStateID.equals("2") || coachingSessionStateID.equals("9")) {
+										submittedStateCount = existingCoachingNotification.getSubmittedStateCount();
+										if (submittedStateCount == null) {
+											submittedStateCount = 0;
+										}
+										existingCoachingNotification.setSubmittedStateCount(submittedStateCount + 1);
+									} else if (coachingSessionStateID.equals("5") || coachingSessionStateID.equals("11")) {
+										pendingCoachStateCount =  existingCoachingNotification.getPendingCoachStateCount();
+										if (pendingCoachStateCount == null) {
+											pendingCoachStateCount = 0;
+										}
+										existingCoachingNotification.setPendingCoachStateCount(pendingCoachStateCount + 1);
+									} else if (coachingSessionStateID.equals("3") || coachingSessionStateID.equals("10")) {
+										pendingEmployeeStateCount = existingCoachingNotification.getPendingEmployeeStateCount();
+										if (pendingEmployeeStateCount == null) {
+											pendingEmployeeStateCount = 0;
+										}
+										existingCoachingNotification.setPendingEmployeeStateCount(pendingEmployeeStateCount + 1);
+
+									} else if (coachingSessionStateID.equals("4") || coachingSessionStateID.equals("6")) {
+										acknowledgementStateCount = existingCoachingNotification.getAcknowledgementStateCount();
+										if (acknowledgementStateCount == null) {
+											acknowledgementStateCount = 0;
+										}
+										existingCoachingNotification.setAcknowledgementStateCount(acknowledgementStateCount + 1);
+									} else if (coachingSessionStateID.equals("7")) {
+										skippedStateCount = existingCoachingNotification.getSkippedStateCount();
+										if (skippedStateCount == null) {
+											skippedStateCount = 0;
+										}
+										existingCoachingNotification.setSkippedStateCount(skippedStateCount + 1);
+									}
+								}
+							}
+
+							// Save the ExistingCoachingNotification.
+							syncAgentService.systemPutObject(existingCoachingNotification, null, null, null, true);
+
 							result = BaseDataObject.toClassIdPair(existingCoachingNotification);
 						}
 					}
