@@ -47,7 +47,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
 	
-	private String joinAgentScorecardIDQualityEvaluation = ",(select ? As SQL_ID From Dual) WHERE QUALITY_EVALUATION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND QUALITY_EVALUATION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND QUALITY_EVALUATION.WK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
+	private String joinAgentScorecardIDQualityEvaluation = ",(select ? As SQL_ID From Dual) WHERE QUALITY_EVALUATION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND QUALITY_EVALUATION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND QUALITY_EVALUATION.WEEK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
 
 
 	
