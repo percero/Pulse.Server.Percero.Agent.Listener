@@ -282,8 +282,8 @@ public void setDueDate(Date dueDate)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfDevelopmentActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -295,8 +295,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="DEVELOPMENT_PLAN_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_DevelopmentPlanOfDevelopmentActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -308,8 +308,8 @@ public DevelopmentPlan getDevelopmentPlan() {
 public void setDevelopmentPlan(DevelopmentPlan value) {
 	this.developmentPlan = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfDevelopmentActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

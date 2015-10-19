@@ -146,8 +146,8 @@ public void setCreatedOn(Date createdOn)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

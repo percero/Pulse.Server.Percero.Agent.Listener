@@ -41,7 +41,7 @@ public class GradeScaleDAO extends SqlDataAccessObject<GradeScale> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"GRADE_SCALE\".\"START_EXP\",\"GRADE_SCALE\".\"UPDATED_BY\",\"GRADE_SCALE\".\"CREATED_ON\",\"GRADE_SCALE\".\"END_DATE\",\"GRADE_SCALE\".\"START_DATE\",\"GRADE_SCALE\".\"UPDATED_ON\",\"GRADE_SCALE\".\"CUSTOM\",\"GRADE_SCALE\".\"END_VALUE\",\"GRADE_SCALE\".\"GRADE\",\"GRADE_SCALE\".\"SCM_GOAL_ID\",\"GRADE_SCALE\".\"AND_OR\",\"GRADE_SCALE\".\"COLOR\",\"GRADE_SCALE\".\"CREATED_BY\",\"GRADE_SCALE\".\"END_EXPRESSION\",\"GRADE_SCALE\".\"GOAL_ID\"";
+	public static final String SQL_VIEW = ",\"GRADE_SCALE\".\"SCM_GOAL_ID\",\"GRADE_SCALE\".\"START_EXP\",\"GRADE_SCALE\".\"UPDATED_BY\",\"GRADE_SCALE\".\"CREATED_ON\",\"GRADE_SCALE\".\"END_DATE\",\"GRADE_SCALE\".\"START_DATE\",\"GRADE_SCALE\".\"UPDATED_ON\",\"GRADE_SCALE\".\"CUSTOM\",\"GRADE_SCALE\".\"END_VALUE\",\"GRADE_SCALE\".\"GRADE\",\"GRADE_SCALE\".\"AND_OR\",\"GRADE_SCALE\".\"COLOR\",\"GRADE_SCALE\".\"CREATED_BY\",\"GRADE_SCALE\".\"END_EXPRESSION\",\"GRADE_SCALE\".\"GOAL_ID\"";
 	private String selectFromStatementTableName = " FROM \"GRADE_SCALE\" \"GRADE_SCALE\"";
 	private String whereClause = "  WHERE \"GRADE_SCALE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"GRADE_SCALE\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class GradeScaleDAO extends SqlDataAccessObject<GradeScale> implements ID
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_GRADE_SCALE (\"ID\",\"START_EXP\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"CUSTOM\",\"END_VALUE\",\"GRADE\",\"SCM_GOAL_ID\",\"AND_OR\",\"COLOR\",\"CREATED_BY\",\"END_EXPRESSION\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_GRADE_SCALE (\"ID\",\"SCM_GOAL_ID\",\"START_EXP\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"CUSTOM\",\"END_VALUE\",\"GRADE\",\"AND_OR\",\"COLOR\",\"CREATED_BY\",\"END_EXPRESSION\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_GRADE_SCALE SET \"START_EXP\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"CUSTOM\"=?,\"END_VALUE\"=?,\"GRADE\"=?,\"SCM_GOAL_ID\"=?,\"AND_OR\"=?,\"COLOR\"=?,\"CREATED_BY\"=?,\"END_EXPRESSION\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_GRADE_SCALE SET \"SCM_GOAL_ID\"=?,\"START_EXP\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"CUSTOM\"=?,\"END_VALUE\"=?,\"GRADE\"=?,\"AND_OR\"=?,\"COLOR\"=?,\"CREATED_BY\"=?,\"END_EXPRESSION\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,7 +150,9 @@ public class GradeScaleDAO extends SqlDataAccessObject<GradeScale> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setStartExp(rs.getString("START_EXP"));
+			nextResult.setSCMGoalId(rs.getString("SCM_GOAL_ID"));
+
+nextResult.setStartExp(rs.getString("START_EXP"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
@@ -167,8 +169,6 @@ nextResult.setCustom(rs.getInt("CUSTOM"));
 nextResult.setEndValue(rs.getInt("END_VALUE"));
 
 nextResult.setGrade(rs.getInt("GRADE"));
-
-nextResult.setSCMGoalId(rs.getInt("SCM_GOAL_ID"));
 
 nextResult.setANDOR(rs.getString("AND_OR"));
 
@@ -192,16 +192,16 @@ nextResult.setGoal(goal);
 	protected void setBaseStatmentInsertParams(GradeScale perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getStartExp());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(8, perceroObject.getCustom());
-pstmt.setInt(9, perceroObject.getEndValue());
-pstmt.setInt(10, perceroObject.getGrade());
-pstmt.setInt(11, perceroObject.getSCMGoalId());
+pstmt.setString(2, perceroObject.getSCMGoalId());
+pstmt.setString(3, perceroObject.getStartExp());
+pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,9, perceroObject.getCustom());
+JdbcHelper.setInt(pstmt,10, perceroObject.getEndValue());
+JdbcHelper.setInt(pstmt,11, perceroObject.getGrade());
 pstmt.setString(12, perceroObject.getANDOR());
 pstmt.setString(13, perceroObject.getColor());
 pstmt.setString(14, perceroObject.getCreatedBy());
@@ -239,16 +239,16 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(GradeScale perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getStartExp());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(7, perceroObject.getCustom());
-pstmt.setInt(8, perceroObject.getEndValue());
-pstmt.setInt(9, perceroObject.getGrade());
-pstmt.setInt(10, perceroObject.getSCMGoalId());
+		pstmt.setString(1, perceroObject.getSCMGoalId());
+pstmt.setString(2, perceroObject.getStartExp());
+pstmt.setString(3, perceroObject.getUpdatedBy());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,8, perceroObject.getCustom());
+JdbcHelper.setInt(pstmt,9, perceroObject.getEndValue());
+JdbcHelper.setInt(pstmt,10, perceroObject.getGrade());
 pstmt.setString(11, perceroObject.getANDOR());
 pstmt.setString(12, perceroObject.getColor());
 pstmt.setString(13, perceroObject.getCreatedBy());
@@ -292,11 +292,28 @@ pstmt.setString(16, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useStartExp = StringUtils.hasText(theQueryObject.getStartExp()) && (excludeProperties == null || !excludeProperties.contains("startExp"));
+		boolean useSCMGoalId = StringUtils.hasText(theQueryObject.getSCMGoalId()) && (excludeProperties == null || !excludeProperties.contains("sCMGoalId"));
+
+if (useSCMGoalId)
+{
+sql += " WHERE ";
+sql += " \"SCM_GOAL_ID\" =? ";
+paramValues.add(theQueryObject.getSCMGoalId());
+propertyCounter++;
+}
+
+boolean useStartExp = StringUtils.hasText(theQueryObject.getStartExp()) && (excludeProperties == null || !excludeProperties.contains("startExp"));
 
 if (useStartExp)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"START_EXP\" =? ";
 paramValues.add(theQueryObject.getStartExp());
 propertyCounter++;
@@ -435,23 +452,6 @@ sql += " WHERE ";
 }
 sql += " \"GRADE\" =? ";
 paramValues.add(theQueryObject.getGrade());
-propertyCounter++;
-}
-
-boolean useSCMGoalId = theQueryObject.getSCMGoalId() != null && (excludeProperties == null || !excludeProperties.contains("sCMGoalId"));
-
-if (useSCMGoalId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SCM_GOAL_ID\" =? ";
-paramValues.add(theQueryObject.getSCMGoalId());
 propertyCounter++;
 }
 

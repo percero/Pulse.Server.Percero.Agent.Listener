@@ -187,8 +187,8 @@ public void setTeamLeaders(List<TeamLeader> value) {
 	this.teamLeaders = value;
 }
 
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @com.percero.agents.sync.metadata.annotations.Externalize
 @OneToOne(fetch=FetchType.LAZY, mappedBy="supervisor", cascade=javax.persistence.CascadeType.REMOVE)
 private CorrectiveAction correctiveAction;
@@ -220,8 +220,8 @@ public void setSubordinateSupervisors(List<Supervisor> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="MANAGER_SUPERVISOR_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ManagerSupervisorOfSubordinateSupervisor")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

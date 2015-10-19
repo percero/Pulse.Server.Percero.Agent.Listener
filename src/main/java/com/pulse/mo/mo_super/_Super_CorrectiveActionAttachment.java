@@ -248,8 +248,8 @@ public void setDescription(String description)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CorrectiveActionOfCorrectiveActionAttachment")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

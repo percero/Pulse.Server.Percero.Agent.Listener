@@ -265,8 +265,8 @@ public void setUpdatedOn(Date updatedOn)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="ADHOC_TASK_STATE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AdhocTaskStateOfAdhocTask")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -278,8 +278,8 @@ public AdhocTaskState getAdhocTaskState() {
 public void setAdhocTaskState(AdhocTaskState value) {
 	this.adhocTaskState = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfAdhocTask")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -291,8 +291,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfAdhocTask")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

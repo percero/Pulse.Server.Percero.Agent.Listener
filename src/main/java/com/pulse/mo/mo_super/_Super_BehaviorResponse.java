@@ -197,21 +197,8 @@ public void setUpdatedBy(String updatedBy)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="BEHAVIOR_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_BehaviorOfBehaviorResponse")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Behavior behavior;
-public Behavior getBehavior() {
-	return this.behavior;
-}
-
-public void setBehavior(Behavior value) {
-	this.behavior = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -223,8 +210,21 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="BEHAVIOR_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_BehaviorOfBehaviorResponse")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Behavior behavior;
+public Behavior getBehavior() {
+	return this.behavior;
+}
+
+public void setBehavior(Behavior value) {
+	this.behavior = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -236,8 +236,8 @@ public ScorecardMeasure getScorecardMeasure() {
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="COACHING_SESSION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -346,18 +346,6 @@ public void setCoachingSession(CoachingSession value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Behavior of Behavior Response relationship
-objectJson += ",\"behavior\":";
-		if (getBehavior() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getBehavior()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Agent of Behavior Response relationship
 objectJson += ",\"agent\":";
 		if (getAgent() == null)
@@ -365,6 +353,18 @@ objectJson += ",\"agent\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Behavior of Behavior Response relationship
+objectJson += ",\"behavior\":";
+		if (getBehavior() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getBehavior()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -423,8 +423,8 @@ objectJson += ",\"coachingSession\":";
 
 		
 		// Source Relationships
-		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 

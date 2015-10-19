@@ -97,8 +97,8 @@ public void setMessage(String message)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfLOBConfigurationNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)
@@ -110,8 +110,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)

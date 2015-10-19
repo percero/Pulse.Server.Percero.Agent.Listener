@@ -182,8 +182,8 @@ public void setApprovedStateCount(Integer approvedStateCount)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfShiftStatusNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

@@ -115,8 +115,8 @@ public void setEmailAddress(String emailAddress)
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.RelationshipInterface(entityInterfaceClass=com.percero.agents.auth.vo.IUserIdentifier.class, sourceVarName="userAnchor")
 @com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_USER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfEmail")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

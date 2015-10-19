@@ -295,14 +295,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer sCMGoalId;
+private String sCMGoalId;
 
-public Integer getSCMGoalId() 
+public String getSCMGoalId() 
 {
 	return this.sCMGoalId;
 }
 
-public void setSCMGoalId(Integer sCMGoalId)
+public void setSCMGoalId(String sCMGoalId)
 {
 	this.sCMGoalId = sCMGoalId;
 }/*
@@ -333,8 +333,8 @@ public void setCustom(Integer custom)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_GoalOfGradeScale")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -648,7 +648,7 @@ objectJson += ",\"goal\":";
 		//From value of the End Value property
 		setEndValue(JsonUtils.getJsonInteger(jsonObject, "endValue"));
 		//From value of the SCM Goal Id property
-		setSCMGoalId(JsonUtils.getJsonInteger(jsonObject, "sCMGoalId"));
+		setSCMGoalId(JsonUtils.getJsonString(jsonObject, "sCMGoalId"));
 		//From value of the Custom property
 		setCustom(JsonUtils.getJsonInteger(jsonObject, "custom"));
 

@@ -222,30 +222,19 @@ public void setCreatedOn(Date createdOn)
 	this.createdOn = createdOn;
 }/*
 Type
-Notes:Unknown = 7201,
-               XLS = 7202,
-               DOC = 7203,
-               PDF = 7204,
-               CSV = 7205,
-               GIF = 7206,
-               JPEG = 7207,
-               BMP = 7208,
-               WAV = 7209,
-               PNG = 7210,
-               PPT = 7211,
-               TXT = 7231
+Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private Integer type;
 
-public String getType() 
+public Integer getType() 
 {
 	return this.type;
 }
 
-public void setType(String type)
+public void setType(Integer type)
 {
 	this.type = type;
 }/*
@@ -292,7 +281,20 @@ public void setTempStoreId(String tempStoreId)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfCoachingSessionAttachment")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private CoachingSession coachingSession;
+public CoachingSession getCoachingSession() {
+	return this.coachingSession;
+}
+
+public void setCoachingSession(CoachingSession value) {
+	this.coachingSession = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -509,6 +511,18 @@ public void setTempStoreId(String tempStoreId)
 
 				
 		// Source Relationships
+//Retrieve value of the Coaching Session of Coaching Session Attachment relationship
+objectJson += ",\"coachingSession\":";
+		if (getCoachingSession() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getCoachingSession()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -540,7 +554,7 @@ public void setTempStoreId(String tempStoreId)
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Temp Store Id property
@@ -548,6 +562,7 @@ public void setTempStoreId(String tempStoreId)
 
 		
 		// Source Relationships
+		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 
 
 		// Target Relationships

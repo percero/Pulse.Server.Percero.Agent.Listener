@@ -187,6 +187,40 @@ public void setSupervisorACKDate(Date supervisorACKDate)
 {
 	this.supervisorACKDate = supervisorACKDate;
 }/*
+ClientId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer clientId;
+
+public Integer getClientId() 
+{
+	return this.clientId;
+}
+
+public void setClientId(Integer clientId)
+{
+	this.clientId = clientId;
+}/*
+ExpireDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date expireDate;
+
+public Date getExpireDate() 
+{
+	return this.expireDate;
+}
+
+public void setExpireDate(Date expireDate)
+{
+	this.expireDate = expireDate;
+}/*
 HRApprovalDate
 Notes:
 */
@@ -227,8 +261,8 @@ public void setCorrectiveActionAttachments(List<CorrectiveActionAttachment> valu
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_STATE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CorrectiveActionStateOfCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -240,8 +274,8 @@ public CorrectiveActionState getCorrectiveActionState() {
 public void setCorrectiveActionState(CorrectiveActionState value) {
 	this.correctiveActionState = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_TYPE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CorrectiveActionTypeOfCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -253,8 +287,8 @@ public CorrectiveActionType getCorrectiveActionType() {
 public void setCorrectiveActionType(CorrectiveActionType value) {
 	this.correctiveActionType = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -266,8 +300,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="MANAGER_EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ManagerEmployeeOfManagerCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -279,8 +313,8 @@ public Employee getManagerEmployee() {
 public void setManagerEmployee(Employee value) {
 	this.managerEmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISORMANAGER_EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorManagerEmployeeOfSupervisorCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -292,8 +326,8 @@ public Employee getSupervisorManagerEmployee() {
 public void setSupervisorManagerEmployee(Employee value) {
 	this.supervisorManagerEmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="HR_EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_HREmployeeOfHRCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -305,8 +339,8 @@ public Employee getHREmployee() {
 public void setHREmployee(Employee value) {
 	this.hREmployee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorOfCorrectiveAction")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
@@ -412,6 +446,34 @@ public void setSupervisor(Supervisor value)
 			objectJson += "null";
 		else {
 			objectJson += getSupervisorACKDate().getTime();
+		}
+		//Retrieve value of the Client Id property
+		objectJson += ",\"clientId\":";
+		
+		if (getClientId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getClientId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Expire Date property
+		objectJson += ",\"expireDate\":";
+		if (getExpireDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getExpireDate().getTime();
 		}
 		//Retrieve value of the HR Approval Date property
 		objectJson += ",\"hRApprovalDate\":";
@@ -550,6 +612,10 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
 		//From value of the Supervisor ACK Date property
 		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
+		//From value of the Client Id property
+		setClientId(JsonUtils.getJsonInteger(jsonObject, "clientId"));
+		//From value of the Expire Date property
+		setExpireDate(JsonUtils.getJsonDate(jsonObject, "expireDate"));
 		//From value of the HR Approval Date property
 		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
 

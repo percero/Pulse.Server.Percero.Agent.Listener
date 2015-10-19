@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -173,9 +172,9 @@ nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setGoalTypeName(rs.getString("GOAL_TYPE_NAME"));
 
-//ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-//scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
-//nextResult.setScorecardMeasure(scorecardmeasure);
+ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
+scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 			
@@ -192,21 +191,21 @@ pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(7, perceroObject.getDurationFrom());
-pstmt.setInt(8, perceroObject.getDurationTo());
-pstmt.setInt(9, perceroObject.getGoalType());
-pstmt.setInt(10, perceroObject.getGoalValue());
+JdbcHelper.setInt(pstmt,7, perceroObject.getDurationFrom());
+JdbcHelper.setInt(pstmt,8, perceroObject.getDurationTo());
+JdbcHelper.setInt(pstmt,9, perceroObject.getGoalType());
+JdbcHelper.setInt(pstmt,10, perceroObject.getGoalValue());
 pstmt.setString(11, perceroObject.getCreatedBy());
 pstmt.setString(12, perceroObject.getGoalTypeName());
 
-//if (perceroObject.getScorecardMeasure() == null)
-//{
-//pstmt.setString(13, null);
-//}
-//else
-//{
-//		pstmt.setString(13, perceroObject.getScorecardMeasure().getID());
-//}
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(13, null);
+}
+else
+{
+		pstmt.setString(13, perceroObject.getScorecardMeasure().getID());
+}
 
 
 		
@@ -236,21 +235,21 @@ pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(6, perceroObject.getDurationFrom());
-pstmt.setInt(7, perceroObject.getDurationTo());
-pstmt.setInt(8, perceroObject.getGoalType());
-pstmt.setInt(9, perceroObject.getGoalValue());
+JdbcHelper.setInt(pstmt,6, perceroObject.getDurationFrom());
+JdbcHelper.setInt(pstmt,7, perceroObject.getDurationTo());
+JdbcHelper.setInt(pstmt,8, perceroObject.getGoalType());
+JdbcHelper.setInt(pstmt,9, perceroObject.getGoalValue());
 pstmt.setString(10, perceroObject.getCreatedBy());
 pstmt.setString(11, perceroObject.getGoalTypeName());
 
-//if (perceroObject.getScorecardMeasure() == null)
-//{
-//pstmt.setString(12, null);
-//}
-//else
-//{
-//		pstmt.setString(12, perceroObject.getScorecardMeasure().getID());
-//}
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(12, null);
+}
+else
+{
+		pstmt.setString(12, perceroObject.getScorecardMeasure().getID());
+}
 
 pstmt.setString(13, perceroObject.getID());
 
@@ -461,22 +460,22 @@ paramValues.add(theQueryObject.getGoalTypeName());
 propertyCounter++;
 }
 
-//boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
-//
-//if (useScorecardMeasureID)
-//{
-//if (propertyCounter > 0)
-//{
-//sql += " AND ";
-//}
-//else
-//{
-//sql += " WHERE ";
-//}
-//sql += " \"SCORECARD_MEASURE_ID\" =? ";
-////paramValues.add(theQueryObject.getScorecardMeasure().getID());
-//propertyCounter++;
-//}
+boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
+
+if (useScorecardMeasureID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_MEASURE_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardMeasure().getID());
+propertyCounter++;
+}
 
 
 
@@ -504,4 +503,4 @@ propertyCounter++;
 	
 	
 }
-
+

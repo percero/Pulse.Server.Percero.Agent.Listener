@@ -47,7 +47,8 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"QUALITY_EVALUATION\".\"ID\"";
 	
-	
+	private String joinAgentScorecardIDQualityEvaluation = ",(select ? As SQL_ID From Dual) WHERE QUALITY_EVALUATION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND QUALITY_EVALUATION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND QUALITY_EVALUATION.WK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
+
 
 	
 	@Override
@@ -105,14 +106,22 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDQualityEvaluation;
+}
+
 		return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
+{
+return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDQualityEvaluation;
+}
+
 		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
 	}
 
@@ -195,11 +204,11 @@ nextResult.setAgentScorecard(agentscorecard);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setBoolean(3, perceroObject.getIsRequired());
+JdbcHelper.setBoolean(pstmt,3, perceroObject.getIsRequired());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(7, perceroObject.getNiceEvalId());
+JdbcHelper.setInt(pstmt,7, perceroObject.getNiceEvalId());
 pstmt.setString(8, perceroObject.getCreatedBy());
 pstmt.setString(9, perceroObject.getManualDetails());
 pstmt.setString(10, perceroObject.getNiceAppServer());
@@ -267,11 +276,11 @@ else
 	protected void setPreparedStatmentUpdateParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getUpdatedBy());
-pstmt.setBoolean(2, perceroObject.getIsRequired());
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(6, perceroObject.getNiceEvalId());
+JdbcHelper.setInt(pstmt,6, perceroObject.getNiceEvalId());
 pstmt.setString(7, perceroObject.getCreatedBy());
 pstmt.setString(8, perceroObject.getManualDetails());
 pstmt.setString(9, perceroObject.getNiceAppServer());

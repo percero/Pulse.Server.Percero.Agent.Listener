@@ -178,11 +178,11 @@ nextResult.setNotificationFrequency(notificationfrequency);
 	protected void setBaseStatmentInsertParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setBoolean(2, perceroObject.getDurationToleranceEnabled());
-pstmt.setInt(3, perceroObject.getDurationTolerance());
-pstmt.setInt(4, perceroObject.getDurationToleranceInterval());
-pstmt.setInt(5, perceroObject.getOccurrenceToleranceInterval());
-pstmt.setInt(6, perceroObject.getReminderInterval());
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getDurationToleranceEnabled());
+JdbcHelper.setInt(pstmt,3, perceroObject.getDurationTolerance());
+JdbcHelper.setInt(pstmt,4, perceroObject.getDurationToleranceInterval());
+JdbcHelper.setInt(pstmt,5, perceroObject.getOccurrenceToleranceInterval());
+JdbcHelper.setInt(pstmt,6, perceroObject.getReminderInterval());
 
 if (perceroObject.getLOBConfiguration() == null)
 {
@@ -226,11 +226,11 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfigurationEntry perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setBoolean(1, perceroObject.getDurationToleranceEnabled());
-pstmt.setInt(2, perceroObject.getDurationTolerance());
-pstmt.setInt(3, perceroObject.getDurationToleranceInterval());
-pstmt.setInt(4, perceroObject.getOccurrenceToleranceInterval());
-pstmt.setInt(5, perceroObject.getReminderInterval());
+		JdbcHelper.setBoolean(pstmt,1, perceroObject.getDurationToleranceEnabled());
+JdbcHelper.setInt(pstmt,2, perceroObject.getDurationTolerance());
+JdbcHelper.setInt(pstmt,3, perceroObject.getDurationToleranceInterval());
+JdbcHelper.setInt(pstmt,4, perceroObject.getOccurrenceToleranceInterval());
+JdbcHelper.setInt(pstmt,5, perceroObject.getReminderInterval());
 
 if (perceroObject.getLOBConfiguration() == null)
 {

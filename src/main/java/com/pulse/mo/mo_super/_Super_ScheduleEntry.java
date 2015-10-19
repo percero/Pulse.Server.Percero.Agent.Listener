@@ -248,8 +248,8 @@ public void setEndTime(Date endTime)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfScheduleEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -261,8 +261,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCHEDULE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScheduleOfScheduleEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

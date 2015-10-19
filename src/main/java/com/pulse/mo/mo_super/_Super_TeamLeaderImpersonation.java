@@ -112,8 +112,8 @@ public void setLastImpersonatedOn(Date lastImpersonatedOn)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfTeamLeaderImpersonation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -125,8 +125,8 @@ public TeamLeader getTeamLeader() {
 public void setTeamLeader(TeamLeader value) {
 	this.teamLeader = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_USER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfTeamLeaderImpersonation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

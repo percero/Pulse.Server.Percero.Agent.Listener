@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.vo.BaseDataObject;
 
 import com.pulse.mo.*;
 
@@ -128,7 +129,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DEVELOPMENT_ACTIVITY (\"ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"DUE_DATE\",\"UPDATED_ON\",\"NAME\",\"PLAN_ID\",\"STATUS\",\"TEAM_LEADER_ID\",\"AGENT_ID\",\"DEVELOPMENT_PLAN_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"PLAN_ID\",  \"TASK_DESC\",  \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\",\"CREATED_ON\",\"UPDATED_ON\", \"WK_DATE\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,1)";
 	}
 	
 	@Override
@@ -584,5 +585,69 @@ propertyCounter++;
 	
 	
 	
+
+	public DevelopmentActivity createObject(DevelopmentActivity perceroObject, String userId)
+			throws SyncException {
+		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+			return null;
+		}
+
+		long timeStart = System.currentTimeMillis();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		Statement stmt = null;
+		String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
+		String sql = null;
+		String insertedId = "0";
+		int result = 0;
+		try {
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+			conn = connectionFactory.getConnection();
+			conn.setAutoCommit(false);
+
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				insertedId = rs.getString(1);
+			}
+			perceroObject.setID(insertedId);
+			sql = getInsertIntoSQL();
+			pstmt = conn.prepareStatement(sql);
+
+
+			setPreparedStatmentInsertParams(perceroObject, pstmt);
+			result = pstmt.executeUpdate();
+			conn.commit();
+		} catch(Exception e) {
+			log.error("Unable to executeUpdate\n" + sql, e);
+			throw new SyncDataException(e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.setAutoCommit(true);
+					conn.close();
+				}
+			} catch (Exception e) {
+				log.error("Error closing database statement/connection", e);
+			}
+		}
+
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
+
+		if (result > 0) {
+			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+		}
+		else {
+			return null;
+		}
+	}
 }
 

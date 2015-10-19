@@ -189,8 +189,8 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setInt(3, perceroObject.getLoginCount());
-pstmt.setInt(4, perceroObject.getLogoutCount());
+JdbcHelper.setInt(pstmt,3, perceroObject.getLoginCount());
+JdbcHelper.setInt(pstmt,4, perceroObject.getLogoutCount());
 pstmt.setString(5, perceroObject.getMessage());
 pstmt.setString(6, perceroObject.getName());
 pstmt.setString(7, perceroObject.getType());
@@ -258,8 +258,8 @@ else
 	protected void setPreparedStatmentUpdateParams(WorkModeOccurrenceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setInt(2, perceroObject.getLoginCount());
-pstmt.setInt(3, perceroObject.getLogoutCount());
+JdbcHelper.setInt(pstmt,2, perceroObject.getLoginCount());
+JdbcHelper.setInt(pstmt,3, perceroObject.getLogoutCount());
 pstmt.setString(4, perceroObject.getMessage());
 pstmt.setString(5, perceroObject.getName());
 pstmt.setString(6, perceroObject.getType());

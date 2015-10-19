@@ -261,8 +261,8 @@ public void setDevelopmentActivities(List<DevelopmentActivity> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfDevelopmentPlan")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

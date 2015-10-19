@@ -140,14 +140,27 @@ public void setCoachable(Boolean coachable)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=Behavior.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
+private List<Behavior> behaviors;
+public List<Behavior> getBehaviors() {
+	return this.behaviors;
+}
+
+public void setBehaviors(List<Behavior> value) {
+	this.behaviors = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="MEASURE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_MeasureOfScorecardMeasure")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -159,8 +172,8 @@ public Measure getMeasure() {
 public void setMeasure(Measure value) {
 	this.measure = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfScorecardMeasure")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -261,6 +274,23 @@ objectJson += ",\"scorecard\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Scorecard Measure of Behavior relationship
+objectJson += ",\"behaviors\":[";
+		
+		if (getBehaviors() != null) {
+			int behaviorsCounter = 0;
+			for(Behavior nextBehaviors : getBehaviors()) {
+				if (behaviorsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextBehaviors).toEmbeddedJson();
+					behaviorsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -286,6 +316,7 @@ objectJson += ",\"scorecard\":";
 
 
 		// Target Relationships
+		this.behaviors = (List<Behavior>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviors");
 
 
 	}
@@ -295,6 +326,7 @@ objectJson += ",\"scorecard\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(Behavior.class, "scorecardmeasure"));
 
 		
 		return listSetters;

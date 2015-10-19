@@ -294,7 +294,20 @@ public void setGradeScales(List<GradeScale> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfGoal")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
+}
+
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -483,6 +496,18 @@ public void setGradeScales(List<GradeScale> value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Scorecard Measure of Goal relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -539,6 +564,7 @@ objectJson += ",\"gradeScales\":[";
 
 		
 		// Source Relationships
+		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 
 
 		// Target Relationships

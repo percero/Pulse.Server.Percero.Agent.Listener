@@ -188,8 +188,8 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setInt(4, perceroObject.getAuxModeEventCount());
-pstmt.setInt(5, perceroObject.getTimecardActivityEventCount());
+JdbcHelper.setInt(pstmt,4, perceroObject.getAuxModeEventCount());
+JdbcHelper.setInt(pstmt,5, perceroObject.getTimecardActivityEventCount());
 pstmt.setString(6, perceroObject.getAuxCodeEntryName());
 pstmt.setString(7, perceroObject.getMessage());
 pstmt.setString(8, perceroObject.getName());
@@ -248,8 +248,8 @@ else
 		
 		pstmt.setString(1, perceroObject.getType());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setInt(3, perceroObject.getAuxModeEventCount());
-pstmt.setInt(4, perceroObject.getTimecardActivityEventCount());
+JdbcHelper.setInt(pstmt,3, perceroObject.getAuxModeEventCount());
+JdbcHelper.setInt(pstmt,4, perceroObject.getTimecardActivityEventCount());
 pstmt.setString(5, perceroObject.getAuxCodeEntryName());
 pstmt.setString(6, perceroObject.getMessage());
 pstmt.setString(7, perceroObject.getName());

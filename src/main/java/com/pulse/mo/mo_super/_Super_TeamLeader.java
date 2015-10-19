@@ -275,8 +275,8 @@ public void setUserSessions(List<UserSession> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorOfTeamLeader")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

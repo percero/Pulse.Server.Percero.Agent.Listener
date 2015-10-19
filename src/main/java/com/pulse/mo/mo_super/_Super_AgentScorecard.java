@@ -207,14 +207,14 @@ public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureWeeklyResult.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasureWeeklyResult> scorecardMeasureWeeklyResults;
-public List<ScorecardMeasureWeeklyResult> getScorecardMeasureWeeklyResults() {
-	return this.scorecardMeasureWeeklyResults;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyResult.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardWeeklyResult> scorecardWeeklyResults;
+public List<ScorecardWeeklyResult> getScorecardWeeklyResults() {
+	return this.scorecardWeeklyResults;
 }
 
-public void setScorecardMeasureWeeklyResults(List<ScorecardMeasureWeeklyResult> value) {
-	this.scorecardMeasureWeeklyResults = value;
+public void setScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
+	this.scorecardWeeklyResults = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -243,27 +243,14 @@ public void setCoachingSessions(List<CoachingSession> value) {
 	this.coachingSessions = value;
 }
 
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasureMonthlyResult.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasureMonthlyResult> scorecardMeasureMonthlyResults;
-public List<ScorecardMeasureMonthlyResult> getScorecardMeasureMonthlyResults() {
-	return this.scorecardMeasureMonthlyResults;
-}
-
-public void setScorecardMeasureMonthlyResults(List<ScorecardMeasureMonthlyResult> value) {
-	this.scorecardMeasureMonthlyResults = value;
-}
-
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfAgentScorecard")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)
@@ -275,8 +262,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfAgentScorecard")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)
@@ -415,17 +402,17 @@ objectJson += ",\"adhocCoachingSessions\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent Scorecard of Scorecard Measure Weekly Result relationship
-objectJson += ",\"scorecardMeasureWeeklyResults\":[";
+//Retrieve value of the Agent Scorecard of Scorecard Weekly Result relationship
+objectJson += ",\"scorecardWeeklyResults\":[";
 		
-		if (getScorecardMeasureWeeklyResults() != null) {
-			int scorecardMeasureWeeklyResultsCounter = 0;
-			for(ScorecardMeasureWeeklyResult nextScorecardMeasureWeeklyResults : getScorecardMeasureWeeklyResults()) {
-				if (scorecardMeasureWeeklyResultsCounter > 0)
+		if (getScorecardWeeklyResults() != null) {
+			int scorecardWeeklyResultsCounter = 0;
+			for(ScorecardWeeklyResult nextScorecardWeeklyResults : getScorecardWeeklyResults()) {
+				if (scorecardWeeklyResultsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasureWeeklyResults).toEmbeddedJson();
-					scorecardMeasureWeeklyResultsCounter++;
+					objectJson += ((BaseDataObject) nextScorecardWeeklyResults).toEmbeddedJson();
+					scorecardWeeklyResultsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -466,23 +453,6 @@ objectJson += ",\"coachingSessions\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent Scorecard of Scorecard Measure Monthly Result relationship
-objectJson += ",\"scorecardMeasureMonthlyResults\":[";
-		
-		if (getScorecardMeasureMonthlyResults() != null) {
-			int scorecardMeasureMonthlyResultsCounter = 0;
-			for(ScorecardMeasureMonthlyResult nextScorecardMeasureMonthlyResults : getScorecardMeasureMonthlyResults()) {
-				if (scorecardMeasureMonthlyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasureMonthlyResults).toEmbeddedJson();
-					scorecardMeasureMonthlyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -515,10 +485,9 @@ objectJson += ",\"scorecardMeasureMonthlyResults\":[";
 
 		// Target Relationships
 		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
-		this.scorecardMeasureWeeklyResults = (List<ScorecardMeasureWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureWeeklyResults");
+		this.scorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyResults");
 		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
-		this.scorecardMeasureMonthlyResults = (List<ScorecardMeasureMonthlyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasureMonthlyResults");
 
 
 	}
@@ -529,10 +498,9 @@ objectJson += ",\"scorecardMeasureMonthlyResults\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agentscorecard"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureWeeklyResult.class, "agentscorecard"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasureMonthlyResult.class, "agentscorecard"));
 
 		
 		return listSetters;

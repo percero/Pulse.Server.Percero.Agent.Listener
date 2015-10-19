@@ -180,8 +180,8 @@ public void setToTime(String toTime)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfCMSEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

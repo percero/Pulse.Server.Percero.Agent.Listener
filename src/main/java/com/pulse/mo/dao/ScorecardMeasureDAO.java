@@ -175,7 +175,7 @@ nextResult.setMeasure(measure);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getWeeklyTrend());
-pstmt.setBoolean(3, perceroObject.getCoachable());
+JdbcHelper.setBoolean(pstmt,3, perceroObject.getCoachable());
 pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getScorecard() == null)
@@ -221,7 +221,7 @@ else
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getWeeklyTrend());
-pstmt.setBoolean(2, perceroObject.getCoachable());
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getCoachable());
 pstmt.setString(3, perceroObject.getName());
 
 if (perceroObject.getScorecard() == null)

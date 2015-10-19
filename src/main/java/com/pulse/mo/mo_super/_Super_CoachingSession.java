@@ -153,40 +153,6 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-PreviousMTDThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double previousMTDThresholdGrade;
-
-public Double getPreviousMTDThresholdGrade() 
-{
-	return this.previousMTDThresholdGrade;
-}
-
-public void setPreviousMTDThresholdGrade(Double previousMTDThresholdGrade)
-{
-	this.previousMTDThresholdGrade = previousMTDThresholdGrade;
-}/*
-CurrentMTDThresholdGrade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double currentMTDThresholdGrade;
-
-public Double getCurrentMTDThresholdGrade() 
-{
-	return this.currentMTDThresholdGrade;
-}
-
-public void setCurrentMTDThresholdGrade(Double currentMTDThresholdGrade)
-{
-	this.currentMTDThresholdGrade = currentMTDThresholdGrade;
-}/*
 ScorecardId
 Notes:
 */
@@ -220,23 +186,6 @@ public String getCreatedBy()
 public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
-}/*
-WeeklyOverallScore
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyOverallScore;
-
-public String getWeeklyOverallScore() 
-{
-	return this.weeklyOverallScore;
-}
-
-public void setWeeklyOverallScore(String weeklyOverallScore)
-{
-	this.weeklyOverallScore = weeklyOverallScore;
 }/*
 CreatedOn
 Notes:
@@ -305,23 +254,6 @@ public Date getClosedOn()
 public void setClosedOn(Date closedOn)
 {
 	this.closedOn = closedOn;
-}/*
-WeeklyOverallScoreStateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String weeklyOverallScoreStateName;
-
-public String getWeeklyOverallScoreStateName() 
-{
-	return this.weeklyOverallScoreStateName;
-}
-
-public void setWeeklyOverallScoreStateName(String weeklyOverallScoreStateName)
-{
-	this.weeklyOverallScoreStateName = weeklyOverallScoreStateName;
 }
 
 	//////////////////////////////////////////////////////
@@ -340,14 +272,27 @@ public void setBehaviorResponses(List<BehaviorResponse> value) {
 	this.behaviorResponses = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CoachingSessionAttachment.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CoachingSessionAttachment> coachingSessionAttachments;
+public List<CoachingSessionAttachment> getCoachingSessionAttachments() {
+	return this.coachingSessionAttachments;
+}
+
+public void setCoachingSessionAttachments(List<CoachingSessionAttachment> value) {
+	this.coachingSessionAttachments = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="COACHING_SESSION_STATE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionStateOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -359,8 +304,21 @@ public CoachingSessionState getCoachingSessionState() {
 public void setCoachingSessionState(CoachingSessionState value) {
 	this.coachingSessionState = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="COMMENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CommentOfCoachingSession")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Comment comment;
+public Comment getComment() {
+	return this.comment;
+}
+
+public void setComment(Comment value) {
+	this.comment = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -452,20 +410,6 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Previous MTD Threshold Grade property
-		objectJson += ",\"previousMTDThresholdGrade\":";
-		if (getPreviousMTDThresholdGrade() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPreviousMTDThresholdGrade();
-		}
-		//Retrieve value of the Current MTD Threshold Grade property
-		objectJson += ",\"currentMTDThresholdGrade\":";
-		if (getCurrentMTDThresholdGrade() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCurrentMTDThresholdGrade();
-		}
 		//Retrieve value of the Scorecard Id property
 		objectJson += ",\"scorecardId\":";
 		
@@ -508,27 +452,6 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Weekly Overall Score property
-		objectJson += ",\"weeklyOverallScore\":";
-		
-		if (getWeeklyOverallScore() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyOverallScore());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
 		if (getCreatedOn() == null)
@@ -557,27 +480,6 @@ public void setAgentScorecard(AgentScorecard value) {
 		else {
 			objectJson += getClosedOn().getTime();
 		}
-		//Retrieve value of the Weekly Overall Score State Name property
-		objectJson += ",\"weeklyOverallScoreStateName\":";
-		
-		if (getWeeklyOverallScoreStateName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getWeeklyOverallScoreStateName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -588,6 +490,18 @@ objectJson += ",\"coachingSessionState\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getCoachingSessionState()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Comment of Coaching Session relationship
+objectJson += ",\"comment\":";
+		if (getComment() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getComment()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -625,6 +539,23 @@ objectJson += ",\"behaviorResponses\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Coaching Session of Coaching Session Attachment relationship
+objectJson += ",\"coachingSessionAttachments\":[";
+		
+		if (getCoachingSessionAttachments() != null) {
+			int coachingSessionAttachmentsCounter = 0;
+			for(CoachingSessionAttachment nextCoachingSessionAttachments : getCoachingSessionAttachments()) {
+				if (coachingSessionAttachmentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCoachingSessionAttachments).toEmbeddedJson();
+					coachingSessionAttachmentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -644,16 +575,10 @@ objectJson += ",\"behaviorResponses\":[";
 		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Previous MTD Threshold Grade property
-		setPreviousMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "previousMTDThresholdGrade"));
-		//From value of the Current MTD Threshold Grade property
-		setCurrentMTDThresholdGrade(JsonUtils.getJsonDouble(jsonObject, "currentMTDThresholdGrade"));
 		//From value of the Scorecard Id property
 		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Weekly Overall Score property
-		setWeeklyOverallScore(JsonUtils.getJsonString(jsonObject, "weeklyOverallScore"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Is Required property
@@ -662,18 +587,17 @@ objectJson += ",\"behaviorResponses\":[";
 		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Closed On property
 		setClosedOn(JsonUtils.getJsonDate(jsonObject, "closedOn"));
-		//From value of the Weekly Overall Score State Name property
-		setWeeklyOverallScoreStateName(JsonUtils.getJsonString(jsonObject, "weeklyOverallScoreStateName"));
 
 		
 		// Source Relationships
 		this.coachingSessionState = (CoachingSessionState) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSessionState");
+		this.comment = (Comment) JsonUtils.getJsonPerceroObject(jsonObject, "comment");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 
 
 		// Target Relationships
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
-
+		this.coachingSessionAttachments = (List<CoachingSessionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessionAttachments");
 
 
 	}
@@ -684,6 +608,7 @@ objectJson += ",\"behaviorResponses\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "coachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(CoachingSessionAttachment.class, "coachingsession"));
 
 		
 		return listSetters;

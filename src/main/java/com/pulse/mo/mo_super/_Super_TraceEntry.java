@@ -146,8 +146,8 @@ public void setTraceType(String traceType)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TRACE_LOG_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TraceLogOfTraceEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -159,8 +159,8 @@ public TraceLog getTraceLog() {
 public void setTraceLog(TraceLog value) {
 	this.traceLog = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_USER_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseUserOfTraceEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

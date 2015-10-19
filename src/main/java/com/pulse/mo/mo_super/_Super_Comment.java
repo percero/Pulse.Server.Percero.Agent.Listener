@@ -85,6 +85,40 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+SessionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer sessionId;
+
+public Integer getSessionId() 
+{
+	return this.sessionId;
+}
+
+public void setSessionId(Integer sessionId)
+{
+	this.sessionId = sessionId;
+}/*
+DatarefId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer datarefId;
+
+public Integer getDatarefId() 
+{
+	return this.datarefId;
+}
+
+public void setDatarefId(Integer datarefId)
+{
+	this.datarefId = datarefId;
+}/*
 Date
 Notes:
 */
@@ -101,6 +135,91 @@ public Date getDate()
 public void setDate(Date date)
 {
 	this.date = date;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
+}/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer type;
+
+public Integer getType() 
+{
+	return this.type;
+}
+
+public void setType(Integer type)
+{
+	this.type = type;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }/*
 Description
 Notes:
@@ -128,20 +247,7 @@ public void setDescription(String description)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@JoinColumn(name="ADHOC_COACHING_SESSION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfComment")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private AdhocCoachingSession adhocCoachingSession;
-public AdhocCoachingSession getAdhocCoachingSession() {
-	return this.adhocCoachingSession;
-}
-
-public void setAdhocCoachingSession(AdhocCoachingSession value) {
-	this.adhocCoachingSession = value;
-}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -152,12 +258,131 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Session Id property
+		objectJson += ",\"sessionId\":";
+		
+		if (getSessionId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSessionId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Dataref Id property
+		objectJson += ",\"datarefId\":";
+		
+		if (getDatarefId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDatarefId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Date property
 		objectJson += ",\"date\":";
 		if (getDate() == null)
 			objectJson += "null";
 		else {
 			objectJson += getDate().getTime();
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
+		
+		if (getType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
@@ -183,18 +408,6 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Adhoc Coaching Session of Comment relationship
-objectJson += ",\"adhocCoachingSession\":";
-		if (getAdhocCoachingSession() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getAdhocCoachingSession()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
@@ -209,14 +422,27 @@ objectJson += ",\"adhocCoachingSession\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Session Id property
+		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
+		//From value of the Dataref Id property
+		setDatarefId(JsonUtils.getJsonInteger(jsonObject, "datarefId"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 
 		
 		// Source Relationships
-		this.adhocCoachingSession = (AdhocCoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingSession");
 
 
 		// Target Relationships

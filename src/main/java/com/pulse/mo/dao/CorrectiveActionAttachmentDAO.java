@@ -184,7 +184,7 @@ nextResult.setCorrectiveAction(correctiveaction);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(4, perceroObject.getType());
+JdbcHelper.setInt(pstmt,4, perceroObject.getType());
 pstmt.setString(5, perceroObject.getCreatedBy());
 pstmt.setString(6, perceroObject.getDescription());
 pstmt.setString(7, perceroObject.getEmployeeId());
@@ -226,7 +226,7 @@ else
 		
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setInt(3, perceroObject.getType());
+JdbcHelper.setInt(pstmt,3, perceroObject.getType());
 pstmt.setString(4, perceroObject.getCreatedBy());
 pstmt.setString(5, perceroObject.getDescription());
 pstmt.setString(6, perceroObject.getEmployeeId());

@@ -193,8 +193,8 @@ public void setThresholdExceededNotifications(List<ThresholdExceededNotification
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -206,8 +206,8 @@ public LOBConfiguration getLOBConfiguration() {
 public void setLOBConfiguration(LOBConfiguration value) {
 	this.lOBConfiguration = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="NOTIFICATION_FREQUENCY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_NotificationFrequencyOfLOBConfigurationEntry")
 @OneToOne(fetch=FetchType.LAZY, optional=false)

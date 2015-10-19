@@ -80,8 +80,8 @@ public class _Super_ThresholdExceededNotification extends LOBConfigurationNotifi
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ENTRY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationEntryOfThresholdExceededNotification")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

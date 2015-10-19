@@ -162,7 +162,7 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	protected void setBaseStatmentInsertParams(PulseConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setInt(2, perceroObject.getDurationTolerance());
+JdbcHelper.setInt(pstmt,2, perceroObject.getDurationTolerance());
 
 		
 	}
@@ -186,7 +186,7 @@ pstmt.setInt(2, perceroObject.getDurationTolerance());
 	@Override
 	protected void setPreparedStatmentUpdateParams(PulseConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setInt(1, perceroObject.getDurationTolerance());
+		JdbcHelper.setInt(pstmt,1, perceroObject.getDurationTolerance());
 pstmt.setString(2, perceroObject.getID());
 
 		

@@ -181,11 +181,11 @@ nextResult.setScorecard(scorecard);
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDouble(3, perceroObject.getPointsPossible());
-pstmt.setDouble(4, perceroObject.getPointsReceived());
-pstmt.setDouble(5, perceroObject.getScore());
-pstmt.setInt(6, perceroObject.getGrade());
-pstmt.setInt(7, perceroObject.getQuartile());
+JdbcHelper.setDouble(pstmt,3, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,4, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,5, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,6, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,7, perceroObject.getQuartile());
 
 if (perceroObject.getAgent() == null)
 {
@@ -230,11 +230,11 @@ else
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDouble(2, perceroObject.getPointsPossible());
-pstmt.setDouble(3, perceroObject.getPointsReceived());
-pstmt.setDouble(4, perceroObject.getScore());
-pstmt.setInt(5, perceroObject.getGrade());
-pstmt.setInt(6, perceroObject.getQuartile());
+JdbcHelper.setDouble(pstmt,2, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,3, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,4, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,5, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,6, perceroObject.getQuartile());
 
 if (perceroObject.getAgent() == null)
 {

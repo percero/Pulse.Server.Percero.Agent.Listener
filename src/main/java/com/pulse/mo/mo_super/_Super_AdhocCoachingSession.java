@@ -174,27 +174,14 @@ public void setEmployeeId(Integer employeeId)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Comment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Comment> comments;
-public List<Comment> getComments() {
-	return this.comments;
-}
-
-public void setComments(List<Comment> value) {
-	this.comments = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="ADHOC_COACHING_CATEGORY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingCategoryOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -206,8 +193,21 @@ public AdhocCoachingCategory getAdhocCoachingCategory() {
 public void setAdhocCoachingCategory(AdhocCoachingCategory value) {
 	this.adhocCoachingCategory = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="COMMENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CommentOfAdhocCoachingSession")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Comment comment;
+public Comment getComment() {
+	return this.comment;
+}
+
+public void setComment(Comment value) {
+	this.comment = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfAdhocCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -335,6 +335,18 @@ objectJson += ",\"adhocCoachingCategory\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Comment of Adhoc Coaching Session relationship
+objectJson += ",\"comment\":";
+		if (getComment() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getComment()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Agent Scorecard of Adhoc Coaching Session relationship
 objectJson += ",\"agentScorecard\":";
 		if (getAgentScorecard() == null)
@@ -350,23 +362,6 @@ objectJson += ",\"agentScorecard\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Adhoc Coaching Session of Comment relationship
-objectJson += ",\"comments\":[";
-		
-		if (getComments() != null) {
-			int commentsCounter = 0;
-			for(Comment nextComments : getComments()) {
-				if (commentsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextComments).toEmbeddedJson();
-					commentsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -392,12 +387,11 @@ objectJson += ",\"comments\":[";
 		
 		// Source Relationships
 		this.adhocCoachingCategory = (AdhocCoachingCategory) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingCategory");
+		this.comment = (Comment) JsonUtils.getJsonPerceroObject(jsonObject, "comment");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 
 
 		// Target Relationships
-
-		this.comments = (List<Comment>) JsonUtils.getJsonListPerceroObject(jsonObject, "comments");
 
 
 	}
@@ -407,7 +401,6 @@ objectJson += ",\"comments\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Comment.class, "adhoccoachingsession"));
 
 		
 		return listSetters;

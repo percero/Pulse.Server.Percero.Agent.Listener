@@ -244,6 +244,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			sql = getInsertIntoSQL();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
+			System.out.println(sql);
 			
 			setPreparedStatmentInsertParams(perceroObject, pstmt);
 			result = pstmt.executeUpdate();
@@ -451,7 +452,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects\n" + selectQueryString, e);
+			log.error("Unable to retrieveObjects\n" + selectQueryString);
 			throw new SyncDataException(e);
 		} finally {
 			try {

@@ -316,8 +316,8 @@ public void setActionCode(String actionCode)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -329,8 +329,8 @@ public TimecardActivity getTimecardActivity() {
 public void setTimecardActivity(TimecardActivity value) {
 	this.timecardActivity = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -342,8 +342,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_TimecardOfTimecardEntry")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

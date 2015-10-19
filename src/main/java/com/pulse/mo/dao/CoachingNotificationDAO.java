@@ -187,12 +187,12 @@ nextResult.setTeamLeader(teamleader);
 pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(5, perceroObject.getAcknowledgementStateCount());
-pstmt.setInt(6, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(7, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(8, perceroObject.getPendingStateCount());
-pstmt.setInt(9, perceroObject.getSkippedStateCount());
-pstmt.setInt(10, perceroObject.getSubmittedStateCount());
+JdbcHelper.setInt(pstmt,5, perceroObject.getAcknowledgementStateCount());
+JdbcHelper.setInt(pstmt,6, perceroObject.getPendingCoachStateCount());
+JdbcHelper.setInt(pstmt,7, perceroObject.getPendingEmployeeStateCount());
+JdbcHelper.setInt(pstmt,8, perceroObject.getPendingStateCount());
+JdbcHelper.setInt(pstmt,9, perceroObject.getSkippedStateCount());
+JdbcHelper.setInt(pstmt,10, perceroObject.getSubmittedStateCount());
 pstmt.setString(11, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
@@ -230,12 +230,12 @@ else
 		pstmt.setString(1, perceroObject.getType());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setInt(4, perceroObject.getAcknowledgementStateCount());
-pstmt.setInt(5, perceroObject.getPendingCoachStateCount());
-pstmt.setInt(6, perceroObject.getPendingEmployeeStateCount());
-pstmt.setInt(7, perceroObject.getPendingStateCount());
-pstmt.setInt(8, perceroObject.getSkippedStateCount());
-pstmt.setInt(9, perceroObject.getSubmittedStateCount());
+JdbcHelper.setInt(pstmt,4, perceroObject.getAcknowledgementStateCount());
+JdbcHelper.setInt(pstmt,5, perceroObject.getPendingCoachStateCount());
+JdbcHelper.setInt(pstmt,6, perceroObject.getPendingEmployeeStateCount());
+JdbcHelper.setInt(pstmt,7, perceroObject.getPendingStateCount());
+JdbcHelper.setInt(pstmt,8, perceroObject.getSkippedStateCount());
+JdbcHelper.setInt(pstmt,9, perceroObject.getSubmittedStateCount());
 pstmt.setString(10, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)

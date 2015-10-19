@@ -125,8 +125,8 @@ public void setLOBConfigurations(List<LOBConfiguration> value) {
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_CONFIGURATION_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PulseConfigurationOfLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -138,8 +138,8 @@ public PulseConfiguration getPulseConfiguration() {
 public void setPulseConfiguration(PulseConfiguration value) {
 	this.pulseConfiguration = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ClientOfLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

@@ -248,8 +248,8 @@ public void setCreatedBy(String createdBy)
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -261,8 +261,8 @@ public Agent getAgent() {
 public void setAgent(Agent value) {
 	this.agent = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_EmployeeOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -274,8 +274,8 @@ public Employee getEmployee() {
 public void setEmployee(Employee value) {
 	this.employee = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -287,8 +287,8 @@ public Scorecard getScorecard() {
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfQualityEvaluation")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)

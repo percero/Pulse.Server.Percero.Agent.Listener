@@ -121,8 +121,8 @@ public void setLOBConfigurationNotifications(List<LOBConfigurationNotification> 
 	// Source Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBOfLOBConfiguration")
 @ManyToOne(fetch=FetchType.LAZY, optional=true)
