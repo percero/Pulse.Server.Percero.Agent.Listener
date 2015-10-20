@@ -69,41 +69,7 @@ public class _Super_OccurrenceMismatchNotification extends DiscrepancyDetectedNo
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	/*
-AuxModeEventCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer auxModeEventCount;
-
-public Integer getAuxModeEventCount() 
-{
-	return this.auxModeEventCount;
-}
-
-public void setAuxModeEventCount(Integer auxModeEventCount)
-{
-	this.auxModeEventCount = auxModeEventCount;
-}/*
-TimecardActivityEventCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer timecardActivityEventCount;
-
-public Integer getTimecardActivityEventCount() 
-{
-	return this.timecardActivityEventCount;
-}
-
-public void setTimecardActivityEventCount(Integer timecardActivityEventCount)
-{
-	this.timecardActivityEventCount = timecardActivityEventCount;
-}
+	
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -124,48 +90,6 @@ public void setTimecardActivityEventCount(Integer timecardActivityEventCount)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Aux Mode Event Count property
-		objectJson += ",\"auxModeEventCount\":";
-		
-		if (getAuxModeEventCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAuxModeEventCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Timecard Activity Event Count property
-		objectJson += ",\"timecardActivityEventCount\":";
-		
-		if (getTimecardActivityEventCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getTimecardActivityEventCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -183,10 +107,6 @@ public void setTimecardActivityEventCount(Integer timecardActivityEventCount)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Aux Mode Event Count property
-		setAuxModeEventCount(JsonUtils.getJsonInteger(jsonObject, "auxModeEventCount"));
-		//From value of the Timecard Activity Event Count property
-		setTimecardActivityEventCount(JsonUtils.getJsonInteger(jsonObject, "timecardActivityEventCount"));
 
 		
 		// Source Relationships

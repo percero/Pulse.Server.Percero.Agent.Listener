@@ -69,41 +69,7 @@ public class _Super_WorkModeOccurrenceNotification extends ThresholdExceededNoti
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	/*
-LogoutCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer logoutCount;
-
-public Integer getLogoutCount() 
-{
-	return this.logoutCount;
-}
-
-public void setLogoutCount(Integer logoutCount)
-{
-	this.logoutCount = logoutCount;
-}/*
-LoginCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer loginCount;
-
-public Integer getLoginCount() 
-{
-	return this.loginCount;
-}
-
-public void setLoginCount(Integer loginCount)
-{
-	this.loginCount = loginCount;
-}
+	
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -124,48 +90,6 @@ public void setLoginCount(Integer loginCount)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Logout Count property
-		objectJson += ",\"logoutCount\":";
-		
-		if (getLogoutCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLogoutCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Login Count property
-		objectJson += ",\"loginCount\":";
-		
-		if (getLoginCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLoginCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
@@ -183,10 +107,6 @@ public void setLoginCount(Integer loginCount)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Logout Count property
-		setLogoutCount(JsonUtils.getJsonInteger(jsonObject, "logoutCount"));
-		//From value of the Login Count property
-		setLoginCount(JsonUtils.getJsonInteger(jsonObject, "loginCount"));
 
 		
 		// Source Relationships

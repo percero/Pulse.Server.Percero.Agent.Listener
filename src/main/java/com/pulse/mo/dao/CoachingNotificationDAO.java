@@ -41,7 +41,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"ACKNOWLEDGEMENT_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_COACH_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_EMPLOYEE_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"PENDING_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SKIPPED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"SUBMITTED_STATE_COUNT\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"WEEK_DATE\",\"ACKNOWLEDGEMENT_STATE_COUNT\",\"PENDING_COACH_STATE_COUNT\",\"PENDING_EMPLOYEE_STATE_COUNT\",\"PENDING_STATE_COUNT\",\"SKIPPED_STATE_COUNT\",\"SUBMITTED_STATE_COUNT\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"WEEK_DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACHING_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"WEEK_DATE\"=?,\"ACKNOWLEDGEMENT_STATE_COUNT\"=?,\"PENDING_COACH_STATE_COUNT\"=?,\"PENDING_EMPLOYEE_STATE_COUNT\"=?,\"PENDING_STATE_COUNT\"=?,\"SKIPPED_STATE_COUNT\"=?,\"SUBMITTED_STATE_COUNT\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACHING_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"WEEK_DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -156,18 +156,6 @@ nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 
-nextResult.setAcknowledgementStateCount(rs.getInt("ACKNOWLEDGEMENT_STATE_COUNT"));
-
-nextResult.setPendingCoachStateCount(rs.getInt("PENDING_COACH_STATE_COUNT"));
-
-nextResult.setPendingEmployeeStateCount(rs.getInt("PENDING_EMPLOYEE_STATE_COUNT"));
-
-nextResult.setPendingStateCount(rs.getInt("PENDING_STATE_COUNT"));
-
-nextResult.setSkippedStateCount(rs.getInt("SKIPPED_STATE_COUNT"));
-
-nextResult.setSubmittedStateCount(rs.getInt("SUBMITTED_STATE_COUNT"));
-
 nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
@@ -187,21 +175,15 @@ nextResult.setTeamLeader(teamleader);
 pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,5, perceroObject.getAcknowledgementStateCount());
-JdbcHelper.setInt(pstmt,6, perceroObject.getPendingCoachStateCount());
-JdbcHelper.setInt(pstmt,7, perceroObject.getPendingEmployeeStateCount());
-JdbcHelper.setInt(pstmt,8, perceroObject.getPendingStateCount());
-JdbcHelper.setInt(pstmt,9, perceroObject.getSkippedStateCount());
-JdbcHelper.setInt(pstmt,10, perceroObject.getSubmittedStateCount());
-pstmt.setString(11, perceroObject.getName());
+pstmt.setString(5, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(12, null);
+pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getTeamLeader().getID());
+		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
 
 
@@ -230,24 +212,18 @@ else
 		pstmt.setString(1, perceroObject.getType());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,4, perceroObject.getAcknowledgementStateCount());
-JdbcHelper.setInt(pstmt,5, perceroObject.getPendingCoachStateCount());
-JdbcHelper.setInt(pstmt,6, perceroObject.getPendingEmployeeStateCount());
-JdbcHelper.setInt(pstmt,7, perceroObject.getPendingStateCount());
-JdbcHelper.setInt(pstmt,8, perceroObject.getSkippedStateCount());
-JdbcHelper.setInt(pstmt,9, perceroObject.getSubmittedStateCount());
-pstmt.setString(10, perceroObject.getName());
+pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(11, null);
+pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getTeamLeader().getID());
+		pstmt.setString(5, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(12, perceroObject.getID());
+pstmt.setString(6, perceroObject.getID());
 
 		
 	}
@@ -320,108 +296,6 @@ paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
 }
 
-boolean useAcknowledgementStateCount = theQueryObject.getAcknowledgementStateCount() != null && (excludeProperties == null || !excludeProperties.contains("acknowledgementStateCount"));
-
-if (useAcknowledgementStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"ACKNOWLEDGEMENT_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getAcknowledgementStateCount());
-propertyCounter++;
-}
-
-boolean usePendingCoachStateCount = theQueryObject.getPendingCoachStateCount() != null && (excludeProperties == null || !excludeProperties.contains("pendingCoachStateCount"));
-
-if (usePendingCoachStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"PENDING_COACH_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getPendingCoachStateCount());
-propertyCounter++;
-}
-
-boolean usePendingEmployeeStateCount = theQueryObject.getPendingEmployeeStateCount() != null && (excludeProperties == null || !excludeProperties.contains("pendingEmployeeStateCount"));
-
-if (usePendingEmployeeStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"PENDING_EMPLOYEE_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getPendingEmployeeStateCount());
-propertyCounter++;
-}
-
-boolean usePendingStateCount = theQueryObject.getPendingStateCount() != null && (excludeProperties == null || !excludeProperties.contains("pendingStateCount"));
-
-if (usePendingStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"PENDING_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getPendingStateCount());
-propertyCounter++;
-}
-
-boolean useSkippedStateCount = theQueryObject.getSkippedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("skippedStateCount"));
-
-if (useSkippedStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SKIPPED_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getSkippedStateCount());
-propertyCounter++;
-}
-
-boolean useSubmittedStateCount = theQueryObject.getSubmittedStateCount() != null && (excludeProperties == null || !excludeProperties.contains("submittedStateCount"));
-
-if (useSubmittedStateCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SUBMITTED_STATE_COUNT\" =? ";
-paramValues.add(theQueryObject.getSubmittedStateCount());
-propertyCounter++;
-}
-
 boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
@@ -467,11 +341,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

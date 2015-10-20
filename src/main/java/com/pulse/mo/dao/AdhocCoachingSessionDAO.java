@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -20,7 +19,6 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
 
 import com.pulse.mo.*;
 
@@ -139,7 +137,7 @@ return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableNam
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_ADHOC_COACHING_SESSION (\"ID\",\"SESSION_TYPE\",\"STATUS\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_SCORECARD_ID\",\"COMMENT_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -189,33 +187,47 @@ nextResult.setComment(comment);
     	
     	return nextResult;
 	}
-
+	
 	protected void setBaseStatmentInsertParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
-		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
-		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
-		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
-		pstmt.setInt(4, 0); // not a follow up  session  SCORECARD_ID
-		pstmt.setInt(5, 3); //Adhoc Coaching session - TYPE
-		pstmt.setString(6, perceroObject.getStatus());  //STATUS
+		
+		pstmt.setString(1, perceroObject.getID());
+pstmt.setString(2, perceroObject.getSessionType());
+pstmt.setString(3, perceroObject.getStatus());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,5, perceroObject.getEmployeeId());
+JdbcHelper.setInt(pstmt,6, perceroObject.getScorecardId());
 
-		pstmt.setInt(7, perceroObject.getEmployeeId());  //CREATED_BY
-		pstmt.setInt(8, perceroObject.getEmployeeId());	//UPDATED_BY
-
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date()));  //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date()));  //UPDATED_ON
-		pstmt.setInt(11, 0); //IS_REQUIRED
-		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH
-
-		if (perceroObject.getAdhocCoachingCategory() == null)
-		{
-			pstmt.setString(13, null);  //CATEGORY_ID
-		}
-		else
-		{
-			pstmt.setString(13, perceroObject.getAdhocCoachingCategory().getID());  //CATEGORY_ID
-		}
+if (perceroObject.getAdhocCoachingCategory() == null)
+{
+pstmt.setString(7, null);
+}
+else
+{
+		pstmt.setString(7, perceroObject.getAdhocCoachingCategory().getID());
+}
 
 
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getAgentScorecard().getID());
+}
+
+
+if (perceroObject.getComment() == null)
+{
+pstmt.setString(9, null);
+}
+else
+{
+		pstmt.setString(9, perceroObject.getComment().getID());
+}
+
+
+		
 	}
 	
 	@Override
@@ -454,70 +466,6 @@ propertyCounter++;
 	
 	
 	
-
-	public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, String userId)
-			throws SyncException {
-		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
-			return null;
-		}
-
-		long timeStart = System.currentTimeMillis();
-
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		Statement stmt = null;
-		String query = "Select EFC_SESSION_SEQ.NEXTVAL from dual";
-		String sql = null;
-		String insertedId = "0";
-		int result = 0;
-		try {
-			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
-			conn = connectionFactory.getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				insertedId = rs.getString(1);
-			}
-
-			perceroObject.setID(insertedId);
-			sql = getInsertIntoSQL();
-			pstmt = conn.prepareStatement(sql);
-
-
-			setPreparedStatmentInsertParams(perceroObject, pstmt);
-			result = pstmt.executeUpdate();
-			conn.commit();
-		} catch(Exception e) {
-			log.error("Unable to executeUpdate\n" + sql, e);
-			throw new SyncDataException(e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.setAutoCommit(true);
-					conn.close();
-				}
-			} catch (Exception e) {
-				log.error("Error closing database statement/connection", e);
-			}
-		}
-
-		long timeEnd = System.currentTimeMillis();
-		long totalTime = timeEnd - timeStart;
-		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
-		}
-
-		if (result > 0) {
-			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
-		}
-		else {
-			return null;
-		}
-	}
 	
 }
-
+

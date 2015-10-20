@@ -41,7 +41,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"CREATED_ON\",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"CREATED_ON\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_TOLERANCE_NOTIF\" \"DURATION_TOLERANCE_NOTIF\"";
 	private String whereClause = "  WHERE \"DURATION_TOLERANCE_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DURATION_TOLERANCE_NOTIF (\"ID\",\"CREATED_ON\",\"TYPE\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DURATION_TOLERANCE_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DURATION_TOLERANCE_NOTIF SET \"CREATED_ON\"=?,\"TYPE\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DURATION_TOLERANCE_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,9 +150,9 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setType(rs.getString("TYPE"));
+nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
@@ -166,13 +166,13 @@ LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
 
-LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
-lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
-nextResult.setLOBConfigurationEntry(lobconfigurationentry);
-
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
+
+LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
+lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
+nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 
 
 			
@@ -184,8 +184,8 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(DurationToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getType());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(4, perceroObject.getMessage());
 pstmt.setString(5, perceroObject.getName());
 
@@ -209,23 +209,23 @@ else
 }
 
 
-if (perceroObject.getLOBConfigurationEntry() == null)
+if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
+		pstmt.setString(8, perceroObject.getTeamLeader().getID());
 }
 
 
-if (perceroObject.getTeamLeader() == null)
+if (perceroObject.getLOBConfigurationEntry() == null)
 {
 pstmt.setString(9, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getTeamLeader().getID());
+		pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
 }
 
 
@@ -251,8 +251,8 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DurationToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(2, perceroObject.getType());
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(3, perceroObject.getMessage());
 pstmt.setString(4, perceroObject.getName());
 
@@ -276,23 +276,23 @@ else
 }
 
 
-if (perceroObject.getLOBConfigurationEntry() == null)
+if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getLOBConfigurationEntry().getID());
+		pstmt.setString(7, perceroObject.getTeamLeader().getID());
 }
 
 
-if (perceroObject.getTeamLeader() == null)
+if (perceroObject.getLOBConfigurationEntry() == null)
 {
 pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getTeamLeader().getID());
+		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
 }
 
 pstmt.setString(9, perceroObject.getID());
@@ -324,19 +324,19 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
 
-if (useCreatedOn)
+if (useType)
 {
 sql += " WHERE ";
-sql += " \"CREATED_ON\" =? ";
-paramValues.add(theQueryObject.getCreatedOn());
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
-if (useType)
+if (useCreatedOn)
 {
 if (propertyCounter > 0)
 {
@@ -346,8 +346,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
+sql += " \"CREATED_ON\" =? ";
+paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
 
@@ -419,23 +419,6 @@ paramValues.add(theQueryObject.getLOBConfiguration().getID());
 propertyCounter++;
 }
 
-boolean useLOBConfigurationEntryID = theQueryObject.getLOBConfigurationEntry() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfigurationEntry"));
-
-if (useLOBConfigurationEntryID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LOB_CONFIGURATION_ENTRY_ID\" =? ";
-paramValues.add(theQueryObject.getLOBConfigurationEntry().getID());
-propertyCounter++;
-}
-
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
 if (useTeamLeaderID)
@@ -450,6 +433,23 @@ sql += " WHERE ";
 }
 sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
+propertyCounter++;
+}
+
+boolean useLOBConfigurationEntryID = theQueryObject.getLOBConfigurationEntry() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfigurationEntry"));
+
+if (useLOBConfigurationEntryID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"LOB_CONFIGURATION_ENTRY_ID\" =? ";
+paramValues.add(theQueryObject.getLOBConfigurationEntry().getID());
 propertyCounter++;
 }
 

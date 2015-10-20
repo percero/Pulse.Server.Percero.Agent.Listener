@@ -41,11 +41,11 @@ public class CorrectiveActionAttachmentDAO extends SqlDataAccessObject<Correctiv
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACH_ATTACHMENT\".\"CREATED_ON\",\"COACH_ATTACHMENT\".\"UPDATED_ON\",\"COACH_ATTACHMENT\".\"TYPE\",\"COACH_ATTACHMENT\".\"CREATED_BY\",\"COACH_ATTACHMENT\".\"DESCRIPTION\",\"COACH_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACH_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACH_ATTACHMENT\".\"UPDATED_BY\",\"COACH_ATTACHMENT\".\"VERSION\",\"COACH_ATTACHMENT\".\"CORRECTIVE_ACTION_ID\"";
-	private String selectFromStatementTableName = " FROM \"COACH_ATTACHMENT\" \"COACH_ATTACHMENT\"";
-	private String whereClause = "  WHERE \"COACH_ATTACHMENT\".\"ID\"=?";
-	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACH_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COACH_ATTACHMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ATTACHMENT\".\"CREATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"TYPE\",\"CORRECTIVE_ATTACHMENT\".\"CREATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"DESCRIPTION\",\"CORRECTIVE_ATTACHMENT\".\"EMPLOYEE_ID\",\"CORRECTIVE_ATTACHMENT\".\"TEMP_STORE_ID\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"VERSION\",\"CORRECTIVE_ATTACHMENT\".\"CORRECTIVE_ACTION_ID\"";
+	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ATTACHMENT\" \"CORRECTIVE_ATTACHMENT\"";
+	private String whereClause = "  WHERE \"CORRECTIVE_ATTACHMENT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ATTACHMENT\".\"ID\"";
 	
 	
 
@@ -57,32 +57,32 @@ public class CorrectiveActionAttachmentDAO extends SqlDataAccessObject<Correctiv
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -94,51 +94,51 @@ public class CorrectiveActionAttachmentDAO extends SqlDataAccessObject<Correctiv
 	@Override
 	protected String getSelectInStarSQL() 
 	{
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACH_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACH_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+		return "SELECT \"CORRECTIVE_ATTACHMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACH_ATTACHMENT (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"CORRECTIVE_ACTION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_CORRECTIVE_ATTACHMENT (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"CORRECTIVE_ACTION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACH_ATTACHMENT SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"CORRECTIVE_ACTION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_CORRECTIVE_ATTACHMENT SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"CORRECTIVE_ACTION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TBL_COACH_ATTACHMENT WHERE \"ID\"=?";
+		return "DELETE FROM TBL_CORRECTIVE_ATTACHMENT WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -446,15 +446,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACH_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_CORRECTIVE_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACH_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_CORRECTIVE_ATTACHMENT(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_COACH_ATTACHMENT(?)}";
+		return "{call Delete_CORRECTIVE_ATTACHMENT(?)}";
 	}
 	
 	

@@ -170,6 +170,23 @@ public void setCodeType(Integer codeType)
 {
 	this.codeType = codeType;
 }/*
+POS
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String pOS;
+
+public String getPOS() 
+{
+	return this.pOS;
+}
+
+public void setPOS(String pOS)
+{
+	this.pOS = pOS;
+}/*
 EStartProjectName
 Notes:
 */
@@ -428,6 +445,27 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the POS property
+		objectJson += ",\"pOS\":";
+		
+		if (getPOS() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPOS());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
 		
@@ -631,6 +669,8 @@ objectJson += ",\"timecard\":";
 		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 		//From value of the Code Type property
 		setCodeType(JsonUtils.getJsonInteger(jsonObject, "codeType"));
+		//From value of the POS property
+		setPOS(JsonUtils.getJsonString(jsonObject, "pOS"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
 		//From value of the Duration property

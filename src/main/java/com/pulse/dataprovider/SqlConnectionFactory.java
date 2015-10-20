@@ -4,6 +4,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.percero.agents.sync.services.DAODataProvider;
 import com.percero.agents.sync.services.DataProviderManager;
 import org.apache.log4j.Logger;
+import org.boon.core.Sys;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
@@ -12,6 +13,8 @@ import java.sql.SQLException;
 public class SqlConnectionFactory implements IConnectionFactory {
 
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
+    
+    private static final long MAX_CONNECT_TIME = 1000 * 15;	// 15 Seconds.
     
     public SqlConnectionFactory() {
     	
@@ -128,6 +131,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
 	 */
     @Override
 	public Connection getConnection() throws SQLException{
+    	long timeStart = System.currentTimeMillis();
         try{
         	if (!initialized) {
         		try {
@@ -140,6 +144,12 @@ public class SqlConnectionFactory implements IConnectionFactory {
         }catch(SQLException e){
             logger.error(e.getMessage(), e);
             throw e;
+        } finally {
+        	long timeEnd = System.currentTimeMillis();
+        	long totalTime = timeEnd - timeStart;
+        	if (totalTime > MAX_CONNECT_TIME) {
+        		logger.warn("Long Database Connection: " + totalTime + "ms [" + this.getName() + "]");
+        	}
         }
     }
 

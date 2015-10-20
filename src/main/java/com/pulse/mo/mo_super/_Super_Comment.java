@@ -119,23 +119,6 @@ public void setDatarefId(Integer datarefId)
 {
 	this.datarefId = datarefId;
 }/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date date;
-
-public Date getDate() 
-{
-	return this.date;
-}
-
-public void setDate(Date date)
-{
-	this.date = date;
-}/*
 CreatedBy
 Notes:
 */
@@ -300,13 +283,6 @@ public void setDescription(String description)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
 		
@@ -426,8 +402,6 @@ public void setDescription(String description)
 		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
 		//From value of the Dataref Id property
 		setDatarefId(JsonUtils.getJsonInteger(jsonObject, "datarefId"));
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Created On property

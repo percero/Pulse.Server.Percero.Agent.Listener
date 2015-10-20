@@ -41,7 +41,7 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_MODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"ACTVTY_CODE_EVENT_COUNT\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"OCCURRENCE_MISMATCH_NOTIF\" \"OCCURRENCE_MISMATCH_NOTIF\"";
 	private String whereClause = "  WHERE \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_OCCURRENCE_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"AUX_MODE_EVENT_COUNT\",\"ACTVTY_CODE_EVENT_COUNT\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_OCCURRENCE_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_OCCURRENCE_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"AUX_MODE_EVENT_COUNT\"=?,\"ACTVTY_CODE_EVENT_COUNT\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_OCCURRENCE_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -153,10 +153,6 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 			nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
-
-nextResult.setAuxModeEventCount(rs.getInt("AUX_MODE_EVENT_COUNT"));
-
-nextResult.setTimecardActivityEventCount(rs.getInt("ACTVTY_CODE_EVENT_COUNT"));
 
 nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
 
@@ -188,39 +184,37 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-JdbcHelper.setInt(pstmt,4, perceroObject.getAuxModeEventCount());
-JdbcHelper.setInt(pstmt,5, perceroObject.getTimecardActivityEventCount());
-pstmt.setString(6, perceroObject.getAuxCodeEntryName());
-pstmt.setString(7, perceroObject.getMessage());
-pstmt.setString(8, perceroObject.getName());
+pstmt.setString(4, perceroObject.getAuxCodeEntryName());
+pstmt.setString(5, perceroObject.getMessage());
+pstmt.setString(6, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(9, null);
+pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getAgent().getID());
+		pstmt.setString(7, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getLOBConfiguration() == null)
 {
-pstmt.setString(10, null);
+pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
 }
 
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(11, null);
+pstmt.setString(9, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getTeamLeader().getID());
+		pstmt.setString(9, perceroObject.getTeamLeader().getID());
 }
 
 
@@ -248,42 +242,40 @@ else
 		
 		pstmt.setString(1, perceroObject.getType());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-JdbcHelper.setInt(pstmt,3, perceroObject.getAuxModeEventCount());
-JdbcHelper.setInt(pstmt,4, perceroObject.getTimecardActivityEventCount());
-pstmt.setString(5, perceroObject.getAuxCodeEntryName());
-pstmt.setString(6, perceroObject.getMessage());
-pstmt.setString(7, perceroObject.getName());
+pstmt.setString(3, perceroObject.getAuxCodeEntryName());
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(8, null);
+pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getAgent().getID());
+		pstmt.setString(6, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getLOBConfiguration() == null)
 {
-pstmt.setString(9, null);
+pstmt.setString(7, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getLOBConfiguration().getID());
+		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
 }
 
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(10, null);
+pstmt.setString(8, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getTeamLeader().getID());
+		pstmt.setString(8, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(11, perceroObject.getID());
+pstmt.setString(9, perceroObject.getID());
 
 		
 	}
@@ -336,40 +328,6 @@ sql += " WHERE ";
 }
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
-propertyCounter++;
-}
-
-boolean useAuxModeEventCount = theQueryObject.getAuxModeEventCount() != null && (excludeProperties == null || !excludeProperties.contains("auxModeEventCount"));
-
-if (useAuxModeEventCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AUX_MODE_EVENT_COUNT\" =? ";
-paramValues.add(theQueryObject.getAuxModeEventCount());
-propertyCounter++;
-}
-
-boolean useTimecardActivityEventCount = theQueryObject.getTimecardActivityEventCount() != null && (excludeProperties == null || !excludeProperties.contains("timecardActivityEventCount"));
-
-if (useTimecardActivityEventCount)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"ACTVTY_CODE_EVENT_COUNT\" =? ";
-paramValues.add(theQueryObject.getTimecardActivityEventCount());
 propertyCounter++;
 }
 
@@ -486,11 +444,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_OCCURRENCE_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

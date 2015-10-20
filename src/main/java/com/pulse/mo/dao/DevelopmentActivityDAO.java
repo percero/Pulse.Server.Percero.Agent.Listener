@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -20,7 +19,6 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
 
 import com.pulse.mo.*;
 
@@ -130,7 +128,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_TASK (\"PLAN_ID\",  \"TASK_DESC\",  \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\",\"CREATED_ON\",\"UPDATED_ON\", \"WK_DATE\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,1)";
+		return "INSERT INTO TBL_DEVELOPMENT_ACTIVITY (\"ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"DUE_DATE\",\"UPDATED_ON\",\"NAME\",\"PLAN_ID\",\"STATUS\",\"TEAM_LEADER_ID\",\"AGENT_ID\",\"DEVELOPMENT_PLAN_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -192,46 +190,53 @@ nextResult.setDevelopmentPlan(developmentplan);
     	
     	return nextResult;
 	}
-
+	
 	protected void setBaseStatmentInsertParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getID());
+pstmt.setString(2, perceroObject.getCreatedBy());
+pstmt.setString(3, perceroObject.getType());
+pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(10, perceroObject.getName());
+pstmt.setString(11, perceroObject.getPlanId());
+pstmt.setString(12, perceroObject.getStatus());
 
-		if (perceroObject.getDevelopmentPlan() == null)
-		{
-			pstmt.setString(1, null);
-		}
-		else
-		{
-			pstmt.setString(1, perceroObject.getDevelopmentPlan().getID());
-		}
+if (perceroObject.getTeamLeader() == null)
+{
+pstmt.setString(13, null);
+}
+else
+{
+		pstmt.setString(13, perceroObject.getTeamLeader().getID());
+}
 
-		pstmt.setString(2, perceroObject.getName());
 
-		if (perceroObject.getAgent() == null)
-		{
-			pstmt.setString(3, null);
-		}
-		else
-		{
-			pstmt.setString(3, perceroObject.getAgent().getID());
-		}
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getAgent().getID());
+}
 
-		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-		pstmt.setString(5, perceroObject.getStatus());
 
-		if (perceroObject.getTeamLeader() == null)
-		{
-			pstmt.setString(6, null);
-			pstmt.setString(7, null);
-		}
-		else
-		{
-			pstmt.setString(6, perceroObject.getTeamLeader().getID());
-			pstmt.setString(7, perceroObject.getTeamLeader().getID());
-		}
-		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-		pstmt.setString(11, perceroObject.getID());
+if (perceroObject.getDevelopmentPlan() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getDevelopmentPlan().getID());
+}
+
+
+		
 	}
 	
 	@Override
@@ -579,69 +584,5 @@ propertyCounter++;
 	
 	
 	
-
-	public DevelopmentActivity createObject(DevelopmentActivity perceroObject, String userId)
-			throws SyncException {
-		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
-			return null;
-		}
-
-		long timeStart = System.currentTimeMillis();
-
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		Statement stmt = null;
-		String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
-		String sql = null;
-		String insertedId = "0";
-		int result = 0;
-		try {
-			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
-			conn = connectionFactory.getConnection();
-			conn.setAutoCommit(false);
-
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				insertedId = rs.getString(1);
-			}
-			perceroObject.setID(insertedId);
-			sql = getInsertIntoSQL();
-			pstmt = conn.prepareStatement(sql);
-
-
-			setPreparedStatmentInsertParams(perceroObject, pstmt);
-			result = pstmt.executeUpdate();
-			conn.commit();
-		} catch(Exception e) {
-			log.error("Unable to executeUpdate\n" + sql, e);
-			throw new SyncDataException(e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.setAutoCommit(true);
-					conn.close();
-				}
-			} catch (Exception e) {
-				log.error("Error closing database statement/connection", e);
-			}
-		}
-
-		long timeEnd = System.currentTimeMillis();
-		long totalTime = timeEnd - timeStart;
-		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
-		}
-
-		if (result > 0) {
-			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
-		}
-		else {
-			return null;
-		}
-	}
 }
-
+

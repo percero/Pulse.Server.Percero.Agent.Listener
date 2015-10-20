@@ -70,40 +70,6 @@ public class _Super_ShiftStatusNotification extends Notification implements Seri
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-InProgressStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer inProgressStateCount;
-
-public Integer getInProgressStateCount() 
-{
-	return this.inProgressStateCount;
-}
-
-public void setInProgressStateCount(Integer inProgressStateCount)
-{
-	this.inProgressStateCount = inProgressStateCount;
-}/*
-NotYetStartedStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer notYetStartedStateCount;
-
-public Integer getNotYetStartedStateCount() 
-{
-	return this.notYetStartedStateCount;
-}
-
-public void setNotYetStartedStateCount(Integer notYetStartedStateCount)
-{
-	this.notYetStartedStateCount = notYetStartedStateCount;
-}/*
 ShiftEndDate
 Notes:
 */
@@ -137,40 +103,6 @@ public Boolean getResolved()
 public void setResolved(Boolean resolved)
 {
 	this.resolved = resolved;
-}/*
-CompleteStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer completeStateCount;
-
-public Integer getCompleteStateCount() 
-{
-	return this.completeStateCount;
-}
-
-public void setCompleteStateCount(Integer completeStateCount)
-{
-	this.completeStateCount = completeStateCount;
-}/*
-ApprovedStateCount
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer approvedStateCount;
-
-public Integer getApprovedStateCount() 
-{
-	return this.approvedStateCount;
-}
-
-public void setApprovedStateCount(Integer approvedStateCount)
-{
-	this.approvedStateCount = approvedStateCount;
 }
 
 	//////////////////////////////////////////////////////
@@ -205,48 +137,6 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the In Progress State Count property
-		objectJson += ",\"inProgressStateCount\":";
-		
-		if (getInProgressStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getInProgressStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Not Yet Started State Count property
-		objectJson += ",\"notYetStartedStateCount\":";
-		
-		if (getNotYetStartedStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getNotYetStartedStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Shift End Date property
 		objectJson += ",\"shiftEndDate\":";
 		if (getShiftEndDate() == null)
@@ -260,48 +150,6 @@ public void setTimecardActivity(TimecardActivity value) {
 			objectJson += "null";
 		else {
 			objectJson += getResolved();
-		}
-		//Retrieve value of the Complete State Count property
-		objectJson += ",\"completeStateCount\":";
-		
-		if (getCompleteStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCompleteStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Approved State Count property
-		objectJson += ",\"approvedStateCount\":";
-		
-		if (getApprovedStateCount() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getApprovedStateCount());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 
 				
@@ -332,18 +180,10 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the In Progress State Count property
-		setInProgressStateCount(JsonUtils.getJsonInteger(jsonObject, "inProgressStateCount"));
-		//From value of the Not Yet Started State Count property
-		setNotYetStartedStateCount(JsonUtils.getJsonInteger(jsonObject, "notYetStartedStateCount"));
 		//From value of the Shift End Date property
 		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
 		//From value of the Resolved property
 		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
-		//From value of the Complete State Count property
-		setCompleteStateCount(JsonUtils.getJsonInteger(jsonObject, "completeStateCount"));
-		//From value of the Approved State Count property
-		setApprovedStateCount(JsonUtils.getJsonInteger(jsonObject, "approvedStateCount"));
 
 		
 		// Source Relationships

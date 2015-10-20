@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -20,7 +19,6 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
 
 import com.pulse.mo.*;
 
@@ -43,7 +41,7 @@ public class CoachingSessionDAO extends SqlDataAccessObject<CoachingSession> imp
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_SESSION\".\"CREATED_BY\",\"COACHING_SESSION\".\"TYPE\",\"COACHING_SESSION\".\"UPDATED_BY\",\"COACHING_SESSION\".\"IS_REQUIRED\",\"COACHING_SESSION\".\"CLOSED_ON\",\"COACHING_SESSION\".\"CREATED_ON\",\"COACHING_SESSION\".\"UPDATED_ON\",\"COACHING_SESSION\".\"WEEK_DATE\",\"COACHING_SESSION\".\"EMPLOYEE_ID\",\"COACHING_SESSION\".\"SCORECARD_ID\",\"COACHING_SESSION\".\"AGENT_SCORECARD_ID\",\"COACHING_SESSION\".\"COACHING_SESSION_STATE_ID\",\"COACHING_SESSION\".\"COMMENT_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_SESSION\".\"IS_REQUIRED\",\"COACHING_SESSION\".\"CLOSED_ON\",\"COACHING_SESSION\".\"CREATED_ON\",\"COACHING_SESSION\".\"UPDATED_ON\",\"COACHING_SESSION\".\"WEEK_DATE\",\"COACHING_SESSION\".\"EMPLOYEE_ID\",\"COACHING_SESSION\".\"SCORECARD_ID\",\"COACHING_SESSION\".\"TYPE\",\"COACHING_SESSION\".\"UPDATED_BY\",\"COACHING_SESSION\".\"CREATED_BY\",\"COACHING_SESSION\".\"AGENT_SCORECARD_ID\",\"COACHING_SESSION\".\"COACHING_SESSION_STATE_ID\",\"COACHING_SESSION\".\"COMMENT_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_SESSION\" \"COACHING_SESSION\"";
 	private String whereClause = "  WHERE \"COACHING_SESSION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
@@ -139,12 +137,12 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACHING_SESSION (\"ID\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"TYPE\",\"UPDATED_BY\",\"CREATED_BY\",\"AGENT_SCORECARD_ID\",\"COACHING_SESSION_STATE_ID\",\"COMMENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACHING_SESSION SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=?,\"COMMENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACHING_SESSION SET \"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=?,\"COMMENT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -161,13 +159,7 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-nextResult.setType(rs.getString("TYPE"));
-
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
-
-nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
+			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
 nextResult.setClosedOn(rs.getDate("CLOSED_ON"));
 
@@ -180,6 +172,12 @@ nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
 nextResult.setEmployeeId(rs.getInt("EMPLOYEE_ID"));
 
 nextResult.setScorecardId(rs.getInt("SCORECARD_ID"));
+
+nextResult.setType(rs.getString("TYPE"));
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
@@ -199,27 +197,52 @@ nextResult.setComment(comment);
     	
     	return nextResult;
 	}
-
+	
 	protected void setBaseStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
+		
+		pstmt.setString(1, perceroObject.getID());
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,7, perceroObject.getEmployeeId());
+JdbcHelper.setInt(pstmt,8, perceroObject.getScorecardId());
+pstmt.setString(9, perceroObject.getType());
+pstmt.setString(10, perceroObject.getUpdatedBy());
+pstmt.setString(11, perceroObject.getCreatedBy());
 
-		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
-		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
-		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
-		pstmt.setInt(4, perceroObject.getScorecardId()); // follow up  session  SCORECARD_ID
-		pstmt.setInt(5, 2); //Followup Coaching session - TYPE
-		pstmt.setInt(6, 1);  //STATUS    TODO  Fix this
-
-		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
-		pstmt.setString(8, perceroObject.getUpdatedBy());	//UPDATED_BY
-
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));  //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));  //UPDATED_ON
-		pstmt.setInt(11, 0); //IS_REQUIRED
-		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH
-
-		pstmt.setInt(13, 0);  //CATEGORY_ID  - For follow up it is 0.
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(12, null);
+}
+else
+{
+		pstmt.setString(12, perceroObject.getAgentScorecard().getID());
+}
 
 
+if (perceroObject.getCoachingSessionState() == null)
+{
+pstmt.setString(13, null);
+}
+else
+{
+		pstmt.setString(13, perceroObject.getCoachingSessionState().getID());
+}
+
+
+if (perceroObject.getComment() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getComment().getID());
+}
+
+
+		
 	}
 	
 	@Override
@@ -241,16 +264,16 @@ nextResult.setComment(comment);
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getCreatedBy());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-JdbcHelper.setBoolean(pstmt,4, perceroObject.getIsRequired());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,9, perceroObject.getEmployeeId());
-JdbcHelper.setInt(pstmt,10, perceroObject.getScorecardId());
+		JdbcHelper.setBoolean(pstmt,1, perceroObject.getIsRequired());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,6, perceroObject.getEmployeeId());
+JdbcHelper.setInt(pstmt,7, perceroObject.getScorecardId());
+pstmt.setString(8, perceroObject.getType());
+pstmt.setString(9, perceroObject.getUpdatedBy());
+pstmt.setString(10, perceroObject.getCreatedBy());
 
 if (perceroObject.getAgentScorecard() == null)
 {
@@ -310,62 +333,11 @@ pstmt.setString(14, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-sql += " WHERE ";
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
+		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
 
 if (useIsRequired)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"IS_REQUIRED\" =? ";
 paramValues.add(theQueryObject.getIsRequired());
 propertyCounter++;
@@ -473,6 +445,57 @@ paramValues.add(theQueryObject.getScorecardId());
 propertyCounter++;
 }
 
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
 boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
 
 if (useAgentScorecardID)
@@ -549,69 +572,5 @@ propertyCounter++;
 	
 	
 	
-
-	public CoachingSession createObject(CoachingSession perceroObject, String userId)
-			throws SyncException {
-		if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
-			return null;
-		}
-
-		long timeStart = System.currentTimeMillis();
-
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		Statement stmt = null;
-		String query = "Select EFC_SESSION_SEQ.NEXTVAL from dual";
-		String sql = null;
-		String insertedId = "0";
-		int result = 0;
-		try {
-			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
-			conn = connectionFactory.getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				insertedId = rs.getString(1);
-			}
-
-			perceroObject.setID(insertedId);
-			sql = getInsertIntoSQL();
-			pstmt = conn.prepareStatement(sql);
-
-
-			setPreparedStatmentInsertParams(perceroObject, pstmt);
-			result = pstmt.executeUpdate();
-			conn.commit();
-		} catch(Exception e) {
-			log.error("Unable to executeUpdate\n" + sql, e);
-			throw new SyncDataException(e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.setAutoCommit(true);
-					conn.close();
-				}
-			} catch (Exception e) {
-				log.error("Error closing database statement/connection", e);
-			}
-		}
-
-		long timeEnd = System.currentTimeMillis();
-		long totalTime = timeEnd - timeStart;
-		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
-		}
-
-		if (result > 0) {
-			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
-		}
-		else {
-			return null;
-		}
-	}
 }
-
+

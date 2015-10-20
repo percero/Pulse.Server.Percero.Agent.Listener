@@ -153,6 +153,23 @@ public void setDetails(String details)
 {
 	this.details = details;
 }/*
+SessionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer sessionId;
+
+public Integer getSessionId() 
+{
+	return this.sessionId;
+}
+
+public void setSessionId(Integer sessionId)
+{
+	this.sessionId = sessionId;
+}/*
 ManagerApprovalDate
 Notes:
 */
@@ -433,6 +450,27 @@ public void setSupervisor(Supervisor value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Session Id property
+		objectJson += ",\"sessionId\":";
+		
+		if (getSessionId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSessionId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Manager Approval Date property
 		objectJson += ",\"managerApprovalDate\":";
 		if (getManagerApprovalDate() == null)
@@ -608,6 +646,8 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
 		//From value of the Details property
 		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
+		//From value of the Session Id property
+		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
 		//From value of the Manager Approval Date property
 		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
 		//From value of the Supervisor ACK Date property

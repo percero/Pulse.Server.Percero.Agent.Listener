@@ -132,18 +132,18 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 							// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
 							accessManager.addWatcherField(pair, "timecardState", fieldsToWatch);
 
-							if (host.getTimecardEntries().size() <=0 ){
-								existingShiftStatusNotification.setNotYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
-							}
-							else if (host.getTimecardState().equals("Approved")) {
-								existingShiftStatusNotification.setApprovedStateCount(existingShiftStatusNotification.getApprovedStateCount() + 1);
-							}
-							else if (host.getTimecardState().equals("Completed")){
-								existingShiftStatusNotification.setCompleteStateCount(existingShiftStatusNotification.getCompleteStateCount() + 1);
-							}
-							else{
-								existingShiftStatusNotification.setInProgressStateCount(existingShiftStatusNotification.getInProgressStateCount());
-							}
+//							if (host.getTimecardEntries().size() <=0 ){
+//								existingShiftStatusNotification.setNotYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
+//							}
+//							else if (host.getTimecardState().equals("Approved")) {
+//								existingShiftStatusNotification.setApprovedStateCount(existingShiftStatusNotification.getApprovedStateCount() + 1);
+//							}
+//							else if (host.getTimecardState().equals("Completed")){
+//								existingShiftStatusNotification.setCompleteStateCount(existingShiftStatusNotification.getCompleteStateCount() + 1);
+//							}
+//							else{
+//								existingShiftStatusNotification.setInProgressStateCount(existingShiftStatusNotification.getInProgressStateCount());
+//							}
 
 							// Save the ExistingShiftStatusNotification.
 							syncAgentService.systemPutObject(existingShiftStatusNotification, null, null, null, true);
