@@ -12,6 +12,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.percero.agents.auth.vo.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,9 +30,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
 import com.percero.agents.auth.services.IAuthProvider;
-import com.percero.agents.auth.vo.BasicAuthCredential;
-import com.percero.agents.auth.vo.ServiceIdentifier;
-import com.percero.agents.auth.vo.ServiceUser;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.auth.vo.PulseUserInfo;
 import com.pulse.mo.TeamLeader;
@@ -57,8 +55,9 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @param credential - String in <USERNAME>:<PASSWORD> format
      * @return
      */
-    public ServiceUser authenticate(String credential) {
-    	ServiceUser result = null;
+    public AuthProviderResponse authenticate(String credential) {
+        AuthProviderResponse response = new AuthProviderResponse();
+    	ServiceUser serviceUser = null;
     	BasicAuthCredential cred = BasicAuthCredential.fromString(credential);
 
         // This enables the backdoor. Anything after || is considered the employeeId
@@ -104,12 +103,15 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     pulseUserInfo = objectMapper.readValue(body, PulseUserInfo.class);
                     // Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
                     // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
+                    if(pulseUserInfo.getEmployeeId() == null)
+                        response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+
                 } catch (JsonMappingException jme) {
                     logger.warn(jme.getMessage(), jme);
-                    return result;
+                    response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
-                    return result;
+                    response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
                 }
             }
 
@@ -123,28 +125,34 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 	                // If we found one
 	                if (list.size() > 0) {
 	                    TeamLeader teamLeader = list.get(0);
-	                    result = new ServiceUser();
-	                    result.setId(pulseUserInfo.getEmployeeId());
-	                    result.setFirstName(teamLeader.getFirstName());
-	                    result.setLastName(teamLeader.getLastName());
-	                    result.getRoleNames().add("TeamLeader");
-	                    result.setAreRoleNamesAccurate(true);
-	                    result.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
+	                    serviceUser = new ServiceUser();
+	                    serviceUser.setId(pulseUserInfo.getEmployeeId());
+	                    serviceUser.setFirstName(teamLeader.getFirstName());
+	                    serviceUser.setLastName(teamLeader.getLastName());
+	                    serviceUser.getRoleNames().add("TeamLeader");
+	                    serviceUser.setAreRoleNamesAccurate(true);
+	                    serviceUser.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
 	                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+                        response.serviceUser = serviceUser;
+                        response.authCode = AuthCode.SUCCESS;
 	                }
 	                else {
-	                	logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
-	                }
-            	}
-            	else {
-                	logger.warn("No TeamLeader for logged in user");
-            	}
+                        logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+                        response.authCode = PulseAuthCode.NO_TEAM_LEADER;
+                    }
+            	} else if(response.authCode == null) // code hasn't been set
+                    response.authCode = PulseAuthCode.EMPLOYEEID_NOT_FOUND;
+
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);
+                response.authCode = new AuthCode(500, se.getMessage());
             }
     	}
+        else
+            response.authCode = PulseAuthCode.BAD_USER_PASS;
 
-    	return result;
+
+    	return response;
     }
 
     /**
