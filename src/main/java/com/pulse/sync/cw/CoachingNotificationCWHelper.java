@@ -88,23 +88,215 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 	}
 	
 	private Object calc_skippedStateCount(ClassIDPair pair) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer skippedStateCount 			= 0;
+
+		try {
+			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate pendingStateCount: Invalid objectId");
+				return skippedStateCount;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
+
+			if (host != null) {
+
+				accessManager.addWatcherField(pair, "agentScorecard", fieldsToWatch);
+				AgentScorecard agentScorecard = syncAgentService.systemGetByObject(host.getAgentScorecard());
+
+				if (agentScorecard != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
+					Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
+
+					while (itrCoachingSession.hasNext()) {
+						CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
+						if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
+							ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
+							accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
+
+							String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
+							if (coachingSessionStateID.equals("7")) {
+								skippedStateCount++;
+							}
+						}
+					}
+				}
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, "skippedStateCount", fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, "skippedStateCount", skippedStateCount);
+		} catch(Exception e) {
+			log.error("Unable to calculate skippedStateCount", e);
+		}
+
+		return skippedStateCount;
 	}
 
 	private Object calc_acknowledgementStateCount(ClassIDPair pair) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer acknowledgementStateCount 			= 0;
+
+		try {
+			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate pendingStateCount: Invalid objectId");
+				return acknowledgementStateCount;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
+
+			if (host != null) {
+
+				accessManager.addWatcherField(pair, "agentScorecard", fieldsToWatch);
+				AgentScorecard agentScorecard = syncAgentService.systemGetByObject(host.getAgentScorecard());
+
+				if (agentScorecard != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
+					Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
+
+					while (itrCoachingSession.hasNext()) {
+						CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
+						if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
+							ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
+							accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
+
+							String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
+							if (coachingSessionStateID.equals("4") || coachingSessionStateID.equals("6")) {
+								acknowledgementStateCount++;
+							}
+						}
+					}
+				}
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, "acknowledgementStateCount", fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, "acknowledgementStateCount", acknowledgementStateCount);
+		} catch(Exception e) {
+			log.error("Unable to calculate acknowledgementStateCount", e);
+		}
+
+		return acknowledgementStateCount;
 	}
 
 	private Object calc_pendingEmployeeStateCount(ClassIDPair pair) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer pendingEmployeeStateCount 			= 0;
+
+		try {
+			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate pendingStateCount: Invalid objectId");
+				return pendingEmployeeStateCount;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
+
+			if (host != null) {
+
+				accessManager.addWatcherField(pair, "agentScorecard", fieldsToWatch);
+				AgentScorecard agentScorecard = syncAgentService.systemGetByObject(host.getAgentScorecard());
+
+				if (agentScorecard != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
+					Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
+
+					while (itrCoachingSession.hasNext()) {
+						CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
+						if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
+							ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
+							accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
+
+							String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
+							if (coachingSessionStateID.equals("3") || coachingSessionStateID.equals("10")) {
+								pendingEmployeeStateCount++;
+							}
+						}
+					}
+				}
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, "pendingEmployeeStateCount", fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, "pendingEmployeeStateCount", pendingEmployeeStateCount);
+		} catch(Exception e) {
+			log.error("Unable to calculate pendingEmployeeStateCount", e);
+		}
+
+		return pendingEmployeeStateCount;
 	}
 
 	private Object calc_pendingCoachStateCount(ClassIDPair pair) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer pendingCoachStateCount 			= 0;
+
+		try {
+			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate pendingStateCount: Invalid objectId");
+				return pendingCoachStateCount;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
+
+			if (host != null) {
+
+				accessManager.addWatcherField(pair, "agentScorecard", fieldsToWatch);
+				AgentScorecard agentScorecard = syncAgentService.systemGetByObject(host.getAgentScorecard());
+
+				if (agentScorecard != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
+					Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
+
+					while (itrCoachingSession.hasNext()) {
+						CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
+						if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
+							ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
+							accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
+
+							String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
+							if (coachingSessionStateID.equals("5") || coachingSessionStateID.equals("11")) {
+								pendingCoachStateCount++;
+							}
+						}
+					}
+				}
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, "pendingCoachStateCount", fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, "pendingCoachStateCount", pendingCoachStateCount);
+		} catch(Exception e) {
+			log.error("Unable to calculate pendingCoachStateCount", e);
+		}
+
+		return pendingCoachStateCount;
 	}
 
 	public Integer calc_pendingStateCount(ClassIDPair pair) {
