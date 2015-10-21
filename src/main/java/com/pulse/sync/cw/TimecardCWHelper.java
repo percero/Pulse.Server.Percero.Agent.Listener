@@ -73,65 +73,64 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 			// We want to re-trigger this change watcher when Timecard.endDate changes.
 			accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 			
-			if (host != null) {
-				DateTime timecardDateTime = new DateTime(host.getDate());
-				DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-				int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
+			DateTime timecardDateTime = new DateTime(host.getDate());
+			DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+			int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
 
-				// If the Timecard.date < 3 days old
-				if ( daysBetweem < 3) {
-					// Re-trigger this change watcher when AgentScorecard.agent changes.
-					accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+			// If the Timecard.date < 3 days old
+			if ( daysBetweem < 3) {
+				// Re-trigger this change watcher when AgentScorecard.agent changes.
+				accessManager.addWatcherField(pair, "agent", fieldsToWatch);
 
-					// Check to see if there is already a coaching notification created.
-					Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-					if (agent != null) {
-						// Re-trigger this change watcher when Agent.teamLeader changes.
-						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "teamLeader", fieldsToWatch);
-						TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
-						if (teamLeader != null) {
-							ShiftStatusNotification existingShiftStatusNotification = null;
+				// Check to see if there is already a coaching notification created.
+				Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+				if (agent != null) {
+					// Re-trigger this change watcher when Agent.teamLeader changes.
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "teamLeader", fieldsToWatch);
+					TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
+					if (teamLeader != null) {
+						ShiftStatusNotification existingShiftStatusNotification = null;
 
-							// Re-trigger this change watcher when TeamLeader.notifications changes.
-							accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "notifications", fieldsToWatch);
-							Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
-							while (itrNotifications.hasNext()) {
-								Notification nextNotification = itrNotifications.next();
-								if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
-									ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
-									
-									if (nextShiftStatusNotification == null) {
-										continue;
-									}
-									
-									// Re-trigger this change watcher when ShiftStatusNotification.shiftEndDate changes.
-									accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextShiftStatusNotification), "shiftEndDate", fieldsToWatch);
+						// Re-trigger this change watcher when TeamLeader.notifications changes.
+						accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "notifications", fieldsToWatch);
+						Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
+						while (itrNotifications.hasNext()) {
+							Notification nextNotification = itrNotifications.next();
+							if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
+								ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
+								
+								if (nextShiftStatusNotification == null) {
+									continue;
+								}
+								
+								// Re-trigger this change watcher when ShiftStatusNotification.shiftEndDate changes.
+								accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextShiftStatusNotification), "shiftEndDate", fieldsToWatch);
 
-									DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
-									// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
-									if (DateTimeComparator.getDateOnlyInstance().compare(timecardDateTime, nextShiftStatusNotificationWeekDate) == 0) {
-										existingShiftStatusNotification = nextShiftStatusNotification;
-										break;
-									}
+								DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
+								// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
+								if (DateTimeComparator.getDateOnlyInstance().compare(timecardDateTime, nextShiftStatusNotificationWeekDate) == 0) {
+									existingShiftStatusNotification = nextShiftStatusNotification;
+									break;
 								}
 							}
-							
-							if (existingShiftStatusNotification == null) {
-								existingShiftStatusNotification = new ShiftStatusNotification();
-								existingShiftStatusNotification.setID(UUID.randomUUID().toString());
-								existingShiftStatusNotification.setCreatedOn(new Date());
-								existingShiftStatusNotification.setName("Shift Status");
-								existingShiftStatusNotification.setType("ShiftStatusNotification");
-								existingShiftStatusNotification.setTeamLeader(teamLeader);
-								existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
-								existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
-							}
-							
-							// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-							accessManager.addWatcherField(pair, "timecardEntries", fieldsToWatch);
-							// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-							accessManager.addWatcherField(pair, "timecardState", fieldsToWatch);
-
+						}
+						
+						if (existingShiftStatusNotification == null) {
+							existingShiftStatusNotification = new ShiftStatusNotification();
+							existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+							existingShiftStatusNotification.setCreatedOn(new Date());
+							existingShiftStatusNotification.setName("Shift Status");
+							existingShiftStatusNotification.setType("ShiftStatusNotification");
+							existingShiftStatusNotification.setTeamLeader(teamLeader);
+							existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
+							existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+						}
+						
+//							// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
+//							accessManager.addWatcherField(pair, "timecardEntries", fieldsToWatch);
+//							// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
+//							accessManager.addWatcherField(pair, "timecardState", fieldsToWatch);
+//
 //							if (host.getTimecardEntries().size() <=0 ){
 //								existingShiftStatusNotification.setNotYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
 //							}
@@ -144,12 +143,11 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 //							else{
 //								existingShiftStatusNotification.setInProgressStateCount(existingShiftStatusNotification.getInProgressStateCount());
 //							}
+//
+//							// Save the ExistingShiftStatusNotification.
+//							syncAgentService.systemPutObject(existingShiftStatusNotification, null, null, null, true);
 
-							// Save the ExistingShiftStatusNotification.
-							syncAgentService.systemPutObject(existingShiftStatusNotification, null, null, null, true);
-
-							result = BaseDataObject.toClassIdPair(existingShiftStatusNotification);
-						}
+						result = BaseDataObject.toClassIdPair(existingShiftStatusNotification);
 					}
 				}
 			}

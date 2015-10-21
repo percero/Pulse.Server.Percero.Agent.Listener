@@ -91,7 +91,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		}
 	}
 	
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) throws SyncDataException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -101,7 +101,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		return null;
 	}
 	
-	protected String getSelectByRelationship(String joinColumnName, Boolean shellOnly) {
+	protected String getSelectByRelationship(String joinColumnName, Boolean shellOnly) throws SyncDataException {
 		if (shellOnly) {
 			return getSelectByRelationshipShellOnlySQL("\""+joinColumnName+"\"");
 		}

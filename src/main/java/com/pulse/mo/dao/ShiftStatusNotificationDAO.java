@@ -189,6 +189,14 @@ else
 		pstmt.setString(7, perceroObject.getTeamLeader().getID());
 }
 
+if (perceroObject.getTimecardActivity() == null)
+{
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getTimecardActivity().getID());
+}
 
 		
 	}
@@ -228,6 +236,14 @@ else
 }
 
 pstmt.setString(7, perceroObject.getID());
+
+if (perceroObject.getTimecardActivity() == null) {
+pstmt.setString(8, null);
+}
+else
+{
+		pstmt.setString(8, perceroObject.getTimecardActivity().getID());
+}
 
 		
 	}
@@ -362,15 +378,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SHIFT_STATUS_NOTIFICATION(?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SHIFT_STATUS_NOTIFICATION(?,?,?,?,?,?,?)}";
+		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_SHIFT_STATUS_NOTIFICATION(?)}";
+		return "{call Delete_SHIFT_STATUS_NOTIFY(?)}";
 	}
 	
 	

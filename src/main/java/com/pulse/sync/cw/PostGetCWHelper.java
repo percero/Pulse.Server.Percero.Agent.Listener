@@ -17,13 +17,16 @@ import com.percero.agents.sync.cw.ChangeWatcherHelper;
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
+import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Notification;
+import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
+import com.pulse.mo.Timecard;
 
 // This should get picked up by Spring and be auto-wired.
 @Component
@@ -69,6 +72,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		// Switch on the class name.
 		if (AgentScorecard.class.getCanonicalName().equalsIgnoreCase(className)) {
 			handleAgentScorecard(new ClassIDPair(classId, className), params);
+		}
+		else if (Timecard.class.getCanonicalName().equalsIgnoreCase(className)) {
+			handleTimecard(new ClassIDPair(classId, className), params);
 		}
 	}
 	
@@ -198,4 +204,73 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		}
 	}
 
+	private void handleTimecard(ClassIDPair classIdPair, String[] params) {
+		try {
+			checkForOrCreateShiftStatusNotification(classIdPair);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	private void checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
+			throws SyncException {
+		Timecard host = (Timecard) syncAgentService
+				.systemGetById(classIdPair);
+
+		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]");
+		DateTime timecardDateTime = new DateTime(host.getDate());
+		DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+		int daysBetween = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
+		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
+				+ daysBetween);
+
+		// If the Timecard.date < 3 days old
+		if ( daysBetween < 3) {
+			// Check to see if there is already a coaching notification created.
+			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+			if (agent != null) {
+				TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
+				if (teamLeader != null) {
+					ShiftStatusNotification existingShiftStatusNotification = null;
+
+					Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
+					while (itrNotifications.hasNext()) {
+						Notification nextNotification = itrNotifications.next();
+						if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
+							ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
+							
+							if (nextShiftStatusNotification == null) {
+								continue;
+							}
+							
+							log.debug("[ShiftStatusNotification]  ShiftStatusNotification id - "
+									+ nextShiftStatusNotification.getID());
+							log.debug("[ShiftStatusNotification]  Timecard id"
+									+ host.getID());
+							DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
+							// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
+							if (DateTimeComparator.getDateOnlyInstance().compare(timecardDateTime, nextShiftStatusNotificationWeekDate) == 0) {
+								existingShiftStatusNotification = nextShiftStatusNotification;
+								log.debug("[ShiftStatusNotification]  Existing ShiftStatusNotification found: "
+										+ nextShiftStatusNotification.getID());
+								break;
+							}
+						}
+					}
+					
+					if (existingShiftStatusNotification == null) {
+						existingShiftStatusNotification = new ShiftStatusNotification();
+						existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+						existingShiftStatusNotification.setResolved(false);
+						existingShiftStatusNotification.setCreatedOn(new Date());
+						existingShiftStatusNotification.setName("Shift Status");
+						existingShiftStatusNotification.setType("ShiftStatusNotification");
+						existingShiftStatusNotification.setTeamLeader(teamLeader);
+						existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
+						existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+					}
+				}
+			}
+		}
+	}
 }

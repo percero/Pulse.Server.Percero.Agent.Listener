@@ -106,6 +106,9 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
+		if ("\"SCHEDULE_ID\"".equalsIgnoreCase(joinColumnName)) {
+			return "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) WHERE \"SCHEDULE\".\"ID\"=?";
+		}
 		
 		return SQL_VIEW + "  \"SCHEDULE_ENTRY\"." + joinColumnName + "=?";
 	}
@@ -113,7 +116,11 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
+		if ("\"SCHEDULE_ID\"".equalsIgnoreCase(joinColumnName)) {
+			return "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " +
+					"FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) " +
+					"WHERE \"SCHEDULE\".\"ID\"=?";
+		}
 		
 		return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE_ENTRY\"." + joinColumnName + "=?";
 	}

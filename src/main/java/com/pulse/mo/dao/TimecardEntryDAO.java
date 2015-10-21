@@ -110,7 +110,7 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	{
 		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\""))
 {
-return "SELECT \"TIMECARD_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
+return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
 }
 
 		return SQL_VIEW + "  \"TIMECARD_ENTRY\"." + joinColumnName + "=?";
@@ -121,7 +121,7 @@ return "SELECT \"TIMECARD_ENTRY\".\"ID\"" + SQL_VIEW + " " + selectFromStatement
 	{
 		if (joinColumnName.equalsIgnoreCase("\"TIMECARD_ID\""))
 		{
-				return "SELECT \"TIMECARD_ENTRY\".\"ID\" " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
+				return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatementTableName + joinTimecardIDTimecardEntry;
 		}
 
 		

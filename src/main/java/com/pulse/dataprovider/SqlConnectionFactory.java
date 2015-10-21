@@ -14,7 +14,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
 
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
     
-    private static final long MAX_CONNECT_TIME = 1000 * 15;	// 15 Seconds.
+    private static final long MAX_CONNECT_TIME = 2500;	// 2.5 Seconds.
     
     public SqlConnectionFactory() {
     	
@@ -148,7 +148,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
         	long timeEnd = System.currentTimeMillis();
         	long totalTime = timeEnd - timeStart;
         	if (totalTime > MAX_CONNECT_TIME) {
-        		logger.warn("Long Database Connection: " + totalTime + "ms [" + this.getName() + "]");
+        		logger.warn("Long Database Connection: " + totalTime + "ms [" + this.getName() + ": " + this.getJdbcUrl() + "]");
         	}
         }
     }

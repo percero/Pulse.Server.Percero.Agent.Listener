@@ -43,6 +43,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 
     private static Logger logger = Logger.getLogger(PulseHttpAuthProvider.class);
     public static final String ID = "pulse_http";
+    
+    private static final long TIMEOUT_TIME = 2500;
 
     public String getID() {
         return ID;
@@ -161,6 +163,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @return
      */
     private String makeRequest(String url, Map<String, String> params){
+    	long timeStart = System.currentTimeMillis();
+
         String body = "";
         try {
             HttpClient client = getHttpClient();
@@ -179,6 +183,12 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         } catch(IOException ioe){
             logger.warn(ioe.getMessage(), ioe);
         }
+        
+        long timeEnd = System.currentTimeMillis();
+        long totalTime = timeEnd - timeStart;
+    	if (totalTime > TIMEOUT_TIME) {
+    		logger.warn("Slow Auth: " + url + " - " + totalTime + "ms [" + this.getClass().getName() + "]");
+    	}
 
         return body;
     }
