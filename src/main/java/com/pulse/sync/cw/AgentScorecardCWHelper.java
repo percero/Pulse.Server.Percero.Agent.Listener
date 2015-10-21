@@ -109,7 +109,9 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 									log.debug("[CoachingNotification]  AgentScoreCard DateTime" + scorecardDateTime);
 									log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
 									// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
-									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, nextCoachingNotificationWeekDate) == 0) {
+									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, nextCoachingNotificationWeekDate) == 0 && 
+											nextCoachingNotification.getAgentScorecard() != null && 
+											nextCoachingNotification.getAgentScorecard().getID().equalsIgnoreCase(host.getID())) {
 										log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
 										existingCoachingNotification = nextCoachingNotification;
 										break;
@@ -125,6 +127,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 								existingCoachingNotification.setType("CoachingNotification");
 								existingCoachingNotification.setTeamLeader(teamLeader);
 								existingCoachingNotification.setWeekDate(host.getWeekDate());
+								existingCoachingNotification.setAgentScorecard(host);
 								existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
 							}
 
