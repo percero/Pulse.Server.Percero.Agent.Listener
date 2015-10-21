@@ -153,23 +153,6 @@ public void setGoalValue(Integer goalValue)
 {
 	this.goalValue = goalValue;
 }/*
-GoalTypeName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String goalTypeName;
-
-public String getGoalTypeName() 
-{
-	return this.goalTypeName;
-}
-
-public void setGoalTypeName(String goalTypeName)
-{
-	this.goalTypeName = goalTypeName;
-}/*
 StartDate
 Notes:
 */
@@ -374,27 +357,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Goal Type Name property
-		objectJson += ",\"goalTypeName\":";
-		
-		if (getGoalTypeName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getGoalTypeName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Start Date property
 		objectJson += ",\"startDate\":";
 		if (getStartDate() == null)
@@ -547,8 +509,6 @@ objectJson += ",\"gradeScales\":[";
 		setDurationTo(JsonUtils.getJsonInteger(jsonObject, "durationTo"));
 		//From value of the Goal Value property
 		setGoalValue(JsonUtils.getJsonInteger(jsonObject, "goalValue"));
-		//From value of the Goal Type Name property
-		setGoalTypeName(JsonUtils.getJsonString(jsonObject, "goalTypeName"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Created By property

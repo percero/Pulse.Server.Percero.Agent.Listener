@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.metadata.MappedClass;
 
 import com.pulse.mo.*;
 
@@ -41,7 +43,7 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"CREATED_ON\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"CREATED_ON\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"SHIFT_STATUS_NOTIFICATION\" \"SHIFT_STATUS_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"SHIFT_STATUS_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SHIFT_STATUS_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +130,12 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SHIFT_STATUS_NOTIFICATION (\"ID\",\"RESOLVED\",\"TYPE\",\"CREATED_ON\",\"SHIFT_END_DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SHIFT_STATUS_NOTIFICATION (\"ID\",\"RESOLVED\",\"CREATED_ON\",\"TYPE\",\"SHIFT_END_DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SHIFT_STATUS_NOTIFICATION SET \"RESOLVED\"=?,\"TYPE\"=?,\"CREATED_ON\"=?,\"SHIFT_END_DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SHIFT_STATUS_NOTIFICATION SET \"RESOLVED\"=?,\"CREATED_ON\"=?,\"TYPE\"=?,\"SHIFT_END_DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,7 +145,25 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	
 	@Override
 	protected ShiftStatusNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	ShiftStatusNotification nextResult = new ShiftStatusNotification();
+
+		ShiftStatusNotification nextResult = null;
+		String type = rs.getString("TYPE");
+		String className = type;
+		if (className.indexOf("com.pulse.mo.") != 0) {
+			className = "com.pulse.mo." + className;
+		}
+		try {
+			nextResult = (ShiftStatusNotification) MappedClass.forName(className).newInstance();
+		} catch(Exception e) {
+			// Do nothing.
+		}
+
+
+		if (nextResult == null) {
+			nextResult = new ShiftStatusNotification();
+		}
+
+
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
@@ -152,9 +172,9 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 		{
 			nextResult.setResolved(rs.getBoolean("RESOLVED"));
 
-nextResult.setType(rs.getString("TYPE"));
-
 nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+
+nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setShiftEndDate(rs.getDate("SHIFT_END_DATE"));
 
@@ -175,8 +195,8 @@ nextResult.setTeamLeader(teamleader);
 		
 		pstmt.setString(1, perceroObject.getID());
 JdbcHelper.setBoolean(pstmt,2, perceroObject.getResolved());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(4, perceroObject.getType());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
 pstmt.setString(6, perceroObject.getName());
 
@@ -188,15 +208,15 @@ else
 {
 		pstmt.setString(7, perceroObject.getTeamLeader().getID());
 }
+		if (perceroObject.getTimecardActivity() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getTimecardActivity().getID());
+		}
 
-if (perceroObject.getTimecardActivity() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getTimecardActivity().getID());
-}
 
 		
 	}
@@ -221,8 +241,8 @@ else
 	protected void setPreparedStatmentUpdateParams(ShiftStatusNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		JdbcHelper.setBoolean(pstmt,1, perceroObject.getResolved());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(3, perceroObject.getType());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
 pstmt.setString(5, perceroObject.getName());
 
@@ -236,14 +256,14 @@ else
 }
 
 pstmt.setString(7, perceroObject.getID());
-
-if (perceroObject.getTimecardActivity() == null) {
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getTimecardActivity().getID());
-}
+		if (perceroObject.getTimecardActivity() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getTimecardActivity().getID());
+		}
 
 		
 	}
@@ -282,23 +302,6 @@ paramValues.add(theQueryObject.getResolved());
 propertyCounter++;
 }
 
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
 boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
@@ -313,6 +316,23 @@ sql += " WHERE ";
 }
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
@@ -378,19 +398,19 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_SHIFT_STATUS_NOTIFY(?)}";
+		return "{call Delete_SHIFT_STATUS_NOTIFICATION(?)}";
 	}
 	
 	
 	
 	
 }
-
+

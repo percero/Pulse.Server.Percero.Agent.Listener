@@ -41,7 +41,7 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"ADHOC_ATTACHMENT\".\"NAME\",\"ADHOC_ATTACHMENT\".\"CREATED_BY\",\"ADHOC_ATTACHMENT\".\"CREATED_ON\",\"ADHOC_ATTACHMENT\".\"DESCRIPTION\",\"ADHOC_ATTACHMENT\".\"DOCUMENT_REFERENCE_ID\",\"ADHOC_ATTACHMENT\".\"EMPLOYEE_ID\",\"ADHOC_ATTACHMENT\".\"TEMP_STORE_ID\",\"ADHOC_ATTACHMENT\".\"TYPE\",\"ADHOC_ATTACHMENT\".\"UPDATED_BY\",\"ADHOC_ATTACHMENT\".\"UPDATED_ON\",\"ADHOC_ATTACHMENT\".\"VERSION\"";
+	public static final String SQL_VIEW = ",\"ADHOC_ATTACHMENT\".\"NAME\",\"ADHOC_ATTACHMENT\".\"CREATED_BY\",\"ADHOC_ATTACHMENT\".\"CREATED_ON\",\"ADHOC_ATTACHMENT\".\"DESCRIPTION\",\"ADHOC_ATTACHMENT\".\"EMPLOYEE_ID\",\"ADHOC_ATTACHMENT\".\"TEMP_STORE_ID\",\"ADHOC_ATTACHMENT\".\"TYPE\",\"ADHOC_ATTACHMENT\".\"UPDATED_BY\",\"ADHOC_ATTACHMENT\".\"UPDATED_ON\",\"ADHOC_ATTACHMENT\".\"VERSION\",\"ADHOC_ATTACHMENT\".\"ADHOC_COACHING_SESSION_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_ATTACHMENT\" \"ADHOC_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"ADHOC_ATTACHMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_BY\",\"CREATED_ON\",\"DESCRIPTION\",\"DOCUMENT_REFERENCE_ID\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"TYPE\",\"UPDATED_BY\",\"UPDATED_ON\",\"VERSION\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_ADHOC_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_BY\",\"CREATED_ON\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"TYPE\",\"UPDATED_BY\",\"UPDATED_ON\",\"VERSION\",\"ADHOC_COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_ATTACHMENT SET \"NAME\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"DESCRIPTION\"=?,\"DOCUMENT_REFERENCE_ID\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"VERSION\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_ATTACHMENT SET \"NAME\"=?,\"CREATED_BY\"=?,\"CREATED_ON\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"UPDATED_ON\"=?,\"VERSION\"=?,\"ADHOC_COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -158,8 +158,6 @@ nextResult.setCreatedOn(rs.getString("CREATED_ON"));
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
 
-nextResult.setDocumentReferenceId(rs.getString("DOCUMENT_REFERENCE_ID"));
-
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
@@ -171,6 +169,10 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 nextResult.setUpdatedOn(rs.getString("UPDATED_ON"));
 
 nextResult.setVersion(rs.getString("VERSION"));
+
+AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
+adhoccoachingsession.setID(rs.getString("ADHOC_COACHING_SESSION_ID"));
+nextResult.setAdhocCoachingSession(adhoccoachingsession);
 
 
 			
@@ -186,13 +188,22 @@ pstmt.setString(2, perceroObject.getName());
 pstmt.setString(3, perceroObject.getCreatedBy());
 pstmt.setString(4, perceroObject.getCreatedOn());
 pstmt.setString(5, perceroObject.getDescription());
-pstmt.setString(6, perceroObject.getDocumentReferenceId());
-pstmt.setString(7, perceroObject.getEmployeeId());
-pstmt.setString(8, perceroObject.getTempStoreId());
-pstmt.setString(9, perceroObject.getType());
-pstmt.setString(10, perceroObject.getUpdatedBy());
-pstmt.setString(11, perceroObject.getUpdatedOn());
-pstmt.setString(12, perceroObject.getVersion());
+pstmt.setString(6, perceroObject.getEmployeeId());
+pstmt.setString(7, perceroObject.getTempStoreId());
+pstmt.setString(8, perceroObject.getType());
+pstmt.setString(9, perceroObject.getUpdatedBy());
+pstmt.setString(10, perceroObject.getUpdatedOn());
+pstmt.setString(11, perceroObject.getVersion());
+
+if (perceroObject.getAdhocCoachingSession() == null)
+{
+pstmt.setString(12, null);
+}
+else
+{
+		pstmt.setString(12, perceroObject.getAdhocCoachingSession().getID());
+}
+
 
 		
 	}
@@ -220,13 +231,22 @@ pstmt.setString(12, perceroObject.getVersion());
 pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setString(3, perceroObject.getCreatedOn());
 pstmt.setString(4, perceroObject.getDescription());
-pstmt.setString(5, perceroObject.getDocumentReferenceId());
-pstmt.setString(6, perceroObject.getEmployeeId());
-pstmt.setString(7, perceroObject.getTempStoreId());
-pstmt.setString(8, perceroObject.getType());
-pstmt.setString(9, perceroObject.getUpdatedBy());
-pstmt.setString(10, perceroObject.getUpdatedOn());
-pstmt.setString(11, perceroObject.getVersion());
+pstmt.setString(5, perceroObject.getEmployeeId());
+pstmt.setString(6, perceroObject.getTempStoreId());
+pstmt.setString(7, perceroObject.getType());
+pstmt.setString(8, perceroObject.getUpdatedBy());
+pstmt.setString(9, perceroObject.getUpdatedOn());
+pstmt.setString(10, perceroObject.getVersion());
+
+if (perceroObject.getAdhocCoachingSession() == null)
+{
+pstmt.setString(11, null);
+}
+else
+{
+		pstmt.setString(11, perceroObject.getAdhocCoachingSession().getID());
+}
+
 pstmt.setString(12, perceroObject.getID());
 
 		
@@ -314,23 +334,6 @@ sql += " WHERE ";
 }
 sql += " \"DESCRIPTION\" =? ";
 paramValues.add(theQueryObject.getDescription());
-propertyCounter++;
-}
-
-boolean useDocumentReferenceId = StringUtils.hasText(theQueryObject.getDocumentReferenceId()) && (excludeProperties == null || !excludeProperties.contains("documentReferenceId"));
-
-if (useDocumentReferenceId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DOCUMENT_REFERENCE_ID\" =? ";
-paramValues.add(theQueryObject.getDocumentReferenceId());
 propertyCounter++;
 }
 
@@ -433,6 +436,23 @@ sql += " WHERE ";
 }
 sql += " \"VERSION\" =? ";
 paramValues.add(theQueryObject.getVersion());
+propertyCounter++;
+}
+
+boolean useAdhocCoachingSessionID = theQueryObject.getAdhocCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("adhocCoachingSession"));
+
+if (useAdhocCoachingSessionID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"ADHOC_COACHING_SESSION_ID\" =? ";
+paramValues.add(theQueryObject.getAdhocCoachingSession().getID());
 propertyCounter++;
 }
 

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.metadata.MappedClass;
 
 import com.pulse.mo.*;
 
@@ -143,7 +145,25 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected DurationMismatchNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	DurationMismatchNotification nextResult = new DurationMismatchNotification();
+
+		DurationMismatchNotification nextResult = null;
+		String type = rs.getString("TYPE");
+		String className = type;
+		if (className.indexOf("com.pulse.mo.") != 0) {
+			className = "com.pulse.mo." + className;
+		}
+		try {
+			nextResult = (DurationMismatchNotification) MappedClass.forName(className).newInstance();
+		} catch(Exception e) {
+			// Do nothing.
+		}
+
+
+		if (nextResult == null) {
+			nextResult = new DurationMismatchNotification();
+		}
+
+
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
@@ -501,4 +521,4 @@ propertyCounter++;
 	
 	
 }
-
+

@@ -174,7 +174,20 @@ public void setToTime(String toTime)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="cMSEntry", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CMSEntryLOB> cMSEntryLOBs;
+public List<CMSEntryLOB> getCMSEntryLOBs() {
+	return this.cMSEntryLOBs;
+}
+
+public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
+	this.cMSEntryLOBs = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -298,6 +311,23 @@ objectJson += ",\"agent\":";
 
 		
 		// Target Relationships
+//Retrieve value of the CMS Entry of CMS Entry LOB relationship
+objectJson += ",\"cMSEntryLOBs\":[";
+		
+		if (getCMSEntryLOBs() != null) {
+			int cMSEntryLOBsCounter = 0;
+			for(CMSEntryLOB nextCMSEntryLOBs : getCMSEntryLOBs()) {
+				if (cMSEntryLOBsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
+					cMSEntryLOBsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -326,6 +356,7 @@ objectJson += ",\"agent\":";
 
 
 		// Target Relationships
+		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
 
 
 	}
@@ -335,6 +366,7 @@ objectJson += ",\"agent\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "cmsentry"));
 
 		
 		return listSetters;

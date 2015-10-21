@@ -20,8 +20,10 @@ import com.pulse.mo.*;
 /*
 import com.pulse.mo.LOB;
 import com.pulse.mo.LOBConfiguration;
-import com.pulse.mo.PulseConfiguration;
+import com.pulse.mo.CMSEntryLOB;
 import com.pulse.mo.Client;
+import com.pulse.mo.ClientSite;
+import com.pulse.mo.PulseConfiguration;
 
 */
 
@@ -44,7 +46,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"PULSE_CONFIGURATION_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
+	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"CLIENT_SITE_ID\", '' as \"PULSE_CONFIGURATION_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\"";
 	private String whereClause = " WHERE \"LOB\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB\".\"ID\"= SQLLIST.column_value";
@@ -160,6 +162,10 @@ Client client = new Client();
 client.setID(rs.getString("CLIENT_ID"));
 nextResult.setClient(client);
 
+ClientSite clientsite = new ClientSite();
+clientsite.setID(rs.getString("CLIENT_SITE_ID"));
+nextResult.setClientSite(clientsite);
+
 PulseConfiguration pulseconfiguration = new PulseConfiguration();
 pulseconfiguration.setID(rs.getString("PULSE_CONFIGURATION_ID"));
 nextResult.setPulseConfiguration(pulseconfiguration);
@@ -221,6 +227,23 @@ sql += " WHERE ";
 }
 sql += " CLIENT_ID=? ";
 paramValues.add(theQueryObject.getClient().getID());
+propertyCounter++;
+}
+
+boolean useClientSiteID = theQueryObject.getClientSite() != null && (excludeProperties == null || !excludeProperties.contains("clientSite"));
+
+if (useClientSiteID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CLIENT_SITE_ID=? ";
+paramValues.add(theQueryObject.getClientSite().getID());
 propertyCounter++;
 }
 

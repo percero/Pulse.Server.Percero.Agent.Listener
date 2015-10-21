@@ -109,14 +109,14 @@ public void setName(String name)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Client.class, mappedBy="site", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Client> clients;
-public List<Client> getClients() {
-	return this.clients;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ClientSite.class, mappedBy="site", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ClientSite> clientSites;
+public List<ClientSite> getClientSites() {
+	return this.clientSites;
 }
 
-public void setClients(List<Client> value) {
-	this.clients = value;
+public void setClientSites(List<ClientSite> value) {
+	this.clientSites = value;
 }
 
 
@@ -162,17 +162,17 @@ public void setClients(List<Client> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Site of Client relationship
-objectJson += ",\"clients\":[";
+//Retrieve value of the Site of Client Site relationship
+objectJson += ",\"clientSites\":[";
 		
-		if (getClients() != null) {
-			int clientsCounter = 0;
-			for(Client nextClients : getClients()) {
-				if (clientsCounter > 0)
+		if (getClientSites() != null) {
+			int clientSitesCounter = 0;
+			for(ClientSite nextClientSites : getClientSites()) {
+				if (clientSitesCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextClients).toEmbeddedJson();
-					clientsCounter++;
+					objectJson += ((BaseDataObject) nextClientSites).toEmbeddedJson();
+					clientSitesCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -198,7 +198,7 @@ objectJson += ",\"clients\":[";
 
 
 		// Target Relationships
-		this.clients = (List<Client>) JsonUtils.getJsonListPerceroObject(jsonObject, "clients");
+		this.clientSites = (List<ClientSite>) JsonUtils.getJsonListPerceroObject(jsonObject, "clientSites");
 
 
 	}
@@ -208,7 +208,7 @@ objectJson += ",\"clients\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Client.class, "site"));
+		listSetters.add(MappedClass.getFieldSetters(ClientSite.class, "site"));
 
 		
 		return listSetters;

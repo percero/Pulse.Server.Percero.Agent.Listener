@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_ScorecardMeasure extends BaseDataObject implements Serializable
+public class _Super_ClientSite extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_ScorecardMeasure extends BaseDataObject implements Serializa
 
 	
 	/*
-	Keys of ScorecardMeasure
+	Keys of ClientSite
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -84,41 +84,7 @@ public void setID(String value) {
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
-RewardActive
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String rewardActive;
-
-public String getRewardActive() 
-{
-	return this.rewardActive;
-}
-
-public void setRewardActive(String rewardActive)
-{
-	this.rewardActive = rewardActive;
-}
+	
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -126,14 +92,14 @@ public void setRewardActive(String rewardActive)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Behavior.class, mappedBy="scorecardMeasure", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Behavior> behaviors;
-public List<Behavior> getBehaviors() {
-	return this.behaviors;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=LOB.class, mappedBy="clientSite", cascade=javax.persistence.CascadeType.REMOVE)
+private List<LOB> lOBs;
+public List<LOB> getLOBs() {
+	return this.lOBs;
 }
 
-public void setBehaviors(List<Behavior> value) {
-	this.behaviors = value;
+public void setLOBs(List<LOB> value) {
+	this.lOBs = value;
 }
 
 
@@ -144,29 +110,29 @@ public void setBehaviors(List<Behavior> value) {
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_MeasureOfScorecardMeasure")
+@JoinColumn(name="CLIENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ClientOfClientSite")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Measure measure;
-public Measure getMeasure() {
-	return this.measure;
+private Client client;
+public Client getClient() {
+	return this.client;
 }
 
-public void setMeasure(Measure value) {
-	this.measure = value;
+public void setClient(Client value) {
+	this.client = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfScorecardMeasure")
+@JoinColumn(name="SITE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_SiteOfClientSite")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Scorecard scorecard;
-public Scorecard getScorecard() {
-	return this.scorecard;
+private Site site;
+public Site getSite() {
+	return this.site;
 }
 
-public void setScorecard(Scorecard value) {
-	this.scorecard = value;
+public void setSite(Site value) {
+	this.site = value;
 }
 
 	
@@ -178,70 +144,28 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Reward Active property
-		objectJson += ",\"rewardActive\":";
-		
-		if (getRewardActive() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getRewardActive());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 
 				
 		// Source Relationships
-//Retrieve value of the Measure of Scorecard Measure relationship
-objectJson += ",\"measure\":";
-		if (getMeasure() == null)
+//Retrieve value of the Client of Client Site relationship
+objectJson += ",\"client\":";
+		if (getClient() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getMeasure()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getClient()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Scorecard of Scorecard Measure relationship
-objectJson += ",\"scorecard\":";
-		if (getScorecard() == null)
+//Retrieve value of the Site of Client Site relationship
+objectJson += ",\"site\":";
+		if (getSite() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getSite()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -250,17 +174,17 @@ objectJson += ",\"scorecard\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard Measure of Behavior relationship
-objectJson += ",\"behaviors\":[";
+//Retrieve value of the Client Site of LOB relationship
+objectJson += ",\"lOBs\":[";
 		
-		if (getBehaviors() != null) {
-			int behaviorsCounter = 0;
-			for(Behavior nextBehaviors : getBehaviors()) {
-				if (behaviorsCounter > 0)
+		if (getLOBs() != null) {
+			int lOBsCounter = 0;
+			for(LOB nextLOBs : getLOBs()) {
+				if (lOBsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextBehaviors).toEmbeddedJson();
-					behaviorsCounter++;
+					objectJson += ((BaseDataObject) nextLOBs).toEmbeddedJson();
+					lOBsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -278,19 +202,15 @@ objectJson += ",\"behaviors\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Reward Active property
-		setRewardActive(JsonUtils.getJsonString(jsonObject, "rewardActive"));
 
 		
 		// Source Relationships
-		this.measure = (Measure) JsonUtils.getJsonPerceroObject(jsonObject, "measure");
-		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
+		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
+		this.site = (Site) JsonUtils.getJsonPerceroObject(jsonObject, "site");
 
 
 		// Target Relationships
-		this.behaviors = (List<Behavior>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviors");
+		this.lOBs = (List<LOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBs");
 
 
 	}
@@ -300,7 +220,7 @@ objectJson += ",\"behaviors\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(Behavior.class, "scorecardmeasure"));
+		listSetters.add(MappedClass.getFieldSetters(LOB.class, "clientsite"));
 
 		
 		return listSetters;

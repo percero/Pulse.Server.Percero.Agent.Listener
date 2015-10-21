@@ -109,6 +109,19 @@ public void setName(String name)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ClientSite.class, mappedBy="client", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ClientSite> clientSites;
+public List<ClientSite> getClientSites() {
+	return this.clientSites;
+}
+
+public void setClientSites(List<ClientSite> value) {
+	this.clientSites = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=LOB.class, mappedBy="client", cascade=javax.persistence.CascadeType.REMOVE)
 private List<LOB> lOBs;
 public List<LOB> getLOBs() {
@@ -124,20 +137,7 @@ public void setLOBs(List<LOB> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SITE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_SiteOfClient")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Site site;
-public Site getSite() {
-	return this.site;
-}
-
-public void setSite(Site value) {
-	this.site = value;
-}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -172,21 +172,26 @@ public void setSite(Site value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Site of Client relationship
-objectJson += ",\"site\":";
-		if (getSite() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getSite()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
+//Retrieve value of the Client of Client Site relationship
+objectJson += ",\"clientSites\":[";
+		
+		if (getClientSites() != null) {
+			int clientSitesCounter = 0;
+			for(ClientSite nextClientSites : getClientSites()) {
+				if (clientSitesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextClientSites).toEmbeddedJson();
+					clientSitesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Client of LOB relationship
 objectJson += ",\"lOBs\":[";
 		
@@ -220,10 +225,10 @@ objectJson += ",\"lOBs\":[";
 
 		
 		// Source Relationships
-		this.site = (Site) JsonUtils.getJsonPerceroObject(jsonObject, "site");
 
 
 		// Target Relationships
+		this.clientSites = (List<ClientSite>) JsonUtils.getJsonListPerceroObject(jsonObject, "clientSites");
 		this.lOBs = (List<LOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBs");
 
 
@@ -234,6 +239,7 @@ objectJson += ",\"lOBs\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(ClientSite.class, "client"));
 		listSetters.add(MappedClass.getFieldSetters(LOB.class, "client"));
 
 		

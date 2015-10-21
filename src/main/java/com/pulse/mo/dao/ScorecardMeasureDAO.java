@@ -41,7 +41,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"WEEKLY_TREND\",\"SCORECARD_MEASURE\".\"COACHABLE\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"REWARD_ACTIVE\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\"";
 	private String whereClause = "  WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MEASURE\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"WEEKLY_TREND\",\"COACHABLE\",\"NAME\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"NAME\",\"REWARD_ACTIVE\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_MEASURE SET \"WEEKLY_TREND\"=?,\"COACHABLE\"=?,\"NAME\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_MEASURE SET \"NAME\"=?,\"REWARD_ACTIVE\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,11 +150,9 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeeklyTrend(rs.getString("WEEKLY_TREND"));
+			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setCoachable(rs.getBoolean("COACHABLE"));
-
-nextResult.setName(rs.getString("NAME"));
+nextResult.setRewardActive(rs.getString("REWARD_ACTIVE"));
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
@@ -174,27 +172,26 @@ nextResult.setMeasure(measure);
 	protected void setBaseStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getWeeklyTrend());
-JdbcHelper.setBoolean(pstmt,3, perceroObject.getCoachable());
-pstmt.setString(4, perceroObject.getName());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getScorecard().getID());
+		pstmt.setString(4, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getMeasure() == null)
 {
-pstmt.setString(6, null);
+pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getMeasure().getID());
+		pstmt.setString(5, perceroObject.getMeasure().getID());
 }
 
 
@@ -220,30 +217,29 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getWeeklyTrend());
-JdbcHelper.setBoolean(pstmt,2, perceroObject.getCoachable());
-pstmt.setString(3, perceroObject.getName());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setString(2, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(4, null);
+pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getScorecard().getID());
+		pstmt.setString(3, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getMeasure() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getMeasure().getID());
+		pstmt.setString(4, perceroObject.getMeasure().getID());
 }
 
-pstmt.setString(6, perceroObject.getID());
+pstmt.setString(5, perceroObject.getID());
 
 		
 	}
@@ -272,37 +268,20 @@ pstmt.setString(6, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWeeklyTrend = StringUtils.hasText(theQueryObject.getWeeklyTrend()) && (excludeProperties == null || !excludeProperties.contains("weeklyTrend"));
-
-if (useWeeklyTrend)
-{
-sql += " WHERE ";
-sql += " \"WEEKLY_TREND\" =? ";
-paramValues.add(theQueryObject.getWeeklyTrend());
-propertyCounter++;
-}
-
-boolean useCoachable = theQueryObject.getCoachable() != null && (excludeProperties == null || !excludeProperties.contains("coachable"));
-
-if (useCoachable)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"COACHABLE\" =? ";
-paramValues.add(theQueryObject.getCoachable());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
 {
+sql += " WHERE ";
+sql += " \"NAME\" =? ";
+paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useRewardActive = StringUtils.hasText(theQueryObject.getRewardActive()) && (excludeProperties == null || !excludeProperties.contains("rewardActive"));
+
+if (useRewardActive)
+{
 if (propertyCounter > 0)
 {
 sql += " AND ";
@@ -311,8 +290,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
+sql += " \"REWARD_ACTIVE\" =? ";
+paramValues.add(theQueryObject.getRewardActive());
 propertyCounter++;
 }
 
@@ -361,11 +340,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

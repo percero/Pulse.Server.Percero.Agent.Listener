@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.metadata.MappedClass;
 
 import com.pulse.mo.*;
 
@@ -143,7 +145,25 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected CoachingNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	CoachingNotification nextResult = new CoachingNotification();
+
+		CoachingNotification nextResult = null;
+		String type = rs.getString("TYPE");
+		String className = type;
+		if (className.indexOf("com.pulse.mo.") != 0) {
+			className = "com.pulse.mo." + className;
+		}
+		try {
+			nextResult = (CoachingNotification) MappedClass.forName(className).newInstance();
+		} catch(Exception e) {
+			// Do nothing.
+		}
+
+
+		if (nextResult == null) {
+			nextResult = new CoachingNotification();
+		}
+
+
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
@@ -356,4 +376,4 @@ propertyCounter++;
 	
 	
 }
-
+

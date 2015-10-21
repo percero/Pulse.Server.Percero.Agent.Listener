@@ -344,59 +344,7 @@ public void setGrade(Integer grade)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyResult.class, mappedBy="previous3ScorecardMonthlyResult", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardWeeklyResult> next3ScorecardWeeklyResults;
-public List<ScorecardWeeklyResult> getNext3ScorecardWeeklyResults() {
-	return this.next3ScorecardWeeklyResults;
-}
-
-public void setNext3ScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
-	this.next3ScorecardWeeklyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyResult.class, mappedBy="currentScorecardMonthlyResult", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardWeeklyResult> currentMonthScorecardWeeklyResults;
-public List<ScorecardWeeklyResult> getCurrentMonthScorecardWeeklyResults() {
-	return this.currentMonthScorecardWeeklyResults;
-}
-
-public void setCurrentMonthScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
-	this.currentMonthScorecardWeeklyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyResult.class, mappedBy="previous2ScorecardMonthlyResult", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardWeeklyResult> next2ScorecardWeeklyResults;
-public List<ScorecardWeeklyResult> getNext2ScorecardWeeklyResults() {
-	return this.next2ScorecardWeeklyResults;
-}
-
-public void setNext2ScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
-	this.next2ScorecardWeeklyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyResult.class, mappedBy="previous1ScorecardMonthlyResult", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardWeeklyResult> next1ScorecardWeeklyResults;
-public List<ScorecardWeeklyResult> getNext1ScorecardWeeklyResults() {
-	return this.next1ScorecardWeeklyResults;
-}
-
-public void setNext1ScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
-	this.next1ScorecardWeeklyResults = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -699,74 +647,6 @@ objectJson += ",\"scorecardMeasure\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Previous 3 Scorecard Monthly Result of Next 3 Scorecard Weekly Result relationship
-objectJson += ",\"next3ScorecardWeeklyResults\":[";
-		
-		if (getNext3ScorecardWeeklyResults() != null) {
-			int next3ScorecardWeeklyResultsCounter = 0;
-			for(ScorecardWeeklyResult nextNext3ScorecardWeeklyResults : getNext3ScorecardWeeklyResults()) {
-				if (next3ScorecardWeeklyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextNext3ScorecardWeeklyResults).toEmbeddedJson();
-					next3ScorecardWeeklyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Current Scorecard Monthly Result of Current Month Scorecard Weekly Result relationship
-objectJson += ",\"currentMonthScorecardWeeklyResults\":[";
-		
-		if (getCurrentMonthScorecardWeeklyResults() != null) {
-			int currentMonthScorecardWeeklyResultsCounter = 0;
-			for(ScorecardWeeklyResult nextCurrentMonthScorecardWeeklyResults : getCurrentMonthScorecardWeeklyResults()) {
-				if (currentMonthScorecardWeeklyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCurrentMonthScorecardWeeklyResults).toEmbeddedJson();
-					currentMonthScorecardWeeklyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Previous 2 Scorecard Monthly Result of Next 2 Scorecard Weekly Result relationship
-objectJson += ",\"next2ScorecardWeeklyResults\":[";
-		
-		if (getNext2ScorecardWeeklyResults() != null) {
-			int next2ScorecardWeeklyResultsCounter = 0;
-			for(ScorecardWeeklyResult nextNext2ScorecardWeeklyResults : getNext2ScorecardWeeklyResults()) {
-				if (next2ScorecardWeeklyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextNext2ScorecardWeeklyResults).toEmbeddedJson();
-					next2ScorecardWeeklyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Previous 1 Scorecard Monthly Result of Next 1 Scorecard Weekly Result relationship
-objectJson += ",\"next1ScorecardWeeklyResults\":[";
-		
-		if (getNext1ScorecardWeeklyResults() != null) {
-			int next1ScorecardWeeklyResultsCounter = 0;
-			for(ScorecardWeeklyResult nextNext1ScorecardWeeklyResults : getNext1ScorecardWeeklyResults()) {
-				if (next1ScorecardWeeklyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextNext1ScorecardWeeklyResults).toEmbeddedJson();
-					next1ScorecardWeeklyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -816,10 +696,6 @@ objectJson += ",\"next1ScorecardWeeklyResults\":[";
 
 
 		// Target Relationships
-		this.next3ScorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "next3ScorecardWeeklyResults");
-		this.currentMonthScorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "currentMonthScorecardWeeklyResults");
-		this.next2ScorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "next2ScorecardWeeklyResults");
-		this.next1ScorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "next1ScorecardWeeklyResults");
 
 
 	}
@@ -829,10 +705,6 @@ objectJson += ",\"next1ScorecardWeeklyResults\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "scorecardmonthlyresult"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "scorecardmonthlyresult"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "scorecardmonthlyresult"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "scorecardmonthlyresult"));
 
 		
 		return listSetters;

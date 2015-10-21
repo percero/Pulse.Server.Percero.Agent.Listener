@@ -238,23 +238,6 @@ public void setTempStoreId(String tempStoreId)
 {
 	this.tempStoreId = tempStoreId;
 }/*
-DocumentReferenceId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String documentReferenceId;
-
-public String getDocumentReferenceId() 
-{
-	return this.documentReferenceId;
-}
-
-public void setDocumentReferenceId(String documentReferenceId)
-{
-	this.documentReferenceId = documentReferenceId;
-}/*
 UpdatedOn
 Notes:
 */
@@ -281,7 +264,20 @@ public void setUpdatedOn(String updatedOn)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="ADHOC_COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfAdhocCoachingSessionAttachment")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private AdhocCoachingSession adhocCoachingSession;
+public AdhocCoachingSession getAdhocCoachingSession() {
+	return this.adhocCoachingSession;
+}
+
+public void setAdhocCoachingSession(AdhocCoachingSession value) {
+	this.adhocCoachingSession = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -481,27 +477,6 @@ public void setUpdatedOn(String updatedOn)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Document Reference Id property
-		objectJson += ",\"documentReferenceId\":";
-		
-		if (getDocumentReferenceId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDocumentReferenceId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
 		
@@ -526,6 +501,18 @@ public void setUpdatedOn(String updatedOn)
 
 				
 		// Source Relationships
+//Retrieve value of the Adhoc Coaching Session of Adhoc Coaching Session Attachment relationship
+objectJson += ",\"adhocCoachingSession\":";
+		if (getAdhocCoachingSession() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAdhocCoachingSession()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -558,13 +545,12 @@ public void setUpdatedOn(String updatedOn)
 		setCreatedOn(JsonUtils.getJsonString(jsonObject, "createdOn"));
 		//From value of the Temp Store Id property
 		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
-		//From value of the Document Reference Id property
-		setDocumentReferenceId(JsonUtils.getJsonString(jsonObject, "documentReferenceId"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
 
 		
 		// Source Relationships
+		this.adhocCoachingSession = (AdhocCoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingSession");
 
 
 		// Target Relationships

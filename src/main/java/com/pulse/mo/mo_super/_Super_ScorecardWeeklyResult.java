@@ -422,58 +422,6 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREVIOUS3_SCORECARD_MONTHLY_RESULT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_Previous3ScorecardMonthlyResultOfNext3ScorecardWeeklyResult")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMonthlyResult previous3ScorecardMonthlyResult;
-public ScorecardMonthlyResult getPrevious3ScorecardMonthlyResult() {
-	return this.previous3ScorecardMonthlyResult;
-}
-
-public void setPrevious3ScorecardMonthlyResult(ScorecardMonthlyResult value) {
-	this.previous3ScorecardMonthlyResult = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="CURRENT_SCORECARD_MONTHLY_RESULT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CurrentScorecardMonthlyResultOfCurrentMonthScorecardWeeklyResult")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMonthlyResult currentScorecardMonthlyResult;
-public ScorecardMonthlyResult getCurrentScorecardMonthlyResult() {
-	return this.currentScorecardMonthlyResult;
-}
-
-public void setCurrentScorecardMonthlyResult(ScorecardMonthlyResult value) {
-	this.currentScorecardMonthlyResult = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREVIOUS2_SCORECARD_MONTHLY_RESULT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_Previous2ScorecardMonthlyResultOfNext2ScorecardWeeklyResult")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMonthlyResult previous2ScorecardMonthlyResult;
-public ScorecardMonthlyResult getPrevious2ScorecardMonthlyResult() {
-	return this.previous2ScorecardMonthlyResult;
-}
-
-public void setPrevious2ScorecardMonthlyResult(ScorecardMonthlyResult value) {
-	this.previous2ScorecardMonthlyResult = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREVIOUS1_SCORECARD_MONTHLY_RESULT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_Previous1ScorecardMonthlyResultOfNext1ScorecardWeeklyResult")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMonthlyResult previous1ScorecardMonthlyResult;
-public ScorecardMonthlyResult getPrevious1ScorecardMonthlyResult() {
-	return this.previous1ScorecardMonthlyResult;
-}
-
-public void setPrevious1ScorecardMonthlyResult(ScorecardMonthlyResult value) {
-	this.previous1ScorecardMonthlyResult = value;
 }
 
 	
@@ -783,54 +731,6 @@ objectJson += ",\"scorecardMeasure\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Previous 3 Scorecard Monthly Result of Next 3 Scorecard Weekly Result relationship
-objectJson += ",\"previous3ScorecardMonthlyResult\":";
-		if (getPrevious3ScorecardMonthlyResult() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPrevious3ScorecardMonthlyResult()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Current Scorecard Monthly Result of Current Month Scorecard Weekly Result relationship
-objectJson += ",\"currentScorecardMonthlyResult\":";
-		if (getCurrentScorecardMonthlyResult() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getCurrentScorecardMonthlyResult()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Previous 2 Scorecard Monthly Result of Next 2 Scorecard Weekly Result relationship
-objectJson += ",\"previous2ScorecardMonthlyResult\":";
-		if (getPrevious2ScorecardMonthlyResult() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPrevious2ScorecardMonthlyResult()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
-//Retrieve value of the Previous 1 Scorecard Monthly Result of Next 1 Scorecard Weekly Result relationship
-objectJson += ",\"previous1ScorecardMonthlyResult\":";
-		if (getPrevious1ScorecardMonthlyResult() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPrevious1ScorecardMonthlyResult()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
@@ -885,10 +785,6 @@ objectJson += ",\"previous1ScorecardMonthlyResult\":";
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
-		this.previous3ScorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "previous3ScorecardMonthlyResult");
-		this.currentScorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "currentScorecardMonthlyResult");
-		this.previous2ScorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "previous2ScorecardMonthlyResult");
-		this.previous1ScorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "previous1ScorecardMonthlyResult");
 
 
 		// Target Relationships

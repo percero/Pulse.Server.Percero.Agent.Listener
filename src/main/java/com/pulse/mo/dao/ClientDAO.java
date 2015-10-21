@@ -19,8 +19,8 @@ import com.pulse.mo.*;
 
 /*
 import com.pulse.mo.Client;
+import com.pulse.mo.ClientSite;
 import com.pulse.mo.LOB;
-import com.pulse.mo.Site;
 
 */
 
@@ -43,7 +43,7 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 	
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CLIENT\".\"ID\" as \"ID\", \"CLIENT\".\"NAME\" as \"NAME\", \"CLIENT\".\"SITE_ID\" as \"SITE_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
+	public static final String SQL_VIEW = "SELECT  \"CLIENT\".\"ID\" as \"ID\", \"CLIENT\".\"NAME\" as \"NAME\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT\"";
 	private String whereClause = " WHERE \"CLIENT\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CLIENT\".\"ID\"= SQLLIST.column_value";
@@ -155,10 +155,6 @@ public class ClientDAO extends SqlDataAccessObject<Client> implements IDataAcces
 		{
 			nextResult.setName(rs.getString("NAME"));
 
-Site site = new Site();
-site.setID(rs.getString("SITE_ID"));
-nextResult.setSite(site);
-
 
 			
     	}
@@ -199,23 +195,6 @@ if (useName)
 sql += " WHERE ";
 sql += " NAME=? ";
 paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useSiteID = theQueryObject.getSite() != null && (excludeProperties == null || !excludeProperties.contains("site"));
-
-if (useSiteID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " SITE_ID=? ";
-paramValues.add(theQueryObject.getSite().getID());
 propertyCounter++;
 }
 

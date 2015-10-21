@@ -174,7 +174,20 @@ public void setEmployeeId(Integer employeeId)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSessionAttachment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AdhocCoachingSessionAttachment> adhocCoachingSessionAttachments;
+public List<AdhocCoachingSessionAttachment> getAdhocCoachingSessionAttachments() {
+	return this.adhocCoachingSessionAttachments;
+}
+
+public void setAdhocCoachingSessionAttachments(List<AdhocCoachingSessionAttachment> value) {
+	this.adhocCoachingSessionAttachments = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -362,6 +375,23 @@ objectJson += ",\"agentScorecard\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Adhoc Coaching Session of Adhoc Coaching Session Attachment relationship
+objectJson += ",\"adhocCoachingSessionAttachments\":[";
+		
+		if (getAdhocCoachingSessionAttachments() != null) {
+			int adhocCoachingSessionAttachmentsCounter = 0;
+			for(AdhocCoachingSessionAttachment nextAdhocCoachingSessionAttachments : getAdhocCoachingSessionAttachments()) {
+				if (adhocCoachingSessionAttachmentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocCoachingSessionAttachments).toEmbeddedJson();
+					adhocCoachingSessionAttachmentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -392,6 +422,7 @@ objectJson += ",\"agentScorecard\":";
 
 
 		// Target Relationships
+		this.adhocCoachingSessionAttachments = (List<AdhocCoachingSessionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessionAttachments");
 
 
 	}
@@ -401,6 +432,7 @@ objectJson += ",\"agentScorecard\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSessionAttachment.class, "adhoccoachingsession"));
 
 		
 		return listSetters;

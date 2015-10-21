@@ -136,23 +136,6 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-DocumentReferenceId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer documentReferenceId;
-
-public Integer getDocumentReferenceId() 
-{
-	return this.documentReferenceId;
-}
-
-public void setDocumentReferenceId(Integer documentReferenceId)
-{
-	this.documentReferenceId = documentReferenceId;
-}/*
 Name
 Notes:
 */
@@ -365,27 +348,6 @@ public void setCoachingSession(CoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Document Reference Id property
-		objectJson += ",\"documentReferenceId\":";
-		
-		if (getDocumentReferenceId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDocumentReferenceId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
 		
@@ -554,8 +516,6 @@ objectJson += ",\"coachingSession\":";
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Document Reference Id property
-		setDocumentReferenceId(JsonUtils.getJsonInteger(jsonObject, "documentReferenceId"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Version property

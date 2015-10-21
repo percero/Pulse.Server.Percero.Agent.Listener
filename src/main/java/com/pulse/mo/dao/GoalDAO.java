@@ -41,7 +41,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"GOAL\".\"UPDATED_BY\",\"GOAL\".\"CREATED_ON\",\"GOAL\".\"END_DATE\",\"GOAL\".\"START_DATE\",\"GOAL\".\"UPDATED_ON\",\"GOAL\".\"DURATION_FROM\",\"GOAL\".\"DURATION_TO\",\"GOAL\".\"GOAL_TYPE\",\"GOAL\".\"GOAL_VALUE\",\"GOAL\".\"CREATED_BY\",\"GOAL\".\"GOAL_TYPE_NAME\",\"GOAL\".\"SCORECARD_MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"GOAL\".\"UPDATED_BY\",\"GOAL\".\"CREATED_ON\",\"GOAL\".\"END_DATE\",\"GOAL\".\"START_DATE\",\"GOAL\".\"UPDATED_ON\",\"GOAL\".\"DURATION_FROM\",\"GOAL\".\"DURATION_TO\",\"GOAL\".\"GOAL_TYPE\",\"GOAL\".\"GOAL_VALUE\",\"GOAL\".\"CREATED_BY\",\"GOAL\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"GOAL\" \"GOAL\"";
 	private String whereClause = "  WHERE \"GOAL\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"GOAL\".\"ID\"= SQLLIST.column_value";
@@ -128,12 +128,12 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_GOAL (\"ID\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"DURATION_FROM\",\"DURATION_TO\",\"GOAL_TYPE\",\"GOAL_VALUE\",\"CREATED_BY\",\"GOAL_TYPE_NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_GOAL (\"ID\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"DURATION_FROM\",\"DURATION_TO\",\"GOAL_TYPE\",\"GOAL_VALUE\",\"CREATED_BY\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_GOAL SET \"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"GOAL_TYPE\"=?,\"GOAL_VALUE\"=?,\"CREATED_BY\"=?,\"GOAL_TYPE_NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_GOAL SET \"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"GOAL_TYPE\"=?,\"GOAL_VALUE\"=?,\"CREATED_BY\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -170,8 +170,6 @@ nextResult.setGoalValue(rs.getInt("GOAL_VALUE"));
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
-nextResult.setGoalTypeName(rs.getString("GOAL_TYPE_NAME"));
-
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -196,15 +194,14 @@ JdbcHelper.setInt(pstmt,8, perceroObject.getDurationTo());
 JdbcHelper.setInt(pstmt,9, perceroObject.getGoalType());
 JdbcHelper.setInt(pstmt,10, perceroObject.getGoalValue());
 pstmt.setString(11, perceroObject.getCreatedBy());
-pstmt.setString(12, perceroObject.getGoalTypeName());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
-pstmt.setString(13, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(12, perceroObject.getScorecardMeasure().getID());
 }
 
 
@@ -240,18 +237,17 @@ JdbcHelper.setInt(pstmt,7, perceroObject.getDurationTo());
 JdbcHelper.setInt(pstmt,8, perceroObject.getGoalType());
 JdbcHelper.setInt(pstmt,9, perceroObject.getGoalValue());
 pstmt.setString(10, perceroObject.getCreatedBy());
-pstmt.setString(11, perceroObject.getGoalTypeName());
 
 if (perceroObject.getScorecardMeasure() == null)
 {
-pstmt.setString(12, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
 }
 
-pstmt.setString(13, perceroObject.getID());
+pstmt.setString(12, perceroObject.getID());
 
 		
 	}
@@ -443,23 +439,6 @@ paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
 }
 
-boolean useGoalTypeName = StringUtils.hasText(theQueryObject.getGoalTypeName()) && (excludeProperties == null || !excludeProperties.contains("goalTypeName"));
-
-if (useGoalTypeName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"GOAL_TYPE_NAME\" =? ";
-paramValues.add(theQueryObject.getGoalTypeName());
-propertyCounter++;
-}
-
 boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
 
 if (useScorecardMeasureID)
@@ -488,11 +467,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_GOAL(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_GOAL(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_GOAL(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_GOAL(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
