@@ -170,7 +170,7 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 

@@ -152,9 +152,9 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 		{
 			nextResult.setName(rs.getString("NAME"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 

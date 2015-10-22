@@ -150,15 +150,15 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setExpireDate(rs.getDate("EXPIRE_DATE"));
+			nextResult.setExpireDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("EXPIRE_DATE")));
 
-nextResult.setHRApprovalDate(rs.getDate("HR_APPROVAL_DATE"));
+nextResult.setHRApprovalDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("HR_APPROVAL_DATE")));
 
-nextResult.setManagerApprovalDate(rs.getDate("MANAGER_APPROVAL_DATE"));
+nextResult.setManagerApprovalDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("MANAGER_APPROVAL_DATE")));
 
-nextResult.setSupervisorACKDate(rs.getDate("SUPERVISOR_ACK_DATE"));
+nextResult.setSupervisorACKDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SUPERVISOR_ACK_DATE")));
 
-nextResult.setCompletionDate(rs.getDate("COMPLETION_DATE"));
+nextResult.setCompletionDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("COMPLETION_DATE")));
 
 nextResult.setClientId(rs.getInt("CLIENT_ID"));
 

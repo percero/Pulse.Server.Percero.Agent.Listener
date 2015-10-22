@@ -158,9 +158,9 @@ nextResult.setMetricUnit(rs.getString("METRIC_UNIT"));
 
 nextResult.setScorecardId(rs.getString("SCORECARD_ID"));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 nextResult.setMetricResult(rs.getDouble("METRIC_RESULT"));
 

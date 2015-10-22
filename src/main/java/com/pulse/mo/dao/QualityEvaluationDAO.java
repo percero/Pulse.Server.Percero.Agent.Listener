@@ -163,11 +163,11 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + 
 
 nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setNiceEvalId(rs.getInt("NICE_EVAL_ID"));
 

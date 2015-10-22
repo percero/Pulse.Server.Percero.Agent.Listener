@@ -59,7 +59,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +69,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +115,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -149,21 +149,33 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
     	
     	// ID
     	nextResult.setID(rs.getString("ID"));
+		String type = rs.getString("TYPE");
+		String className = type;
+		if (className.indexOf("com.pulse.mo.") != 0) {
+			className = "com.pulse.mo." + className;
+		}
+		try {
+			nextResult = (Notification) MappedClass.forName(className).newInstance();
+		} catch(Exception e) {
+			// Do nothing.
+		}
+
+
+		if (nextResult == null) {
+			nextResult = new Notification();
+		}
     	
     	if (!shellOnly) 
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setName(rs.getString("NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
-
-
-			
     	}
     	
     	return nextResult;

@@ -150,7 +150,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
     	
     	if (!shellOnly) 
 		{
-			nextResult.setTimestamp(rs.getDate("TIMESTAMP"));
+			nextResult.setTimestamp(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("TIMESTAMP")));
 
 nextResult.setTraceType(rs.getString("TRACE_TYPE"));
 

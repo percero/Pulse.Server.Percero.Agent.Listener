@@ -150,7 +150,7 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
 nextResult.setConnectedState(rs.getString("CONNECTED_STATE"));
 

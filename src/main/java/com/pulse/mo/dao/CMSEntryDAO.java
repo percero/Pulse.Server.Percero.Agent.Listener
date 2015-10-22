@@ -153,7 +153,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setFromTime(rs.getDate("FROM_TIME"));
+			nextResult.setFromTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("FROM_TIME")));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 

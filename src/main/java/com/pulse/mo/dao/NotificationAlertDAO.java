@@ -150,7 +150,7 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
 nextResult.setHasBeenRead(rs.getString("HAS_BEEN_READ"));
 

@@ -172,9 +172,9 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setEndTime(rs.getDate("END_TIME"));
+nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 

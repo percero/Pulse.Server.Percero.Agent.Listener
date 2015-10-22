@@ -163,7 +163,7 @@ return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableNam
 
 nextResult.setStatus(rs.getString("STATUS"));
 
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setEmployeeId(rs.getInt("EMPLOYEE_ID"));
 

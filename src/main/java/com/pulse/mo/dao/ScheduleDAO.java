@@ -155,11 +155,11 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 		{
 			nextResult.setStartTime(rs.getString("START_TIME"));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
-nextResult.setEndTime(rs.getDate("END_TIME"));
+nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
 nextResult.setShift(rs.getInt("SHIFT"));
 

@@ -152,9 +152,9 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 		{
 			nextResult.setDescription(rs.getString("DESCRIPTION"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
 nextResult.setDatarefId(rs.getInt("DATAREF_ID"));
 

@@ -156,13 +156,13 @@ nextResult.setStartExp(rs.getString("START_EXP"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
 nextResult.setCustom(rs.getInt("CUSTOM"));
 

@@ -150,7 +150,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+			nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setPointsPossible(rs.getDouble("POINTS_POSSIBLE"));
 

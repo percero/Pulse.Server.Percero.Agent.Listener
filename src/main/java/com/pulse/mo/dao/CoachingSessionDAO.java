@@ -167,13 +167,13 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
-nextResult.setClosedOn(rs.getDate("CLOSED_ON"));
+nextResult.setClosedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CLOSED_ON")));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setEmployeeId(rs.getInt("EMPLOYEE_ID"));
 

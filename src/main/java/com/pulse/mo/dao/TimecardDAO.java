@@ -153,11 +153,11 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDate(rs.getDate("DATE"));
+			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 nextResult.setApproved(rs.getString("APPROVED"));
 

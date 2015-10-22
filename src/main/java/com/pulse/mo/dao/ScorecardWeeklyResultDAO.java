@@ -165,11 +165,11 @@ nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setUpdatedOn(rs.getDate("UPDATED_ON"));
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setPercentageAttainment(rs.getDouble("PERCENTAGE_ATTAINMENT"));
 

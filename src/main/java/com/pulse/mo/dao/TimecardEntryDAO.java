@@ -5,6 +5,8 @@ package com.pulse.mo.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import com.percero.util.DateUtils;
@@ -178,9 +180,9 @@ nextResult.setNotificationDetected(rs.getBoolean("NOTIFICATION_DETECTED"));
 
 nextResult.setNotificationResolved(rs.getBoolean("NOTIFICATION_RESOLVED"));
 
-nextResult.setFromTime(rs.getDate("FROM_TIME"));
+nextResult.setFromTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("FROM_TIME")));
 
-nextResult.setToTime(rs.getDate("TO_TIME"));
+nextResult.setToTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("TO_TIME")));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 

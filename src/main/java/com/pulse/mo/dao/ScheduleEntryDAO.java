@@ -173,13 +173,13 @@ nextResult.setPosition(rs.getString("POSITION"));
 
 nextResult.setProject(rs.getString("PROJECT"));
 
-nextResult.setEndDate(rs.getDate("END_DATE"));
+nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
-nextResult.setStartDate(rs.getDate("START_DATE"));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
-nextResult.setEndTime(rs.getDate("END_TIME"));
+nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
-nextResult.setModifiedTimestamp(rs.getDate("MODIFIED_TIMESTAMP"));
+nextResult.setModifiedTimestamp(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("MODIFIED_TIMESTAMP")));
 
 nextResult.setDuration(rs.getDouble("DURATION"));
 

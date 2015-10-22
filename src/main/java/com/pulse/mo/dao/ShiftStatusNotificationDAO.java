@@ -172,11 +172,11 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 		{
 			nextResult.setResolved(rs.getBoolean("RESOLVED"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setShiftEndDate(rs.getDate("SHIFT_END_DATE"));
+nextResult.setShiftEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SHIFT_END_DATE")));
 
 nextResult.setName(rs.getString("NAME"));
 

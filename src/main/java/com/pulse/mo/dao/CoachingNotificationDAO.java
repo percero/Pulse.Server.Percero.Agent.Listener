@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import com.percero.agents.sync.exceptions.SyncDataException;
@@ -172,9 +174,21 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-nextResult.setCreatedOn(rs.getDate("CREATED_ON"));
+			try {
+				Timestamp timestamp = rs.getTimestamp("CREATED_ON");
+				System.out.println(timestamp);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				Time time = rs.getTime("CREATED_ON");
+				System.out.println(time);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setWeekDate(rs.getDate("WEEK_DATE"));
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 nextResult.setName(rs.getString("NAME"));
 

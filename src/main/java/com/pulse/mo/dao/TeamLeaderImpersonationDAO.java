@@ -150,7 +150,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
     	
     	if (!shellOnly) 
 		{
-			nextResult.setLastImpersonatedOn(rs.getDate("LAST_IMPERSONATED_ON"));
+			nextResult.setLastImpersonatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("LAST_IMPERSONATED_ON")));
 
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
