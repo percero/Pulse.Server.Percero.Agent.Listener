@@ -178,7 +178,11 @@ nextResult.setRollupType(rs.getInt("ROLLUP_TYPE"));
 
 nextResult.setTenure(rs.getInt("TENURE"));
 
-nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+Agent agent = new Agent();
+agent.setID(rs.getString("EMPLOYEE_ID"));
+if (StringUtils.hasText(agent.getID())) {
+	nextResult.setAgent(agent);
+}
 
 Goal goal = new Goal();
 goal.setID(rs.getString("GOAL_ID"));
@@ -212,8 +216,15 @@ JdbcHelper.setInt(pstmt,12, perceroObject.getExcluded());
 JdbcHelper.setInt(pstmt,13, perceroObject.getGrade());
 JdbcHelper.setInt(pstmt,14, perceroObject.getRollupType());
 JdbcHelper.setInt(pstmt,15, perceroObject.getTenure());
-pstmt.setString(16, perceroObject.getEmployeeId());
 
+if (perceroObject.getAgent() == null)
+{
+	pstmt.setString(16, null);
+}
+else
+{
+	pstmt.setString(16, perceroObject.getAgent().getID());
+}
 if (perceroObject.getGoal() == null)
 {
 pstmt.setString(17, null);
@@ -270,7 +281,15 @@ JdbcHelper.setInt(pstmt,11, perceroObject.getExcluded());
 JdbcHelper.setInt(pstmt,12, perceroObject.getGrade());
 JdbcHelper.setInt(pstmt,13, perceroObject.getRollupType());
 JdbcHelper.setInt(pstmt,14, perceroObject.getTenure());
-pstmt.setString(15, perceroObject.getEmployeeId());
+
+if (perceroObject.getAgent() == null)
+{
+	pstmt.setString(15, null);
+}
+else
+{
+	pstmt.setString(15, perceroObject.getAgent().getID());
+}
 
 if (perceroObject.getGoal() == null)
 {
@@ -551,9 +570,9 @@ paramValues.add(theQueryObject.getTenure());
 propertyCounter++;
 }
 
-boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+boolean useAgent = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useEmployeeId)
+if (useAgent)
 {
 if (propertyCounter > 0)
 {
@@ -564,7 +583,7 @@ else
 sql += " WHERE ";
 }
 sql += " \"EMPLOYEE_ID\" =? ";
-paramValues.add(theQueryObject.getEmployeeId());
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

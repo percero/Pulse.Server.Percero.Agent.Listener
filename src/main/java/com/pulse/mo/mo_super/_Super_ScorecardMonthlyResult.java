@@ -271,24 +271,8 @@ public String getMetricUnit()
 public void setMetricUnit(String metricUnit)
 {
 	this.metricUnit = metricUnit;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeId;
-
-public String getEmployeeId() 
-{
-	return this.employeeId;
 }
-
-public void setEmployeeId(String employeeId)
-{
-	this.employeeId = employeeId;
-}/*
+/*
 PointsReceived
 Notes:
 */
@@ -349,6 +333,21 @@ public void setGrade(Integer grade)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="EMPLOYEE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfMonthlyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Agent agent;
+public Agent getAgent() {
+return this.agent;
+}
+
+public void setAgent(Agent value) {
+this.agent = value;
+}
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
@@ -547,27 +546,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
-		
-		if (getEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Points Received property
 		objectJson += ",\"pointsReceived\":";
 		if (getPointsReceived() == null)
@@ -620,6 +598,18 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Agent of Scorecard Monthly Result relationship
+		objectJson += ",\"agent\":";
+		if (getAgent() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Goal of Scorecard Monthly Result relationship
 objectJson += ",\"goal\":";
 		if (getGoal() == null)
@@ -680,8 +670,6 @@ objectJson += ",\"scorecardMeasure\":";
 		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
 		//From value of the Metric Unit property
 		setMetricUnit(JsonUtils.getJsonString(jsonObject, "metricUnit"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Points Received property
 		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 		//From value of the Excluded property
@@ -691,6 +679,7 @@ objectJson += ",\"scorecardMeasure\":";
 
 		
 		// Source Relationships
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 

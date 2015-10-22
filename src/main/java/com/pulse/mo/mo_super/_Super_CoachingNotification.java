@@ -101,7 +101,7 @@ public void setWeekDate(Date weekDate)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScardOfCoachingNotify")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
+@OneToOne(fetch=FetchType.LAZY, optional=true)
 private AgentScorecard agentScorecard;
 public AgentScorecard getAgentScorecard() {
 	return this.agentScorecard;

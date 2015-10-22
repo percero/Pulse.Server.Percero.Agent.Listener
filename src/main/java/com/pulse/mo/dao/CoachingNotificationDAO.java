@@ -174,18 +174,6 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
-			try {
-				Timestamp timestamp = rs.getTimestamp("CREATED_ON");
-				System.out.println(timestamp);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				Time time = rs.getTime("CREATED_ON");
-				System.out.println(time);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
@@ -198,7 +186,8 @@ nextResult.setTeamLeader(teamleader);
 
 AgentScorecard agentScorecard = new AgentScorecard();
 agentScorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
-nextResult.setAgentScorecard(agentScorecard);
+if (StringUtils.hasText(agentScorecard.getID()))
+	nextResult.setAgentScorecard(agentScorecard);
 
 
 			

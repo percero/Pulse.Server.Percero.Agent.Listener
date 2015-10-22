@@ -10,11 +10,12 @@ import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.ShiftStatusNotification;
+import com.pulse.mo.Timecard;
 
 @Component
 public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHelper {
 
-	private static final Logger log = Logger.getLogger(CoachingNotificationCWHelper.class);
+	private static final Logger log = Logger.getLogger(ShiftStatusNotificationCWHelper.class);
 
 	@Override
 	public Object calculate(String fieldName, ClassIDPair pair) {
@@ -87,13 +88,15 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
 				accessManager.addWatcherField(pair, "timecardState", fieldsToWatch);
 				
-//				if (host.getTimecardEntries().size() <=0 ){
+//				Timecard timecard;
+//				
+//				if (timecard.getTimecardEntries().size() <=0 ){
 //					notYetStartedStateCount(existingShiftStatusNotification.getNotYetStartedStateCount() + 1);
 //				}
-//				else if (host.getTimecardState().equals("Approved")) {
+//				else if (timecard.getTimecardState().equals("Approved")) {
 //					existingShiftStatusNotification.setApprovedStateCount(existingShiftStatusNotification.getApprovedStateCount() + 1);
 //				}
-//				else if (host.getTimecardState().equals("Completed")){
+//				else if (timecard.getTimecardState().equals("Completed")){
 //					existingShiftStatusNotification.setCompleteStateCount(existingShiftStatusNotification.getCompleteStateCount() + 1);
 //				}
 //				else{

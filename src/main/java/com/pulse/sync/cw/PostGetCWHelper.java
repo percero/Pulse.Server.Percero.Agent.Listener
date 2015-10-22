@@ -271,7 +271,8 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 						existingShiftStatusNotification.setType("ShiftStatusNotification");
 						existingShiftStatusNotification.setTeamLeader(teamLeader);
 						existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
-//						existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+//						existingShiftStatusNotification.setTimecard(host);
+						existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
 					}
 				}
 			}

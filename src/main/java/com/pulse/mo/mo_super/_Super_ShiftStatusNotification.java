@@ -129,6 +129,22 @@ public void setTimecardActivity(TimecardActivity value) {
 }
 
 	
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="TIMECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_TimecardOfShiftStatusNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
+private Timecard timecard;
+public Timecard getTimecard() {
+	return this.timecard;
+}
+
+public void setTimecard(Timecard value) {
+	this.timecard = value;
+}
+
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -166,6 +182,20 @@ objectJson += ",\"timecardActivity\":";
 			}
 		}
 		objectJson += "";
+		
+		
+//Retrieve value of the Timecard of Shift Status Notification relationship
+		objectJson += ",\"timecard\":";
+		if (getTimecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getTimecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -173,7 +203,7 @@ objectJson += ",\"timecardActivity\":";
 		
 		return objectJson;
 	}
-
+	
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
@@ -188,6 +218,7 @@ objectJson += ",\"timecardActivity\":";
 		
 		// Source Relationships
 		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
+		this.timecard = (Timecard) JsonUtils.getJsonPerceroObject(jsonObject, "timecard");
 
 
 		// Target Relationships
