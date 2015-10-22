@@ -1,14 +1,16 @@
 package com.pulse.dataprovider;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.percero.agents.sync.services.DAODataProvider;
-import com.percero.agents.sync.services.DataProviderManager;
-import org.apache.log4j.Logger;
-import org.boon.core.Sys;
-
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import oracle.jdbc.driver.OracleConnection;
+
+import org.apache.log4j.Logger;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.percero.agents.sync.services.DAODataProvider;
+import com.percero.agents.sync.services.DataProviderManager;
 
 public class SqlConnectionFactory implements IConnectionFactory {
 
@@ -25,9 +27,10 @@ public class SqlConnectionFactory implements IConnectionFactory {
     private String username;
     private String password;
     private String jdbcUrl;
-    private Integer acquireIncrement = 5;
-    private Integer minPoolSize = 5;
+    private Integer acquireIncrement = 2;
+    private Integer minPoolSize = 2;
     private Integer maxPoolSize = 50;
+    private Integer fetchSize = 500;
     
     public String getName() {
     	return name;
@@ -93,6 +96,18 @@ public class SqlConnectionFactory implements IConnectionFactory {
 		this.maxPoolSize = maxPoolSize;
 	}
     
+	public Integer getFetchSize() {
+		// Default to 100;
+		if (fetchSize == null || fetchSize <= 0) {
+			return 100;
+		}
+		return fetchSize;
+	}
+	
+	public void setFetchSize(Integer fetchSize) {
+		this.fetchSize = fetchSize;
+	}
+	
     private ComboPooledDataSource cpds;
 
     
@@ -140,7 +155,11 @@ public class SqlConnectionFactory implements IConnectionFactory {
         			logger.error("Error initializing SqlConnectionFactory: " + this.getName(), e);
         		}
         	}
-            return cpds.getConnection();
+            Connection result = cpds.getConnection();
+            if (result instanceof OracleConnection) {
+            	((OracleConnection) result).setDefaultRowPrefetch(fetchSize);
+            }
+            return result;
         }catch(SQLException e){
             logger.error(e.getMessage(), e);
             throw e;

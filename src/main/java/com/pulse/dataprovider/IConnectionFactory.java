@@ -8,5 +8,7 @@ public interface IConnectionFactory {
 	String getName();
 	void setName(String name);
 	Connection getConnection() throws SQLException;
+	
+	Integer getFetchSize();
 
 }

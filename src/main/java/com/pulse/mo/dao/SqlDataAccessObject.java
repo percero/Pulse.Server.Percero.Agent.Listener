@@ -323,6 +323,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setFetchSize(connectionFactory.getFetchSize());
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 
 			int counter = 1;	// PreparedStatement index starts at 1.
@@ -395,6 +396,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			stmt = conn.createStatement();
+			stmt.setFetchSize(connectionFactory.getFetchSize());
 			stmt.setQueryTimeout(QUERY_TIMEOUT);
 //			String queryString = overlayReadQuery(className, userId,
 //					selectQueryString);
@@ -443,6 +445,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(selectQueryString);
+			pstmt.setFetchSize(connectionFactory.getFetchSize());
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			pstmt.setString(1, id);
 			
@@ -490,6 +493,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(selectQueryString);
+			pstmt.setFetchSize(connectionFactory.getFetchSize());
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			for(int i=0; i<paramValues.length; i++) {
@@ -558,6 +562,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
 			conn = connectionFactory.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setFetchSize(connectionFactory.getFetchSize());
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 			
 			if (useLimit) {
