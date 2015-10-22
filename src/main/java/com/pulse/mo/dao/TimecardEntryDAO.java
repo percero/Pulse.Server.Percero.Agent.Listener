@@ -49,11 +49,11 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", \"TIMECARD_ENTRY\".\"ACTION\" as \"ACTION_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"NOTE\" as \"NOTE\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"EWA_1\" as \"EWA_1\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"CODE_TYPE\" as \"CODE_TYPE\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", \"TIMECARD_ENTRY\".\"EWA_2\" as \"EWA_2\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"MINUTES\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"POS\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", \"TIMECARD_ENTRY\".CENTRE || \"TIMECARD_ENTRY\".POS as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\"";
-	private String whereClause = "WHERE TIMECARD_ENTRY.WORKED_ID=?";
-	private String whereInClause = "Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On TIMECARD_ENTRY.WORKED_ID= SQLLIST.columnvalue";
-	private String orderByTableName = "ORDER BY TIMECARD_ENTRY.WORKED_ID";
+	private String whereClause = " WHERE TIMECARD_ENTRY.WORKED_ID=?";
+	private String whereInClause = " Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On TIMECARD_ENTRY.WORKED_ID= SQLLIST.columnvalue";
+	private String orderByTableName = " ORDER BY TIMECARD_ENTRY.WORKED_ID";
 	
-	private String joinTimecardIDTimecardEntry = "WHERE TIMECARD_ENTRY.ID=?";
+	private String joinTimecardIDTimecardEntry = " WHERE TIMECARD_ENTRY.ID=?";
 
 
 	

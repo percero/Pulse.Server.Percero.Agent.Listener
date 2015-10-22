@@ -194,7 +194,7 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(ShiftStatusNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-JdbcHelper.setBoolean(pstmt,2, perceroObject.getResolved());
+JdbcHelper.setInt(pstmt,2, perceroObject.getResolved() ? 1 : 0);
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setString(4, perceroObject.getType());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getShiftEndDate()));
@@ -398,11 +398,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?)}";
+		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

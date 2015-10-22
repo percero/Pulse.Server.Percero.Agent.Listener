@@ -145,10 +145,9 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected Notification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Notification nextResult = new Notification();
+    	Notification nextResult = null;
     	
     	// ID
-    	nextResult.setID(rs.getString("ID"));
 		String type = rs.getString("TYPE");
 		String className = type;
 		if (className.indexOf("com.pulse.mo.") != 0) {
@@ -164,6 +163,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 		if (nextResult == null) {
 			nextResult = new Notification();
 		}
+		nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
