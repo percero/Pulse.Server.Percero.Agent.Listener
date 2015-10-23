@@ -45,7 +45,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"AGENT_SCORECARD_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"WEEK_DATE\",\"NAME\",\"TEAM_LEADER_ID\",\"AGENT_SCORECARD_ID\") VALUES (?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACHING_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"WEEK_DATE\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACHING_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"WEEK_DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACHING_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"WEEK_DATE\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -184,12 +184,6 @@ TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
-AgentScorecard agentScorecard = new AgentScorecard();
-agentScorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
-if (StringUtils.hasText(agentScorecard.getID()))
-	nextResult.setAgentScorecard(agentScorecard);
-
-
 			
     	}
     	
@@ -213,14 +207,6 @@ else
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
 
-if (perceroObject.getAgentScorecard() == null)
-{
-	pstmt.setString(7, null);
-}
-else
-{
-	pstmt.setString(7, perceroObject.getAgentScorecard().getID());
-}
 
 
 		
@@ -258,16 +244,8 @@ else
 {
 		pstmt.setString(5, perceroObject.getTeamLeader().getID());
 }
-if (perceroObject.getAgentScorecard() == null)
-{
-	pstmt.setString(6, null);
-}
-else
-{
-	pstmt.setString(6, perceroObject.getAgentScorecard().getID());
-}
 
-pstmt.setString(7, perceroObject.getID());
+pstmt.setString(6, perceroObject.getID());
 
 		
 	}
@@ -374,22 +352,6 @@ paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 
-boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
-
-if (useAgentScorecardID)
-{
-	if (propertyCounter > 0)
-	{
-		sql += " AND ";
-	}
-	else
-	{
-		sql += " WHERE ";
-	}
-	sql += " \"AGENT_SCORECARD_ID\" =? ";
-	paramValues.add(theQueryObject.getAgentScorecard().getID());
-	propertyCounter++;
-}
 
 
 
@@ -402,11 +364,11 @@ if (useAgentScorecardID)
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
+		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
+		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

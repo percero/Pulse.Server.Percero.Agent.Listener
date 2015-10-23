@@ -4,8 +4,6 @@ import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import oracle.jdbc.driver.OracleConnection;
-
 import org.apache.log4j.Logger;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -156,9 +154,6 @@ public class SqlConnectionFactory implements IConnectionFactory {
         		}
         	}
             Connection result = cpds.getConnection();
-            if (result instanceof OracleConnection) {
-            	((OracleConnection) result).setDefaultRowPrefetch(fetchSize);
-            }
             return result;
         }catch(SQLException e){
             logger.error(e.getMessage(), e);

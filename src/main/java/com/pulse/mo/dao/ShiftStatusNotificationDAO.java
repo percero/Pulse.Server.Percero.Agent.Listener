@@ -47,7 +47,7 @@ public class ShiftStatusNotificationDAO extends
 	// "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 
-	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"CREATED_ON\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\",\"SHIFT_STATUS_NOTIFICATION\".\"TIMECARD_ACTIVITY_ID\",\"SHIFT_STATUS_NOTIFICATION\".\"TIMECARD_ID\"";
+	public static final String SQL_VIEW = ",\"SHIFT_STATUS_NOTIFICATION\".\"RESOLVED\",\"SHIFT_STATUS_NOTIFICATION\".\"CREATED_ON\",\"SHIFT_STATUS_NOTIFICATION\".\"TYPE\",\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",\"SHIFT_STATUS_NOTIFICATION\".\"NAME\",\"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\",\"SHIFT_STATUS_NOTIFICATION\".\"TIMECARD_ACTIVITY_ID\"";
 	private String selectFromStatementTableName = " FROM \"SHIFT_STATUS_NOTIFICATION\" \"SHIFT_STATUS_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"SHIFT_STATUS_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SHIFT_STATUS_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -205,11 +205,6 @@ public class ShiftStatusNotificationDAO extends
 			if (StringUtils.hasText(timecardActivity.getID()))
 				nextResult.setTimecardActivity(timecardActivity);
 
-			Timecard timecard = new Timecard();
-			timecard.setID(rs.getString("TIMECARD_ID"));
-			if (StringUtils.hasText(timecard.getID()))
-				nextResult.setTimecard(timecard);
-
 		}
 
 		return nextResult;
@@ -237,12 +232,6 @@ public class ShiftStatusNotificationDAO extends
 			pstmt.setString(8, null);
 		} else {
 			pstmt.setString(8, perceroObject.getTimecardActivity().getID());
-		}
-
-		if (perceroObject.getTimecard() == null) {
-			pstmt.setString(9, null);
-		} else {
-			pstmt.setString(9, perceroObject.getTimecard().getID());
 		}
 
 	}
@@ -284,17 +273,12 @@ public class ShiftStatusNotificationDAO extends
 			pstmt.setString(6, perceroObject.getTeamLeader().getID());
 		}
 
-		pstmt.setString(7, perceroObject.getID());
 		if (perceroObject.getTimecardActivity() == null) {
-			pstmt.setString(8, null);
+			pstmt.setString(7, null);
 		} else {
-			pstmt.setString(8, perceroObject.getTimecardActivity().getID());
+			pstmt.setString(7, perceroObject.getTimecardActivity().getID());
 		}
-		if (perceroObject.getTimecard() == null) {
-			pstmt.setString(9, null);
-		} else {
-			pstmt.setString(9, perceroObject.getTimecard().getID());
-		}
+		pstmt.setString(8, perceroObject.getID());
 
 	}
 
@@ -420,37 +404,18 @@ public class ShiftStatusNotificationDAO extends
 			propertyCounter++;
 		}
 
-		boolean useTimecardID = theQueryObject.getTimecard() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("timecard"));
-
-		if (useTimecardID) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " \"TIMECARD_ID\" =? ";
-			paramValues.add(theQueryObject.getTimecard().getID());
-			propertyCounter++;
-		}
-
-		if (propertyCounter == 0) {
-			throw new SyncException(SyncException.METHOD_UNSUPPORTED,
-					SyncException.METHOD_UNSUPPORTED_CODE);
-		}
 
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
 	}
 
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 
 	@Override

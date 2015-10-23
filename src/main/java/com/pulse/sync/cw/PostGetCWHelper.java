@@ -1,7 +1,9 @@
 package com.pulse.sync.cw;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +29,7 @@ import com.pulse.mo.Notification;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
+import com.pulse.mo.dao.AgentScorecardDAO;
 
 // This should get picked up by Spring and be auto-wired.
 @Component
@@ -47,6 +50,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	public ISyncAgentService getSyncAgentService() {
 		return syncAgentService;
 	}
+	
+	@Autowired
+	AgentScorecardDAO agentScorecardDAO;
 
 	@PostConstruct
 	public void initialize() {
@@ -70,18 +76,16 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		String classId = fieldName;
 		
 		// Switch on the class name.
-		if (AgentScorecard.class.getCanonicalName().equalsIgnoreCase(className)) {
-			handleAgentScorecard(new ClassIDPair(classId, className), params);
-		}
-		else if (Timecard.class.getCanonicalName().equalsIgnoreCase(className)) {
-			handleTimecard(new ClassIDPair(classId, className), params);
+		if (TeamLeader.class.getCanonicalName().equalsIgnoreCase(className)) {
+			handleTeamLeader(new ClassIDPair(classId, className), params);
 		}
 	}
 	
 	
-	private void handleAgentScorecard(ClassIDPair classIdPair, String[] params) {
+	private void handleTeamLeader(ClassIDPair classIdPair, String[] params) {
 		try {
-			 checkForOrCreateCoachingNotification(classIdPair);
+			checkForOrCreateShiftStatusNotification(classIdPair);
+			checkForOrCreateCoachingNotification(classIdPair);
 		} catch(Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -89,193 +93,146 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	
 
 	private void checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
-		AgentScorecard host = (AgentScorecard) syncAgentService.systemGetById(classIdPair);
-		if (host != null) {
-			// Trigger the retrieval/creation of the CoachingNotification.
-			host.getCoachingNotification();
-		}
-//		
-//		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]");
-//		Date currentDate = new Date();
-//		DateTime currentDateTime = new DateTime(currentDate);
-//		DateTime scorecardDateTime = new DateTime(host.getWeekDate());
-//		int daysBetween = Math.abs(Days.daysBetween(scorecardDateTime, currentDateTime).getDays());
-//		
-//		// If agentScorecard < 4 weeks old
-//		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]  daysBetween" + daysBetween);
-//		if ( daysBetween < 7 * 4) {
-//			// Check to see if there is already a coaching notification created.
-//			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-//			if (agent != null) {
-//				TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
-//				if (teamLeader != null) {
-//					CoachingNotification existingCoachingNotification = null;
-//
-//					Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
-//					while (itrNotifications.hasNext()) {
-//						Notification nextNotification = itrNotifications.next();
-//						if (nextNotification != null && nextNotification instanceof CoachingNotification) {
-//							CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
-//							
-//							if (nextCoachingNotification == null) {
-//								continue;
-//							}
-//							
-//							DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
-//							log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
-//							log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
-//							log.debug("[CoachingNotification]  AgentScoreCard DateTime" + scorecardDateTime);
-//							log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
-//							// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
-//							if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, nextCoachingNotificationWeekDate) == 0) {
-//								log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
-//								existingCoachingNotification = nextCoachingNotification;
-//								break;
-//							}
-//						}
-//					}
-//					
-//					if (existingCoachingNotification == null) {
-//						existingCoachingNotification = new CoachingNotification();
-//						existingCoachingNotification.setID(UUID.randomUUID().toString());
-//						existingCoachingNotification.setCreatedOn(new Date());
-//						existingCoachingNotification.setName("Available for Coaching");
-//						existingCoachingNotification.setType("CoachingNotification");
-//						existingCoachingNotification.setTeamLeader(teamLeader);
-//						existingCoachingNotification.setWeekDate(host.getWeekDate());
-//						existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
-//					}
-//
-////					Integer pendingStateCount 			= null;
-////					Integer submittedStateCount			= null;
-////					Integer pendingCoachStateCount		= null;
-////					Integer pendingEmployeeStateCount	= null;
-////					Integer acknowledgementStateCount	= null;
-////					Integer skippedStateCount			= null;
-////
-////					Iterator<CoachingSession> itrCoachingSession  = host.getCoachingSessions().iterator();
-////
-////					while (itrCoachingSession.hasNext()) {
-////						CoachingSession nextCoachingSession = itrCoachingSession.next();
-////						if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
-////							String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
-////
-////							if (coachingSessionStateID.equals("1") || coachingSessionStateID.equals("8")) {
-////								pendingStateCount =  existingCoachingNotification.getPendingStateCount();
-////								if (pendingStateCount == null) {
-////									pendingStateCount = 0;
-////								}
-////								existingCoachingNotification.setPendingStateCount(pendingStateCount + 1);
-////							} else if (coachingSessionStateID.equals("2") || coachingSessionStateID.equals("9")) {
-////								submittedStateCount = existingCoachingNotification.getSubmittedStateCount();
-////								if (submittedStateCount == null) {
-////									submittedStateCount = 0;
-////								}
-////								existingCoachingNotification.setSubmittedStateCount(submittedStateCount + 1);
-////							} else if (coachingSessionStateID.equals("5") || coachingSessionStateID.equals("11")) {
-////								pendingCoachStateCount =  existingCoachingNotification.getPendingCoachStateCount();
-////								if (pendingCoachStateCount == null) {
-////									pendingCoachStateCount = 0;
-////								}
-////								existingCoachingNotification.setPendingCoachStateCount(pendingCoachStateCount + 1);
-////							} else if (coachingSessionStateID.equals("3") || coachingSessionStateID.equals("10")) {
-////								pendingEmployeeStateCount = existingCoachingNotification.getPendingEmployeeStateCount();
-////								if (pendingEmployeeStateCount == null) {
-////									pendingEmployeeStateCount = 0;
-////								}
-////								existingCoachingNotification.setPendingEmployeeStateCount(pendingEmployeeStateCount + 1);
-////
-////							} else if (coachingSessionStateID.equals("4") || coachingSessionStateID.equals("6")) {
-////								acknowledgementStateCount = existingCoachingNotification.getAcknowledgementStateCount();
-////								if (acknowledgementStateCount == null) {
-////									acknowledgementStateCount = 0;
-////								}
-////								existingCoachingNotification.setAcknowledgementStateCount(acknowledgementStateCount + 1);
-////							} else if (coachingSessionStateID.equals("7")) {
-////								skippedStateCount = existingCoachingNotification.getSkippedStateCount();
-////								if (skippedStateCount == null) {
-////									skippedStateCount = 0;
-////								}
-////								existingCoachingNotification.setSkippedStateCount(skippedStateCount + 1);
-////							}
-////						}
-////					}
-////
-////					// Save the ExistingCoachingNotification.
-////					syncAgentService.systemPutObject(existingCoachingNotification, null, null, null, true);
-//				}
-//			}
-//		}
-	}
+		TeamLeader host = (TeamLeader) syncAgentService.systemGetById(classIdPair);
+		
+		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]");
+		
+		// Get the most recent WeekDates from AgentScorecard.
+		List<Date> mostRecentWeekDates = agentScorecardDAO.findCurrentWeekDates();
+		
+		List<Notification> createdNotifications = new ArrayList<Notification>();
+		
+		// For each week date, make sure we have a corresponding CoachingNotification.
+		Iterator<Date> itrWeekDates = mostRecentWeekDates.iterator();
+		while ( itrWeekDates.hasNext() ) {
+			Date nextWeekDate = itrWeekDates.next();
+			DateTime nextWeekDateTime = new DateTime(nextWeekDate);
+			CoachingNotification existingCoachingNotification = null;
 
-	private void handleTimecard(ClassIDPair classIdPair, String[] params) {
-		try {
-			checkForOrCreateShiftStatusNotification(classIdPair);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			Iterator<Notification> itrNotifications = host.getNotifications().iterator();
+			while (itrNotifications.hasNext()) {
+				Notification nextNotification = itrNotifications.next();
+				if (nextNotification != null && nextNotification instanceof CoachingNotification) {
+					CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
+					
+					if (nextCoachingNotification == null) {
+						continue;
+					}
+					
+					DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
+					log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
+					log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
+					log.debug("[CoachingNotification]  AgentScoreCard DateTime" + nextWeekDateTime);
+					log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
+					// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
+					if (DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, nextCoachingNotificationWeekDate) == 0) {
+						log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
+						existingCoachingNotification = nextCoachingNotification;
+						break;
+					}
+				}
+			}
+			
+			itrNotifications = createdNotifications.iterator();
+			while (itrNotifications.hasNext()) {
+				Notification nextNotification = itrNotifications.next();
+				if (nextNotification != null && nextNotification instanceof CoachingNotification) {
+					CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
+					
+					if (nextCoachingNotification == null) {
+						continue;
+					}
+					
+					DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
+					log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
+					log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
+					log.debug("[CoachingNotification]  AgentScoreCard DateTime" + nextWeekDateTime);
+					log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
+					// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
+					if (DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, nextCoachingNotificationWeekDate) == 0) {
+						log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
+						existingCoachingNotification = nextCoachingNotification;
+						break;
+					}
+				}
+			}
+			
+			if (existingCoachingNotification == null) {
+				existingCoachingNotification = new CoachingNotification();
+				existingCoachingNotification.setID(UUID.randomUUID().toString());
+				existingCoachingNotification.setCreatedOn(new Date());
+				existingCoachingNotification.setName("Available for Coaching");
+				existingCoachingNotification.setType("CoachingNotification");
+				existingCoachingNotification.setTeamLeader(host);
+				existingCoachingNotification.setWeekDate(nextWeekDate);
+				existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
+				
+				createdNotifications.add(existingCoachingNotification);
+			}
 		}
 	}
 
 	private void checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
 			throws SyncException {
-		Timecard host = (Timecard) syncAgentService
+		TeamLeader host = (TeamLeader) syncAgentService
 				.systemGetById(classIdPair);
 
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]");
-		DateTime timecardDateTime = new DateTime(host.getDate());
-		DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-		int daysBetween = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
+		DateTime currentDateTime = new DateTime(new Date());
+		DateTime shiftDateTime = new DateTime(new Date());
+		int daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
 				+ daysBetween);
 
 		// If the Timecard.date < 3 days old
-		if ( daysBetween < 3) {
+		while ( daysBetween < 3) {
 			// Check to see if there is already a coaching notification created.
-			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-			if (agent != null) {
-				TeamLeader teamLeader = syncAgentService.systemGetByObject(agent.getTeamLeader());
-				if (teamLeader != null) {
-					ShiftStatusNotification existingShiftStatusNotification = null;
+			ShiftStatusNotification existingShiftStatusNotification = null;
 
-					Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
-					while (itrNotifications.hasNext()) {
-						Notification nextNotification = itrNotifications.next();
-						if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
-							ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
-							
-							if (nextShiftStatusNotification == null) {
-								continue;
-							}
-							
-							log.debug("[ShiftStatusNotification]  ShiftStatusNotification id - "
-									+ nextShiftStatusNotification.getID());
-							log.debug("[ShiftStatusNotification]  Timecard id"
-									+ host.getID());
-							DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
-							// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
-							if (DateTimeComparator.getDateOnlyInstance().compare(timecardDateTime, nextShiftStatusNotificationWeekDate) == 0) {
-								existingShiftStatusNotification = nextShiftStatusNotification;
-								log.debug("[ShiftStatusNotification]  Existing ShiftStatusNotification found: "
-										+ nextShiftStatusNotification.getID());
-								break;
-							}
-						}
+			Iterator<Notification> itrNotifications = host.getNotifications().iterator();
+			while (itrNotifications.hasNext()) {
+				Notification nextNotification = itrNotifications.next();
+				if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
+					ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
+					
+					if (nextShiftStatusNotification == null) {
+						continue;
 					}
 					
-					if (existingShiftStatusNotification == null) {
-						existingShiftStatusNotification = new ShiftStatusNotification();
-						existingShiftStatusNotification.setID(UUID.randomUUID().toString());
-						existingShiftStatusNotification.setResolved(false);
-						existingShiftStatusNotification.setCreatedOn(new Date());
-						existingShiftStatusNotification.setName("Shift Status");
-						existingShiftStatusNotification.setType("ShiftStatusNotification");
-						existingShiftStatusNotification.setTeamLeader(teamLeader);
-						existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
-//						existingShiftStatusNotification.setTimecard(host);
-						existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+					log.debug("[ShiftStatusNotification]  ShiftStatusNotification id - "
+							+ nextShiftStatusNotification.getID());
+					log.debug("[ShiftStatusNotification]  Timecard id"
+							+ host.getID());
+					DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
+					// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
+					if (DateTimeComparator.getDateOnlyInstance().compare(shiftDateTime, nextShiftStatusNotificationWeekDate) == 0) {
+						existingShiftStatusNotification = nextShiftStatusNotification;
+						log.debug("[ShiftStatusNotification]  Existing ShiftStatusNotification found: "
+								+ nextShiftStatusNotification.getID());
+						break;
 					}
 				}
 			}
+			
+			if (existingShiftStatusNotification == null) {
+				existingShiftStatusNotification = new ShiftStatusNotification();
+				existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+				existingShiftStatusNotification.setResolved(false);
+				existingShiftStatusNotification.setCreatedOn(new Date());
+				existingShiftStatusNotification.setName("Shift Status");
+				existingShiftStatusNotification.setType("ShiftStatusNotification");
+				existingShiftStatusNotification.setTeamLeader(host);
+				existingShiftStatusNotification.setShiftEndDate(shiftDateTime.toDate());
+				try {
+					existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			shiftDateTime = shiftDateTime.minusDays(1);
+			daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
+
 		}
 	}
 }

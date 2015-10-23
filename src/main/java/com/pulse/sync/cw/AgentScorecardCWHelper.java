@@ -145,7 +145,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 								existingCoachingNotification.setType("CoachingNotification");
 								existingCoachingNotification.setTeamLeader(teamLeader);
 								existingCoachingNotification.setWeekDate(host.getWeekDate());
-								existingCoachingNotification.setAgentScorecard(host);
+//								existingCoachingNotification.setAgentScorecard(host);
 								existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
 							}
 

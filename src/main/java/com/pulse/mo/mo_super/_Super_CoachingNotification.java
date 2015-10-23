@@ -96,22 +96,6 @@ public void setWeekDate(Date weekDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AGENT_SCORECARD_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentScardOfCoachingNotify")
-@OneToOne(fetch=FetchType.LAZY, optional=true)
-private AgentScorecard agentScorecard;
-public AgentScorecard getAgentScorecard() {
-	return this.agentScorecard;
-}
-
-public void setAgentScorecard(AgentScorecard value) 
-{
-	this.agentScorecard = value;
-}
-	
 
 	
 	//////////////////////////////////////////////////////
@@ -132,18 +116,6 @@ public void setAgentScorecard(AgentScorecard value)
 
 				
 		// Source Relationships
-		//Retrieve value of the Team Leader of Pulse User relationship
-		objectJson += ",\"agentScorecard\":";
-				if (getAgentScorecard() == null)
-					objectJson += "null";
-				else {
-					try {
-						objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
-					} catch(Exception e) {
-						objectJson += "null";
-					}
-				}
-				objectJson += "";
 
 		
 		// Target Relationships
@@ -163,7 +135,6 @@ public void setAgentScorecard(AgentScorecard value)
 
 		
 		// Source Relationships
-		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 
 				
 

@@ -1,26 +1,28 @@
 
 package com.pulse.mo.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.util.DateUtils;
-import com.pulse.dataprovider.IConnectionFactory;
+
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
-
-import com.pulse.mo.*;
+import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.pulse.mo.Agent;
+import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.Scorecard;
 
 
 @Component
@@ -420,6 +422,59 @@ propertyCounter++;
 		}
 		
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
+	}
+	
+	public List<Date> findCurrentWeekDates() throws SyncException {
+//		String sql = "SELECT * FROM AGENT_SCORECARD WHERE AGENT_ID=? AND WEEK_DATE>? ORDER BY WEEK_DATE DESC";
+		
+		List<Date> results = new ArrayList<Date>();
+		String sql = "SELECT DISTINCT(\"WEEK_DATE\") FROM \"AGENT_SCORECARD\" WHERE \"WEEK_DATE\">?";
+		
+		long timeStart = System.currentTimeMillis();
+		
+		// Open the database session.
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+			conn = connectionFactory.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setFetchSize(connectionFactory.getFetchSize());
+			pstmt.setQueryTimeout(QUERY_TIMEOUT);
+			
+			// Looking for past 4 weeks worth.
+			DateTime theDateTime = new DateTime();
+			theDateTime = theDateTime.minusMonths(1);
+			pstmt.setDate(1, DateUtils.utilDateToSqlDate(theDateTime.toDate()));
+			
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Date nextResult = DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE"));
+				results.add(nextResult);
+			}
+		} catch(Exception e) {
+			log.error("[AgentScorecardDAO] Unable to findMostRecent\n" + sql, e);
+			throw new SyncDataException(e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				log.error("[AgentScorecardDAO] Error closing database statement/connection", e);
+			}
+		}
+		
+		long timeEnd = System.currentTimeMillis();
+		long totalTime = timeEnd - timeStart;
+		if (totalTime > LONG_RUNNING_QUERY_TIME) {
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+		}
+		
+		return results;
 	}
 	
 	@Override
