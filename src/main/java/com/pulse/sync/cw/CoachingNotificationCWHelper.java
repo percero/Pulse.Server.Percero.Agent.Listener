@@ -183,8 +183,7 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 	
 	public Integer calc_skippedStateCount(ClassIDPair pair) {
 		Set<String> ids = new HashSet<String>(2);
-		ids.add("4");
-		ids.add("6");
+		ids.add("7");
 		return calcCounter(pair, "skippedStateCount", ids);
 	}
 	
@@ -211,8 +210,8 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 	
 	public Integer calc_pendingStateCount(ClassIDPair pair) {
 		Set<String> ids = new HashSet<String>(2);
-		ids.add("2");
-		ids.add("9");
+		ids.add("1");
+		ids.add("8");
 		return calcCounter(pair, "pendingStateCount", ids);
 	}
 	
