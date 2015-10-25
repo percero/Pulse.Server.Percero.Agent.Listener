@@ -21,6 +21,7 @@ import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
+import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
@@ -63,36 +64,46 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	 * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void process(String category, String subCategory, String fieldName) {
-		process(category, subCategory, fieldName, null);
+	public Object process(String category, String subCategory, String fieldName) {
+		return process(category, subCategory, fieldName, null);
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
 	 */
 	@Override
-	public void process(String category, String subCategory, String fieldName, String[] params) {
+	public Object process(String category, String subCategory, String fieldName, String[] params) {
 		String className = subCategory;
 		String classId = fieldName;
 		
 		// Switch on the class name.
 		if (TeamLeader.class.getCanonicalName().equalsIgnoreCase(className)) {
-			handleTeamLeader(new ClassIDPair(classId, className), params);
+			return handleTeamLeader(new ClassIDPair(classId, className), params);
 		}
+		
+		return null;
 	}
 	
 	
-	private void handleTeamLeader(ClassIDPair classIdPair, String[] params) {
+	private IPerceroObject handleTeamLeader(ClassIDPair classIdPair, String[] params) {
 		try {
-			checkForOrCreateShiftStatusNotification(classIdPair);
-			checkForOrCreateCoachingNotification(classIdPair);
+			boolean shiftStatusResult = checkForOrCreateShiftStatusNotification(classIdPair); 
+			boolean coachingResult = checkForOrCreateCoachingNotification(classIdPair);
+			if (shiftStatusResult || coachingResult) {
+				// If notifications have been created, then we need to return the updated TeamLeader ouject.
+				return syncAgentService.systemGetById(classIdPair);
+			}
+			
 		} catch(Exception e) {
 			log.error(e.getMessage(), e);
 		}
+
+		return null;
 	}
 	
 
-	private void checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
+	private boolean checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
+		
 		TeamLeader host = (TeamLeader) syncAgentService.systemGetById(classIdPair);
 		
 		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]");
@@ -168,11 +179,14 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 				existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
 				
 				createdNotifications.add(existingCoachingNotification);
+				
 			}
 		}
+		
+		return !createdNotifications.isEmpty();
 	}
 
-	private void checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
+	private boolean checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
 			throws SyncException {
 		TeamLeader host = (TeamLeader) syncAgentService
 				.systemGetById(classIdPair);
@@ -183,6 +197,8 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		int daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
 				+ daysBetween);
+
+		List<Notification> createdNotifications = new ArrayList<Notification>();
 
 		// If the Timecard.date < 3 days old
 		while ( daysBetween < 3) {
@@ -225,6 +241,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 				existingShiftStatusNotification.setShiftEndDate(shiftDateTime.toDate());
 				try {
 					existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+					createdNotifications.add(existingShiftStatusNotification);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -234,5 +251,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 			daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
 
 		}
+		
+		return !createdNotifications.isEmpty();
 	}
 }
