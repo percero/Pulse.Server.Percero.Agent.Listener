@@ -35,6 +35,13 @@ public class Pulse_AccountHelper extends AccountHelper {
 			List<ServiceUser> serviceUserList, IUserAnchor userAnchor) {
 		IUserAnchor result = super.addOrUpdateUserAnchorFromServiceUserList(userId, serviceUserList, userAnchor);
 		PulseUser pulseUser = (PulseUser) result;
+		log.debug("[Pulse_AccountHelper] PulseUser " + pulseUser.getID());
+		if (pulseUser.getTeamLeader() != null) {
+			log.debug("[Pulse_AccountHelper] PulseUser.TeamLeader " + pulseUser.getTeamLeader().getID());
+		}
+		else {
+			log.debug("[Pulse_AccountHelper] PulseUser.TeamLeader NO TEAM LEADER");
+		}
 		DAORegistry daoRegistry = DAORegistry.getInstance();
 		IDataAccessObject<Email> dao = (IDataAccessObject<Email>)daoRegistry.getDataAccessObject(Email.class.getName());
 		Email example = new Email();
@@ -43,6 +50,7 @@ public class Pulse_AccountHelper extends AccountHelper {
 			List<Email> emails = dao.findByExample(example, null, null, false);
 			if(emails.size() > 0){
 				Email email = emails.get(0);
+				log.debug("[Pulse_AccountHelper] PulseUser.Email " + email.getID() + " (" + email.getEmailAddress() + ")");
 				// Now find the TeamLeader that has this email (because that is where it came from in the first place
 				// see PulseHttpAuthProvider for proof.
 				IDataAccessObject<TeamLeader> teamLeaderDAO = (IDataAccessObject<TeamLeader>)daoRegistry.getDataAccessObject(TeamLeader.class.getName());
@@ -53,10 +61,23 @@ public class Pulse_AccountHelper extends AccountHelper {
 					TeamLeader theChosenOne = teamLeaders.get(0);
 					pulseUser.setTeamLeader(theChosenOne);
 					IDataAccessObject<PulseUser> pulseUserDAO = (IDataAccessObject<PulseUser>)daoRegistry.getDataAccessObject(PulseUser.class.getName());
-					pulseUserDAO.updateObject(pulseUser, null, null);
+					try {
+						pulseUserDAO.updateObject(pulseUser, null, null);
+					} catch(Exception e) {
+						log.error("[Pulse_AccountHelper] Unable to set TeamLeader " + theChosenOne.getID() + " on PulseUser " + pulseUser.getID(), e);
+					}
+				}
+				else {
+					log.warn("[Pulse_AccountHelper] NO TEAM LEADER FOUND for PulseUser " + pulseUser.getID());
 				}
 			}
-		}catch(Exception e){}
+			else {
+				log.warn("[Pulse_AccountHelper] NO EMAIL FOUND for PulseUser " + pulseUser.getID());
+			}
+		}
+		catch(Exception e){
+			log.error("[Pulse_AccountHelper] Error authenticating PulseUser " + pulseUser.getID(), e);
+		}
 		return result;
 	}
 }
