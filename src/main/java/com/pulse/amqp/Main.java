@@ -3,6 +3,7 @@ package com.pulse.amqp;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -27,16 +28,23 @@ import com.pulse.mo.*;
  *
  */
 public class Main{
+	private static Logger logger = Logger.getLogger(Main.class);
 	/**
 	 * Main function for starting the process
 	 */
 	@SuppressWarnings("resource")
 	public static void main(String[] args){
+
+		String config = "spring/percero-spring-config.xml"; // Default
+		if(args.length > 0)
+			config = args[0];
+
+		logger.info("Using config: "+config);
 		ApplicationContext context =
-				new ClassPathXmlApplicationContext(new String[] {"spring/percero-spring-config.xml","spring/*.xml"});
-		System.out.println(context.toString());
+				new ClassPathXmlApplicationContext(new String[] {config,"spring/*.xml"});
+		logger.debug(context.toString());
 		
-		System.out.println("\n\n****************************************\nApplication Started\n****************************************\n\n");
+		logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 		
 		// Test Login
 //		Map<String, Object> componentBeans = context.getBeansWithAnnotation(Component.class);
