@@ -35,5 +35,24 @@ public class ScorecardWeeklyResult extends _Super_ScorecardWeeklyResult
 		
 		return null;
 	}
+
+	public ScorecardWeeklyResult getPreviousScorecardWeeklyResult() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+		
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+		
+		ClassIDPair result = (ClassIDPair) cwh.get(ScorecardWeeklyResultCWHelper.PREVIOUS_SCORECARD_WEEKLY_RESULT, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+		
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+			
+			MappedClass mappedClass = mcm.getMappedClassByClassName(result.getClassName());
+			IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+			return (ScorecardWeeklyResult) dataProvider.findById(result, null);
+		}
+		
+		return null;
+	}
 }
 
