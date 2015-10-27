@@ -17,25 +17,25 @@ import com.pulse.sync.cw.ScorecardWeeklyResultCWHelper;
 @Entity(name="ScorecardWeeklyResult")
 public class ScorecardWeeklyResult extends _Super_ScorecardWeeklyResult
 {
-	public ScorecardMonthlyResult getCurrentScorecardMonthlyResult() {
-		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
-		
-		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
-		
-		ClassIDPair result = (ClassIDPair) cwh.get(ScorecardWeeklyResultCWHelper.CURRENT_SCORECARD_MONTHLY_RESULT, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
-		
-		if (result != null)
-		{
-			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
-			
-			MappedClass mappedClass = mcm.getMappedClassByClassName(result.getClassName());
-			IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
-			return (ScorecardMonthlyResult) dataProvider.findById(result, null);
-		}
-		
-		return null;
-	}
-
+//	public ScorecardMonthlyResult getCurrentScorecardMonthlyResult() {
+//		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+//		
+//		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+//		
+//		ClassIDPair result = (ClassIDPair) cwh.get(ScorecardWeeklyResultCWHelper.CURRENT_SCORECARD_MONTHLY_RESULT, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+//		
+//		if (result != null)
+//		{
+//			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+//			
+//			MappedClass mappedClass = mcm.getMappedClassByClassName(result.getClassName());
+//			IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+//			return (ScorecardMonthlyResult) dataProvider.findById(result, null);
+//		}
+//		
+//		return null;
+//	}
+//
 	public ScorecardWeeklyResult getPreviousScorecardWeeklyResult() {
 		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
 		
