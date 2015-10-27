@@ -51,7 +51,7 @@ public class ScorecardWeeklyResultDAO extends SqlDataAccessObject<ScorecardWeekl
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCARD_WEEKLY_RESULT\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"SCARD_WEEKLY_RESULT\".\"ID\"";
 	
-	private String joinAgentScorecardIDScorecardWeeklyResult = ",(select ? As SQLID From Dual) WHERE SCARD_WEEKLY_RESULT.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCARD_WEEKLY_RESULT.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCARD_WEEKLY_RESULT.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+	private String joinAgentScorecardIDScorecardWeeklyResult = ",(select ? As SQLID From Dual) WHERE SCARD_WEEKLY_RESULT.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCARD_WEEKLY_RESULT.AGENT_SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCARD_WEEKLY_RESULT.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 
 
 	
