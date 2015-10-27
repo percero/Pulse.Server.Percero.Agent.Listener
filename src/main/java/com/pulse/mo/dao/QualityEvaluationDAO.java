@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation> implements IDataAccessObject<QualityEvaluation> {
@@ -41,6 +44,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"QUALITY_EVALUATION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"QUALITY_EVALUATION\".\"UPDATED_BY\",\"QUALITY_EVALUATION\".\"IS_REQUIRED\",\"QUALITY_EVALUATION\".\"CREATED_ON\",\"QUALITY_EVALUATION\".\"UPDATED_ON\",\"QUALITY_EVALUATION\".\"WEEK_DATE\",\"QUALITY_EVALUATION\".\"NICE_EVAL_ID\",\"QUALITY_EVALUATION\".\"CREATED_BY\",\"QUALITY_EVALUATION\".\"MANUAL_DETAILS\",\"QUALITY_EVALUATION\".\"NICE_APP_SERVER\",\"QUALITY_EVALUATION\".\"SCORECARD_ID\",\"QUALITY_EVALUATION\".\"EMPLOYEE_ID\",\"QUALITY_EVALUATION\".\"AGENT_ID\",\"QUALITY_EVALUATION\".\"AGENT_SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\"";
 	private String whereClause = "  WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
@@ -58,7 +62,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -68,12 +72,12 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -100,7 +104,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -122,12 +126,12 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\"" + SQL_VIEW + " " + selectFromState
 return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDQualityEvaluation;
 }
 
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"QUALITY_EVALUATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -152,8 +156,16 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + 
 	
 	@Override
 	protected QualityEvaluation extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	QualityEvaluation nextResult = new QualityEvaluation();
     	
+		
+QualityEvaluation nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new QualityEvaluation();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -161,42 +173,56 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + 
 		{
 			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
+
 nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
+
 
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
+
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+
 
 nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
+
 nextResult.setNiceEvalId(rs.getInt("NICE_EVAL_ID"));
+
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
+
 nextResult.setManualDetails(rs.getString("MANUAL_DETAILS"));
 
+
 nextResult.setNiceAppServer(rs.getString("NICE_APP_SERVER"));
+
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
 
+
 Employee employee = new Employee();
 employee.setID(rs.getString("EMPLOYEE_ID"));
 nextResult.setEmployee(employee);
 
+
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
+
 
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
 nextResult.setAgentScorecard(agentscorecard);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -590,6 +616,71 @@ propertyCounter++;
 	}
 	
 	
+public QualityEvaluation createObject(QualityEvaluation perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select QUALITY_EVALUATION_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,14 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class NotificationDAO extends SqlDataAccessObject<Notification> implements IDataAccessObject<Notification> {
@@ -43,6 +44,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\"";
 	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"CREATED_ON\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
 	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
@@ -59,7 +61,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +71,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +117,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -145,39 +147,52 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	
 	@Override
 	protected Notification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Notification nextResult = null;
     	
-    	// ID
+		
+Notification nextResult = null;
+    	
 		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (Notification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
+		
+    	String className = type;
+		
+    	if (className.indexOf("com.pulse.mo.") != 0) {
+    		className = "com.pulse.mo." + className;
+    	}
+    	try {
+    		nextResult = (Notification) MappedClass.forName(className).newInstance();
+    	} catch(Exception e) {
+    		// Do nothing.
+    	}
+    	
+    	if (nextResult == null) {
+    		nextResult = new Notification();
+    	}
 
-
-		if (nextResult == null) {
-			nextResult = new Notification();
-		}
-		nextResult.setID(rs.getString("ID"));
+		
+    	// ID
+    	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
+
 nextResult.setName(rs.getString("NAME"));
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
+
+
+
+			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -349,4 +364,4 @@ propertyCounter++;
 	
 	
 }
-
+

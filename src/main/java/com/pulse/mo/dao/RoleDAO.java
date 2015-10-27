@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObject<Role> {
@@ -41,6 +44,7 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"ROLE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"ROLE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"ROLE\" \"ROLE\"";
 	private String whereClause = "  WHERE \"ROLE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName + " WHERE \"ROLE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ROLE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 	
 	@Override
 	protected Role extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Role nextResult = new Role();
     	
+		
+Role nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Role();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -153,9 +165,11 @@ public class RoleDAO extends SqlDataAccessObject<Role> implements IDataAccessObj
 			nextResult.setName(rs.getString("NAME"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

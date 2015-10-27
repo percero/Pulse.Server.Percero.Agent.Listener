@@ -153,23 +153,6 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-ScorecardId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer scorecardId;
-
-public Integer getScorecardId() 
-{
-	return this.scorecardId;
-}
-
-public void setScorecardId(Integer scorecardId)
-{
-	this.scorecardId = scorecardId;
-}/*
 CreatedBy
 Notes:
 */
@@ -319,6 +302,32 @@ public void setComment(Comment value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfCoachingSession")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Agent agent;
+public Agent getAgent() {
+	return this.agent;
+}
+
+public void setAgent(Agent value) {
+	this.agent = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfCoachingSession")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
+}
+
+public void setScorecard(Scorecard value) {
+	this.scorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfCoachingSession")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -410,27 +419,6 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Scorecard Id property
-		objectJson += ",\"scorecardId\":";
-		
-		if (getScorecardId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getScorecardId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
 		
@@ -507,6 +495,30 @@ objectJson += ",\"comment\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Agent of Coaching Session relationship
+objectJson += ",\"agent\":";
+		if (getAgent() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Scorecard of Coaching Session relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Agent Scorecard of Coaching Session relationship
 objectJson += ",\"agentScorecard\":";
 		if (getAgentScorecard() == null)
@@ -575,8 +587,6 @@ objectJson += ",\"coachingSessionAttachments\":[";
 		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Scorecard Id property
-		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Created On property
@@ -592,6 +602,8 @@ objectJson += ",\"coachingSessionAttachments\":[";
 		// Source Relationships
 		this.coachingSessionState = (CoachingSessionState) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSessionState");
 		this.comment = (Comment) JsonUtils.getJsonPerceroObject(jsonObject, "comment");
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 
 

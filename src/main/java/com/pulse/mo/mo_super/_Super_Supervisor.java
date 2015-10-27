@@ -187,20 +187,6 @@ public void setTeamLeaders(List<TeamLeader> value) {
 	this.teamLeaders = value;
 }
 
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@com.percero.agents.sync.metadata.annotations.Externalize
-@OneToOne(fetch=FetchType.LAZY, mappedBy="supervisor", cascade=javax.persistence.CascadeType.REMOVE)
-private CorrectiveAction correctiveAction;
-public CorrectiveAction getCorrectiveAction() {
-	return this.correctiveAction;
-}
-
-public void setCorrectiveAction(CorrectiveAction value) 
-{
-	this.correctiveAction = value;
-}
-
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -383,8 +369,6 @@ objectJson += ",\"teamLeaders\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Supervisor of Corrective Action relationship
-
 //Retrieve value of the Manager Supervisor of Subordinate Supervisor relationship
 objectJson += ",\"subordinateSupervisors\":[";
 		
@@ -431,7 +415,6 @@ objectJson += ",\"subordinateSupervisors\":[";
 
 		// Target Relationships
 		this.teamLeaders = (List<TeamLeader>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaders");
-		this.correctiveAction = (CorrectiveAction) JsonUtils.getJsonPerceroObject(jsonObject, "correctiveAction");
 		this.subordinateSupervisors = (List<Supervisor>) JsonUtils.getJsonListPerceroObject(jsonObject, "subordinateSupervisors");
 
 

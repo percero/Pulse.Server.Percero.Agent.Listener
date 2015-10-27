@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurationEntry> implements IDataAccessObject<LOBConfigurationEntry> {
@@ -41,6 +44,7 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"LOB_CONFIGURATION_ENTRY\".\"ID\"";
 	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_ENABLED\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE\",\"LOB_CONFIGURATION_ENTRY\".\"DURATION_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"OCC_TOLERANCE_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"REMINDER_INTERVAL\",\"LOB_CONFIGURATION_ENTRY\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_ENTRY\".\"NOTIFICATION_FREQUENCY_ID\"";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_ENTRY\" \"LOB_CONFIGURATION_ENTRY\"";
 	private String whereClause = "  WHERE \"LOB_CONFIGURATION_ENTRY\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_ENTRY\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 	
 	@Override
 	protected LOBConfigurationEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	LOBConfigurationEntry nextResult = new LOBConfigurationEntry();
     	
+		
+LOBConfigurationEntry nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new LOBConfigurationEntry();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,26 +164,34 @@ public class LOBConfigurationEntryDAO extends SqlDataAccessObject<LOBConfigurati
 		{
 			nextResult.setDurationToleranceEnabled(rs.getBoolean("DURATION_TOLERANCE_ENABLED"));
 
+
 nextResult.setDurationTolerance(rs.getInt("DURATION_TOLERANCE"));
+
 
 nextResult.setDurationToleranceInterval(rs.getInt("DURATION_TOLERANCE_INTERVAL"));
 
+
 nextResult.setOccurrenceToleranceInterval(rs.getInt("OCC_TOLERANCE_INTERVAL"));
 
+
 nextResult.setReminderInterval(rs.getInt("REMINDER_INTERVAL"));
+
 
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
 
 NotificationFrequency notificationfrequency = new NotificationFrequency();
 notificationfrequency.setID(rs.getString("NOTIFICATION_FREQUENCY_ID"));
 nextResult.setNotificationFrequency(notificationfrequency);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

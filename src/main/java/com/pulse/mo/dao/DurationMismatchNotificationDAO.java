@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,14 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<DurationMismatchNotification> implements IDataAccessObject<DurationMismatchNotification> {
@@ -43,7 +44,8 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"DURATION_MISMATCH_NOTIF\".\"ID\"";
+	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
 	private String whereClause = "  WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -59,7 +61,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +71,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +117,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"DURATION_MISMATCH_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"DURATION_MISMATCH_NOTIF\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -130,12 +132,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DURATION_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"END_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DURATION_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"END_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"TIMECARD_ACTIVITY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DURATION_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"END_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DURATION_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"END_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"TIMECARD_ACTIVITY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -145,26 +147,16 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected DurationMismatchNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-
-		DurationMismatchNotification nextResult = null;
-		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (DurationMismatchNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
-
-
-		if (nextResult == null) {
-			nextResult = new DurationMismatchNotification();
-		}
-
-
     	
+		
+DurationMismatchNotification nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new DurationMismatchNotification();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -172,34 +164,50 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
+
 nextResult.setDuration(rs.getDouble("DURATION"));
+
 
 nextResult.setAuxCodeEntryName(rs.getString("AUX_CODE_ENTRY_NAME"));
 
+
 nextResult.setMessage(rs.getString("MESSAGE"));
 
+
 nextResult.setName(rs.getString("NAME"));
+
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
 
+
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+TimecardActivity timecardactivity = new TimecardActivity();
+timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
+nextResult.setTimecardActivity(timecardactivity);
+
+
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -241,6 +249,16 @@ pstmt.setString(11, null);
 else
 {
 		pstmt.setString(11, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getTimecardActivity() == null)
+{
+pstmt.setString(12, null);
+}
+else
+{
+		pstmt.setString(12, perceroObject.getTimecardActivity().getID());
 }
 
 
@@ -303,7 +321,17 @@ else
 		pstmt.setString(10, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(11, perceroObject.getID());
+
+if (perceroObject.getTimecardActivity() == null)
+{
+pstmt.setString(11, null);
+}
+else
+{
+		pstmt.setString(11, perceroObject.getTimecardActivity().getID());
+}
+
+pstmt.setString(12, perceroObject.getID());
 
 		
 	}
@@ -495,6 +523,23 @@ paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
 
+boolean useTimecardActivityID = theQueryObject.getTimecardActivity() != null && (excludeProperties == null || !excludeProperties.contains("timecardActivity"));
+
+if (useTimecardActivityID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TIMECARD_ACTIVITY_ID\" =? ";
+paramValues.add(theQueryObject.getTimecardActivity().getID());
+propertyCounter++;
+}
+
 
 
 		if (propertyCounter == 0) {
@@ -506,11 +551,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -521,4 +566,4 @@ propertyCounter++;
 	
 	
 }
-
+

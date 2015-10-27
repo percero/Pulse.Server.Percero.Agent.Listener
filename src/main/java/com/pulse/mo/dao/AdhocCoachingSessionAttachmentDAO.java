@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<AdhocCoachingSessionAttachment> implements IDataAccessObject<AdhocCoachingSessionAttachment> {
@@ -41,6 +44,7 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"ADHOC_ATTACHMENT\".\"ID\"";
 	public static final String SQL_VIEW = ",\"ADHOC_ATTACHMENT\".\"NAME\",\"ADHOC_ATTACHMENT\".\"CREATED_BY\",\"ADHOC_ATTACHMENT\".\"CREATED_ON\",\"ADHOC_ATTACHMENT\".\"DESCRIPTION\",\"ADHOC_ATTACHMENT\".\"EMPLOYEE_ID\",\"ADHOC_ATTACHMENT\".\"TEMP_STORE_ID\",\"ADHOC_ATTACHMENT\".\"TYPE\",\"ADHOC_ATTACHMENT\".\"UPDATED_BY\",\"ADHOC_ATTACHMENT\".\"UPDATED_ON\",\"ADHOC_ATTACHMENT\".\"VERSION\",\"ADHOC_ATTACHMENT\".\"ADHOC_COACHING_SESSION_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_ATTACHMENT\" \"ADHOC_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"ADHOC_ATTACHMENT\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 	
 	@Override
 	protected AdhocCoachingSessionAttachment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	AdhocCoachingSessionAttachment nextResult = new AdhocCoachingSessionAttachment();
     	
+		
+AdhocCoachingSessionAttachment nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new AdhocCoachingSessionAttachment();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,32 +164,44 @@ public class AdhocCoachingSessionAttachmentDAO extends SqlDataAccessObject<Adhoc
 		{
 			nextResult.setName(rs.getString("NAME"));
 
+
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
 
 nextResult.setCreatedOn(rs.getString("CREATED_ON"));
 
+
 nextResult.setDescription(rs.getString("DESCRIPTION"));
+
 
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
+
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
+
 
 nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
 
 nextResult.setUpdatedOn(rs.getString("UPDATED_ON"));
 
+
 nextResult.setVersion(rs.getString("VERSION"));
+
 
 AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
 adhoccoachingsession.setID(rs.getString("ADHOC_COACHING_SESSION_ID"));
 nextResult.setAdhocCoachingSession(adhoccoachingsession);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -479,6 +503,71 @@ propertyCounter++;
 	}
 	
 	
+public AdhocCoachingSessionAttachment createObject(AdhocCoachingSessionAttachment perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select ADHOC_ATTACHMENT_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

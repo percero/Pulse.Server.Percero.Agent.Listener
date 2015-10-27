@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAlert> implements IDataAccessObject<NotificationAlert> {
@@ -41,7 +44,8 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"NOTIFICATION_ALERT\".\"DATE\",\"NOTIFICATION_ALERT\".\"HAS_BEEN_READ\",\"NOTIFICATION_ALERT\".\"NAME\",\"NOTIFICATION_ALERT\".\"TEAM_LEADER_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"NOTIFICATION_ALERT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"NOTIFICATION_ALERT\".\"DATE\",\"NOTIFICATION_ALERT\".\"HAS_BEEN_READ\",\"NOTIFICATION_ALERT\".\"NAME\",\"NOTIFICATION_ALERT\".\"TYPE\",\"NOTIFICATION_ALERT\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION_ALERT\" \"NOTIFICATION_ALERT\"";
 	private String whereClause = "  WHERE \"NOTIFICATION_ALERT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION_ALERT\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION_ALERT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION_ALERT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_ALERT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_NOTIFICATION_ALERT (\"ID\",\"DATE\",\"HAS_BEEN_READ\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO TBL_NOTIFICATION_ALERT (\"ID\",\"DATE\",\"HAS_BEEN_READ\",\"NAME\",\"TYPE\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_NOTIFICATION_ALERT SET \"DATE\"=?,\"HAS_BEEN_READ\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_NOTIFICATION_ALERT SET \"DATE\"=?,\"HAS_BEEN_READ\"=?,\"NAME\"=?,\"TYPE\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,8 +147,16 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 	
 	@Override
 	protected NotificationAlert extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	NotificationAlert nextResult = new NotificationAlert();
     	
+		
+NotificationAlert nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new NotificationAlert();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,18 +164,26 @@ public class NotificationAlertDAO extends SqlDataAccessProcObject<NotificationAl
 		{
 			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
+
 nextResult.setHasBeenRead(rs.getString("HAS_BEEN_READ"));
 
+
 nextResult.setName(rs.getString("NAME"));
+
+
+nextResult.setType(rs.getString("TYPE"));
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -173,14 +193,15 @@ nextResult.setTeamLeader(teamleader);
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(3, perceroObject.getHasBeenRead());
 pstmt.setString(4, perceroObject.getName());
+pstmt.setString(5, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
 
 
@@ -209,17 +230,18 @@ else
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getDate()));
 pstmt.setString(2, perceroObject.getHasBeenRead());
 pstmt.setString(3, perceroObject.getName());
+pstmt.setString(4, perceroObject.getType());
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(4, null);
+pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getTeamLeader().getID());
+		pstmt.setString(5, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(5, perceroObject.getID());
+pstmt.setString(6, perceroObject.getID());
 
 		
 	}
@@ -292,6 +314,23 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
 if (useTeamLeaderID)
@@ -320,11 +359,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_NOTIFICATION_ALERT(?,?,?,?,?)}";
+		return "{call UPDATE_NOTIFICATION_ALERT(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_NOTIFICATION_ALERT(?,?,?,?,?)}";
+		return "{call CREATE_NOTIFICATION_ALERT(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

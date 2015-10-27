@@ -262,6 +262,19 @@ public void setUpdatedOn(Date updatedOn)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMonthlyScore.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardMonthlyScore> scorecardMonthlyScores;
+public List<ScorecardMonthlyScore> getScorecardMonthlyScores() {
+	return this.scorecardMonthlyScores;
+}
+
+public void setScorecardMonthlyScores(List<ScorecardMonthlyScore> value) {
+	this.scorecardMonthlyScores = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
 private List<ScorecardMeasure> scorecardMeasures;
 public List<ScorecardMeasure> getScorecardMeasures() {
@@ -275,14 +288,14 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentScorecard.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AgentScorecard> agentScorecards;
-public List<AgentScorecard> getAgentScorecards() {
-	return this.agentScorecards;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyScore.class, mappedBy="scorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardWeeklyScore> scorecardWeeklyScores;
+public List<ScorecardWeeklyScore> getScorecardWeeklyScores() {
+	return this.scorecardWeeklyScores;
 }
 
-public void setAgentScorecards(List<AgentScorecard> value) {
-	this.agentScorecards = value;
+public void setScorecardWeeklyScores(List<ScorecardWeeklyScore> value) {
+	this.scorecardWeeklyScores = value;
 }
 
 
@@ -489,6 +502,23 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 
 		
 		// Target Relationships
+//Retrieve value of the Scorecard of Scorecard Monthly Score relationship
+objectJson += ",\"scorecardMonthlyScores\":[";
+		
+		if (getScorecardMonthlyScores() != null) {
+			int scorecardMonthlyScoresCounter = 0;
+			for(ScorecardMonthlyScore nextScorecardMonthlyScores : getScorecardMonthlyScores()) {
+				if (scorecardMonthlyScoresCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardMonthlyScores).toEmbeddedJson();
+					scorecardMonthlyScoresCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Scorecard of Scorecard Measure relationship
 objectJson += ",\"scorecardMeasures\":[";
 		
@@ -506,17 +536,17 @@ objectJson += ",\"scorecardMeasures\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Scorecard of Agent Scorecard relationship
-objectJson += ",\"agentScorecards\":[";
+//Retrieve value of the Scorecard of Scorecard Weekly Score relationship
+objectJson += ",\"scorecardWeeklyScores\":[";
 		
-		if (getAgentScorecards() != null) {
-			int agentScorecardsCounter = 0;
-			for(AgentScorecard nextAgentScorecards : getAgentScorecards()) {
-				if (agentScorecardsCounter > 0)
+		if (getScorecardWeeklyScores() != null) {
+			int scorecardWeeklyScoresCounter = 0;
+			for(ScorecardWeeklyScore nextScorecardWeeklyScores : getScorecardWeeklyScores()) {
+				if (scorecardWeeklyScoresCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextAgentScorecards).toEmbeddedJson();
-					agentScorecardsCounter++;
+					objectJson += ((BaseDataObject) nextScorecardWeeklyScores).toEmbeddedJson();
+					scorecardWeeklyScoresCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -560,8 +590,9 @@ objectJson += ",\"agentScorecards\":[";
 
 
 		// Target Relationships
+		this.scorecardMonthlyScores = (List<ScorecardMonthlyScore>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMonthlyScores");
 		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
-		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
+		this.scorecardWeeklyScores = (List<ScorecardWeeklyScore>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyScores");
 
 
 	}
@@ -571,8 +602,9 @@ objectJson += ",\"agentScorecards\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(ScorecardMonthlyScore.class, "scorecard"));
 		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "scorecard"));
-		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "scorecard"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyScore.class, "scorecard"));
 
 		
 		return listSetters;

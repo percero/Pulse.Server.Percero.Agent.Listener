@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDataAccessObject<PulseUser> {
@@ -41,6 +44,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"PULSE_USER\".\"ID\"";
 	public static final String SQL_VIEW = ",\"PULSE_USER\".\"USER_ID\",\"PULSE_USER\".\"EMPLOYEE_ID\",\"PULSE_USER\".\"FIRST_NAME\",\"PULSE_USER\".\"LAST_NAME\",\"PULSE_USER\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"PULSE_USER\" \"PULSE_USER\"";
 	private String whereClause = "  WHERE \"PULSE_USER\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName + " WHERE \"PULSE_USER\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"PULSE_USER\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"PULSE_USER\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 	
 	@Override
 	protected PulseUser extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	PulseUser nextResult = new PulseUser();
     	
+		
+PulseUser nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new PulseUser();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,20 +164,26 @@ public class PulseUserDAO extends SqlDataAccessObject<PulseUser> implements IDat
 		{
 			nextResult.setUserId(rs.getString("USER_ID"));
 
+
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
 
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
 
+
 nextResult.setLastName(rs.getString("LAST_NAME"));
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

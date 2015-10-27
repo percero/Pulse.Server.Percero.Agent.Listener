@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements IDataAccessObject<TraceEntry> {
@@ -41,6 +44,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"TRACE_ENTRY\".\"ID\"";
 	public static final String SQL_VIEW = ",\"TRACE_ENTRY\".\"TIMESTAMP\",\"TRACE_ENTRY\".\"TRACE_TYPE\",\"TRACE_ENTRY\".\"LOG_MESSAGE\",\"TRACE_ENTRY\".\"PULSE_USER_ID\",\"TRACE_ENTRY\".\"TRACE_LOG_ID\"";
 	private String selectFromStatementTableName = " FROM \"TRACE_ENTRY\" \"TRACE_ENTRY\"";
 	private String whereClause = "  WHERE \"TRACE_ENTRY\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName + " WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"TRACE_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TRACE_ENTRY\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 	
 	@Override
 	protected TraceEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	TraceEntry nextResult = new TraceEntry();
     	
+		
+TraceEntry nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new TraceEntry();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,22 +164,28 @@ public class TraceEntryDAO extends SqlDataAccessObject<TraceEntry> implements ID
 		{
 			nextResult.setTimestamp(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("TIMESTAMP")));
 
+
 nextResult.setTraceType(rs.getString("TRACE_TYPE"));
 
+
 nextResult.setLogMessage(rs.getString("LOG_MESSAGE"));
+
 
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
+
 
 TraceLog tracelog = new TraceLog();
 tracelog.setID(rs.getString("TRACE_LOG_ID"));
 nextResult.setTraceLog(tracelog);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

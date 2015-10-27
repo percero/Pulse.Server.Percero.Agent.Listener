@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -15,13 +16,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMonthlyResult> implements IDataAccessObject<ScorecardMonthlyResult> {
@@ -41,6 +45,7 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"SCARD_MONTHLY_RESULT\".\"ID\"";
 	public static final String SQL_VIEW = ",\"SCARD_MONTHLY_RESULT\".\"INTERVAL_TYPE\",\"SCARD_MONTHLY_RESULT\".\"METRIC_TYPE\",\"SCARD_MONTHLY_RESULT\".\"METRIC_UNIT\",\"SCARD_MONTHLY_RESULT\".\"SCORECARD_ID\",\"SCARD_MONTHLY_RESULT\".\"END_DATE\",\"SCARD_MONTHLY_RESULT\".\"START_DATE\",\"SCARD_MONTHLY_RESULT\".\"METRIC_RESULT\",\"SCARD_MONTHLY_RESULT\".\"PERCENTAGE_ATTAINMENT\",\"SCARD_MONTHLY_RESULT\".\"POINTS_POSSIBLE\",\"SCARD_MONTHLY_RESULT\".\"POINTS_RECEIVED\",\"SCARD_MONTHLY_RESULT\".\"EXCLUDED\",\"SCARD_MONTHLY_RESULT\".\"GRADE\",\"SCARD_MONTHLY_RESULT\".\"ROLLUP_TYPE\",\"SCARD_MONTHLY_RESULT\".\"TENURE\",\"SCARD_MONTHLY_RESULT\".\"EMPLOYEE_ID\",\"SCARD_MONTHLY_RESULT\".\"GOAL_ID\",\"SCARD_MONTHLY_RESULT\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCARD_MONTHLY_RESULT\" \"SCARD_MONTHLY_RESULT\"";
 	private String whereClause = "  WHERE \"SCARD_MONTHLY_RESULT\".\"ID\"=?";
@@ -57,7 +62,7 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +72,12 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +104,7 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +118,12 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName + " WHERE \"SCARD_MONTHLY_RESULT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SCARD_MONTHLY_RESULT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SCARD_MONTHLY_RESULT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +148,17 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	
 	@Override
 	protected ScorecardMonthlyResult extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	ScorecardMonthlyResult nextResult = new ScorecardMonthlyResult();
     	
+		
+
+ScorecardMonthlyResult nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new ScorecardMonthlyResult();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,29 +166,42 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 		{
 			nextResult.setIntervalType(rs.getString("INTERVAL_TYPE"));
 
+
 nextResult.setMetricType(rs.getString("METRIC_TYPE"));
+
 
 nextResult.setMetricUnit(rs.getString("METRIC_UNIT"));
 
+
 nextResult.setScorecardId(rs.getString("SCORECARD_ID"));
+
 
 nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
+
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+
 
 nextResult.setMetricResult(rs.getDouble("METRIC_RESULT"));
 
+
 nextResult.setPercentageAttainment(rs.getDouble("PERCENTAGE_ATTAINMENT"));
+
 
 nextResult.setPointsPossible(rs.getDouble("POINTS_POSSIBLE"));
 
+
 nextResult.setPointsReceived(rs.getDouble("POINTS_RECEIVED"));
+
 
 nextResult.setExcluded(rs.getInt("EXCLUDED"));
 
+
 nextResult.setGrade(rs.getInt("GRADE"));
 
+
 nextResult.setRollupType(rs.getInt("ROLLUP_TYPE"));
+
 
 nextResult.setTenure(rs.getInt("TENURE"));
 
@@ -188,14 +215,17 @@ Goal goal = new Goal();
 goal.setID(rs.getString("GOAL_ID"));
 nextResult.setGoal(goal);
 
+
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
 nextResult.setScorecardMeasure(scorecardmeasure);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -216,6 +246,7 @@ JdbcHelper.setInt(pstmt,12, perceroObject.getExcluded());
 JdbcHelper.setInt(pstmt,13, perceroObject.getGrade());
 JdbcHelper.setInt(pstmt,14, perceroObject.getRollupType());
 JdbcHelper.setInt(pstmt,15, perceroObject.getTenure());
+
 
 if (perceroObject.getAgent() == null)
 {
@@ -644,7 +675,74 @@ propertyCounter++;
 	}
 	
 	
+
+public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select SCARD_MONTHLY_RESULT_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
+
 	
 	
 }
-
+

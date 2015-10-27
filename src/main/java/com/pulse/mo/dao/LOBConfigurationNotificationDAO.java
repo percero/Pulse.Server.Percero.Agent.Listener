@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,15 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOBConfigurationNotification> implements IDataAccessObject<LOBConfigurationNotification> {
@@ -44,6 +44,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\"";
 	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"CREATED_ON\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
 	private String whereClause = "  WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
@@ -60,7 +61,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -70,12 +71,12 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -102,7 +103,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -116,12 +117,12 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION_NOTIF\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -146,23 +147,28 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 	
 	@Override
 	protected LOBConfigurationNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-		LOBConfigurationNotification nextResult = null;
+    	
+		
+LOBConfigurationNotification nextResult = null;
+    	
 		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (LOBConfigurationNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
+		
+    	String className = type;
+		
+    	if (className.indexOf("com.pulse.mo.") != 0) {
+    		className = "com.pulse.mo." + className;
+    	}
+    	try {
+    		nextResult = (LOBConfigurationNotification) MappedClass.forName(className).newInstance();
+    	} catch(Exception e) {
+    		// Do nothing.
+    	}
+    	
+    	if (nextResult == null) {
+    		nextResult = new LOBConfigurationNotification();
+    	}
 
-
-		if (nextResult == null) {
-			nextResult = new LOBConfigurationNotification();
-		}
-
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -170,28 +176,36 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
+
 nextResult.setName(rs.getString("NAME"));
+
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
 
+
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -456,4 +470,4 @@ propertyCounter++;
 	
 	
 }
-
+

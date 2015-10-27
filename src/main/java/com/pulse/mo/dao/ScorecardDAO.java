@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDataAccessObject<Scorecard> {
@@ -41,6 +44,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"SCORECARD\".\"ID\"";
 	public static final String SQL_VIEW = ",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD\" \"SCORECARD\"";
 	private String whereClause = "  WHERE \"SCORECARD\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName + " WHERE \"SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SCORECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SCORECARD\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected Scorecard extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Scorecard nextResult = new Scorecard();
     	
+		
+Scorecard nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Scorecard();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,28 +164,39 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 		{
 			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
+
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
+
 nextResult.setDescription(rs.getString("DESCRIPTION"));
+
 
 nextResult.setECoachingLOBId(rs.getString("ECOACHING_LOB_ID"));
 
+
 nextResult.setGroupId(rs.getString("GROUP_ID"));
+
 
 nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 
+
 nextResult.setName(rs.getString("NAME"));
 
+
 nextResult.setRegionId(rs.getString("REGION_ID"));
+
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -438,6 +461,71 @@ propertyCounter++;
 	}
 	
 	
+public Scorecard createObject(Scorecard perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select SCORECARD_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

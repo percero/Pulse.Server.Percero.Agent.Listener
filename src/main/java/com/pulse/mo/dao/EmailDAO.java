@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessObject<Email> {
@@ -41,6 +44,7 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"EMAIL\".\"ID\"";
 	public static final String SQL_VIEW = ",\"EMAIL\".\"EMAIL_ADDRESS\",\"EMAIL\".\"PULSE_USER_ID\"";
 	private String selectFromStatementTableName = " FROM \"EMAIL\" \"EMAIL\"";
 	private String whereClause = "  WHERE \"EMAIL\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName + " WHERE \"EMAIL\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"EMAIL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"EMAIL\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 	
 	@Override
 	protected Email extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Email nextResult = new Email();
     	
+		
+Email nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Email();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,14 +164,17 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 		{
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
+
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

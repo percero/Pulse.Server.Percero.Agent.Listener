@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguration> implements IDataAccessObject<PulseConfiguration> {
@@ -41,6 +44,7 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"PULSE_CONFIGURATION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"PULSE_CONFIGURATION\".\"DURATION_TOLERANCE\"";
 	private String selectFromStatementTableName = " FROM \"PULSE_CONFIGURATION\" \"PULSE_CONFIGURATION\"";
 	private String whereClause = "  WHERE \"PULSE_CONFIGURATION\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"PULSE_CONFIGURATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"PULSE_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"PULSE_CONFIGURATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 	
 	@Override
 	protected PulseConfiguration extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	PulseConfiguration nextResult = new PulseConfiguration();
     	
+		
+PulseConfiguration nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new PulseConfiguration();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -153,9 +165,11 @@ public class PulseConfigurationDAO extends SqlDataAccessObject<PulseConfiguratio
 			nextResult.setDurationTolerance(rs.getInt("DURATION_TOLERANCE"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

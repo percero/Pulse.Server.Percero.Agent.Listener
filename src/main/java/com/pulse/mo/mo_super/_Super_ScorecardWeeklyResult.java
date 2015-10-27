@@ -357,6 +357,23 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
+IsCoachable
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isCoachable;
+
+public Boolean getIsCoachable() 
+{
+	return this.isCoachable;
+}
+
+public void setIsCoachable(Boolean isCoachable)
+{
+	this.isCoachable = isCoachable;
+}/*
 DurationTo
 Notes:
 */
@@ -422,6 +439,19 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_MONTHLY_RESULT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMonthlyResultOfScorecardWeeklyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardMonthlyResult scorecardMonthlyResult;
+public ScorecardMonthlyResult getScorecardMonthlyResult() {
+	return this.scorecardMonthlyResult;
+}
+
+public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
+	this.scorecardMonthlyResult = value;
 }
 
 	
@@ -671,6 +701,13 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Is Coachable property
+		objectJson += ",\"isCoachable\":";
+		if (getIsCoachable() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsCoachable();
+		}
 		//Retrieve value of the Duration To property
 		objectJson += ",\"durationTo\":";
 		
@@ -731,6 +768,18 @@ objectJson += ",\"scorecardMeasure\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Scorecard Monthly Result of Scorecard Weekly Result relationship
+objectJson += ",\"scorecardMonthlyResult\":";
+		if (getScorecardMonthlyResult() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardMonthlyResult()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -777,6 +826,8 @@ objectJson += ",\"scorecardMeasure\":";
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Is Coachable property
+		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
 		//From value of the Duration To property
 		setDurationTo(JsonUtils.getJsonInteger(jsonObject, "durationTo"));
 
@@ -785,6 +836,7 @@ objectJson += ",\"scorecardMeasure\":";
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
+		this.scorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyResult");
 
 
 		// Target Relationships

@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderImpersonation> implements IDataAccessObject<TeamLeaderImpersonation> {
@@ -41,6 +44,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"TEAM_LEADER_IMPERSONATION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"TEAM_LEADER_IMPERSONATION\".\"LAST_IMPERSONATED_ON\",\"TEAM_LEADER_IMPERSONATION\".\"PULSE_USER_ID\",\"TEAM_LEADER_IMPERSONATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"TEAM_LEADER_IMPERSONATION\" \"TEAM_LEADER_IMPERSONATION\"";
 	private String whereClause = "  WHERE \"TEAM_LEADER_IMPERSONATION\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"TEAM_LEADER_IMPERSONATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER_IMPERSONATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 	
 	@Override
 	protected TeamLeaderImpersonation extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	TeamLeaderImpersonation nextResult = new TeamLeaderImpersonation();
     	
+		
+TeamLeaderImpersonation nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new TeamLeaderImpersonation();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,18 +164,22 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 		{
 			nextResult.setLastImpersonatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("LAST_IMPERSONATED_ON")));
 
+
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

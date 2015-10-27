@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -300,7 +301,8 @@ public void setCMSEntries(List<CMSEntry> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
@@ -521,7 +523,7 @@ objectJson += ",\"timecards\":[";
 		objectJson += "]";
 //Retrieve value of the Agent of ScorecardMonthlyResults relationship
 		objectJson += ",\"scorecardMonthlyResults\":[";
-		
+
 		if (getScorecardMonthlyResults() != null) {
 			int scorecardMonthlyResultsCounter = 0;
 			for(ScorecardMonthlyResult nextScorecardMonthlyResult : getScorecardMonthlyResults()) {
@@ -664,4 +666,4 @@ objectJson += ",\"cMSEntries\":[";
 		return listSetters;
 	}
 }
-
+

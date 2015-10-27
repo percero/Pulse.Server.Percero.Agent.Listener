@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAccessObject<Setting> {
@@ -41,6 +44,7 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"SETTING\".\"ID\"";
 	public static final String SQL_VIEW = ",\"SETTING\".\"VALUE\",\"SETTING\".\"NAME\",\"SETTING\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"SETTING\" \"SETTING\"";
 	private String whereClause = "  WHERE \"SETTING\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName + " WHERE \"SETTING\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SETTING\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SETTING\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 	
 	@Override
 	protected Setting extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Setting nextResult = new Setting();
     	
+		
+Setting nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Setting();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,16 +164,20 @@ public class SettingDAO extends SqlDataAccessObject<Setting> implements IDataAcc
 		{
 			nextResult.setValue(rs.getString("VALUE"));
 
+
 nextResult.setName(rs.getString("NAME"));
+
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

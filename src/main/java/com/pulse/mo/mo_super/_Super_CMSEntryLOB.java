@@ -1,5 +1,5 @@
 
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,27 +60,27 @@ public class _Super_CMSEntryLOB extends BaseDataObject implements Serializable
 		return "1.0.0";
 	}
 
-
+	
 	/*
 	Keys of CMSEntryLOB
 	*/
 	//////////////////////////////////////////////////////
 // ID
 //////////////////////////////////////////////////////
-	@Id
-	@com.percero.agents.sync.metadata.annotations.Externalize
-	@Column(unique=true,name="ID")
-	private String ID;
-	@JsonProperty(value="ID")
-	public String getID() {
-		return this.ID;
-	}
+@Id
+@com.percero.agents.sync.metadata.annotations.Externalize
+@Column(unique=true,name="ID")
+private String ID;
+@JsonProperty(value="ID")
+public String getID() {
+	return this.ID;
+}
 
-	@JsonProperty(value="ID")
-	public void setID(String value) {
-		this.ID = value;
-	}
-
+@JsonProperty(value="ID")
+public void setID(String value) {
+	this.ID = value;
+}
+	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
@@ -88,145 +88,143 @@ public class _Super_CMSEntryLOB extends BaseDataObject implements Serializable
 EmployeeId
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private Integer employeeId;
+private Integer employeeId;
 
-	public Integer getEmployeeId()
-	{
-		return this.employeeId;
-	}
+public Integer getEmployeeId() 
+{
+	return this.employeeId;
+}
 
-	public void setEmployeeId(Integer employeeId)
-	{
-		this.employeeId = employeeId;
-	}/*
+public void setEmployeeId(Integer employeeId)
+{
+	this.employeeId = employeeId;
+}/*
 ClientName
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private String clientName;
+private String clientName;
 
-	public String getClientName()
-	{
-		return this.clientName;
-	}
+public String getClientName() 
+{
+	return this.clientName;
+}
 
-	public void setClientName(String clientName)
-	{
-		this.clientName = clientName;
-	}/*
+public void setClientName(String clientName)
+{
+	this.clientName = clientName;
+}/*
 LOBName
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private String lOBName;
+private String lOBName;
 
-	public String getLOBName()
-	{
-		return this.lOBName;
-	}
+public String getLOBName() 
+{
+	return this.lOBName;
+}
 
-	public void setLOBName(String lOBName)
-	{
-		this.lOBName = lOBName;
-	}/*
+public void setLOBName(String lOBName)
+{
+	this.lOBName = lOBName;
+}/*
 SiteName
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private String siteName;
+private String siteName;
 
-	public String getSiteName()
-	{
-		return this.siteName;
-	}
+public String getSiteName() 
+{
+	return this.siteName;
+}
 
-	public void setSiteName(String siteName)
-	{
-		this.siteName = siteName;
-	}/*
+public void setSiteName(String siteName)
+{
+	this.siteName = siteName;
+}/*
 ClientId
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private Integer clientId;
+private Integer clientId;
 
-	public Integer getClientId()
-	{
-		return this.clientId;
-	}
+public Integer getClientId() 
+{
+	return this.clientId;
+}
 
-	public void setClientId(Integer clientId)
-	{
-		this.clientId = clientId;
-	}/*
+public void setClientId(Integer clientId)
+{
+	this.clientId = clientId;
+}/*
 SiteId
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private Integer siteId;
+private Integer siteId;
 
-	public Integer getSiteId()
-	{
-		return this.siteId;
-	}
+public Integer getSiteId() 
+{
+	return this.siteId;
+}
 
-	public void setSiteId(Integer siteId)
-	{
-		this.siteId = siteId;
-	}
+public void setSiteId(Integer siteId)
+{
+	this.siteId = siteId;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="ECP_LOB_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_LOBOfCMSEntryLOB")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private LOB lOB;
+public LOB getLOB() {
+	return this.lOB;
+}
 
-	@com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="ECP_LOB_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_LOBOfCMSEntryLOB")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private LOB lOB;
-	public LOB getLOB() {
-		return this.lOB;
-	}
+public void setLOB(LOB value) {
+	this.lOB = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="CMS_ENTRY_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CMSEntryOfCMSEntryLOB")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private CMSEntry cMSEntry;
+public CMSEntry getCMSEntry() {
+	return this.cMSEntry;
+}
 
-	public void setLOB(LOB value) {
-		this.lOB = value;
-	}
-	@com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="CMS_ENTRY_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_CMSEntryOfCMSEntryLOB")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private CMSEntry cMSEntry;
-	public CMSEntry getCMSEntry() {
-		return this.cMSEntry;
-	}
+public void setCMSEntry(CMSEntry value) {
+	this.cMSEntry = value;
+}
 
-	public void setCMSEntry(CMSEntry value) {
-		this.cMSEntry = value;
-	}
-
-
+	
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -237,7 +235,7 @@ Notes:
 		// Properties		
 		//Retrieve value of the Employee Id property
 		objectJson += ",\"employeeId\":";
-
+		
 		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
@@ -258,7 +256,7 @@ Notes:
 		}
 		//Retrieve value of the Client Name property
 		objectJson += ",\"clientName\":";
-
+		
 		if (getClientName() == null)
 			objectJson += "null";
 		else {
@@ -279,7 +277,7 @@ Notes:
 		}
 		//Retrieve value of the LOB Name property
 		objectJson += ",\"lOBName\":";
-
+		
 		if (getLOBName() == null)
 			objectJson += "null";
 		else {
@@ -300,7 +298,7 @@ Notes:
 		}
 		//Retrieve value of the Site Name property
 		objectJson += ",\"siteName\":";
-
+		
 		if (getSiteName() == null)
 			objectJson += "null";
 		else {
@@ -321,7 +319,7 @@ Notes:
 		}
 		//Retrieve value of the Client Id property
 		objectJson += ",\"clientId\":";
-
+		
 		if (getClientId() == null)
 			objectJson += "null";
 		else {
@@ -342,7 +340,7 @@ Notes:
 		}
 		//Retrieve value of the Site Id property
 		objectJson += ",\"siteId\":";
-
+		
 		if (getSiteId() == null)
 			objectJson += "null";
 		else {
@@ -362,10 +360,10 @@ Notes:
 			}
 		}
 
-
+				
 		// Source Relationships
 //Retrieve value of the LOB of CMS Entry LOB relationship
-		objectJson += ",\"lOB\":";
+objectJson += ",\"lOB\":";
 		if (getLOB() == null)
 			objectJson += "null";
 		else {
@@ -377,7 +375,7 @@ Notes:
 		}
 		objectJson += "";
 //Retrieve value of the CMS Entry of CMS Entry LOB relationship
-		objectJson += ",\"cMSEntry\":";
+objectJson += ",\"cMSEntry\":";
 		if (getCMSEntry() == null)
 			objectJson += "null";
 		else {
@@ -389,17 +387,17 @@ Notes:
 		}
 		objectJson += "";
 
-
+		
 		// Target Relationships
 
-
+		
 		return objectJson;
 	}
 
 
 	@Override
 	protected void fromJson(JsonObject jsonObject) {
-		super.fromJson(jsonObject);
+	    super.fromJson(jsonObject);
 
 		// Properties
 		//From value of the Employee Id property
@@ -415,7 +413,7 @@ Notes:
 		//From value of the Site Id property
 		setSiteId(JsonUtils.getJsonInteger(jsonObject, "siteId"));
 
-
+		
 		// Source Relationships
 		this.lOB = (LOB) JsonUtils.getJsonPerceroObject(jsonObject, "lOB");
 		this.cMSEntry = (CMSEntry) JsonUtils.getJsonPerceroObject(jsonObject, "cMSEntry");
@@ -425,14 +423,15 @@ Notes:
 
 
 	}
-
+	
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
 
-
+		
 		return listSetters;
 	}
 }
+

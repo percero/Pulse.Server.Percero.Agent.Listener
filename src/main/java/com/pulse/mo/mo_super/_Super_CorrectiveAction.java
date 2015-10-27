@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -154,6 +153,23 @@ public void setDetails(String details)
 {
 	this.details = details;
 }/*
+Program
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String program;
+
+public String getProgram() 
+{
+	return this.program;
+}
+
+public void setProgram(String program)
+{
+	this.program = program;
+}/*
 DisciplineType
 Notes:
 */
@@ -170,6 +186,23 @@ public Integer getDisciplineType()
 public void setDisciplineType(Integer disciplineType)
 {
 	this.disciplineType = disciplineType;
+}/*
+Reason
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String reason;
+
+public String getReason() 
+{
+	return this.reason;
+}
+
+public void setReason(String reason)
+{
+	this.reason = reason;
 }/*
 MetricRef
 Notes:
@@ -290,6 +323,23 @@ public void setExpireDate(Date expireDate)
 {
 	this.expireDate = expireDate;
 }/*
+NextSteps
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String nextSteps;
+
+public String getNextSteps() 
+{
+	return this.nextSteps;
+}
+
+public void setNextSteps(String nextSteps)
+{
+	this.nextSteps = nextSteps;
+}/*
 HRApprovalDate
 Notes:
 */
@@ -329,8 +379,7 @@ public void setCorrectiveActionAttachments(List<CorrectiveActionAttachment> valu
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_STATE_ID")
@@ -343,8 +392,7 @@ public CorrectiveActionState getCorrectiveActionState() {
 
 public void setCorrectiveActionState(CorrectiveActionState value) {
 	this.correctiveActionState = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_TYPE_ID")
@@ -357,8 +405,7 @@ public CorrectiveActionType getCorrectiveActionType() {
 
 public void setCorrectiveActionType(CorrectiveActionType value) {
 	this.correctiveActionType = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -371,8 +418,7 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="MANAGER_EMPLOYEE_ID")
@@ -385,11 +431,10 @@ public Employee getManagerEmployee() {
 
 public void setManagerEmployee(Employee value) {
 	this.managerEmployee = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SUPERVISOR_MANAGER_EMPLOYEE_ID")
+@JoinColumn(name="SUPERVISORMANAGER_EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorManagerEmployeeOfSupervisorCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Employee supervisorManagerEmployee;
@@ -399,8 +444,7 @@ public Employee getSupervisorManagerEmployee() {
 
 public void setSupervisorManagerEmployee(Employee value) {
 	this.supervisorManagerEmployee = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="HR_EMPLOYEE_ID")
@@ -413,20 +457,18 @@ public Employee getHREmployee() {
 
 public void setHREmployee(Employee value) {
 	this.hREmployee = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorOfCorrectiveAction")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Supervisor supervisor;
 public Supervisor getSupervisor() {
 	return this.supervisor;
 }
 
-public void setSupervisor(Supervisor value) 
-{
+public void setSupervisor(Supervisor value) {
 	this.supervisor = value;
 }
 
@@ -509,6 +551,27 @@ public void setSupervisor(Supervisor value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Program property
+		objectJson += ",\"program\":";
+		
+		if (getProgram() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getProgram());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Discipline Type property
 		objectJson += ",\"disciplineType\":";
 		
@@ -519,6 +582,27 @@ public void setSupervisor(Supervisor value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDisciplineType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Reason property
+		objectJson += ",\"reason\":";
+		
+		if (getReason() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getReason());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -634,6 +718,27 @@ public void setSupervisor(Supervisor value)
 			objectJson += "null";
 		else {
 			objectJson += getExpireDate().getTime();
+		}
+		//Retrieve value of the Next Steps property
+		objectJson += ",\"nextSteps\":";
+		
+		if (getNextSteps() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getNextSteps());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the HR Approval Date property
 		objectJson += ",\"hRApprovalDate\":";
@@ -768,8 +873,12 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
 		//From value of the Details property
 		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
+		//From value of the Program property
+		setProgram(JsonUtils.getJsonString(jsonObject, "program"));
 		//From value of the Discipline Type property
 		setDisciplineType(JsonUtils.getJsonInteger(jsonObject, "disciplineType"));
+		//From value of the Reason property
+		setReason(JsonUtils.getJsonString(jsonObject, "reason"));
 		//From value of the Metric Ref property
 		setMetricRef(JsonUtils.getJsonString(jsonObject, "metricRef"));
 		//From value of the Session Id property
@@ -784,6 +893,8 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setClientId(JsonUtils.getJsonInteger(jsonObject, "clientId"));
 		//From value of the Expire Date property
 		setExpireDate(JsonUtils.getJsonDate(jsonObject, "expireDate"));
+		//From value of the Next Steps property
+		setNextSteps(JsonUtils.getJsonString(jsonObject, "nextSteps"));
 		//From value of the HR Approval Date property
 		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
 
@@ -815,4 +926,4 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		return listSetters;
 	}
 }
-
+

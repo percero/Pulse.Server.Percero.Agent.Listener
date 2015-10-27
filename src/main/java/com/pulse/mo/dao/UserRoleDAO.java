@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataAccessObject<UserRole> {
@@ -41,6 +44,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"USER_ROLE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"USER_ROLE\".\"ROLE_NAME\",\"USER_ROLE\".\"PULSE_USER_ID\"";
 	private String selectFromStatementTableName = " FROM \"USER_ROLE\" \"USER_ROLE\"";
 	private String whereClause = "  WHERE \"USER_ROLE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName + " WHERE \"USER_ROLE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"USER_ROLE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"USER_ROLE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 	
 	@Override
 	protected UserRole extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	UserRole nextResult = new UserRole();
     	
+		
+UserRole nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new UserRole();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,14 +164,17 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 		{
 			nextResult.setRoleName(rs.getString("ROLE_NAME"));
 
+
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(rs.getString("PULSE_USER_ID"));
 nextResult.setPulseUser(pulseuser);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

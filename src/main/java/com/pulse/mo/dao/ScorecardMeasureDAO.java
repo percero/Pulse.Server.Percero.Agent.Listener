@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> implements IDataAccessObject<ScorecardMeasure> {
@@ -41,7 +44,8 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"REWARD_ACTIVE\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_MEASURE\".\"ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"IS_REQUIRED\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"REWARD_ACTIVE\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\"";
 	private String whereClause = "  WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MEASURE\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName + " WHERE \"SCORECARD_MEASURE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SCORECARD_MEASURE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SCORECARD_MEASURE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"NAME\",\"REWARD_ACTIVE\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"IS_REQUIRED\",\"NAME\",\"REWARD_ACTIVE\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_MEASURE SET \"NAME\"=?,\"REWARD_ACTIVE\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_MEASURE SET \"IS_REQUIRED\"=?,\"NAME\"=?,\"REWARD_ACTIVE\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,55 +147,72 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected ScorecardMeasure extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	ScorecardMeasure nextResult = new ScorecardMeasure();
     	
+		
+ScorecardMeasure nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new ScorecardMeasure();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			nextResult.setName(rs.getString("NAME"));
+			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
+
+
+nextResult.setName(rs.getString("NAME"));
+
 
 nextResult.setRewardActive(rs.getString("REWARD_ACTIVE"));
+
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
+
 
 Measure measure = new Measure();
 measure.setID(rs.getString("MEASURE_ID"));
 nextResult.setMeasure(measure);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
 	protected void setBaseStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setString(3, perceroObject.getRewardActive());
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
+pstmt.setString(3, perceroObject.getName());
+pstmt.setString(4, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(4, null);
-}
-else
-{
-		pstmt.setString(4, perceroObject.getScorecard().getID());
-}
-
-
-if (perceroObject.getMeasure() == null)
 {
 pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getMeasure().getID());
+		pstmt.setString(5, perceroObject.getScorecard().getID());
+}
+
+
+if (perceroObject.getMeasure() == null)
+{
+pstmt.setString(6, null);
+}
+else
+{
+		pstmt.setString(6, perceroObject.getMeasure().getID());
 }
 
 
@@ -217,29 +238,30 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getName());
-pstmt.setString(2, perceroObject.getRewardActive());
+		JdbcHelper.setBoolean(pstmt,1, perceroObject.getIsRequired());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(3, null);
-}
-else
-{
-		pstmt.setString(3, perceroObject.getScorecard().getID());
-}
-
-
-if (perceroObject.getMeasure() == null)
 {
 pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getMeasure().getID());
+		pstmt.setString(4, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(5, perceroObject.getID());
+
+if (perceroObject.getMeasure() == null)
+{
+pstmt.setString(5, null);
+}
+else
+{
+		pstmt.setString(5, perceroObject.getMeasure().getID());
+}
+
+pstmt.setString(6, perceroObject.getID());
 
 		
 	}
@@ -268,11 +290,28 @@ pstmt.setString(5, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
+
+if (useIsRequired)
+{
+sql += " WHERE ";
+sql += " \"IS_REQUIRED\" =? ";
+paramValues.add(theQueryObject.getIsRequired());
+propertyCounter++;
+}
+
+boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
@@ -340,11 +379,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -352,6 +391,71 @@ propertyCounter++;
 	}
 	
 	
+public ScorecardMeasure createObject(ScorecardMeasure perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select SCORECARD_MEASURE_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

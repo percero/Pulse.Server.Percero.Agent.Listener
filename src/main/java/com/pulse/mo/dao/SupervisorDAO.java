@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements IDataAccessObject<Supervisor> {
@@ -41,6 +44,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"SUPERVISOR\".\"ID\"";
 	public static final String SQL_VIEW = ",\"SUPERVISOR\".\"EMAIL_ADDRESS\",\"SUPERVISOR\".\"FIRST_NAME\",\"SUPERVISOR\".\"LAST_NAME\",\"SUPERVISOR\".\"FULL_NAME\",\"SUPERVISOR\".\"PHOTO_URI\",\"SUPERVISOR\".\"MANAGER_SUPERVISOR_ID\"";
 	private String selectFromStatementTableName = " FROM \"SUPERVISOR\" \"SUPERVISOR\"";
 	private String whereClause = "  WHERE \"SUPERVISOR\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName + " WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SUPERVISOR\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SUPERVISOR\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 	
 	@Override
 	protected Supervisor extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Supervisor nextResult = new Supervisor();
     	
+		
+Supervisor nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Supervisor();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,22 +164,29 @@ public class SupervisorDAO extends SqlDataAccessObject<Supervisor> implements ID
 		{
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
+
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
+
 
 nextResult.setLastName(rs.getString("LAST_NAME"));
 
+
 nextResult.setFullName(rs.getString("FULL_NAME"));
 
+
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
+
 
 Supervisor managersupervisor = new Supervisor();
 managersupervisor.setID(rs.getString("MANAGER_SUPERVISOR_ID"));
 nextResult.setManagerSupervisor(managersupervisor);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -374,6 +393,71 @@ propertyCounter++;
 	}
 	
 	
+public Supervisor createObject(Supervisor perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select SUPERVISOR_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

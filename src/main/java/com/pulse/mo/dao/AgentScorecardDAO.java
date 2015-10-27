@@ -1,29 +1,33 @@
 
-package com.pulse.mo.dao;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
+package com.pulse.mo.dao;
+
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import com.percero.agents.sync.exceptions.SyncDataException;
+import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.StringUtils;
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.util.DateUtils;
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
 import com.pulse.dataprovider.IConnectionFactory;
-import com.pulse.mo.Agent;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.Scorecard;
-
+import com.percero.agents.sync.exceptions.SyncDataException;
+import com.pulse.mo.*;
 
 @Component
 public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> implements IDataAccessObject<AgentScorecard> {
@@ -43,6 +47,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"AGENT_SCORECARD\".\"ID\"";
 	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	private String whereClause = " ,(select ? As SQLID From Dual) WHERE AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLID,0,9) AND AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
@@ -59,7 +64,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +74,12 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +106,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +120,12 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"AGENT_SCORECARD\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -145,8 +150,17 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected AgentScorecard extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	AgentScorecard nextResult = new AgentScorecard();
     	
+		
+
+AgentScorecard nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new AgentScorecard();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -154,28 +168,37 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 		{
 			nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
+
 nextResult.setPointsPossible(rs.getDouble("POINTS_POSSIBLE"));
+
 
 nextResult.setPointsReceived(rs.getDouble("POINTS_RECEIVED"));
 
+
 nextResult.setScore(rs.getDouble("SCORE"));
+
 
 nextResult.setGrade(rs.getInt("GRADE"));
 
+
 nextResult.setQuartile(rs.getInt("QUARTILE"));
+
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
+
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -426,12 +449,12 @@ propertyCounter++;
 	
 	public List<Date> findCurrentWeekDates() throws SyncException {
 //		String sql = "SELECT * FROM AGENT_SCORECARD WHERE AGENT_ID=? AND WEEK_DATE>? ORDER BY WEEK_DATE DESC";
-		
+
 		List<Date> results = new ArrayList<Date>();
 		String sql = "SELECT DISTINCT(\"WEEK_DATE\") FROM \"AGENT_SCORECARD\" WHERE \"WEEK_DATE\">?";
-		
+
 		long timeStart = System.currentTimeMillis();
-		
+
 		// Open the database session.
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -441,12 +464,12 @@ propertyCounter++;
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setFetchSize(connectionFactory.getFetchSize());
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
-			
+
 			// Looking for past 4 weeks worth.
 			DateTime theDateTime = new DateTime();
 			theDateTime = theDateTime.minusMonths(1);
 			pstmt.setDate(1, DateUtils.utilDateToSqlDate(theDateTime.toDate()));
-			
+
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Date nextResult = DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE"));
@@ -467,16 +490,16 @@ propertyCounter++;
 				log.error("[AgentScorecardDAO] Error closing database statement/connection", e);
 			}
 		}
-		
+
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
 			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
 		}
-		
+
 		return results;
 	}
-	
+
 	@Override
 	protected String getUpdateCallableStatementSql() {
 		return "{call UPDATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?)}";
@@ -491,7 +514,74 @@ propertyCounter++;
 	}
 	
 	
+
+public AgentScorecard createObject(AgentScorecard perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select AGENT_SCORECARD_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
+
 	
 	
 }
-
+

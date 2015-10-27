@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,14 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<InvalidActivityCodeNotification> implements IDataAccessObject<InvalidActivityCodeNotification> {
@@ -43,7 +44,8 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
+	public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\"";
 	private String whereClause = "  WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"INV_ACTVTY_CODE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -59,7 +61,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +71,12 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +117,12 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"INV_ACTVTY_CODE_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"INV_ACTVTY_CODE_NOTIF\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -130,12 +132,12 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_INV_ACTVTY_CODE_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_INV_ACTVTY_CODE_NOTIF (\"ID\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_INV_ACTVTY_CODE_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_INV_ACTVTY_CODE_NOTIF SET \"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -145,69 +147,68 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 	
 	@Override
 	protected InvalidActivityCodeNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-
-		InvalidActivityCodeNotification nextResult = null;
-		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (InvalidActivityCodeNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
-
-
-		if (nextResult == null) {
-			nextResult = new InvalidActivityCodeNotification();
-		}
-
-
     	
+		
+InvalidActivityCodeNotification nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new InvalidActivityCodeNotification();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			nextResult.setType(rs.getString("TYPE"));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
+
 nextResult.setName(rs.getString("NAME"));
+
+
+nextResult.setType(rs.getString("TYPE"));
+
 
 Agent agent = new Agent();
 agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
 
+
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
 nextResult.setLOBConfiguration(lobconfiguration);
 
+
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
 nextResult.setTeamLeader(teamleader);
+
 
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
 	protected void setBaseStatmentInsertParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(4, perceroObject.getMessage());
-pstmt.setString(5, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
+pstmt.setString(5, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -271,10 +272,10 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(InvalidActivityCodeNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(2, perceroObject.getMessage());
+pstmt.setString(3, perceroObject.getName());
+pstmt.setString(4, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -344,28 +345,11 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-sql += " WHERE ";
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -402,6 +386,23 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
@@ -499,4 +500,4 @@ propertyCounter++;
 	
 	
 }
-
+

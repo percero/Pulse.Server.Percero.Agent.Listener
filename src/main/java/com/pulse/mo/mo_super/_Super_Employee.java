@@ -174,46 +174,7 @@ public void setFullName(String fullName)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="managerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> managerCorrectiveActions;
-public List<CorrectiveAction> getManagerCorrectiveActions() {
-	return this.managerCorrectiveActions;
-}
-
-public void setManagerCorrectiveActions(List<CorrectiveAction> value) {
-	this.managerCorrectiveActions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="supervisorManagerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> supervisorCorrectiveActions;
-public List<CorrectiveAction> getSupervisorCorrectiveActions() {
-	return this.supervisorCorrectiveActions;
-}
-
-public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
-	this.supervisorCorrectiveActions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="hREmployee", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> hRCorrectiveActions;
-public List<CorrectiveAction> getHRCorrectiveActions() {
-	return this.hRCorrectiveActions;
-}
-
-public void setHRCorrectiveActions(List<CorrectiveAction> value) {
-	this.hRCorrectiveActions = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -340,57 +301,6 @@ public void setHRCorrectiveActions(List<CorrectiveAction> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Manager Employee of Manager Corrective Action relationship
-objectJson += ",\"managerCorrectiveActions\":[";
-		
-		if (getManagerCorrectiveActions() != null) {
-			int managerCorrectiveActionsCounter = 0;
-			for(CorrectiveAction nextManagerCorrectiveActions : getManagerCorrectiveActions()) {
-				if (managerCorrectiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextManagerCorrectiveActions).toEmbeddedJson();
-					managerCorrectiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the Supervisor Manager Employee of Supervisor Corrective Action relationship
-objectJson += ",\"supervisorCorrectiveActions\":[";
-		
-		if (getSupervisorCorrectiveActions() != null) {
-			int supervisorCorrectiveActionsCounter = 0;
-			for(CorrectiveAction nextSupervisorCorrectiveActions : getSupervisorCorrectiveActions()) {
-				if (supervisorCorrectiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextSupervisorCorrectiveActions).toEmbeddedJson();
-					supervisorCorrectiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-//Retrieve value of the HR Employee of HR Corrective Action relationship
-objectJson += ",\"hRCorrectiveActions\":[";
-		
-		if (getHRCorrectiveActions() != null) {
-			int hRCorrectiveActionsCounter = 0;
-			for(CorrectiveAction nextHRCorrectiveActions : getHRCorrectiveActions()) {
-				if (hRCorrectiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextHRCorrectiveActions).toEmbeddedJson();
-					hRCorrectiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -418,9 +328,6 @@ objectJson += ",\"hRCorrectiveActions\":[";
 
 
 		// Target Relationships
-		this.managerCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "managerCorrectiveActions");
-		this.supervisorCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "supervisorCorrectiveActions");
-		this.hRCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "hRCorrectiveActions");
 
 
 	}
@@ -430,9 +337,6 @@ objectJson += ",\"hRCorrectiveActions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
 
 		
 		return listSetters;

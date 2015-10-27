@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSessionAttachment> implements IDataAccessObject<CoachingSessionAttachment> {
@@ -41,7 +44,8 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COACH_ATTACHMENT\".\"NAME\",\"COACH_ATTACHMENT\".\"CREATED_ON\",\"COACH_ATTACHMENT\".\"UPDATED_ON\",\"COACH_ATTACHMENT\".\"CREATED_BY\",\"COACH_ATTACHMENT\".\"DESCRIPTION\",\"COACH_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACH_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACH_ATTACHMENT\".\"TYPE\",\"COACH_ATTACHMENT\".\"UPDATED_BY\",\"COACH_ATTACHMENT\".\"VERSION\",\"COACH_ATTACHMENT\".\"COACHING_SESSION_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"COACH_ATTACHMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"COACH_ATTACHMENT\".\"NAME\",\"COACH_ATTACHMENT\".\"CREATED_ON\",\"COACH_ATTACHMENT\".\"UPDATED_ON\",\"COACH_ATTACHMENT\".\"TYPE\",\"COACH_ATTACHMENT\".\"CREATED_BY\",\"COACH_ATTACHMENT\".\"DESCRIPTION\",\"COACH_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACH_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACH_ATTACHMENT\".\"UPDATED_BY\",\"COACH_ATTACHMENT\".\"VERSION\",\"COACH_ATTACHMENT\".\"COACHING_SESSION_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACH_ATTACHMENT\" \"COACH_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"COACH_ATTACHMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACH_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACH_ATTACHMENT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COACH_ATTACHMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACH_ATTACHMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACH_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"TYPE\",\"UPDATED_BY\",\"VERSION\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACH_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACH_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACH_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,8 +147,16 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected CoachingSessionAttachment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	CoachingSessionAttachment nextResult = new CoachingSessionAttachment();
     	
+		
+CoachingSessionAttachment nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new CoachingSessionAttachment();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,32 +164,44 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 		{
 			nextResult.setName(rs.getString("NAME"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
+
+nextResult.setType(rs.getInt("TYPE"));
+
+
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
 
 nextResult.setDescription(rs.getString("DESCRIPTION"));
 
+
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
 
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
 
-nextResult.setType(rs.getString("TYPE"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
+
 nextResult.setVersion(rs.getString("VERSION"));
+
 
 CoachingSession coachingsession = new CoachingSession();
 coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
 nextResult.setCoachingSession(coachingsession);
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -187,11 +211,11 @@ nextResult.setCoachingSession(coachingsession);
 pstmt.setString(2, perceroObject.getName());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setString(6, perceroObject.getDescription());
-pstmt.setString(7, perceroObject.getEmployeeId());
-pstmt.setString(8, perceroObject.getTempStoreId());
-pstmt.setString(9, perceroObject.getType());
+JdbcHelper.setInt(pstmt,5, perceroObject.getType());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(7, perceroObject.getDescription());
+pstmt.setString(8, perceroObject.getEmployeeId());
+pstmt.setString(9, perceroObject.getTempStoreId());
 pstmt.setString(10, perceroObject.getUpdatedBy());
 pstmt.setString(11, perceroObject.getVersion());
 
@@ -230,11 +254,11 @@ else
 		pstmt.setString(1, perceroObject.getName());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(4, perceroObject.getCreatedBy());
-pstmt.setString(5, perceroObject.getDescription());
-pstmt.setString(6, perceroObject.getEmployeeId());
-pstmt.setString(7, perceroObject.getTempStoreId());
-pstmt.setString(8, perceroObject.getType());
+JdbcHelper.setInt(pstmt,4, perceroObject.getType());
+pstmt.setString(5, perceroObject.getCreatedBy());
+pstmt.setString(6, perceroObject.getDescription());
+pstmt.setString(7, perceroObject.getEmployeeId());
+pstmt.setString(8, perceroObject.getTempStoreId());
 pstmt.setString(9, perceroObject.getUpdatedBy());
 pstmt.setString(10, perceroObject.getVersion());
 
@@ -320,6 +344,23 @@ paramValues.add(theQueryObject.getUpdatedOn());
 propertyCounter++;
 }
 
+boolean useType = theQueryObject.getType() != null && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
 boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
 if (useCreatedBy)
@@ -385,23 +426,6 @@ sql += " WHERE ";
 }
 sql += " \"TEMP_STORE_ID\" =? ";
 paramValues.add(theQueryObject.getTempStoreId());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
@@ -479,6 +503,71 @@ propertyCounter++;
 	}
 	
 	
+public CoachingSessionAttachment createObject(CoachingSessionAttachment perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select COACH_ATTACHMENT_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }
