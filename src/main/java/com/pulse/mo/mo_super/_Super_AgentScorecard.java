@@ -243,6 +243,19 @@ public void setCoachingSessions(List<CoachingSession> value) {
 	this.coachingSessions = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyScore.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<ScorecardWeeklyScore> scorecardWeeklyScores;
+public List<ScorecardWeeklyScore> getScorecardWeeklyScores() {
+	return this.scorecardWeeklyScores;
+}
+
+public void setScorecardWeeklyScores(List<ScorecardWeeklyScore> value) {
+	this.scorecardWeeklyScores = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
@@ -453,6 +466,23 @@ objectJson += ",\"coachingSessions\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Agent Scorecard of Scorecard Weekly Score relationship
+objectJson += ",\"scorecardWeeklyScores\":[";
+		
+		if (getScorecardWeeklyScores() != null) {
+			int scorecardWeeklyScoresCounter = 0;
+			for(ScorecardWeeklyScore nextScorecardWeeklyScores : getScorecardWeeklyScores()) {
+				if (scorecardWeeklyScoresCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextScorecardWeeklyScores).toEmbeddedJson();
+					scorecardWeeklyScoresCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -488,6 +518,7 @@ objectJson += ",\"coachingSessions\":[";
 		this.scorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyResults");
 		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
+		this.scorecardWeeklyScores = (List<ScorecardWeeklyScore>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyScores");
 
 
 	}
@@ -501,6 +532,7 @@ objectJson += ",\"coachingSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
+		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyScore.class, "agentscorecard"));
 
 		
 		return listSetters;

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -176,7 +177,8 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	protected AdhocTask extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-AdhocTask nextResult = null;
+
+AdhocTask nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -614,7 +616,8 @@ propertyCounter++;
 	}
 	
 	
-public AdhocTask createObject(AdhocTask perceroObject, String userId)
+
+public AdhocTask createObject(AdhocTask perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -677,9 +680,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

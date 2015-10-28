@@ -45,7 +45,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
-	public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\"";
 	private String whereClause = "  WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_OCCURRENCE_TOLERANCE_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_OCCURRENCE_TOLERANCE_NOTIF (\"ID\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_OCCURRENCE_TOLERANCE_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_OCCURRENCE_TOLERANCE_NOTIF SET \"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,16 +162,16 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
     	
     	if (!shellOnly) 
 		{
-			nextResult.setType(rs.getString("TYPE"));
-
-
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
 
 nextResult.setName(rs.getString("NAME"));
+
+
+nextResult.setType(rs.getString("TYPE"));
 
 
 Agent agent = new Agent();
@@ -205,10 +205,10 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 	protected void setBaseStatmentInsertParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(4, perceroObject.getMessage());
-pstmt.setString(5, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
+pstmt.setString(5, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -272,10 +272,10 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(OccurrenceToleranceNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(2, perceroObject.getMessage());
+pstmt.setString(3, perceroObject.getName());
+pstmt.setString(4, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -345,28 +345,11 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-sql += " WHERE ";
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -403,6 +386,23 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

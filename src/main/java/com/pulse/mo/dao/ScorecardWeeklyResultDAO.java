@@ -45,7 +45,7 @@ public class ScorecardWeeklyResultDAO extends SqlDataAccessObject<ScorecardWeekl
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCARD_WEEKLY_RESULT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCARD_WEEKLY_RESULT\".\"IS_COACHABLE\",\"SCARD_WEEKLY_RESULT\".\"UPDATED_BY\",\"SCARD_WEEKLY_RESULT\".\"CREATED_BY\",\"SCARD_WEEKLY_RESULT\".\"EMPLOYEE_ID\",\"SCARD_WEEKLY_RESULT\".\"CREATED_ON\",\"SCARD_WEEKLY_RESULT\".\"UPDATED_ON\",\"SCARD_WEEKLY_RESULT\".\"WEEK_DATE\",\"SCARD_WEEKLY_RESULT\".\"PERCENTAGE_ATTAINMENT\",\"SCARD_WEEKLY_RESULT\".\"POINTS_POSSIBLE\",\"SCARD_WEEKLY_RESULT\".\"POINTS_RECEIVED\",\"SCARD_WEEKLY_RESULT\".\"RESULT\",\"SCARD_WEEKLY_RESULT\".\"DURATION_FROM\",\"SCARD_WEEKLY_RESULT\".\"DURATION_TO\",\"SCARD_WEEKLY_RESULT\".\"EXCLUDED\",\"SCARD_WEEKLY_RESULT\".\"GOAL_TYPE\",\"SCARD_WEEKLY_RESULT\".\"GRADE\",\"SCARD_WEEKLY_RESULT\".\"QUARTILE\",\"SCARD_WEEKLY_RESULT\".\"ROLLUP_TYPE\",\"SCARD_WEEKLY_RESULT\".\"AGENT_SCORECARD_ID\",\"SCARD_WEEKLY_RESULT\".\"GOAL_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_MEASURE_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_MONTHLY_RESULT_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_ID\" ";
+	public static final String SQL_VIEW = ",\"SCARD_WEEKLY_RESULT\".\"IS_COACHABLE\",\"SCARD_WEEKLY_RESULT\".\"UPDATED_BY\",\"SCARD_WEEKLY_RESULT\".\"CREATED_BY\",\"SCARD_WEEKLY_RESULT\".\"EMPLOYEE_ID\",\"SCARD_WEEKLY_RESULT\".\"CREATED_ON\",\"SCARD_WEEKLY_RESULT\".\"UPDATED_ON\",\"SCARD_WEEKLY_RESULT\".\"WEEK_DATE\",\"SCARD_WEEKLY_RESULT\".\"PERCENTAGE_ATTAINMENT\",\"SCARD_WEEKLY_RESULT\".\"POINTS_POSSIBLE\",\"SCARD_WEEKLY_RESULT\".\"POINTS_RECEIVED\",\"SCARD_WEEKLY_RESULT\".\"RESULT\",\"SCARD_WEEKLY_RESULT\".\"DURATION_FROM\",\"SCARD_WEEKLY_RESULT\".\"DURATION_TO\",\"SCARD_WEEKLY_RESULT\".\"EXCLUDED\",\"SCARD_WEEKLY_RESULT\".\"GOAL_TYPE\",\"SCARD_WEEKLY_RESULT\".\"GRADE\",\"SCARD_WEEKLY_RESULT\".\"QUARTILE\",\"SCARD_WEEKLY_RESULT\".\"ROLLUP_TYPE\",\"SCARD_WEEKLY_RESULT\".\"AGENT_ID\",\"SCARD_WEEKLY_RESULT\".\"AGENT_SCORECARD_ID\",\"SCARD_WEEKLY_RESULT\".\"GOAL_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_MEASURE_ID\",\"SCARD_WEEKLY_RESULT\".\"SCORECARD_MONTHLY_RESULT_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCARD_WEEKLY_RESULT\" \"SCARD_WEEKLY_RESULT\"";
 	private String whereClause = "  WHERE \"SCARD_WEEKLY_RESULT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCARD_WEEKLY_RESULT\".\"ID\"= SQLLIST.column_value";
@@ -141,12 +141,12 @@ return "SELECT \"SCARD_WEEKLY_RESULT\".\"ID\" " + selectFromStatementTableName +
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCARD_WEEKLY_RESULT (\"ID\",\"IS_COACHABLE\",\"UPDATED_BY\",\"CREATED_BY\",\"EMPLOYEE_ID\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"PERCENTAGE_ATTAINMENT\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"RESULT\",\"DURATION_FROM\",\"DURATION_TO\",\"EXCLUDED\",\"GOAL_TYPE\",\"GRADE\",\"QUARTILE\",\"ROLLUP_TYPE\",\"AGENT_SCORECARD_ID\",\"GOAL_ID\",\"SCORECARD_MEASURE_ID\",\"SCORECARD_MONTHLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCARD_WEEKLY_RESULT (\"ID\",\"IS_COACHABLE\",\"UPDATED_BY\",\"CREATED_BY\",\"EMPLOYEE_ID\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"PERCENTAGE_ATTAINMENT\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"RESULT\",\"DURATION_FROM\",\"DURATION_TO\",\"EXCLUDED\",\"GOAL_TYPE\",\"GRADE\",\"QUARTILE\",\"ROLLUP_TYPE\",\"AGENT_ID\",\"AGENT_SCORECARD_ID\",\"GOAL_ID\",\"SCORECARD_ID\",\"SCORECARD_MEASURE_ID\",\"SCORECARD_MONTHLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCARD_WEEKLY_RESULT SET \"IS_COACHABLE\"=?,\"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"EMPLOYEE_ID\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"RESULT\"=?,\"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"EXCLUDED\"=?,\"GOAL_TYPE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"ROLLUP_TYPE\"=?,\"AGENT_SCORECARD_ID\"=?,\"GOAL_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCORECARD_MONTHLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCARD_WEEKLY_RESULT SET \"IS_COACHABLE\"=?,\"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"EMPLOYEE_ID\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"RESULT\"=?,\"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"EXCLUDED\"=?,\"GOAL_TYPE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"ROLLUP_TYPE\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"GOAL_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCORECARD_MONTHLY_RESULT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -225,6 +225,11 @@ nextResult.setQuartile(rs.getInt("QUARTILE"));
 nextResult.setRollupType(rs.getInt("ROLLUP_TYPE"));
 
 
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
+
+
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
 nextResult.setAgentScorecard(agentscorecard);
@@ -233,6 +238,11 @@ nextResult.setAgentScorecard(agentscorecard);
 Goal goal = new Goal();
 goal.setID(rs.getString("GOAL_ID"));
 nextResult.setGoal(goal);
+
+
+Scorecard scorecard = new Scorecard();
+scorecard.setID(rs.getString("SCORECARD_ID"));
+nextResult.setScorecard(scorecard);
 
 
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
@@ -275,43 +285,63 @@ JdbcHelper.setInt(pstmt,17, perceroObject.getGrade());
 JdbcHelper.setInt(pstmt,18, perceroObject.getQuartile());
 JdbcHelper.setInt(pstmt,19, perceroObject.getRollupType());
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(20, null);
 }
 else
 {
-		pstmt.setString(20, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(20, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getGoal() == null)
+if (perceroObject.getAgentScorecard() == null)
 {
 pstmt.setString(21, null);
 }
 else
 {
-		pstmt.setString(21, perceroObject.getGoal().getID());
+		pstmt.setString(21, perceroObject.getAgentScorecard().getID());
 }
 
 
-if (perceroObject.getScorecardMeasure() == null)
+if (perceroObject.getGoal() == null)
 {
 pstmt.setString(22, null);
 }
 else
 {
-		pstmt.setString(22, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(22, perceroObject.getGoal().getID());
 }
 
 
-if (perceroObject.getScorecardMonthlyResult() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(23, null);
 }
 else
 {
-		pstmt.setString(23, perceroObject.getScorecardMonthlyResult().getID());
+		pstmt.setString(23, perceroObject.getScorecard().getID());
+}
+
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(24, null);
+}
+else
+{
+		pstmt.setString(24, perceroObject.getScorecardMeasure().getID());
+}
+
+
+if (perceroObject.getScorecardMonthlyResult() == null)
+{
+pstmt.setString(25, null);
+}
+else
+{
+		pstmt.setString(25, perceroObject.getScorecardMonthlyResult().getID());
 }
 
 
@@ -356,46 +386,66 @@ JdbcHelper.setInt(pstmt,16, perceroObject.getGrade());
 JdbcHelper.setInt(pstmt,17, perceroObject.getQuartile());
 JdbcHelper.setInt(pstmt,18, perceroObject.getRollupType());
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(19, null);
 }
 else
 {
-		pstmt.setString(19, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(19, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getGoal() == null)
+if (perceroObject.getAgentScorecard() == null)
 {
 pstmt.setString(20, null);
 }
 else
 {
-		pstmt.setString(20, perceroObject.getGoal().getID());
+		pstmt.setString(20, perceroObject.getAgentScorecard().getID());
 }
 
 
-if (perceroObject.getScorecardMeasure() == null)
+if (perceroObject.getGoal() == null)
 {
 pstmt.setString(21, null);
 }
 else
 {
-		pstmt.setString(21, perceroObject.getScorecardMeasure().getID());
+		pstmt.setString(21, perceroObject.getGoal().getID());
 }
 
 
-if (perceroObject.getScorecardMonthlyResult() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(22, null);
 }
 else
 {
-		pstmt.setString(22, perceroObject.getScorecardMonthlyResult().getID());
+		pstmt.setString(22, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(23, perceroObject.getID());
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(23, null);
+}
+else
+{
+		pstmt.setString(23, perceroObject.getScorecardMeasure().getID());
+}
+
+
+if (perceroObject.getScorecardMonthlyResult() == null)
+{
+pstmt.setString(24, null);
+}
+else
+{
+		pstmt.setString(24, perceroObject.getScorecardMonthlyResult().getID());
+}
+
+pstmt.setString(25, perceroObject.getID());
 
 		
 	}
@@ -723,6 +773,23 @@ paramValues.add(theQueryObject.getRollupType());
 propertyCounter++;
 }
 
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
+propertyCounter++;
+}
+
 boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
 
 if (useAgentScorecardID)
@@ -754,6 +821,23 @@ sql += " WHERE ";
 }
 sql += " \"GOAL_ID\" =? ";
 paramValues.add(theQueryObject.getGoal().getID());
+propertyCounter++;
+}
+
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
@@ -802,11 +886,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCARD_WEEKLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SCARD_WEEKLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCARD_WEEKLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SCARD_WEEKLY_RESULT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

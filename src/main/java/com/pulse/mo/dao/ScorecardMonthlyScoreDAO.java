@@ -45,7 +45,7 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_MONTHLY_SCORE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_MONTHLY_SCORE\".\"CREATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"END_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"START_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_MONTHLY_SCORE\".\"SCORE\",\"SCORECARD_MONTHLY_SCORE\".\"GRADE\",\"SCORECARD_MONTHLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_MONTHLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE\".\"AGENT_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_MONTHLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_MONTHLY_SCORE\".\"CREATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"END_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"START_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_MONTHLY_SCORE\".\"SCORE\",\"SCORECARD_MONTHLY_SCORE\".\"GRADE\",\"SCORECARD_MONTHLY_SCORE\".\"AGENT_ID\",\"SCORECARD_MONTHLY_SCORE\".\"SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MONTHLY_SCORE\" \"SCORECARD_MONTHLY_SCORE\"";
 	private String whereClause = "  WHERE \"SCORECARD_MONTHLY_SCORE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MONTHLY_SCORE\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_MONTHLY_SCORE (\"ID\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"SCORECARD_ID\",\"AGENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_MONTHLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_MONTHLY_SCORE SET \"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"SCORECARD_ID\"=?,\"AGENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_MONTHLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,7 +162,13 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+			nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
+
+nextResult.setIntervalType(rs.getString("INTERVAL_TYPE"));
+
+
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
 nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
@@ -186,20 +192,14 @@ nextResult.setScore(rs.getDouble("SCORE"));
 nextResult.setGrade(rs.getInt("GRADE"));
 
 
-nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
-
-
-nextResult.setIntervalType(rs.getString("INTERVAL_TYPE"));
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 
 Scorecard scorecard = new Scorecard();
 scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
-
-
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-nextResult.setAgent(agent);
 
 
 
@@ -213,34 +213,34 @@ nextResult.setAgent(agent);
 	protected void setBaseStatmentInsertParams(ScorecardMonthlyScore perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setDouble(pstmt,6, perceroObject.getPointsPossible());
-JdbcHelper.setDouble(pstmt,7, perceroObject.getPointsReceived());
-JdbcHelper.setDouble(pstmt,8, perceroObject.getScore());
-JdbcHelper.setInt(pstmt,9, perceroObject.getGrade());
-pstmt.setString(10, perceroObject.getEmployeeId());
-pstmt.setString(11, perceroObject.getIntervalType());
+pstmt.setString(2, perceroObject.getEmployeeId());
+pstmt.setString(3, perceroObject.getIntervalType());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setDouble(pstmt,8, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,9, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,10, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,11, perceroObject.getGrade());
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getScorecard().getID());
+		pstmt.setString(12, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getAgent().getID());
+		pstmt.setString(13, perceroObject.getScorecard().getID());
 }
 
 
@@ -266,34 +266,34 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMonthlyScore perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setDouble(pstmt,5, perceroObject.getPointsPossible());
-JdbcHelper.setDouble(pstmt,6, perceroObject.getPointsReceived());
-JdbcHelper.setDouble(pstmt,7, perceroObject.getScore());
-JdbcHelper.setInt(pstmt,8, perceroObject.getGrade());
-pstmt.setString(9, perceroObject.getEmployeeId());
-pstmt.setString(10, perceroObject.getIntervalType());
+		pstmt.setString(1, perceroObject.getEmployeeId());
+pstmt.setString(2, perceroObject.getIntervalType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setDouble(pstmt,7, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,8, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,9, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,10, perceroObject.getGrade());
 
-if (perceroObject.getScorecard() == null)
+if (perceroObject.getAgent() == null)
 {
 pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getScorecard().getID());
+		pstmt.setString(11, perceroObject.getAgent().getID());
 }
 
 
-if (perceroObject.getAgent() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getAgent().getID());
+		pstmt.setString(12, perceroObject.getScorecard().getID());
 }
 
 pstmt.setString(13, perceroObject.getID());
@@ -325,11 +325,45 @@ pstmt.setString(13, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+if (useEmployeeId)
+{
+sql += " WHERE ";
+sql += " \"EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getEmployeeId());
+propertyCounter++;
+}
+
+boolean useIntervalType = StringUtils.hasText(theQueryObject.getIntervalType()) && (excludeProperties == null || !excludeProperties.contains("intervalType"));
+
+if (useIntervalType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"INTERVAL_TYPE\" =? ";
+paramValues.add(theQueryObject.getIntervalType());
+propertyCounter++;
+}
+
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -454,9 +488,9 @@ paramValues.add(theQueryObject.getGrade());
 propertyCounter++;
 }
 
-boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
 
-if (useEmployeeId)
+if (useAgentID)
 {
 if (propertyCounter > 0)
 {
@@ -466,25 +500,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"EMPLOYEE_ID\" =? ";
-paramValues.add(theQueryObject.getEmployeeId());
-propertyCounter++;
-}
-
-boolean useIntervalType = StringUtils.hasText(theQueryObject.getIntervalType()) && (excludeProperties == null || !excludeProperties.contains("intervalType"));
-
-if (useIntervalType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"INTERVAL_TYPE\" =? ";
-paramValues.add(theQueryObject.getIntervalType());
+sql += " \"AGENT_ID\" =? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
@@ -502,23 +519,6 @@ sql += " WHERE ";
 }
 sql += " \"SCORECARD_ID\" =? ";
 paramValues.add(theQueryObject.getScorecard().getID());
-propertyCounter++;
-}
-
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
-
-if (useAgentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"AGENT_ID\" =? ";
-paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

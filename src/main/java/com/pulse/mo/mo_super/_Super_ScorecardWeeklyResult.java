@@ -403,6 +403,32 @@ public void setDurationTo(Integer durationTo)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfScorecardWeeklyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Agent agent;
+public Agent getAgent() {
+	return this.agent;
+}
+
+public void setAgent(Agent value) {
+	this.agent = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfScorecardWeeklyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
+}
+
+public void setScorecard(Scorecard value) {
+	this.scorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfScorecardWeeklyResult")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -732,6 +758,30 @@ public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 
 				
 		// Source Relationships
+//Retrieve value of the Agent of Scorecard Weekly Result relationship
+objectJson += ",\"agent\":";
+		if (getAgent() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Scorecard of Scorecard Weekly Result relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Agent Scorecard of Scorecard Weekly Result relationship
 objectJson += ",\"agentScorecard\":";
 		if (getAgentScorecard() == null)
@@ -833,6 +883,8 @@ objectJson += ",\"scorecardMonthlyResult\":";
 
 		
 		// Source Relationships
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");

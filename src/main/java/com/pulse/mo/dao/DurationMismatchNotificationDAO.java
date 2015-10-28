@@ -45,7 +45,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"DURATION_MISMATCH_NOTIF\".\"ID\"";
-	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\"";
+	public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\"";
 	private String selectFromStatementTableName = " FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
 	private String whereClause = "  WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DURATION_MISMATCH_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"END_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"TIMECARD_ACTIVITY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DURATION_MISMATCH_NOTIF (\"ID\",\"CREATED_ON\",\"END_TIME\",\"DURATION\",\"AUX_CODE_ENTRY_NAME\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"TIMECARD_ACTIVITY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DURATION_MISMATCH_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"END_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"TIMECARD_ACTIVITY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DURATION_MISMATCH_NOTIF SET \"CREATED_ON\"=?,\"END_TIME\"=?,\"DURATION\"=?,\"AUX_CODE_ENTRY_NAME\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"TIMECARD_ACTIVITY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,10 +162,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
     	
     	if (!shellOnly) 
 		{
-			nextResult.setType(rs.getString("TYPE"));
-
-
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
 nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
@@ -181,6 +178,9 @@ nextResult.setMessage(rs.getString("MESSAGE"));
 
 
 nextResult.setName(rs.getString("NAME"));
+
+
+nextResult.setType(rs.getString("TYPE"));
 
 
 Agent agent = new Agent();
@@ -214,13 +214,13 @@ nextResult.setTimecardActivity(timecardactivity);
 	protected void setBaseStatmentInsertParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-JdbcHelper.setDouble(pstmt,5, perceroObject.getDuration());
-pstmt.setString(6, perceroObject.getAuxCodeEntryName());
-pstmt.setString(7, perceroObject.getMessage());
-pstmt.setString(8, perceroObject.getName());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+JdbcHelper.setDouble(pstmt,4, perceroObject.getDuration());
+pstmt.setString(5, perceroObject.getAuxCodeEntryName());
+pstmt.setString(6, perceroObject.getMessage());
+pstmt.setString(7, perceroObject.getName());
+pstmt.setString(8, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -284,13 +284,13 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-JdbcHelper.setDouble(pstmt,4, perceroObject.getDuration());
-pstmt.setString(5, perceroObject.getAuxCodeEntryName());
-pstmt.setString(6, perceroObject.getMessage());
-pstmt.setString(7, perceroObject.getName());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
+JdbcHelper.setDouble(pstmt,3, perceroObject.getDuration());
+pstmt.setString(4, perceroObject.getAuxCodeEntryName());
+pstmt.setString(5, perceroObject.getMessage());
+pstmt.setString(6, perceroObject.getName());
+pstmt.setString(7, perceroObject.getType());
 
 if (perceroObject.getAgent() == null)
 {
@@ -360,28 +360,11 @@ pstmt.setString(12, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-sql += " WHERE ";
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -469,6 +452,23 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

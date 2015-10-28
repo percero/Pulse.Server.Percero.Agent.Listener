@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+EvaluationName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String evaluationName;
+
+public String getEvaluationName() 
+{
+	return this.evaluationName;
+}
+
+public void setEvaluationName(String evaluationName)
+{
+	this.evaluationName = evaluationName;
+}/*
 UpdatedBy
 Notes:
 */
@@ -101,6 +118,23 @@ public String getUpdatedBy()
 public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
+}/*
+ResponsibleCoach
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String responsibleCoach;
+
+public String getResponsibleCoach() 
+{
+	return this.responsibleCoach;
+}
+
+public void setResponsibleCoach(String responsibleCoach)
+{
+	this.responsibleCoach = responsibleCoach;
 }/*
 NiceAppServer
 Notes:
@@ -310,6 +344,27 @@ public void setAgentScorecard(AgentScorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Evaluation Name property
+		objectJson += ",\"evaluationName\":";
+		
+		if (getEvaluationName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEvaluationName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
 		
@@ -320,6 +375,27 @@ public void setAgentScorecard(AgentScorecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Responsible Coach property
+		objectJson += ",\"responsibleCoach\":";
+		
+		if (getResponsibleCoach() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getResponsibleCoach());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -508,8 +584,12 @@ objectJson += ",\"agentScorecard\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Evaluation Name property
+		setEvaluationName(JsonUtils.getJsonString(jsonObject, "evaluationName"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Responsible Coach property
+		setResponsibleCoach(JsonUtils.getJsonString(jsonObject, "responsibleCoach"));
 		//From value of the Nice App Server property
 		setNiceAppServer(JsonUtils.getJsonString(jsonObject, "niceAppServer"));
 		//From value of the Manual Details property

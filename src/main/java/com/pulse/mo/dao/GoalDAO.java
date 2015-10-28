@@ -45,7 +45,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"GOAL\".\"ID\"";
-	public static final String SQL_VIEW = ",\"GOAL\".\"DURATION_FROM\",\"GOAL\".\"DURATION_TO\",\"GOAL\".\"UPDATED_BY\",\"GOAL\".\"CREATED_ON\",\"GOAL\".\"END_DATE\",\"GOAL\".\"START_DATE\",\"GOAL\".\"UPDATED_ON\",\"GOAL\".\"GOAL_TYPE\",\"GOAL\".\"GOAL_VALUE\",\"GOAL\".\"CREATED_BY\",\"GOAL\".\"SCORECARD_MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"GOAL\".\"UPDATED_BY\",\"GOAL\".\"CREATED_ON\",\"GOAL\".\"END_DATE\",\"GOAL\".\"START_DATE\",\"GOAL\".\"UPDATED_ON\",\"GOAL\".\"DURATION_FROM\",\"GOAL\".\"DURATION_TO\",\"GOAL\".\"GOAL_TYPE\",\"GOAL\".\"GOAL_VALUE\",\"GOAL\".\"CREATED_BY\",\"GOAL\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"GOAL\" \"GOAL\"";
 	private String whereClause = "  WHERE \"GOAL\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"GOAL\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_GOAL (\"ID\",\"DURATION_FROM\",\"DURATION_TO\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"GOAL_TYPE\",\"GOAL_VALUE\",\"CREATED_BY\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_GOAL (\"ID\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"DURATION_FROM\",\"DURATION_TO\",\"GOAL_TYPE\",\"GOAL_VALUE\",\"CREATED_BY\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_GOAL SET \"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"GOAL_TYPE\"=?,\"GOAL_VALUE\"=?,\"CREATED_BY\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_GOAL SET \"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"DURATION_FROM\"=?,\"DURATION_TO\"=?,\"GOAL_TYPE\"=?,\"GOAL_VALUE\"=?,\"CREATED_BY\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,13 +162,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
     	
     	if (!shellOnly) 
 		{
-			nextResult.setDurationFrom(rs.getInt("DURATION_FROM"));
-
-
-nextResult.setDurationTo(rs.getInt("DURATION_TO"));
-
-
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
@@ -181,6 +175,12 @@ nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("STAR
 
 
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+
+
+nextResult.setDurationFrom(rs.getInt("DURATION_FROM"));
+
+
+nextResult.setDurationTo(rs.getInt("DURATION_TO"));
 
 
 nextResult.setGoalType(rs.getInt("GOAL_TYPE"));
@@ -208,13 +208,13 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setBaseStatmentInsertParams(Goal perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-JdbcHelper.setInt(pstmt,2, perceroObject.getDurationFrom());
-JdbcHelper.setInt(pstmt,3, perceroObject.getDurationTo());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setString(2, perceroObject.getUpdatedBy());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,7, perceroObject.getDurationFrom());
+JdbcHelper.setInt(pstmt,8, perceroObject.getDurationTo());
 JdbcHelper.setInt(pstmt,9, perceroObject.getGoalType());
 JdbcHelper.setInt(pstmt,10, perceroObject.getGoalValue());
 pstmt.setString(11, perceroObject.getCreatedBy());
@@ -251,13 +251,13 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(Goal perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		JdbcHelper.setInt(pstmt,1, perceroObject.getDurationFrom());
-JdbcHelper.setInt(pstmt,2, perceroObject.getDurationTo());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+		pstmt.setString(1, perceroObject.getUpdatedBy());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,6, perceroObject.getDurationFrom());
+JdbcHelper.setInt(pstmt,7, perceroObject.getDurationTo());
 JdbcHelper.setInt(pstmt,8, perceroObject.getGoalType());
 JdbcHelper.setInt(pstmt,9, perceroObject.getGoalValue());
 pstmt.setString(10, perceroObject.getCreatedBy());
@@ -300,45 +300,11 @@ pstmt.setString(12, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDurationFrom = theQueryObject.getDurationFrom() != null && (excludeProperties == null || !excludeProperties.contains("durationFrom"));
-
-if (useDurationFrom)
-{
-sql += " WHERE ";
-sql += " \"DURATION_FROM\" =? ";
-paramValues.add(theQueryObject.getDurationFrom());
-propertyCounter++;
-}
-
-boolean useDurationTo = theQueryObject.getDurationTo() != null && (excludeProperties == null || !excludeProperties.contains("durationTo"));
-
-if (useDurationTo)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DURATION_TO\" =? ";
-paramValues.add(theQueryObject.getDurationTo());
-propertyCounter++;
-}
-
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+		boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
 
 if (useUpdatedBy)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"UPDATED_BY\" =? ";
 paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
@@ -409,6 +375,40 @@ sql += " WHERE ";
 }
 sql += " \"UPDATED_ON\" =? ";
 paramValues.add(theQueryObject.getUpdatedOn());
+propertyCounter++;
+}
+
+boolean useDurationFrom = theQueryObject.getDurationFrom() != null && (excludeProperties == null || !excludeProperties.contains("durationFrom"));
+
+if (useDurationFrom)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DURATION_FROM\" =? ";
+paramValues.add(theQueryObject.getDurationFrom());
+propertyCounter++;
+}
+
+boolean useDurationTo = theQueryObject.getDurationTo() != null && (excludeProperties == null || !excludeProperties.contains("durationTo"));
+
+if (useDurationTo)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DURATION_TO\" =? ";
+paramValues.add(theQueryObject.getDurationTo());
 propertyCounter++;
 }
 

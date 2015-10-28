@@ -293,6 +293,19 @@ public void setScorecard(Scorecard value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="AGENT_SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfScorecardWeeklyScore")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private AgentScorecard agentScorecard;
+public AgentScorecard getAgentScorecard() {
+	return this.agentScorecard;
+}
+
+public void setAgentScorecard(AgentScorecard value) {
+	this.agentScorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MONTHLY_SCORE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardMonthlyScoreOfScorecardWeeklyScore")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -453,6 +466,18 @@ objectJson += ",\"scorecard\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Agent Scorecard of Scorecard Weekly Score relationship
+objectJson += ",\"agentScorecard\":";
+		if (getAgentScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 //Retrieve value of the Scorecard Monthly Score of Scorecard Weekly Score relationship
 objectJson += ",\"scorecardMonthlyScore\":";
 		if (getScorecardMonthlyScore() == null)
@@ -504,6 +529,7 @@ objectJson += ",\"scorecardMonthlyScore\":";
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
+		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
 		this.scorecardMonthlyScore = (ScorecardMonthlyScore) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyScore");
 
 

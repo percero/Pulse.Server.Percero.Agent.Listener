@@ -221,23 +221,6 @@ public void setEndDate(Date endDate)
 {
 	this.endDate = endDate;
 }/*
-ScorecardId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String scorecardId;
-
-public String getScorecardId() 
-{
-	return this.scorecardId;
-}
-
-public void setScorecardId(String scorecardId)
-{
-	this.scorecardId = scorecardId;
-}/*
 Tenure
 Notes:
 */
@@ -271,8 +254,24 @@ public String getMetricUnit()
 public void setMetricUnit(String metricUnit)
 {
 	this.metricUnit = metricUnit;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String employeeId;
+
+public String getEmployeeId() 
+{
+	return this.employeeId;
 }
-/*
+
+public void setEmployeeId(String employeeId)
+{
+	this.employeeId = employeeId;
+}/*
 PointsReceived
 Notes:
 */
@@ -333,22 +332,33 @@ public void setGrade(Integer grade)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EMPLOYEE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfMonthlyResult")
+@JoinColumn(name="AGENT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfScorecardMonthlyResult")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Agent agent;
 public Agent getAgent() {
-return this.agent;
+	return this.agent;
 }
 
 public void setAgent(Agent value) {
-this.agent = value;
+	this.agent = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfScorecardMonthlyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
 }
-	@com.percero.agents.sync.metadata.annotations.Externalize
+
+public void setScorecard(Scorecard value) {
+	this.scorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -483,27 +493,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		else {
 			objectJson += getEndDate().getTime();
 		}
-		//Retrieve value of the Scorecard Id property
-		objectJson += ",\"scorecardId\":";
-		
-		if (getScorecardId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getScorecardId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Tenure property
 		objectJson += ",\"tenure\":";
 		
@@ -535,6 +524,27 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getMetricUnit());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -599,12 +609,24 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				
 		// Source Relationships
 //Retrieve value of the Agent of Scorecard Monthly Result relationship
-		objectJson += ",\"agent\":";
+objectJson += ",\"agent\":";
 		if (getAgent() == null)
 			objectJson += "null";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Scorecard of Scorecard Monthly Result relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -664,12 +686,12 @@ objectJson += ",\"scorecardMeasure\":";
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Scorecard Id property
-		setScorecardId(JsonUtils.getJsonString(jsonObject, "scorecardId"));
 		//From value of the Tenure property
 		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
 		//From value of the Metric Unit property
 		setMetricUnit(JsonUtils.getJsonString(jsonObject, "metricUnit"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Points Received property
 		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 		//From value of the Excluded property
@@ -680,6 +702,7 @@ objectJson += ",\"scorecardMeasure\":";
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 

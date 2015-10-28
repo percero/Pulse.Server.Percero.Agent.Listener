@@ -45,7 +45,7 @@ public class QualityEvaluationDAO extends SqlDataAccessObject<QualityEvaluation>
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"QUALITY_EVALUATION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"QUALITY_EVALUATION\".\"UPDATED_BY\",\"QUALITY_EVALUATION\".\"IS_REQUIRED\",\"QUALITY_EVALUATION\".\"CREATED_ON\",\"QUALITY_EVALUATION\".\"UPDATED_ON\",\"QUALITY_EVALUATION\".\"WEEK_DATE\",\"QUALITY_EVALUATION\".\"NICE_EVAL_ID\",\"QUALITY_EVALUATION\".\"CREATED_BY\",\"QUALITY_EVALUATION\".\"MANUAL_DETAILS\",\"QUALITY_EVALUATION\".\"NICE_APP_SERVER\",\"QUALITY_EVALUATION\".\"SCORECARD_ID\",\"QUALITY_EVALUATION\".\"EMPLOYEE_ID\",\"QUALITY_EVALUATION\".\"AGENT_ID\",\"QUALITY_EVALUATION\".\"AGENT_SCORECARD_ID\"";
+	public static final String SQL_VIEW = ",\"QUALITY_EVALUATION\".\"IS_REQUIRED\",\"QUALITY_EVALUATION\".\"CREATED_ON\",\"QUALITY_EVALUATION\".\"UPDATED_ON\",\"QUALITY_EVALUATION\".\"WEEK_DATE\",\"QUALITY_EVALUATION\".\"NICE_EVAL_ID\",\"QUALITY_EVALUATION\".\"EVALUATION_NAME\",\"QUALITY_EVALUATION\".\"MANUAL_DETAILS\",\"QUALITY_EVALUATION\".\"NICE_APP_SERVER\",\"QUALITY_EVALUATION\".\"RESPONSIBLE_COACH\",\"QUALITY_EVALUATION\".\"CREATED_BY\",\"QUALITY_EVALUATION\".\"UPDATED_BY\",\"QUALITY_EVALUATION\".\"EMPLOYEE_ID\",\"QUALITY_EVALUATION\".\"SCORECARD_ID\",\"QUALITY_EVALUATION\".\"AGENT_ID\",\"QUALITY_EVALUATION\".\"AGENT_SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"QUALITY_EVALUATION\" \"QUALITY_EVALUATION\"";
 	private String whereClause = "  WHERE \"QUALITY_EVALUATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"QUALITY_EVALUATION\".\"ID\"= SQLLIST.column_value";
@@ -141,12 +141,12 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + 
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_QUALITY_EVALUATION (\"ID\",\"UPDATED_BY\",\"IS_REQUIRED\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"NICE_EVAL_ID\",\"CREATED_BY\",\"MANUAL_DETAILS\",\"NICE_APP_SERVER\",\"SCORECARD_ID\",\"EMPLOYEE_ID\",\"AGENT_ID\",\"AGENT_SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_QUALITY_EVALUATION (\"ID\",\"IS_REQUIRED\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"NICE_EVAL_ID\",\"EVALUATION_NAME\",\"MANUAL_DETAILS\",\"NICE_APP_SERVER\",\"RESPONSIBLE_COACH\",\"CREATED_BY\",\"UPDATED_BY\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"AGENT_ID\",\"AGENT_SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_QUALITY_EVALUATION SET \"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"NICE_EVAL_ID\"=?,\"CREATED_BY\"=?,\"MANUAL_DETAILS\"=?,\"NICE_APP_SERVER\"=?,\"SCORECARD_ID\"=?,\"EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_QUALITY_EVALUATION SET \"IS_REQUIRED\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"NICE_EVAL_ID\"=?,\"EVALUATION_NAME\"=?,\"MANUAL_DETAILS\"=?,\"NICE_APP_SERVER\"=?,\"RESPONSIBLE_COACH\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -171,10 +171,7 @@ return "SELECT \"QUALITY_EVALUATION\".\"ID\" " + selectFromStatementTableName + 
     	
     	if (!shellOnly) 
 		{
-			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
-
-
-nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
+			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
 
 
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
@@ -189,7 +186,7 @@ nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_
 nextResult.setNiceEvalId(rs.getInt("NICE_EVAL_ID"));
 
 
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+nextResult.setEvaluationName(rs.getString("EVALUATION_NAME"));
 
 
 nextResult.setManualDetails(rs.getString("MANUAL_DETAILS"));
@@ -198,14 +195,23 @@ nextResult.setManualDetails(rs.getString("MANUAL_DETAILS"));
 nextResult.setNiceAppServer(rs.getString("NICE_APP_SERVER"));
 
 
-Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
-nextResult.setScorecard(scorecard);
+nextResult.setResponsibleCoach(rs.getString("RESPONSIBLE_COACH"));
+
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
 Employee employee = new Employee();
 employee.setID(rs.getString("EMPLOYEE_ID"));
 nextResult.setEmployee(employee);
+
+
+Scorecard scorecard = new Scorecard();
+scorecard.setID(rs.getString("SCORECARD_ID"));
+nextResult.setScorecard(scorecard);
 
 
 Agent agent = new Agent();
@@ -229,53 +235,55 @@ nextResult.setAgentScorecard(agentscorecard);
 	protected void setBaseStatmentInsertParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-JdbcHelper.setBoolean(pstmt,3, perceroObject.getIsRequired());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,7, perceroObject.getNiceEvalId());
-pstmt.setString(8, perceroObject.getCreatedBy());
-pstmt.setString(9, perceroObject.getManualDetails());
-pstmt.setString(10, perceroObject.getNiceAppServer());
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getScorecard().getID());
-}
-
+JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,6, perceroObject.getNiceEvalId());
+pstmt.setString(7, perceroObject.getEvaluationName());
+pstmt.setString(8, perceroObject.getManualDetails());
+pstmt.setString(9, perceroObject.getNiceAppServer());
+pstmt.setString(10, perceroObject.getResponsibleCoach());
+pstmt.setString(11, perceroObject.getCreatedBy());
+pstmt.setString(12, perceroObject.getUpdatedBy());
 
 if (perceroObject.getEmployee() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getEmployee().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
 {
 pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getAgent().getID());
+		pstmt.setString(13, perceroObject.getEmployee().getID());
 }
 
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(14, null);
 }
 else
 {
-		pstmt.setString(14, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(14, perceroObject.getScorecard().getID());
+}
+
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getAgent().getID());
+}
+
+
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getAgentScorecard().getID());
 }
 
 
@@ -301,56 +309,58 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(QualityEvaluation perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getUpdatedBy());
-JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,6, perceroObject.getNiceEvalId());
-pstmt.setString(7, perceroObject.getCreatedBy());
-pstmt.setString(8, perceroObject.getManualDetails());
-pstmt.setString(9, perceroObject.getNiceAppServer());
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getScorecard().getID());
-}
-
+		JdbcHelper.setBoolean(pstmt,1, perceroObject.getIsRequired());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,5, perceroObject.getNiceEvalId());
+pstmt.setString(6, perceroObject.getEvaluationName());
+pstmt.setString(7, perceroObject.getManualDetails());
+pstmt.setString(8, perceroObject.getNiceAppServer());
+pstmt.setString(9, perceroObject.getResponsibleCoach());
+pstmt.setString(10, perceroObject.getCreatedBy());
+pstmt.setString(11, perceroObject.getUpdatedBy());
 
 if (perceroObject.getEmployee() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getEmployee().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
 {
 pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getAgent().getID());
+		pstmt.setString(12, perceroObject.getEmployee().getID());
 }
 
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getScorecard() == null)
 {
 pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(13, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(14, perceroObject.getID());
+
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getAgent().getID());
+}
+
+
+if (perceroObject.getAgentScorecard() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getAgentScorecard().getID());
+}
+
+pstmt.setString(16, perceroObject.getID());
 
 		
 	}
@@ -379,28 +389,11 @@ pstmt.setString(14, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-sql += " WHERE ";
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
+		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
 
 if (useIsRequired)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"IS_REQUIRED\" =? ";
 paramValues.add(theQueryObject.getIsRequired());
 propertyCounter++;
@@ -474,9 +467,9 @@ paramValues.add(theQueryObject.getNiceEvalId());
 propertyCounter++;
 }
 
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+boolean useEvaluationName = StringUtils.hasText(theQueryObject.getEvaluationName()) && (excludeProperties == null || !excludeProperties.contains("evaluationName"));
 
-if (useCreatedBy)
+if (useEvaluationName)
 {
 if (propertyCounter > 0)
 {
@@ -486,8 +479,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
+sql += " \"EVALUATION_NAME\" =? ";
+paramValues.add(theQueryObject.getEvaluationName());
 propertyCounter++;
 }
 
@@ -525,9 +518,9 @@ paramValues.add(theQueryObject.getNiceAppServer());
 propertyCounter++;
 }
 
-boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+boolean useResponsibleCoach = StringUtils.hasText(theQueryObject.getResponsibleCoach()) && (excludeProperties == null || !excludeProperties.contains("responsibleCoach"));
 
-if (useScorecardID)
+if (useResponsibleCoach)
 {
 if (propertyCounter > 0)
 {
@@ -537,8 +530,42 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"SCORECARD_ID\" =? ";
-paramValues.add(theQueryObject.getScorecard().getID());
+sql += " \"RESPONSIBLE_COACH\" =? ";
+paramValues.add(theQueryObject.getResponsibleCoach());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
@@ -556,6 +583,23 @@ sql += " WHERE ";
 }
 sql += " \"EMPLOYEE_ID\" =? ";
 paramValues.add(theQueryObject.getEmployee().getID());
+propertyCounter++;
+}
+
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_ID\" =? ";
+paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
@@ -604,11 +648,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_QUALITY_EVALUATION(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_QUALITY_EVALUATION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_QUALITY_EVALUATION(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_QUALITY_EVALUATION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
