@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -51,7 +52,7 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_WEEKLY_SCORE\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"SCORECARD_WEEKLY_SCORE\".\"ID\"";
 	
-	private String joinAgentScorecardIDScorecardWeeklyScore = ",(select ? As SQLID From Dual) WHERE SCORECARD_WEEKLY_SCORE.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCORECARD_WEEKLY_SCORE.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCORECARD_WEEKLY_SCORE.START_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
+	private String joinAgentScorecardIDScorecardWeeklyScore = ",(select ? As SQLID From Dual) WHERE SCORECARD_WEEKLY_SCORE.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCORECARD_WEEKLY_SCORE.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCORECARD_WEEKLY_SCORE.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 
 
 	
@@ -158,7 +159,8 @@ return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\" " + selectFromStatementTableNam
 	protected ScorecardWeeklyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ScorecardWeeklyScore nextResult = null;
+
+ScorecardWeeklyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -638,7 +640,8 @@ propertyCounter++;
 	}
 	
 	
-public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
+
+public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -701,9 +704,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+
