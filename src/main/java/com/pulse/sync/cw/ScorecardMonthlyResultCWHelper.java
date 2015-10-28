@@ -53,68 +53,68 @@ public class ScorecardMonthlyResultCWHelper extends DerivedValueChangeWatcherHel
 	private ClassIDPair calc_previousScorecardMonthlyResult(ClassIDPair pair, String derivedValueName) {
 		ClassIDPair result = null;
 
-//		try {
-//			ScorecardMonthlyResult host = (ScorecardMonthlyResult) syncAgentService.systemGetById(pair);
-//			if (host == null) {
-//				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
-//				return result;
-//			}
-//
-//			// Setup fieldsToWatch.
-//			Collection<String> fieldsToWatch = new HashSet<String>();
-//
-//			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
-//			accessManager.addWatcherField(pair, "scorecardMeasure", fieldsToWatch);
-//			ScorecardMeasure scorecardMeasure = syncAgentService.systemGetByObject(host.getScorecardMeasure());
-//			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-//			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-//			accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
-//			Date startDate = host.getStartDate();
-//
-//			ScorecardMonthlyResult previousScorecardMonthlyResult = null;
-//			Date previousEndDate = null;
-//
-//			if (startDate != null && startDate.getTime() > 0 && scorecardMeasure != null && agent!= null) {
-//
-//				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "scorecardMonthlyResults", fieldsToWatch);
-//				Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = agent.getScorecardMonthlyResults().iterator();
-//				while (itrScorecardMonthlyResults.hasNext()) {
-//					ScorecardMonthlyResult nextScorecardMonthlyResult = syncAgentService.systemGetByObject(itrScorecardMonthlyResults.next());
-//
-//					if (nextScorecardMonthlyResult != null) {
-//						accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextScorecardMonthlyResult), "scorecardMeasure", fieldsToWatch);
-//						ScorecardMeasure nextScorecardMeasure = nextScorecardMonthlyResult.getScorecardMeasure();
-//
-//						if (nextScorecardMeasure != null && nextScorecardMeasure.getID() != null && nextScorecardMeasure.getID().equalsIgnoreCase(scorecardMeasure.getID())) {
-//							// Found a matching ScorecardMeasure.
-//							accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextScorecardMonthlyResult), "endDate", fieldsToWatch);
-//							Date nextEndDate = nextScorecardMonthlyResult.getEndDate();
-//
-//							if (nextEndDate != null && nextEndDate.getTime() > 0 && nextEndDate.getTime() <= startDate.getTime()) {
-//								if (previousEndDate == null || nextEndDate.getTime() > previousEndDate.getTime()) {
-//									// Found a more recent WeeklyResult for the ScorecardMeasure.
-//									previousScorecardMonthlyResult = nextScorecardMonthlyResult;
-//									previousEndDate = previousScorecardMonthlyResult.getEndDate();
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//			if (previousScorecardMonthlyResult != null) {
-//				result = BaseDataObject.toClassIdPair(previousScorecardMonthlyResult);
-//			}
-//
-//			// Register all the fields to watch for this ChangeWatcher. Whenever
-//			// ANY of these fields change, this ChangeWatcher will get re-run
-//			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
-//
-//			// Store the result for caching, and also for comparing new results to see if there has been a change.
-//			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
-//		} catch(Exception e) {
-//			log.error("Unable to calculate " + derivedValueName, e);
-//		}
+		try {
+			ScorecardMonthlyResult host = (ScorecardMonthlyResult) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "scorecardMeasure", fieldsToWatch);
+			ScorecardMeasure scorecardMeasure = syncAgentService.systemGetByObject(host.getScorecardMeasure());
+			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+			accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
+			Date startDate = host.getStartDate();
+
+			ScorecardMonthlyResult previousScorecardMonthlyResult = null;
+			Date previousEndDate = null;
+
+			if (startDate != null && startDate.getTime() > 0 && scorecardMeasure != null && agent!= null) {
+
+				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "scorecardMonthlyResults", fieldsToWatch);
+				Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = agent.getScorecardMonthlyResults().iterator();
+				while (itrScorecardMonthlyResults.hasNext()) {
+					ScorecardMonthlyResult nextScorecardMonthlyResult = syncAgentService.systemGetByObject(itrScorecardMonthlyResults.next());
+
+					if (nextScorecardMonthlyResult != null) {
+						accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextScorecardMonthlyResult), "scorecardMeasure", fieldsToWatch);
+						ScorecardMeasure nextScorecardMeasure = nextScorecardMonthlyResult.getScorecardMeasure();
+
+						if (nextScorecardMeasure != null && nextScorecardMeasure.getID() != null && nextScorecardMeasure.getID().equalsIgnoreCase(scorecardMeasure.getID())) {
+							// Found a matching ScorecardMeasure.
+							accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextScorecardMonthlyResult), "endDate", fieldsToWatch);
+							Date nextEndDate = nextScorecardMonthlyResult.getEndDate();
+
+							if (nextEndDate != null && nextEndDate.getTime() > 0 && nextEndDate.getTime() <= startDate.getTime()) {
+								if (previousEndDate == null || nextEndDate.getTime() > previousEndDate.getTime()) {
+									// Found a more recent WeeklyResult for the ScorecardMeasure.
+									previousScorecardMonthlyResult = nextScorecardMonthlyResult;
+									previousEndDate = previousScorecardMonthlyResult.getEndDate();
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (previousScorecardMonthlyResult != null) {
+				result = BaseDataObject.toClassIdPair(previousScorecardMonthlyResult);
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
 
 		return result;
 	}
