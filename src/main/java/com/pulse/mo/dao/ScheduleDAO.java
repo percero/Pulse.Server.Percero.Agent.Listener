@@ -105,15 +105,16 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return SQL_VIEW + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) AND \"SCHEDULE\"." + joinColumnName + "=?";
+		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
+		return "SELECT * FROM (SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) AND \"SCHEDULE\"." + joinColumnName + "=?";
+//		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) AND \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 
 	@Override

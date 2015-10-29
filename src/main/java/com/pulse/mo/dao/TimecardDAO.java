@@ -104,16 +104,18 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
+		return "select * from (" + SQL_VIEW + " WHERE \"TIMECARD\"." + joinColumnName + "=? order by \"PDATE\" desc) where ROWNUM < 15";
 		
-		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
+//		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
+		return "select * from (SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\"." + joinColumnName + "=? order by \"PDATE\" desc) where ROWNUM < 15";
 
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
+//		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override

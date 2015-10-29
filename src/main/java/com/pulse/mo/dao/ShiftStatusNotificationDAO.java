@@ -423,15 +423,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SHIFT_STATUS_NOTIFICATION(?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SHIFT_STATUS_NOTIFICATION(?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SHIFT_STATUS_NOTIFY(?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_SHIFT_STATUS_NOTIFICATION(?)}";
+		return "{call Delete_SHIFT_STATUS_NOTIFY(?)}";
 	}
 	
 	

@@ -104,15 +104,14 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return SQL_VIEW + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) AND \"CMS_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) AND \"CMS_ENTRY\"." + joinColumnName + "=?";
+		return "SELECT * FROM (SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
