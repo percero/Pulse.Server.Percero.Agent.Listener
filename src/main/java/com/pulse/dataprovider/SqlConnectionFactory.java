@@ -154,6 +154,7 @@ public class SqlConnectionFactory implements IConnectionFactory {
         		}
         	}
             Connection result = cpds.getConnection();
+    		logger.debug("Database Connection Time: " + (System.currentTimeMillis() - timeStart) + "ms [" + this.getName() + ": " + this.getJdbcUrl() + "]");
             return result;
         }catch(SQLException e){
             logger.error(e.getMessage(), e);
