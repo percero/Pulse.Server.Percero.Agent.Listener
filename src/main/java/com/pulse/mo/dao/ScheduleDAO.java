@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,9 +41,9 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
-	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=?";
+	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=? AND  \"SCHEDULE\".\"START_DATE\" > (sysdate - 14)";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"SCHEDULE\".\"ID\"";
 
@@ -145,7 +146,8 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected Schedule extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-Schedule nextResult = null;
+
+Schedule nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -156,18 +158,17 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 		// ID
 		nextResult.setID(rs.getString("ID"));
 
-		if (!shellOnly) 
-		{
-			nextResult.setStartTime(rs.getString("START_TIME"));
+		if (!shellOnly) {
+			nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
 
-nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
+			nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 
-nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+			nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
 
-nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
+			nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
 
 
 nextResult.setShift(rs.getInt("SHIFT"));
@@ -211,28 +212,11 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 
-		boolean useStartTime = StringUtils.hasText(theQueryObject.getStartTime()) && (excludeProperties == null || !excludeProperties.contains("startTime"));
-
-if (useStartTime)
-{
-sql += " WHERE ";
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
-propertyCounter++;
-}
-
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
 if (useEndDate)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " END_DATE=? ";
 paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
@@ -251,7 +235,7 @@ else
 sql += " WHERE ";
 }
 sql += " START_DATE=? ";
-paramValues.add(theQueryObject.getStartDate());
+	paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
@@ -269,6 +253,23 @@ sql += " WHERE ";
 }
 sql += " END_TIME=? ";
 paramValues.add(theQueryObject.getEndTime());
+propertyCounter++;
+}
+
+boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+
+if (useStartTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_TIME=? ";
+	paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 
@@ -313,7 +314,8 @@ propertyCounter++;
 	}
 
 	
-public Schedule createObject(Schedule perceroObject, String userId)
+
+public Schedule createObject(Schedule perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -376,8 +378,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

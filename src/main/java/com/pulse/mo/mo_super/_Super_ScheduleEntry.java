@@ -176,14 +176,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String startTime;
+private Date startTime;
 
-public String getStartTime() 
+public Date getStartTime() 
 {
 	return this.startTime;
 }
 
-public void setStartTime(String startTime)
+public void setStartTime(Date startTime)
 {
 	this.startTime = startTime;
 }/*
@@ -349,24 +349,10 @@ public void setSchedule(Schedule value) {
 		}
 		//Retrieve value of the Start Time property
 		objectJson += ",\"startTime\":";
-		
 		if (getStartTime() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartTime());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getStartTime().getTime();
 		}
 		//Retrieve value of the Position property
 		objectJson += ",\"position\":";
@@ -455,7 +441,7 @@ objectJson += ",\"schedule\":";
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonString(jsonObject, "startTime"));
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
 		//From value of the Position property
 		setPosition(JsonUtils.getJsonString(jsonObject, "position"));
 		//From value of the Modified Timestamp property

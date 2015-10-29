@@ -159,14 +159,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String toTime;
+private Date toTime;
 
-public String getToTime() 
+public Date getToTime() 
 {
 	return this.toTime;
 }
 
-public void setToTime(String toTime)
+public void setToTime(Date toTime)
 {
 	this.toTime = toTime;
 }
@@ -274,24 +274,10 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the To Time property
 		objectJson += ",\"toTime\":";
-		
 		if (getToTime() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getToTime());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getToTime().getTime();
 		}
 
 				
@@ -348,7 +334,7 @@ objectJson += ",\"cMSEntryLOBs\":[";
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the To Time property
-		setToTime(JsonUtils.getJsonString(jsonObject, "toTime"));
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 
 		
 		// Source Relationships

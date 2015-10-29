@@ -40,7 +40,7 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
 	private String whereClause = " WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE_ENTRY\".\"ID\"= SQLLIST.column_value";
@@ -167,10 +167,7 @@ return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableN
 
 		if (!shellOnly) 
 		{
-			nextResult.setStartTime(rs.getString("START_TIME"));
-
-
-nextResult.setPosition(rs.getString("POSITION"));
+			nextResult.setPosition(rs.getString("POSITION"));
 
 
 nextResult.setProject(rs.getString("PROJECT"));
@@ -186,6 +183,9 @@ nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TI
 
 
 nextResult.setModifiedTimestamp(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("MODIFIED_TIMESTAMP")));
+
+
+nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
 
 
 nextResult.setDuration(rs.getDouble("DURATION"));
@@ -237,28 +237,11 @@ nextResult.setSchedule(schedule);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 
-		boolean useStartTime = StringUtils.hasText(theQueryObject.getStartTime()) && (excludeProperties == null || !excludeProperties.contains("startTime"));
-
-if (useStartTime)
-{
-sql += " WHERE ";
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
-propertyCounter++;
-}
-
-boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
+		boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
 
 if (usePosition)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " POSITION=? ";
 paramValues.add(theQueryObject.getPosition());
 propertyCounter++;
@@ -346,6 +329,23 @@ sql += " WHERE ";
 }
 sql += " MODIFIED_TIMESTAMP=? ";
 paramValues.add(theQueryObject.getModifiedTimestamp());
+propertyCounter++;
+}
+
+boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+
+if (useStartTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " START_TIME=? ";
+paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 

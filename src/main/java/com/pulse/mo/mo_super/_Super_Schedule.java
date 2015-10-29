@@ -108,14 +108,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String startTime;
+private Date startTime;
 
-public String getStartTime() 
+public Date getStartTime() 
 {
 	return this.startTime;
 }
 
-public void setStartTime(String startTime)
+public void setStartTime(Date startTime)
 {
 	this.startTime = startTime;
 }/*
@@ -259,24 +259,10 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Start Time property
 		objectJson += ",\"startTime\":";
-		
 		if (getStartTime() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartTime());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getStartTime().getTime();
 		}
 		//Retrieve value of the Shift property
 		objectJson += ",\"shift\":";
@@ -390,7 +376,7 @@ objectJson += ",\"scheduleEntries\":[";
 		//From value of the End Time property
 		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
 		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonString(jsonObject, "startTime"));
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
 		//From value of the Shift property
 		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
 		//From value of the End Date property

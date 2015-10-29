@@ -170,6 +170,23 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
+StartValue
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer startValue;
+
+public Integer getStartValue() 
+{
+	return this.startValue;
+}
+
+public void setStartValue(Integer startValue)
+{
+	this.startValue = startValue;
+}/*
 UpdatedBy
 Notes:
 */
@@ -433,6 +450,27 @@ public void setGoal(Goal value) {
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
+		//Retrieve value of the Start Value property
+		objectJson += ",\"startValue\":";
+		
+		if (getStartValue() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartValue());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
 		
@@ -633,6 +671,8 @@ objectJson += ",\"goal\":";
 		setANDOR(JsonUtils.getJsonString(jsonObject, "aNDOR"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Start Value property
+		setStartValue(JsonUtils.getJsonInteger(jsonObject, "startValue"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the End Expression property
