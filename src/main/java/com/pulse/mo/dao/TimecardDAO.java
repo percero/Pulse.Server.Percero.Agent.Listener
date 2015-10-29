@@ -43,7 +43,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", '' as \"APPROVED\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
 	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value WHERE \"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) ";
 	private String orderByTableName = " ORDER BY \"TIMECARD\".\"ID\"";
 
 	
@@ -76,17 +76,17 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  +  orderByTableName;
+		return SQL_VIEW  +  " WHERE \"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) " + orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName;
+		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) ";
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return SQL_VIEW + "  \"TIMECARD\"." + joinColumnName + "=?";
+		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	{
 		
 
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\"." + joinColumnName + "=?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE\"TIMECARD\".\"PDATE\">Add_months(sysdate,-1) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override

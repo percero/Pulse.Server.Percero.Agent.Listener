@@ -43,7 +43,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
 	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1)";
 	private String orderByTableName = " ORDER BY \"SCHEDULE\".\"ID\"";
 
 	
@@ -66,27 +66,27 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName  + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) " + orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  +  orderByTableName;
+		return SQL_VIEW  + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) " + orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName;
+		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) ";
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return SQL_VIEW + "  \"SCHEDULE\"." + joinColumnName + "=?";
+		return SQL_VIEW + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) AND \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	{
 		
 
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=?";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\">=Add_months(sysdate,-1) AND \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 
 	@Override
