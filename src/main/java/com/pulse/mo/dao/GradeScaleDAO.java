@@ -45,7 +45,7 @@ public class GradeScaleDAO extends SqlDataAccessObject<GradeScale> implements ID
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"GRADE_SCALE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"GRADE_SCALE\".\"SCM_GOAL_ID\",\"GRADE_SCALE\".\"START_EXP\",\"GRADE_SCALE\".\"UPDATED_BY\",\"GRADE_SCALE\".\"CREATED_ON\",\"GRADE_SCALE\".\"END_DATE\",\"GRADE_SCALE\".\"START_DATE\",\"GRADE_SCALE\".\"UPDATED_ON\",\"GRADE_SCALE\".\"CUSTOM\",\"GRADE_SCALE\".\"END_VALUE\",\"GRADE_SCALE\".\"GRADE\",\"GRADE_SCALE\".\"AND_OR\",\"GRADE_SCALE\".\"COLOR\",\"GRADE_SCALE\".\"CREATED_BY\",\"GRADE_SCALE\".\"END_EXPRESSION\",\"GRADE_SCALE\".\"GOAL_ID\"";
+	public static final String SQL_VIEW = ",\"GRADE_SCALE\".\"SCM_GOAL_ID\",\"GRADE_SCALE\".\"START_EXP\",\"GRADE_SCALE\".\"UPDATED_BY\",\"GRADE_SCALE\".\"CREATED_ON\",\"GRADE_SCALE\".\"END_DATE\",\"GRADE_SCALE\".\"START_DATE\",\"GRADE_SCALE\".\"UPDATED_ON\",\"GRADE_SCALE\".\"CUSTOM\",\"GRADE_SCALE\".\"END_VALUE\",\"GRADE_SCALE\".\"GRADE\",\"GRADE_SCALE\".\"START_VALUE\",\"GRADE_SCALE\".\"AND_OR\",\"GRADE_SCALE\".\"COLOR\",\"GRADE_SCALE\".\"CREATED_BY\",\"GRADE_SCALE\".\"END_EXPRESSION\",\"GRADE_SCALE\".\"GOAL_ID\"";
 	private String selectFromStatementTableName = " FROM \"GRADE_SCALE\" \"GRADE_SCALE\"";
 	private String whereClause = "  WHERE \"GRADE_SCALE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"GRADE_SCALE\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class GradeScaleDAO extends SqlDataAccessObject<GradeScale> implements ID
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_GRADE_SCALE (\"ID\",\"SCM_GOAL_ID\",\"START_EXP\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"CUSTOM\",\"END_VALUE\",\"GRADE\",\"AND_OR\",\"COLOR\",\"CREATED_BY\",\"END_EXPRESSION\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_GRADE_SCALE (\"ID\",\"SCM_GOAL_ID\",\"START_EXP\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"CUSTOM\",\"END_VALUE\",\"GRADE\",\"START_VALUE\",\"AND_OR\",\"COLOR\",\"CREATED_BY\",\"END_EXPRESSION\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_GRADE_SCALE SET \"SCM_GOAL_ID\"=?,\"START_EXP\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"CUSTOM\"=?,\"END_VALUE\"=?,\"GRADE\"=?,\"AND_OR\"=?,\"COLOR\"=?,\"CREATED_BY\"=?,\"END_EXPRESSION\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_GRADE_SCALE SET \"SCM_GOAL_ID\"=?,\"START_EXP\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"CUSTOM\"=?,\"END_VALUE\"=?,\"GRADE\"=?,\"START_VALUE\"=?,\"AND_OR\"=?,\"COLOR\"=?,\"CREATED_BY\"=?,\"END_EXPRESSION\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -192,6 +192,9 @@ nextResult.setEndValue(rs.getInt("END_VALUE"));
 nextResult.setGrade(rs.getInt("GRADE"));
 
 
+nextResult.setStartValue(rs.getInt("START_VALUE"));
+
+
 nextResult.setANDOR(rs.getString("AND_OR"));
 
 
@@ -230,18 +233,19 @@ pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,9, perceroObject.getCustom());
 JdbcHelper.setInt(pstmt,10, perceroObject.getEndValue());
 JdbcHelper.setInt(pstmt,11, perceroObject.getGrade());
-pstmt.setString(12, perceroObject.getANDOR());
-pstmt.setString(13, perceroObject.getColor());
-pstmt.setString(14, perceroObject.getCreatedBy());
-pstmt.setString(15, perceroObject.getEndExpression());
+JdbcHelper.setInt(pstmt,12, perceroObject.getStartValue());
+pstmt.setString(13, perceroObject.getANDOR());
+pstmt.setString(14, perceroObject.getColor());
+pstmt.setString(15, perceroObject.getCreatedBy());
+pstmt.setString(16, perceroObject.getEndExpression());
 
 if (perceroObject.getGoal() == null)
 {
-pstmt.setString(16, null);
+pstmt.setString(17, null);
 }
 else
 {
-		pstmt.setString(16, perceroObject.getGoal().getID());
+		pstmt.setString(17, perceroObject.getGoal().getID());
 }
 
 
@@ -277,21 +281,22 @@ pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,8, perceroObject.getCustom());
 JdbcHelper.setInt(pstmt,9, perceroObject.getEndValue());
 JdbcHelper.setInt(pstmt,10, perceroObject.getGrade());
-pstmt.setString(11, perceroObject.getANDOR());
-pstmt.setString(12, perceroObject.getColor());
-pstmt.setString(13, perceroObject.getCreatedBy());
-pstmt.setString(14, perceroObject.getEndExpression());
+JdbcHelper.setInt(pstmt,11, perceroObject.getStartValue());
+pstmt.setString(12, perceroObject.getANDOR());
+pstmt.setString(13, perceroObject.getColor());
+pstmt.setString(14, perceroObject.getCreatedBy());
+pstmt.setString(15, perceroObject.getEndExpression());
 
 if (perceroObject.getGoal() == null)
 {
-pstmt.setString(15, null);
+pstmt.setString(16, null);
 }
 else
 {
-		pstmt.setString(15, perceroObject.getGoal().getID());
+		pstmt.setString(16, perceroObject.getGoal().getID());
 }
 
-pstmt.setString(16, perceroObject.getID());
+pstmt.setString(17, perceroObject.getID());
 
 		
 	}
@@ -483,6 +488,23 @@ paramValues.add(theQueryObject.getGrade());
 propertyCounter++;
 }
 
+boolean useStartValue = theQueryObject.getStartValue() != null && (excludeProperties == null || !excludeProperties.contains("startValue"));
+
+if (useStartValue)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"START_VALUE\" =? ";
+paramValues.add(theQueryObject.getStartValue());
+propertyCounter++;
+}
+
 boolean useANDOR = StringUtils.hasText(theQueryObject.getANDOR()) && (excludeProperties == null || !excludeProperties.contains("aNDOR"));
 
 if (useANDOR)
@@ -579,11 +601,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_GRADE_SCALE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_GRADE_SCALE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_GRADE_SCALE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_GRADE_SCALE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

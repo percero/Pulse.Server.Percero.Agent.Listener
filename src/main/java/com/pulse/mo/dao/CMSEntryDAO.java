@@ -40,7 +40,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\"";
 	private String whereClause = " WHERE \"CMS_ENTRY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CMS_ENTRY\".\"ID\"= SQLLIST.column_value";
@@ -158,19 +158,19 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 
 		if (!shellOnly) 
 		{
-			nextResult.setFromTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("FROM_TIME")));
-
-
-nextResult.setDuration(rs.getDouble("DURATION"));
-
-
-nextResult.setCMSAuxMode(rs.getString("CMS_AUX_MODE"));
+			nextResult.setCMSAuxMode(rs.getString("CMS_AUX_MODE"));
 
 
 nextResult.setEStartProjectName(rs.getString("ESTART_PROJECT_NAME"));
 
 
-nextResult.setToTime(rs.getString("TO_TIME"));
+nextResult.setFromTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("FROM_TIME")));
+
+
+nextResult.setToTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("TO_TIME")));
+
+
+nextResult.setDuration(rs.getDouble("DURATION"));
 
 
 Agent agent = new Agent();
@@ -211,45 +211,11 @@ nextResult.setAgent(agent);
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 
-		boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
-
-if (useFromTime)
-{
-sql += " WHERE ";
-sql += " FROM_TIME=? ";
-paramValues.add(theQueryObject.getFromTime());
-propertyCounter++;
-}
-
-boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
-
-if (useDuration)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " DURATION=? ";
-paramValues.add(theQueryObject.getDuration());
-propertyCounter++;
-}
-
-boolean useCMSAuxMode = StringUtils.hasText(theQueryObject.getCMSAuxMode()) && (excludeProperties == null || !excludeProperties.contains("cMSAuxMode"));
+		boolean useCMSAuxMode = StringUtils.hasText(theQueryObject.getCMSAuxMode()) && (excludeProperties == null || !excludeProperties.contains("cMSAuxMode"));
 
 if (useCMSAuxMode)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " CMS_AUX_MODE=? ";
 paramValues.add(theQueryObject.getCMSAuxMode());
 propertyCounter++;
@@ -272,7 +238,24 @@ paramValues.add(theQueryObject.getEStartProjectName());
 propertyCounter++;
 }
 
-boolean useToTime = StringUtils.hasText(theQueryObject.getToTime()) && (excludeProperties == null || !excludeProperties.contains("toTime"));
+boolean useFromTime = theQueryObject.getFromTime() != null && (excludeProperties == null || !excludeProperties.contains("fromTime"));
+
+if (useFromTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " FROM_TIME=? ";
+paramValues.add(theQueryObject.getFromTime());
+propertyCounter++;
+}
+
+boolean useToTime = theQueryObject.getToTime() != null && (excludeProperties == null || !excludeProperties.contains("toTime"));
 
 if (useToTime)
 {
@@ -286,6 +269,23 @@ sql += " WHERE ";
 }
 sql += " TO_TIME=? ";
 paramValues.add(theQueryObject.getToTime());
+propertyCounter++;
+}
+
+boolean useDuration = theQueryObject.getDuration() != null && (excludeProperties == null || !excludeProperties.contains("duration"));
+
+if (useDuration)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " DURATION=? ";
+paramValues.add(theQueryObject.getDuration());
 propertyCounter++;
 }
 

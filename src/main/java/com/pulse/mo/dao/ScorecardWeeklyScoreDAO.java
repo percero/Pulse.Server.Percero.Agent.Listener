@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -159,8 +158,7 @@ return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\" " + selectFromStatementTableNam
 	protected ScorecardWeeklyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-
-ScorecardWeeklyScore nextResult = null;
+ScorecardWeeklyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -640,8 +638,7 @@ propertyCounter++;
 	}
 	
 	
-
-public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
+public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -704,10 +701,9 @@ public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, Str
 		return null;
 	}
 }
-
-
+
 
 	
 	
 }
-
+
