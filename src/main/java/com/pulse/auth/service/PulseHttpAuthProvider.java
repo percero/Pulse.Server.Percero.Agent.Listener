@@ -12,7 +12,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import com.percero.agents.auth.vo.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,6 +29,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
 import com.percero.agents.auth.services.IAuthProvider;
+import com.percero.agents.auth.vo.AuthCode;
+import com.percero.agents.auth.vo.AuthProviderResponse;
+import com.percero.agents.auth.vo.BasicAuthCredential;
+import com.percero.agents.auth.vo.ServiceIdentifier;
+import com.percero.agents.auth.vo.ServiceUser;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.auth.vo.PulseUserInfo;
 import com.pulse.mo.TeamLeader;
@@ -119,6 +123,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 
             try {
             	if ( pulseUserInfo != null && StringUtils.hasText(pulseUserInfo.getEmployeeId()) ) {
+            		long timeStart = System.currentTimeMillis();
 	            	logger.debug("Retrieving TeamLeader object for user/employee " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
 	                TeamLeader example = new TeamLeader();
 	                example.setEmployeeId(pulseUserInfo.getEmployeeId());
@@ -142,6 +147,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                         logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
                         response.authCode = PulseAuthCode.NO_TEAM_LEADER;
                     }
+	                
+	        		logger.debug("Auth Retrieve PulseUser Time: " + (System.currentTimeMillis() - timeStart) + "ms [TeamLeader: " + pulseUserInfo.getEmployeeId() + "]");
             	} else if(response.authCode == null) // code hasn't been set
                     response.authCode = PulseAuthCode.EMPLOYEEID_NOT_FOUND;
 
@@ -178,6 +185,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
             HttpResponse response = client.execute(request);
             logger.debug("Got response from auth hostPortAndContext: (" + response.getStatusLine().getStatusCode() + ")" + response.getStatusLine().getReasonPhrase());
             body = IOUtils.toString(response.getEntity().getContent(), "UTF8");
+            logger.debug("Auth Request Time: " + url + " - " + (System.currentTimeMillis()-timeStart) + "ms [" + this.getClass().getName() + "]");
         } catch(ClientProtocolException e){
             logger.warn(e.getMessage(), e);
         } catch(IOException ioe){
