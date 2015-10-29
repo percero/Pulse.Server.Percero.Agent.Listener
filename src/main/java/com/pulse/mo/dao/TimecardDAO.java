@@ -43,8 +43,8 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", '' as \"APPROVED\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
-	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=? AND \"TIMECARD\".\"PDATE\" > (sysdate - 14)";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value";
+	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=? AND \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
 	private String orderByTableName = " ORDER BY \"TIMECARD\".\"ID\"";
 
 	
@@ -67,27 +67,27 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName  + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  +  orderByTableName;
+		return SQL_VIEW  + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName;
+		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14)";
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return SQL_VIEW + "  \"TIMECARD\"." + joinColumnName + "=?";
+		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	{
 		
 
-		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\"." + joinColumnName + "=?";
+		return "SELECT \"TIMECARD\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override
