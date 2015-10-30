@@ -96,6 +96,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                 pulseUserInfo = new PulseUserInfo();
                 pulseUserInfo.setEmployeeId(employeeId);
                 pulseUserInfo.setUserLogin(cred.getUsername());
+
             }
             else {
                 endpoint = hostPortAndContext + "/retrieve_user";
@@ -109,15 +110,19 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     pulseUserInfo = objectMapper.readValue(body, PulseUserInfo.class);
                     // Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
                     // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
-                    if(pulseUserInfo.getEmployeeId() == null)
+                    if(pulseUserInfo.getEmployeeId() == null) {
                         response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                        logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+                    }
 
                 } catch (JsonMappingException jme) {
                     logger.warn(jme.getMessage(), jme);
                     response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
                     response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
                 }
             }
 
@@ -149,16 +154,21 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     }
 	                
 	        		logger.debug("Auth Retrieve PulseUser Time: " + (System.currentTimeMillis() - timeStart) + "ms [TeamLeader: " + pulseUserInfo.getEmployeeId() + "]");
-            	} else if(response.authCode == null) // code hasn't been set
+            	} else if(response.authCode == null) {// code hasn't been set
                     response.authCode = PulseAuthCode.EMPLOYEEID_NOT_FOUND;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+            	}
 
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);
                 response.authCode = new AuthCode(500, se.getMessage());
+                logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
             }
     	}
-        else
+        else {
             response.authCode = PulseAuthCode.BAD_USER_PASS;
+            logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+        }
 
 
     	return response;
