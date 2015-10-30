@@ -48,7 +48,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"AGENT_SCORECARD\".\"ID\"";
-	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\"";
+	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\",\"AGENT_SCORECARD\".\"SCORECARD_WEEKLY_SCORE_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	private String whereClause = " ,(select ? As SQLID From Dual) WHERE AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLID,0,9) AND AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 	private String whereInClause = " Join Table(sys.dbmsdebugvc2coll(?)) SQLLIST On AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLLIST.columnvalue,0,9) And AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 1) + 1,INSTR(SQLLIST.columnvalue,'-', 1, 2)-INSTR(SQLLIST.columnvalue,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 2) + 1,10)";
@@ -135,12 +135,12 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_AGENT_SCORECARD (\"ID\",\"WEEK_DATE\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"QUARTILE\",\"AGENT_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_AGENT_SCORECARD (\"ID\",\"WEEK_DATE\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"QUARTILE\",\"AGENT_ID\",\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_AGENT_SCORECARD SET \"WEEK_DATE\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_AGENT_SCORECARD SET \"WEEK_DATE\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_WEEKLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -194,6 +194,11 @@ scorecard.setID(rs.getString("SCORECARD_ID"));
 nextResult.setScorecard(scorecard);
 
 
+ScorecardWeeklyScore scorecardweeklyscore = new ScorecardWeeklyScore();
+scorecardweeklyscore.setID(rs.getString("SCORECARD_WEEKLY_SCORE_ID"));
+nextResult.setScorecardWeeklyScore(scorecardweeklyscore);
+
+
 
 			
     	}
@@ -229,6 +234,16 @@ pstmt.setString(9, null);
 else
 {
 		pstmt.setString(9, perceroObject.getScorecard().getID());
+}
+
+
+if (perceroObject.getScorecardWeeklyScore() == null)
+{
+pstmt.setString(10, null);
+}
+else
+{
+		pstmt.setString(10, perceroObject.getScorecardWeeklyScore().getID());
 }
 
 
@@ -280,7 +295,17 @@ else
 		pstmt.setString(8, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(9, perceroObject.getID());
+
+if (perceroObject.getScorecardWeeklyScore() == null)
+{
+pstmt.setString(9, null);
+}
+else
+{
+		pstmt.setString(9, perceroObject.getScorecardWeeklyScore().getID());
+}
+
+pstmt.setString(10, perceroObject.getID());
 
 		
 	}
@@ -438,6 +463,23 @@ paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
+boolean useScorecardWeeklyScoreID = theQueryObject.getScorecardWeeklyScore() != null && (excludeProperties == null || !excludeProperties.contains("scorecardWeeklyScore"));
+
+if (useScorecardWeeklyScoreID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_WEEKLY_SCORE_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardWeeklyScore().getID());
+propertyCounter++;
+}
+
 
 
 		if (propertyCounter == 0) {
@@ -502,11 +544,11 @@ propertyCounter++;
 
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

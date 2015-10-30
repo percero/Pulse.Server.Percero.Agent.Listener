@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -144,7 +145,8 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	protected CMSEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-CMSEntry nextResult = null;
+
+CMSEntry nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -312,7 +314,8 @@ propertyCounter++;
 	}
 
 	
-public CMSEntry createObject(CMSEntry perceroObject, String userId)
+
+public CMSEntry createObject(CMSEntry perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -375,8 +378,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -260,19 +259,6 @@ public void setAgentScorecards(List<AgentScorecard> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMonthlyResult.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMonthlyResult> scorecardMonthlyResults;
-public List<ScorecardMonthlyResult> getScorecardMonthlyResults() {
-	return this.scorecardMonthlyResults;
-}
-
-public void setScorecardMonthlyResults(List<ScorecardMonthlyResult> value) {
-	this.scorecardMonthlyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Schedule.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Schedule> schedules;
 public List<Schedule> getSchedules() {
@@ -301,8 +287,7 @@ public void setCMSEntries(List<CMSEntry> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
@@ -521,23 +506,6 @@ objectJson += ",\"timecards\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of ScorecardMonthlyResults relationship
-		objectJson += ",\"scorecardMonthlyResults\":[";
-
-		if (getScorecardMonthlyResults() != null) {
-			int scorecardMonthlyResultsCounter = 0;
-			for(ScorecardMonthlyResult nextScorecardMonthlyResult : getScorecardMonthlyResults()) {
-				if (scorecardMonthlyResultsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMonthlyResult).toEmbeddedJson();
-					scorecardMonthlyResultsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Corrective Action relationship
 objectJson += ",\"correctiveActions\":[";
 		
@@ -637,10 +605,10 @@ objectJson += ",\"cMSEntries\":[";
 
 		// Target Relationships
 		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
+
 		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.timecards = (List<Timecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecards");
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
-		this.scorecardMonthlyResults = (List<ScorecardMonthlyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMonthlyResults");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
 		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
@@ -657,7 +625,6 @@ objectJson += ",\"cMSEntries\":[";
 		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMonthlyResult.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Schedule.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));
@@ -666,4 +633,4 @@ objectJson += ",\"cMSEntries\":[";
 		return listSetters;
 	}
 }
-
+

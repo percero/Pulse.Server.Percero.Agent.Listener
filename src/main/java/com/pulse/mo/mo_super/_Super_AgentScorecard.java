@@ -243,19 +243,6 @@ public void setCoachingSessions(List<CoachingSession> value) {
 	this.coachingSessions = value;
 }
 
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardWeeklyScore.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardWeeklyScore> scorecardWeeklyScores;
-public List<ScorecardWeeklyScore> getScorecardWeeklyScores() {
-	return this.scorecardWeeklyScores;
-}
-
-public void setScorecardWeeklyScores(List<ScorecardWeeklyScore> value) {
-	this.scorecardWeeklyScores = value;
-}
-
 
 
 	//////////////////////////////////////////////////////
@@ -287,6 +274,20 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_WEEKLY_SCORE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardWeeklyScoreOfAgentScorecard")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardWeeklyScore scorecardWeeklyScore;
+public ScorecardWeeklyScore getScorecardWeeklyScore() {
+	return this.scorecardWeeklyScore;
+}
+
+public void setScorecardWeeklyScore(ScorecardWeeklyScore value) 
+{
+	this.scorecardWeeklyScore = value;
 }
 
 	
@@ -395,6 +396,18 @@ objectJson += ",\"scorecard\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Scorecard Weekly Score of Agent Scorecard relationship
+objectJson += ",\"scorecardWeeklyScore\":";
+		if (getScorecardWeeklyScore() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardWeeklyScore()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -466,23 +479,6 @@ objectJson += ",\"coachingSessions\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent Scorecard of Scorecard Weekly Score relationship
-objectJson += ",\"scorecardWeeklyScores\":[";
-		
-		if (getScorecardWeeklyScores() != null) {
-			int scorecardWeeklyScoresCounter = 0;
-			for(ScorecardWeeklyScore nextScorecardWeeklyScores : getScorecardWeeklyScores()) {
-				if (scorecardWeeklyScoresCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardWeeklyScores).toEmbeddedJson();
-					scorecardWeeklyScoresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -511,6 +507,7 @@ objectJson += ",\"scorecardWeeklyScores\":[";
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
+		this.scorecardWeeklyScore = (ScorecardWeeklyScore) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardWeeklyScore");
 
 
 		// Target Relationships
@@ -518,7 +515,6 @@ objectJson += ",\"scorecardWeeklyScores\":[";
 		this.scorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyResults");
 		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
-		this.scorecardWeeklyScores = (List<ScorecardWeeklyScore>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyScores");
 
 
 	}
@@ -532,7 +528,6 @@ objectJson += ",\"scorecardWeeklyScores\":[";
 		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
-		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyScore.class, "agentscorecard"));
 
 		
 		return listSetters;

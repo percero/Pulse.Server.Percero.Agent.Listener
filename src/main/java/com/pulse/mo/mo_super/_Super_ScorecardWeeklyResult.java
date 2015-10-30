@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -153,22 +154,39 @@ public void setExcluded(Integer excluded)
 {
 	this.excluded = excluded;
 }/*
-Quartile
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer quartile;
+private Date endDate;
 
-public Integer getQuartile() 
+public Date getEndDate() 
 {
-	return this.quartile;
+	return this.endDate;
 }
 
-public void setQuartile(Integer quartile)
+public void setEndDate(Date endDate)
 {
-	this.quartile = quartile;
+	this.endDate = endDate;
+}/*
+IsRequired
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isRequired;
+
+public Boolean getIsRequired() 
+{
+	return this.isRequired;
+}
+
+public void setIsRequired(Boolean isRequired)
+{
+	this.isRequired = isRequired;
 }/*
 Grade
 Notes:
@@ -272,6 +290,23 @@ public void setRollupType(Integer rollupType)
 {
 	this.rollupType = rollupType;
 }/*
+Tenure
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer tenure;
+
+public Integer getTenure() 
+{
+	return this.tenure;
+}
+
+public void setTenure(Integer tenure)
+{
+	this.tenure = tenure;
+}/*
 PercentageAttainment
 Notes:
 */
@@ -288,6 +323,23 @@ public Double getPercentageAttainment()
 public void setPercentageAttainment(Double percentageAttainment)
 {
 	this.percentageAttainment = percentageAttainment;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
 }/*
 Result
 Notes:
@@ -400,7 +452,8 @@ public void setDurationTo(Integer durationTo)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -413,7 +466,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -426,7 +480,8 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
@@ -439,7 +494,8 @@ public AgentScorecard getAgentScorecard() {
 
 public void setAgentScorecard(AgentScorecard value) {
 	this.agentScorecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -452,7 +508,8 @@ public Goal getGoal() {
 
 public void setGoal(Goal value) {
 	this.goal = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
@@ -465,7 +522,8 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MONTHLY_RESULT_ID")
@@ -478,6 +536,21 @@ public ScorecardMonthlyResult getScorecardMonthlyResult() {
 
 public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 	this.scorecardMonthlyResult = value;
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="PRE_SCARD_WEEKLY_RESULT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardWeeklyResultOfNextScorecardWeeklyResult")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardWeeklyResult previousScorecardWeeklyResult;
+public ScorecardWeeklyResult getPreviousScorecardWeeklyResult() {
+	return this.previousScorecardWeeklyResult;
+}
+
+public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value) 
+{
+	this.previousScorecardWeeklyResult = value;
 }
 
 	
@@ -559,26 +632,19 @@ public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Quartile property
-		objectJson += ",\"quartile\":";
-		
-		if (getQuartile() == null)
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getQuartile());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Is Required property
+		objectJson += ",\"isRequired\":";
+		if (getIsRequired() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRequired();
 		}
 		//Retrieve value of the Grade property
 		objectJson += ",\"grade\":";
@@ -664,12 +730,40 @@ public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Tenure property
+		objectJson += ",\"tenure\":";
+		
+		if (getTenure() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTenure());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Percentage Attainment property
 		objectJson += ",\"percentageAttainment\":";
 		if (getPercentageAttainment() == null)
 			objectJson += "null";
 		else {
 			objectJson += getPercentageAttainment();
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the Result property
 		objectJson += ",\"result\":";
@@ -830,6 +924,18 @@ objectJson += ",\"scorecardMonthlyResult\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Previous Scorecard Weekly Result of Next Scorecard Weekly Result relationship
+objectJson += ",\"previousScorecardWeeklyResult\":";
+		if (getPreviousScorecardWeeklyResult() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getPreviousScorecardWeeklyResult()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -852,8 +958,10 @@ objectJson += ",\"scorecardMonthlyResult\":";
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Excluded property
 		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
-		//From value of the Quartile property
-		setQuartile(JsonUtils.getJsonInteger(jsonObject, "quartile"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Is Required property
+		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
 		//From value of the Grade property
 		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Week Date property
@@ -866,8 +974,12 @@ objectJson += ",\"scorecardMonthlyResult\":";
 		setGoalType(JsonUtils.getJsonInteger(jsonObject, "goalType"));
 		//From value of the Rollup Type property
 		setRollupType(JsonUtils.getJsonInteger(jsonObject, "rollupType"));
+		//From value of the Tenure property
+		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
 		//From value of the Percentage Attainment property
 		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Result property
 		setResult(JsonUtils.getJsonDouble(jsonObject, "result"));
 		//From value of the Employee Id property
@@ -889,6 +1001,7 @@ objectJson += ",\"scorecardMonthlyResult\":";
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 		this.scorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyResult");
+		this.previousScorecardWeeklyResult = (ScorecardWeeklyResult) JsonUtils.getJsonPerceroObject(jsonObject, "previousScorecardWeeklyResult");
 
 
 		// Target Relationships
@@ -906,4 +1019,4 @@ objectJson += ",\"scorecardMonthlyResult\":";
 		return listSetters;
 	}
 }
-
+

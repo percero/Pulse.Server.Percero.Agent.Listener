@@ -174,7 +174,20 @@ public void setFullName(String fullName)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="supervisorManagerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CorrectiveAction> supervisorCorrectiveActions;
+public List<CorrectiveAction> getSupervisorCorrectiveActions() {
+	return this.supervisorCorrectiveActions;
+}
+
+public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
+	this.supervisorCorrectiveActions = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -301,6 +314,23 @@ public void setFullName(String fullName)
 
 		
 		// Target Relationships
+//Retrieve value of the Supervisor Manager Employee of Supervisor Corrective Action relationship
+objectJson += ",\"supervisorCorrectiveActions\":[";
+		
+		if (getSupervisorCorrectiveActions() != null) {
+			int supervisorCorrectiveActionsCounter = 0;
+			for(CorrectiveAction nextSupervisorCorrectiveActions : getSupervisorCorrectiveActions()) {
+				if (supervisorCorrectiveActionsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextSupervisorCorrectiveActions).toEmbeddedJson();
+					supervisorCorrectiveActionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -328,6 +358,7 @@ public void setFullName(String fullName)
 
 
 		// Target Relationships
+		this.supervisorCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "supervisorCorrectiveActions");
 
 
 	}
@@ -337,6 +368,7 @@ public void setFullName(String fullName)
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
 
 		
 		return listSetters;
