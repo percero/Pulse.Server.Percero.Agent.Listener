@@ -5,11 +5,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.percero.agents.sync.services.DAODataProvider;
 import com.percero.agents.sync.services.DataProviderManager;
 
+/**
+ * See http://www.mchange.com/projects/c3p0/ for configuration tuning.
+ *
+ */
 public class SqlConnectionFactory implements IConnectionFactory {
 
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
@@ -25,10 +30,12 @@ public class SqlConnectionFactory implements IConnectionFactory {
     private String username;
     private String password;
     private String jdbcUrl;
-    private Integer acquireIncrement = 2;
-    private Integer minPoolSize = 2;
-    private Integer maxPoolSize = 50;
-    private Integer fetchSize = 500;
+    private Integer acquireIncrement = 4;
+    private Integer minPoolSize = 4;
+    private Integer maxPoolSize = 52;
+    private Integer maxIdleTime = 60 * 30;	// 30 Minutes
+    private String testQuery = "SELECT 1 FROM dual";
+    private Integer fetchSize = 100;
     
     public String getName() {
     	return name;
@@ -94,6 +101,22 @@ public class SqlConnectionFactory implements IConnectionFactory {
 		this.maxPoolSize = maxPoolSize;
 	}
     
+	public Integer getMaxIdleTime() {
+		return maxIdleTime;
+	}
+	
+	public void setMaxIdleTime(Integer maxIdleTime) {
+		this.maxIdleTime = maxIdleTime;
+	}
+	
+	public String getTestQuery() {
+		return testQuery;
+	}
+	
+	public void setTestQuery(String testQuery) {
+		this.testQuery = testQuery;
+	}
+	
 	public Integer getFetchSize() {
 		// Default to 100;
 		if (fetchSize == null || fetchSize <= 0) {
@@ -123,11 +146,24 @@ public class SqlConnectionFactory implements IConnectionFactory {
             cpds.setPassword(password);
 
 // the settings below are optional -- c3p0 can work with defaults
-            cpds.setMinPoolSize(minPoolSize);
-            cpds.setAcquireIncrement(acquireIncrement);
-            cpds.setMaxPoolSize(maxPoolSize);
+            if (minPoolSize != null) {
+            	cpds.setMinPoolSize(minPoolSize);
+            }
+            if (acquireIncrement != null) {
+            	cpds.setAcquireIncrement(acquireIncrement);
+            }
+            if (maxPoolSize != null) {
+            	cpds.setMaxPoolSize(maxPoolSize);
+            }
+            if (maxIdleTime != null) {
+            	cpds.setMaxIdleTime(maxIdleTime);
+            	cpds.setIdleConnectionTestPeriod(maxIdleTime);
+            }
 			cpds.setNumHelperThreads(30);
 			cpds.setTestConnectionOnCheckout(true);
+			if (StringUtils.hasText(testQuery)) {
+				cpds.setPreferredTestQuery(testQuery);
+			}
             
             PulseDataConnectionRegistry.getInstance().registerConnectionFactory(getName(), this);
             DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());
