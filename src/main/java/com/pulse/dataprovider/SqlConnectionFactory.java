@@ -1,8 +1,9 @@
 package com.pulse.dataprovider;
 
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,8 @@ import org.springframework.util.StringUtils;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.percero.agents.sync.services.DAODataProvider;
 import com.percero.agents.sync.services.DataProviderManager;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * See http://www.mchange.com/projects/c3p0/ for configuration tuning.
@@ -20,12 +23,16 @@ public class SqlConnectionFactory implements IConnectionFactory {
     private static Logger logger = Logger.getLogger(SqlConnectionFactory.class);
     
     private static final long MAX_CONNECT_TIME = 2500;	// 2.5 Seconds.
+
+    private static final String HIKARI_CONNECTION_POOL = "hikari";
+    private static final String C3P0_CONNECTION_POOL = "c3p0";
     
     public SqlConnectionFactory() {
     	
     }
 
     private String name;
+    private String preferredConnectionPool = HIKARI_CONNECTION_POOL;
     private String driverClassName;
     private String username;
     private String password;
@@ -45,6 +52,14 @@ public class SqlConnectionFactory implements IConnectionFactory {
     	this.name = name;
     }
 
+    public String getPreferredConnectionPool() {
+    	return preferredConnectionPool;
+    }
+    
+    public void setPreferredConnectionPool(String preferredConnectionPool) {
+    	this.preferredConnectionPool = preferredConnectionPool;
+    }
+    
 	public String getDriverClassName() {
 		return driverClassName;
 	}
@@ -129,8 +144,8 @@ public class SqlConnectionFactory implements IConnectionFactory {
 		this.fetchSize = fetchSize;
 	}
 	
-    private ComboPooledDataSource cpds;
-
+//    private ComboPooledDataSource cpds;
+	private DataSource ds;
     
     private boolean initialized = false;
     public void init() throws Exception {
@@ -139,37 +154,74 @@ public class SqlConnectionFactory implements IConnectionFactory {
     	}
         try {
             logger.info("Initializing connection factory: "+getName());
-            cpds = new ComboPooledDataSource();
-            cpds.setDriverClass(driverClassName); //loads the jdbc driver
-            cpds.setJdbcUrl(jdbcUrl);
-            cpds.setUser(username);
-            cpds.setPassword(password);
-
-// the settings below are optional -- c3p0 can work with defaults
-            if (minPoolSize != null) {
-            	cpds.setMinPoolSize(minPoolSize);
+  
+            if (C3P0_CONNECTION_POOL.equalsIgnoreCase(preferredConnectionPool)) {
+                ComboPooledDataSource cpds = new ComboPooledDataSource();
+                cpds.setDriverClass(driverClassName); //loads the jdbc driver
+                cpds.setJdbcUrl(jdbcUrl);
+                cpds.setUser(username);
+                cpds.setPassword(password);
+    
+    // the settings below are optional -- c3p0 can work with defaults
+                if (minPoolSize != null) {
+                	cpds.setMinPoolSize(minPoolSize);
+                }
+                if (acquireIncrement != null) {
+                	cpds.setAcquireIncrement(acquireIncrement);
+                }
+                if (maxPoolSize != null) {
+                	cpds.setMaxPoolSize(maxPoolSize);
+                }
+                if (maxIdleTime != null) {
+                	cpds.setMaxIdleTime(maxIdleTime);
+                	cpds.setIdleConnectionTestPeriod(maxIdleTime);
+                }
+    			cpds.setNumHelperThreads(30);
+    			cpds.setTestConnectionOnCheckout(true);
+    			if (StringUtils.hasText(testQuery)) {
+    				cpds.setPreferredTestQuery(testQuery);
+    			}
+    			
+    			ds = cpds;
             }
-            if (acquireIncrement != null) {
-            	cpds.setAcquireIncrement(acquireIncrement);
+            else {
+            	// Default to Hikari Connection Pool.
+            	HikariConfig config = new HikariConfig();
+//            config.setDriverClassName(driverClassName);
+            	config.setJdbcUrl(jdbcUrl);
+            	config.setUsername(username);
+            	config.setPassword(password);
+            	config.addDataSourceProperty("cachePrepStmts", "true");
+            	config.addDataSourceProperty("prepStmtCacheSize", "250");
+            	config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            	
+            	config.setPoolName(name);
+            	if (minPoolSize != null) {
+            		config.setMinimumIdle(minPoolSize);
+            	}
+//            if (acquireIncrement != null) {
+//            	config.setAcquireIncrement(acquireIncrement);
+//            }
+            	if (maxPoolSize != null) {
+            		config.setMaximumPoolSize(maxPoolSize);
+            	}
+            	if (maxIdleTime != null) {
+            		config.setIdleTimeout(maxIdleTime * 1000);	// Convert to milliseconds
+            	}
+//			config.setNumHelperThreads(30);
+//			config.setTestConnectionOnCheckout(true);
+            	if (StringUtils.hasText(testQuery)) {
+            		config.setConnectionTestQuery(testQuery);
+            	}
+            	
+            	ds = new HikariDataSource(config);
             }
-            if (maxPoolSize != null) {
-            	cpds.setMaxPoolSize(maxPoolSize);
-            }
-            if (maxIdleTime != null) {
-            	cpds.setMaxIdleTime(maxIdleTime);
-            	cpds.setIdleConnectionTestPeriod(maxIdleTime);
-            }
-			cpds.setNumHelperThreads(30);
-			cpds.setTestConnectionOnCheckout(true);
-			if (StringUtils.hasText(testQuery)) {
-				cpds.setPreferredTestQuery(testQuery);
-			}
             
             PulseDataConnectionRegistry.getInstance().registerConnectionFactory(getName(), this);
             DataProviderManager.getInstance().setDefaultDataProvider(DAODataProvider.getInstance());
 
             initialized = true;
-        }catch(PropertyVetoException pve){
+        }catch(Exception pve){
             logger.error(pve.getMessage(), pve);
             throw pve;
 		}
@@ -189,7 +241,8 @@ public class SqlConnectionFactory implements IConnectionFactory {
         			logger.error("Error initializing SqlConnectionFactory: " + this.getName(), e);
         		}
         	}
-            Connection result = cpds.getConnection();
+        	Connection result = ds.getConnection();
+//            Connection result = cpds.getConnection();
     		logger.debug("Database Connection Time: " + (System.currentTimeMillis() - timeStart) + "ms [" + this.getName() + ": " + this.getJdbcUrl() + "]");
             return result;
         }catch(SQLException e){

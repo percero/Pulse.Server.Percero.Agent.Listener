@@ -66,6 +66,13 @@
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0</version>
 		</dependency>
+		
+		<!-- Connection Pool -->
+	    <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>2.4.1</version>
+	    </dependency>
 	</dependencies>
 
 	<build>
