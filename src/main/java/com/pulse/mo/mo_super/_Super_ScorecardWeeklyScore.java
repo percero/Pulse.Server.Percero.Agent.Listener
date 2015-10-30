@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -264,7 +265,8 @@ public void setEndDate(Date endDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -277,7 +279,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -290,20 +293,23 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="AGENT_SCORECARD_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentScorecardOfScorecardWeeklyScore")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private AgentScorecard agentScorecard;
-public AgentScorecard getAgentScorecard() {
-	return this.agentScorecard;
+@JoinColumn(name="PRE_SCARD_WEEKLY_SCORE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardWeeklyScoreOfNextScorecardWeeklyScore")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardWeeklyScore previousScorecardWeeklyScore;
+public ScorecardWeeklyScore getPreviousScorecardWeeklyScore() {
+	return this.previousScorecardWeeklyScore;
 }
 
-public void setAgentScorecard(AgentScorecard value) {
-	this.agentScorecard = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+public void setPreviousScorecardWeeklyScore(ScorecardWeeklyScore value) 
+{
+	this.previousScorecardWeeklyScore = value;
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MONTHLY_SCORE_ID")
@@ -466,13 +472,13 @@ objectJson += ",\"scorecard\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Agent Scorecard of Scorecard Weekly Score relationship
-objectJson += ",\"agentScorecard\":";
-		if (getAgentScorecard() == null)
+//Retrieve value of the Previous Scorecard Weekly Score of Next Scorecard Weekly Score relationship
+objectJson += ",\"previousScorecardWeeklyScore\":";
+		if (getPreviousScorecardWeeklyScore() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getPreviousScorecardWeeklyScore()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -529,7 +535,7 @@ objectJson += ",\"scorecardMonthlyScore\":";
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
-		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
+		this.previousScorecardWeeklyScore = (ScorecardWeeklyScore) JsonUtils.getJsonPerceroObject(jsonObject, "previousScorecardWeeklyScore");
 		this.scorecardMonthlyScore = (ScorecardMonthlyScore) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyScore");
 
 
@@ -548,4 +554,4 @@ objectJson += ",\"scorecardMonthlyScore\":";
 		return listSetters;
 	}
 }
-
+

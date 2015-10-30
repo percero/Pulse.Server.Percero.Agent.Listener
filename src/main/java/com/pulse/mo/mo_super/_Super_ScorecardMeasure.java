@@ -118,23 +118,6 @@ public String getRewardActive()
 public void setRewardActive(String rewardActive)
 {
 	this.rewardActive = rewardActive;
-}/*
-IsRequired
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean isRequired;
-
-public Boolean getIsRequired() 
-{
-	return this.isRequired;
-}
-
-public void setIsRequired(Boolean isRequired)
-{
-	this.isRequired = isRequired;
 }
 
 	//////////////////////////////////////////////////////
@@ -237,13 +220,6 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Is Required property
-		objectJson += ",\"isRequired\":";
-		if (getIsRequired() == null)
-			objectJson += "null";
-		else {
-			objectJson += getIsRequired();
-		}
 
 				
 		// Source Relationships
@@ -306,8 +282,6 @@ objectJson += ",\"behaviors\":[";
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Reward Active property
 		setRewardActive(JsonUtils.getJsonString(jsonObject, "rewardActive"));
-		//From value of the Is Required property
-		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
 
 		
 		// Source Relationships

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -264,7 +265,8 @@ public void setEndDate(Date endDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -277,7 +279,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -290,6 +293,21 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="PRE_SCARD_MONTHLY_SCORE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardMonthlyScoreOfNextScorecardMonthlyScore")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private ScorecardMonthlyScore previousScorecardMonthlyScore;
+public ScorecardMonthlyScore getPreviousScorecardMonthlyScore() {
+	return this.previousScorecardMonthlyScore;
+}
+
+public void setPreviousScorecardMonthlyScore(ScorecardMonthlyScore value) 
+{
+	this.previousScorecardMonthlyScore = value;
 }
 
 	
@@ -440,6 +458,18 @@ objectJson += ",\"scorecard\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Previous Scorecard Monthly Score of Next Scorecard Monthly Score relationship
+objectJson += ",\"previousScorecardMonthlyScore\":";
+		if (getPreviousScorecardMonthlyScore() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getPreviousScorecardMonthlyScore()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -479,6 +509,7 @@ objectJson += ",\"scorecard\":";
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
+		this.previousScorecardMonthlyScore = (ScorecardMonthlyScore) JsonUtils.getJsonPerceroObject(jsonObject, "previousScorecardMonthlyScore");
 
 
 		// Target Relationships
@@ -496,4 +527,4 @@ objectJson += ",\"scorecard\":";
 		return listSetters;
 	}
 }
-
+

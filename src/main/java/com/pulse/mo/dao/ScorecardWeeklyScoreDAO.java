@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -45,14 +46,13 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_WEEKLY_SCORE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"PRE_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_WEEKLY_SCORE\" \"SCORECARD_WEEKLY_SCORE\"";
 	private String whereClause = "  WHERE \"SCORECARD_WEEKLY_SCORE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_WEEKLY_SCORE\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"SCORECARD_WEEKLY_SCORE\".\"ID\"";
 	
-	private String joinAgentScorecardIDScorecardWeeklyScore = ",(select ? As SQLID From Dual) WHERE SCORECARD_WEEKLY_SCORE.EMPLOYEE_ID= SUBSTR(SQLID,0,9) AND SCORECARD_WEEKLY_SCORE.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND SCORECARD_WEEKLY_SCORE.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
-
+	
 
 	
 	@Override
@@ -110,22 +110,14 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
-{
-return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDScorecardWeeklyScore;
-}
-
+		
 		return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SCORECARD_WEEKLY_SCORE\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
-{
-return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDScorecardWeeklyScore;
-}
-
+		
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SCORECARD_WEEKLY_SCORE\"." + joinColumnName + "=?";
 	}
 
@@ -141,12 +133,12 @@ return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\" " + selectFromStatementTableNam
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"AGENT_SCORECARD_ID\",\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PRE_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREVIOUS_SCORECARD_WEEKLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -158,7 +150,8 @@ return "SELECT \"SCORECARD_WEEKLY_SCORE\".\"ID\" " + selectFromStatementTableNam
 	protected ScorecardWeeklyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ScorecardWeeklyScore nextResult = null;
+
+ScorecardWeeklyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -206,9 +199,9 @@ agent.setID(rs.getString("AGENT_ID"));
 nextResult.setAgent(agent);
 
 
-AgentScorecard agentscorecard = new AgentScorecard();
-agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
-nextResult.setAgentScorecard(agentscorecard);
+ScorecardWeeklyScore previousscorecardweeklyscore = new ScorecardWeeklyScore();
+previousscorecardweeklyscore.setID(rs.getString("PRE_SCARD_WEEKLY_SCORE_ID"));
+nextResult.setPreviousScorecardWeeklyScore(previousscorecardweeklyscore);
 
 
 Scorecard scorecard = new Scorecard();
@@ -253,13 +246,13 @@ else
 }
 
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getPreviousScorecardWeeklyScore() == null)
 {
 pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(13, perceroObject.getPreviousScorecardWeeklyScore().getID());
 }
 
 
@@ -326,13 +319,13 @@ else
 }
 
 
-if (perceroObject.getAgentScorecard() == null)
+if (perceroObject.getPreviousScorecardWeeklyScore() == null)
 {
 pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getAgentScorecard().getID());
+		pstmt.setString(12, perceroObject.getPreviousScorecardWeeklyScore().getID());
 }
 
 
@@ -564,9 +557,9 @@ paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
-boolean useAgentScorecardID = theQueryObject.getAgentScorecard() != null && (excludeProperties == null || !excludeProperties.contains("agentScorecard"));
+boolean usePreviousScorecardWeeklyScoreID = theQueryObject.getPreviousScorecardWeeklyScore() != null && (excludeProperties == null || !excludeProperties.contains("previousScorecardWeeklyScore"));
 
-if (useAgentScorecardID)
+if (usePreviousScorecardWeeklyScoreID)
 {
 if (propertyCounter > 0)
 {
@@ -576,8 +569,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"AGENT_SCORECARD_ID\" =? ";
-paramValues.add(theQueryObject.getAgentScorecard().getID());
+sql += " \"PRE_SCARD_WEEKLY_SCORE_ID\" =? ";
+paramValues.add(theQueryObject.getPreviousScorecardWeeklyScore().getID());
 propertyCounter++;
 }
 
@@ -638,7 +631,8 @@ propertyCounter++;
 	}
 	
 	
-public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
+
+public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -701,9 +695,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

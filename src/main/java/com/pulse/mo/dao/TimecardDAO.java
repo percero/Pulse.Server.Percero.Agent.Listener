@@ -105,7 +105,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		return "select * from (" + SQL_VIEW + " WHERE \"TIMECARD\"." + joinColumnName + "=? order by \"PDATE\" desc) where ROWNUM < 15";
-		
+
 //		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) AND \"TIMECARD\"." + joinColumnName + "=?";
 	}
 

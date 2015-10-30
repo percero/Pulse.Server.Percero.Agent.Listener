@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	protected ShiftStatusNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ShiftStatusNotification nextResult = null;
+
+ShiftStatusNotification nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -438,4 +440,4 @@ propertyCounter++;
 	
 	
 }
-
+

@@ -45,7 +45,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_MEASURE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"IS_REQUIRED\",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"REWARD_ACTIVE\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_MEASURE\".\"NAME\",\"SCORECARD_MEASURE\".\"REWARD_ACTIVE\",\"SCORECARD_MEASURE\".\"SCORECARD_ID\",\"SCORECARD_MEASURE\".\"MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MEASURE\" \"SCORECARD_MEASURE\"";
 	private String whereClause = "  WHERE \"SCORECARD_MEASURE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MEASURE\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"IS_REQUIRED\",\"NAME\",\"REWARD_ACTIVE\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_MEASURE (\"ID\",\"NAME\",\"REWARD_ACTIVE\",\"SCORECARD_ID\",\"MEASURE_ID\") VALUES (?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_MEASURE SET \"IS_REQUIRED\"=?,\"NAME\"=?,\"REWARD_ACTIVE\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_MEASURE SET \"NAME\"=?,\"REWARD_ACTIVE\"=?,\"SCORECARD_ID\"=?,\"MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,10 +162,7 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
     	
     	if (!shellOnly) 
 		{
-			nextResult.setIsRequired(rs.getBoolean("IS_REQUIRED"));
-
-
-nextResult.setName(rs.getString("NAME"));
+			nextResult.setName(rs.getString("NAME"));
 
 
 nextResult.setRewardActive(rs.getString("REWARD_ACTIVE"));
@@ -192,27 +189,26 @@ nextResult.setMeasure(measure);
 	protected void setBaseStatmentInsertParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getRewardActive());
+pstmt.setString(2, perceroObject.getName());
+pstmt.setString(3, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getScorecard().getID());
+		pstmt.setString(4, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getMeasure() == null)
 {
-pstmt.setString(6, null);
+pstmt.setString(5, null);
 }
 else
 {
-		pstmt.setString(6, perceroObject.getMeasure().getID());
+		pstmt.setString(5, perceroObject.getMeasure().getID());
 }
 
 
@@ -238,30 +234,29 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ScorecardMeasure perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		JdbcHelper.setBoolean(pstmt,1, perceroObject.getIsRequired());
-pstmt.setString(2, perceroObject.getName());
-pstmt.setString(3, perceroObject.getRewardActive());
+		pstmt.setString(1, perceroObject.getName());
+pstmt.setString(2, perceroObject.getRewardActive());
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(4, null);
+pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(4, perceroObject.getScorecard().getID());
+		pstmt.setString(3, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getMeasure() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(4, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getMeasure().getID());
+		pstmt.setString(4, perceroObject.getMeasure().getID());
 }
 
-pstmt.setString(6, perceroObject.getID());
+pstmt.setString(5, perceroObject.getID());
 
 		
 	}
@@ -290,28 +285,11 @@ pstmt.setString(6, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useIsRequired = theQueryObject.getIsRequired() != null && (excludeProperties == null || !excludeProperties.contains("isRequired"));
-
-if (useIsRequired)
-{
-sql += " WHERE ";
-sql += " \"IS_REQUIRED\" =? ";
-paramValues.add(theQueryObject.getIsRequired());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+		boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
@@ -379,11 +357,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD_MEASURE(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD_MEASURE(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

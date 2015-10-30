@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,9 +42,9 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"ID\", \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS as \"NAME\", \"TIMECARD_ACTIVITY\".\"DESCRIPTION\" as \"DESCRIPTION\", \"TIMECARD_ACTIVITY\".\"BILLABLE\" as \"NON_BILLABLE\", \"TIMECARD_ACTIVITY\".\"POS\" as \"CODE\" FROM \"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"ESTART_ACTIVITY_CODE_VW\" \"TIMECARD_ACTIVITY\"";
-	private String whereClause = " WHERE \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"TIMECARD_ACTIVITY\".CENTRE || \"TIMECARD_ACTIVITY\".POS";
+	private String whereClause = " WHERE \"TIMECARD_ACTIVITY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD_ACTIVITY\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"TIMECARD_ACTIVITY\".\"ID\"";
 
 	
 
@@ -146,8 +145,7 @@ public class TimecardActivityDAO extends SqlDataAccessObject<TimecardActivity> i
 	protected TimecardActivity extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-
-TimecardActivity nextResult = null;
+TimecardActivity nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -273,8 +271,7 @@ propertyCounter++;
 	}
 
 	
-
-public TimecardActivity createObject(TimecardActivity perceroObject, String userId)
+public TimecardActivity createObject(TimecardActivity perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -337,9 +334,8 @@ public TimecardActivity createObject(TimecardActivity perceroObject, String user
 		return null;
 	}
 }
-
-
+
 
 
 }
-
+
