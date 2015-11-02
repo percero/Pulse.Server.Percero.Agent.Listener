@@ -45,7 +45,7 @@ public class CorrectiveActionAttachmentDAO extends SqlDataAccessObject<Correctiv
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"CORRECTIVE_ATTACHMENT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"CORRECTIVE_ATTACHMENT\".\"CREATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"TYPE\",\"CORRECTIVE_ATTACHMENT\".\"CREATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"DESCRIPTION\",\"CORRECTIVE_ATTACHMENT\".\"EMPLOYEE_ID\",\"CORRECTIVE_ATTACHMENT\".\"TEMP_STORE_ID\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"VERSION\",\"CORRECTIVE_ATTACHMENT\".\"CORRECTIVE_ACTION_ID\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ATTACHMENT\".\"CREATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_ON\",\"CORRECTIVE_ATTACHMENT\".\"TYPE\",\"CORRECTIVE_ATTACHMENT\".\"TEMP_STORE_ID\",\"CORRECTIVE_ATTACHMENT\".\"UPDATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"VERSION\",\"CORRECTIVE_ATTACHMENT\".\"CREATED_BY\",\"CORRECTIVE_ATTACHMENT\".\"DESCRIPTION\",\"CORRECTIVE_ATTACHMENT\".\"EMPLOYEE_ID\",\"CORRECTIVE_ATTACHMENT\".\"CORRECTIVE_ACTION_ID\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ATTACHMENT\" \"CORRECTIVE_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"CORRECTIVE_ATTACHMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class CorrectiveActionAttachmentDAO extends SqlDataAccessObject<Correctiv
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_CORRECTIVE_ATTACHMENT (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"CORRECTIVE_ACTION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_CORRECTIVE_ATTACHMENT (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"CORRECTIVE_ACTION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_CORRECTIVE_ATTACHMENT SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"CORRECTIVE_ACTION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_CORRECTIVE_ATTACHMENT SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"CORRECTIVE_ACTION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -171,15 +171,6 @@ nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDA
 nextResult.setType(rs.getInt("TYPE"));
 
 
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
-
-
-nextResult.setDescription(rs.getString("DESCRIPTION"));
-
-
-nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
-
-
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
 
 
@@ -187,6 +178,15 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
 nextResult.setVersion(rs.getString("VERSION"));
+
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+
+nextResult.setDescription(rs.getString("DESCRIPTION"));
+
+
+nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 
 
 CorrectiveAction correctiveaction = new CorrectiveAction();
@@ -208,12 +208,12 @@ nextResult.setCorrectiveAction(correctiveaction);
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,4, perceroObject.getType());
-pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setString(6, perceroObject.getDescription());
-pstmt.setString(7, perceroObject.getEmployeeId());
-pstmt.setString(8, perceroObject.getTempStoreId());
-pstmt.setString(9, perceroObject.getUpdatedBy());
-pstmt.setString(10, perceroObject.getVersion());
+pstmt.setString(5, perceroObject.getTempStoreId());
+pstmt.setString(6, perceroObject.getUpdatedBy());
+pstmt.setString(7, perceroObject.getVersion());
+pstmt.setString(8, perceroObject.getCreatedBy());
+pstmt.setString(9, perceroObject.getDescription());
+pstmt.setString(10, perceroObject.getEmployeeId());
 
 if (perceroObject.getCorrectiveAction() == null)
 {
@@ -250,12 +250,12 @@ else
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getCreatedBy());
-pstmt.setString(5, perceroObject.getDescription());
-pstmt.setString(6, perceroObject.getEmployeeId());
-pstmt.setString(7, perceroObject.getTempStoreId());
-pstmt.setString(8, perceroObject.getUpdatedBy());
-pstmt.setString(9, perceroObject.getVersion());
+pstmt.setString(4, perceroObject.getTempStoreId());
+pstmt.setString(5, perceroObject.getUpdatedBy());
+pstmt.setString(6, perceroObject.getVersion());
+pstmt.setString(7, perceroObject.getCreatedBy());
+pstmt.setString(8, perceroObject.getDescription());
+pstmt.setString(9, perceroObject.getEmployeeId());
 
 if (perceroObject.getCorrectiveAction() == null)
 {
@@ -339,57 +339,6 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
-
-if (useCreatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
-propertyCounter++;
-}
-
-boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
-
-if (useDescription)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"DESCRIPTION\" =? ";
-paramValues.add(theQueryObject.getDescription());
-propertyCounter++;
-}
-
-boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
-
-if (useEmployeeId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"EMPLOYEE_ID\" =? ";
-paramValues.add(theQueryObject.getEmployeeId());
-propertyCounter++;
-}
-
 boolean useTempStoreId = StringUtils.hasText(theQueryObject.getTempStoreId()) && (excludeProperties == null || !excludeProperties.contains("tempStoreId"));
 
 if (useTempStoreId)
@@ -438,6 +387,57 @@ sql += " WHERE ";
 }
 sql += " \"VERSION\" =? ";
 paramValues.add(theQueryObject.getVersion());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useDescription = StringUtils.hasText(theQueryObject.getDescription()) && (excludeProperties == null || !excludeProperties.contains("description"));
+
+if (useDescription)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"DESCRIPTION\" =? ";
+paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useEmployeeId = StringUtils.hasText(theQueryObject.getEmployeeId()) && (excludeProperties == null || !excludeProperties.contains("employeeId"));
+
+if (useEmployeeId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"EMPLOYEE_ID\" =? ";
+paramValues.add(theQueryObject.getEmployeeId());
 propertyCounter++;
 }
 

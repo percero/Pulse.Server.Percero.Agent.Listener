@@ -103,23 +103,7 @@ public void setDurationFrom(Integer durationFrom)
 {
 	this.durationFrom = durationFrom;
 }/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
 UpdatedOn
 Notes:
 */
@@ -392,23 +376,6 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
-}/*
 IsCoachable
 Notes:
 */
@@ -498,6 +465,20 @@ public void setAgentScorecard(AgentScorecard value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="DEVELOPMENT_PLAN_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_DevelopmentPlanOfScorecardWeeklyResult")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private DevelopmentPlan developmentPlan;
+public DevelopmentPlan getDevelopmentPlan() {
+	return this.developmentPlan;
+}
+
+public void setDevelopmentPlan(DevelopmentPlan value) {
+	this.developmentPlan = value;
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_GoalOfScorecardWeeklyResult")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -540,7 +521,7 @@ public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PRE_SCARD_WEEKLY_RESULT_ID")
+@JoinColumn(name="PREVIOUS_SCORECARD_WEEKLY_RESULT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardWeeklyResultOfNextScorecardWeeklyResult")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardWeeklyResult previousScorecardWeeklyResult;
@@ -583,27 +564,7 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
 		if (getUpdatedOn() == null)
@@ -800,27 +761,7 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+
 		//Retrieve value of the Is Coachable property
 		objectJson += ",\"isCoachable\":";
 		if (getIsCoachable() == null)
@@ -883,6 +824,18 @@ objectJson += ",\"agentScorecard\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getAgentScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Development Plan of Scorecard Weekly Result relationship
+objectJson += ",\"developmentPlan\":";
+		if (getDevelopmentPlan() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getDevelopmentPlan()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -952,8 +905,7 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		// Properties
 		//From value of the Duration From property
 		setDurationFrom(JsonUtils.getJsonInteger(jsonObject, "durationFrom"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Excluded property
@@ -986,8 +938,7 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+
 		//From value of the Is Coachable property
 		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
 		//From value of the Duration To property
@@ -998,6 +949,7 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
+		this.developmentPlan = (DevelopmentPlan) JsonUtils.getJsonPerceroObject(jsonObject, "developmentPlan");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 		this.scorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyResult");

@@ -207,19 +207,6 @@ public void setAdhocTasks(List<AdhocTask> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentActivity.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<DevelopmentActivity> developmentActivities;
-public List<DevelopmentActivity> getDevelopmentActivities() {
-	return this.developmentActivities;
-}
-
-public void setDevelopmentActivities(List<DevelopmentActivity> value) {
-	this.developmentActivities = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Timecard.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<Timecard> timecards;
 public List<Timecard> getTimecards() {
@@ -472,23 +459,6 @@ objectJson += ",\"adhocTasks\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of Development Activity relationship
-objectJson += ",\"developmentActivities\":[";
-		
-		if (getDevelopmentActivities() != null) {
-			int developmentActivitiesCounter = 0;
-			for(DevelopmentActivity nextDevelopmentActivities : getDevelopmentActivities()) {
-				if (developmentActivitiesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextDevelopmentActivities).toEmbeddedJson();
-					developmentActivitiesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Timecard relationship
 objectJson += ",\"timecards\":[";
 		
@@ -606,7 +576,6 @@ objectJson += ",\"cMSEntries\":[";
 		// Target Relationships
 		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
 
-		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 		this.timecards = (List<Timecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecards");
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
@@ -622,7 +591,6 @@ objectJson += ",\"cMSEntries\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));

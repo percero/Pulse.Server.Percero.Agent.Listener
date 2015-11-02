@@ -40,13 +40,13 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
 	private String whereClause = " WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE_ENTRY\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"SCHEDULE_ENTRY\".\"ID\"";
 
-	private String joinScheduleIDScheduleEntry = "Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) WHERE SCHEDULE.ID=?";
+	private String joinScheduleIDScheduleEntry = "Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) WHERE SCHEDULE.ID=?\"";
 
 
 
@@ -188,24 +188,20 @@ nextResult.setDuration(rs.getDouble("DURATION"));
 nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
 
 
-nextResult.setProject(rs.getString("PROJECT"));
-
-
 nextResult.setPosition(rs.getString("POSITION"));
 
 
-Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
-if (StringUtils.hasText(agent.getID())) {
-	nextResult.setAgent(agent);
-}
+nextResult.setProject(rs.getString("PROJECT"));
 
 
 Schedule schedule = new Schedule();
 schedule.setID(rs.getString("SCHEDULE_ID"));
-if(StringUtils.hasText(schedule.getID())) {
-	nextResult.setSchedule(schedule);
-}
+nextResult.setSchedule(schedule);
+
+
+Agent agent = new Agent();
+agent.setID(rs.getString("AGENT_ID"));
+nextResult.setAgent(agent);
 
 
 
@@ -241,45 +237,11 @@ if(StringUtils.hasText(schedule.getID())) {
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 
-		boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
-
-if (usePosition)
-{
-sql += " WHERE ";
-sql += " POSITION=? ";
-paramValues.add(theQueryObject.getPosition());
-propertyCounter++;
-}
-
-boolean useProject = StringUtils.hasText(theQueryObject.getProject()) && (excludeProperties == null || !excludeProperties.contains("project"));
-
-if (useProject)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " PROJECT=? ";
-paramValues.add(theQueryObject.getProject());
-propertyCounter++;
-}
-
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
 if (useEndDate)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " END_DATE=? ";
 paramValues.add(theQueryObject.getEndDate());
 propertyCounter++;
@@ -387,9 +349,9 @@ paramValues.add(theQueryObject.getCostPOSIndex());
 propertyCounter++;
 }
 
-boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+boolean usePosition = StringUtils.hasText(theQueryObject.getPosition()) && (excludeProperties == null || !excludeProperties.contains("position"));
 
-if (useAgentID)
+if (usePosition)
 {
 if (propertyCounter > 0)
 {
@@ -399,8 +361,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " AGENT_ID=? ";
-paramValues.add(theQueryObject.getAgent().getID());
+sql += " POSITION=? ";
+paramValues.add(theQueryObject.getPosition());
+propertyCounter++;
+}
+
+boolean useProject = StringUtils.hasText(theQueryObject.getProject()) && (excludeProperties == null || !excludeProperties.contains("project"));
+
+if (useProject)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " PROJECT=? ";
+paramValues.add(theQueryObject.getProject());
 propertyCounter++;
 }
 
@@ -418,6 +397,23 @@ sql += " WHERE ";
 }
 sql += " SCHEDULE_ID=? ";
 paramValues.add(theQueryObject.getSchedule().getID());
+propertyCounter++;
+}
+
+boolean useAgentID = theQueryObject.getAgent() != null && (excludeProperties == null || !excludeProperties.contains("agent"));
+
+if (useAgentID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " AGENT_ID=? ";
+paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 

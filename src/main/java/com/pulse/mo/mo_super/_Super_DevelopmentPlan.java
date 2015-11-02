@@ -242,7 +242,20 @@ public void setStartDate(Date startDate)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentActivity.class, mappedBy="developmentPlan", cascade=javax.persistence.CascadeType.REMOVE)
+private List<DevelopmentActivity> developmentActivities;
+public List<DevelopmentActivity> getDevelopmentActivities() {
+	return this.developmentActivities;
+}
+
+public void setDevelopmentActivities(List<DevelopmentActivity> value) {
+	this.developmentActivities = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -422,6 +435,23 @@ objectJson += ",\"scorecardMeasure\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Development Plan of Development Activity relationship
+objectJson += ",\"developmentActivities\":[";
+		
+		if (getDevelopmentActivities() != null) {
+			int developmentActivitiesCounter = 0;
+			for(DevelopmentActivity nextDevelopmentActivities : getDevelopmentActivities()) {
+				if (developmentActivitiesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextDevelopmentActivities).toEmbeddedJson();
+					developmentActivitiesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -458,6 +488,7 @@ objectJson += ",\"scorecardMeasure\":";
 
 
 		// Target Relationships
+		this.developmentActivities = (List<DevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentActivities");
 
 
 	}
@@ -467,6 +498,7 @@ objectJson += ",\"scorecardMeasure\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(DevelopmentActivity.class, "developmentplan"));
 
 		
 		return listSetters;

@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -333,8 +332,7 @@ public void setGrade(Integer grade)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -347,8 +345,7 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -361,8 +358,7 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -375,8 +371,7 @@ public Goal getGoal() {
 
 public void setGoal(Goal value) {
 	this.goal = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
@@ -389,11 +384,10 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREV_SCARD_MONTHLY_RESULT_ID")
+@JoinColumn(name="PREVIOUS_SCORECARD_MONTHLY_RESULT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardMonthlyResultOfNextScorecardMonthlyResult")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardMonthlyResult previousScorecardMonthlyResult;
@@ -755,4 +749,4 @@ objectJson += ",\"previousScorecardMonthlyResult\":";
 		return listSetters;
 	}
 }
-
+

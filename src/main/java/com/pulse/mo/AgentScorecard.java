@@ -1,5 +1,6 @@
 
-package com.pulse.mo;
+
+package com.pulse.mo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +23,7 @@ public class AgentScorecard extends _Super_AgentScorecard
 {
 	public CoachingNotification getCoachingNotification() {
 		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
-		
+
 		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
 		ClassIDPair result = (ClassIDPair) cwh.get("coachingNotification", new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
 
@@ -31,7 +32,7 @@ public class AgentScorecard extends _Super_AgentScorecard
 		{
 			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
 			MappedClass mappedClass = mcm.getMappedClassByClassName(result.getClassName());
-			
+
 			IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
 			coachingNotification = (CoachingNotification) dataProvider.findById(result, null);
 		}
@@ -39,31 +40,31 @@ public class AgentScorecard extends _Super_AgentScorecard
 		return coachingNotification;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<ScorecardMonthlyResult> getScorecardMonthlyResults() {
-		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
-		
-		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
-		
-		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get("scorecardMonthlyResults", new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
-		
-		List<ScorecardMonthlyResult> results = new ArrayList<ScorecardMonthlyResult>();
-		if (result != null)
-		{
-			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
-			
-			Iterator<ClassIDPair> itrResult = result.iterator();
-			while(itrResult.hasNext()) {
-				ClassIDPair nextResult = itrResult.next();
-				
-				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
-				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
-				results.add( (ScorecardMonthlyResult) dataProvider.findById(nextResult, null) );
-			}
-		}
-		
-		return results;
-	}
+//	@SuppressWarnings("unchecked")
+//	public List<ScorecardMonthlyResult> getScorecardMonthlyResults() {
+//		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+//
+//		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+//
+//		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get("scorecardMonthlyResults", new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+//
+//		List<ScorecardMonthlyResult> results = new ArrayList<ScorecardMonthlyResult>();
+//		if (result != null)
+//		{
+//			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+//
+//			Iterator<ClassIDPair> itrResult = result.iterator();
+//			while(itrResult.hasNext()) {
+//				ClassIDPair nextResult = itrResult.next();
+//
+//				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+//				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+//				results.add( (ScorecardMonthlyResult) dataProvider.findById(nextResult, null) );
+//			}
+//		}
+//
+//		return results;
+//	}
 
 }
-
+

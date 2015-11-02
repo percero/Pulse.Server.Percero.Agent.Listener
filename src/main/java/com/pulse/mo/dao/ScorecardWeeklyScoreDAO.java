@@ -46,7 +46,7 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_WEEKLY_SCORE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"PRE_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_WEEKLY_SCORE\" \"SCORECARD_WEEKLY_SCORE\"";
 	private String whereClause = "  WHERE \"SCORECARD_WEEKLY_SCORE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_WEEKLY_SCORE\".\"ID\"= SQLLIST.column_value";
@@ -133,12 +133,12 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PRE_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREVIOUS_SCORECARD_WEEKLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV-SCARD-WEEKLY-SCORE-ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -200,7 +200,7 @@ nextResult.setAgent(agent);
 
 
 ScorecardWeeklyScore previousscorecardweeklyscore = new ScorecardWeeklyScore();
-previousscorecardweeklyscore.setID(rs.getString("PRE_SCARD_WEEKLY_SCORE_ID"));
+previousscorecardweeklyscore.setID(rs.getString("PREV_SCARD_WEEKLY_SCORE_ID"));
 nextResult.setPreviousScorecardWeeklyScore(previousscorecardweeklyscore);
 
 
@@ -569,7 +569,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"PRE_SCARD_WEEKLY_SCORE_ID\" =? ";
+sql += " \"PREV_SCARD_WEEKLY_SCORE_ID\" =? ";
 paramValues.add(theQueryObject.getPreviousScorecardWeeklyScore().getID());
 propertyCounter++;
 }

@@ -205,30 +205,19 @@ public void setCreatedOn(Date createdOn)
 	this.createdOn = createdOn;
 }/*
 Type
-Notes:Unknown = 7201,
-               XLS = 7202,
-               DOC = 7203,
-               PDF = 7204,
-               CSV = 7205,
-               GIF = 7206,
-               JPEG = 7207,
-               BMP = 7208,
-               WAV = 7209,
-               PNG = 7210,
-               PPT = 7211,
-               TXT = 7231
+Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private Integer type;
 
-public String getType() 
+public Integer getType() 
 {
 	return this.type;
 }
 
-public void setType(String type)
+public void setType(Integer type)
 {
 	this.type = type;
 }/*
@@ -525,7 +514,7 @@ objectJson += ",\"coachingSession\":";
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Temp Store Id property

@@ -1,5 +1,6 @@
 
-package com.pulse.mo;
+
+package com.pulse.mo;
 
 import javax.persistence.Entity;
 
@@ -10,8 +11,8 @@ public class Agent extends _Super_Agent
 {
 	/*
 	
-	
+
 	
 	*/
 }
-
+

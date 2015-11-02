@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -265,8 +264,7 @@ public void setEndDate(Date endDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -279,8 +277,7 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -293,11 +290,10 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PRE_SCARD_MONTHLY_SCORE_ID")
+@JoinColumn(name="PREVIOUS_SCORECARD_MONTHLY_SCORE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardMonthlyScoreOfNextScorecardMonthlyScore")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardMonthlyScore previousScorecardMonthlyScore;
@@ -527,4 +523,4 @@ objectJson += ",\"previousScorecardMonthlyScore\":";
 		return listSetters;
 	}
 }
-
+

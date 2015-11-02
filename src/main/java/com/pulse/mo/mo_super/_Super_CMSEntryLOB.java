@@ -199,7 +199,7 @@ public void setSiteId(Integer siteId)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="ECP_LOB_ID")
+@JoinColumn(name="LOB_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_LOBOfCMSEntryLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private LOB lOB;
