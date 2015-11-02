@@ -12,7 +12,7 @@
 
 	<groupId>com.pulse</groupId>
 	<artifactId>Pulse_Listener</artifactId>
-	<version>0.0.31-SNAPSHOT</version>
+	<version>0.0.32-SNAPSHOT</version>
 
 
 	<name>Pulse SyncAgentListener</name>
@@ -20,7 +20,7 @@
 	<properties>
 		<repoSshUri>git@github.com:percero/Pulse.Server.Percero.Agent.Listener.git</repoSshUri>
 		<mockito-core.version>1.9.5</mockito-core.version>
-		<syncengine.version>1.1.35-SNAPSHOT</syncengine.version>
+		<syncengine.version>1.1.36-SNAPSHOT</syncengine.version>
     </properties>
 
 	<scm>
