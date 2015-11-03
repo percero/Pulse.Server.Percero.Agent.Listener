@@ -176,9 +176,7 @@ nextResult.setLastName(rs.getString("LAST_NAME"));
 
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-if (StringUtils.hasText(teamleader.getID())) {
-	nextResult.setTeamLeader(teamleader);
-}
+nextResult.setTeamLeader(teamleader);
 
 
 

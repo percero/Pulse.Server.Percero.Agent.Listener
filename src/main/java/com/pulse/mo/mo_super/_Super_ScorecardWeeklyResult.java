@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -103,21 +102,20 @@ public void setDurationFrom(Integer durationFrom)
 {
 	this.durationFrom = durationFrom;
 }/*
-
 UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date updatedOn;
+private String updatedOn;
 
-public Date getUpdatedOn() 
+public String getUpdatedOn() 
 {
 	return this.updatedOn;
 }
 
-public void setUpdatedOn(Date updatedOn)
+public void setUpdatedOn(String updatedOn)
 {
 	this.updatedOn = updatedOn;
 }/*
@@ -376,6 +374,23 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
+}/*
 IsCoachable
 Notes:
 */
@@ -414,13 +429,25 @@ public void setDurationTo(Integer durationTo)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentPlan.class, mappedBy="scorecardWeeklyResult", cascade=javax.persistence.CascadeType.REMOVE)
+private List<DevelopmentPlan> developmentPlans;
+public List<DevelopmentPlan> getDevelopmentPlans() {
+	return this.developmentPlans;
+}
+
+public void setDevelopmentPlans(List<DevelopmentPlan> value) {
+	this.developmentPlans = value;
+}
+
+
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -433,8 +460,7 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -447,8 +473,7 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_SCORECARD_ID")
@@ -461,22 +486,7 @@ public AgentScorecard getAgentScorecard() {
 
 public void setAgentScorecard(AgentScorecard value) {
 	this.agentScorecard = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="DEVELOPMENT_PLAN_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_DevelopmentPlanOfScorecardWeeklyResult")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private DevelopmentPlan developmentPlan;
-public DevelopmentPlan getDevelopmentPlan() {
-	return this.developmentPlan;
-}
-
-public void setDevelopmentPlan(DevelopmentPlan value) {
-	this.developmentPlan = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -489,8 +499,7 @@ public Goal getGoal() {
 
 public void setGoal(Goal value) {
 	this.goal = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
@@ -503,8 +512,7 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MONTHLY_RESULT_ID")
@@ -517,8 +525,7 @@ public ScorecardMonthlyResult getScorecardMonthlyResult() {
 
 public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 	this.scorecardMonthlyResult = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PREVIOUS_SCORECARD_WEEKLY_RESULT_ID")
@@ -564,13 +571,26 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 				e.printStackTrace();
 			}
 		}
-
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
+		
 		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getUpdatedOn().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Excluded property
 		objectJson += ",\"excluded\":";
@@ -761,7 +781,27 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
-
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Is Coachable property
 		objectJson += ",\"isCoachable\":";
 		if (getIsCoachable() == null)
@@ -829,18 +869,6 @@ objectJson += ",\"agentScorecard\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Development Plan of Scorecard Weekly Result relationship
-objectJson += ",\"developmentPlan\":";
-		if (getDevelopmentPlan() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getDevelopmentPlan()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Goal of Scorecard Weekly Result relationship
 objectJson += ",\"goal\":";
 		if (getGoal() == null)
@@ -892,6 +920,23 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 
 		
 		// Target Relationships
+//Retrieve value of the Scorecard Weekly Result of Development Plan relationship
+objectJson += ",\"developmentPlans\":[";
+		
+		if (getDevelopmentPlans() != null) {
+			int developmentPlansCounter = 0;
+			for(DevelopmentPlan nextDevelopmentPlans : getDevelopmentPlans()) {
+				if (developmentPlansCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextDevelopmentPlans).toEmbeddedJson();
+					developmentPlansCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -905,9 +950,8 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		// Properties
 		//From value of the Duration From property
 		setDurationFrom(JsonUtils.getJsonInteger(jsonObject, "durationFrom"));
-
 		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
 		//From value of the Excluded property
 		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
 		//From value of the End Date property
@@ -938,7 +982,8 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Is Coachable property
 		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
 		//From value of the Duration To property
@@ -949,7 +994,6 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 		this.agentScorecard = (AgentScorecard) JsonUtils.getJsonPerceroObject(jsonObject, "agentScorecard");
-		this.developmentPlan = (DevelopmentPlan) JsonUtils.getJsonPerceroObject(jsonObject, "developmentPlan");
 		this.goal = (Goal) JsonUtils.getJsonPerceroObject(jsonObject, "goal");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
 		this.scorecardMonthlyResult = (ScorecardMonthlyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMonthlyResult");
@@ -957,6 +1001,7 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 
 
 		// Target Relationships
+		this.developmentPlans = (List<DevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentPlans");
 
 
 	}
@@ -966,9 +1011,10 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(DevelopmentPlan.class, "scorecardweeklyresult"));
 
 		
 		return listSetters;
 	}
 }
-
+

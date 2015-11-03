@@ -1,24 +1,7 @@
 package com.pulse.amqp;
 
-import java.util.Iterator;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.percero.agents.sync.services.ISyncAgentService;
-import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.framework.vo.IPerceroObject;
-import com.pulse.mo.Agent;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.CMSEntry;
-import com.pulse.mo.CMSEntryLOB;
-import com.pulse.mo.Schedule;
-import com.pulse.mo.ScheduleEntry;
-import com.pulse.mo.ScorecardMonthlyResult;
-import com.pulse.mo.ScorecardMonthlyScore;
-import com.pulse.mo.ScorecardWeeklyResult;
-import com.pulse.mo.ScorecardWeeklyScore;
-import com.pulse.mo.TeamLeader;
 /**
  * This class supplies the main method that creates the spring context
  * and then all processing is invoked asynchronously by messaging.
@@ -398,5 +381,7 @@ public class Main{
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}
+
+
 	}
 }

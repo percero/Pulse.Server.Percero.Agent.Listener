@@ -50,7 +50,7 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	private String selectFromStatementTableName = " FROM \"SHIFT_STATUS_NOTIFICATION\" \"SHIFT_STATUS_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"SHIFT_STATUS_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SHIFT_STATUS_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"SHIFT_STATUS_NOTIFICATION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\" DESC";
 	
 	
 
@@ -111,14 +111,14 @@ public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftSta
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SHIFT_STATUS_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SHIFT_STATUS_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"SHIFT_STATUS_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SHIFT_STATUS_NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SHIFT_STATUS_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SHIFT_STATUS_NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override

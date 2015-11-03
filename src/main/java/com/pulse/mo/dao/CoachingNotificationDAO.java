@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"WEEK_DATE\"";
 	
 	
 
@@ -110,14 +111,14 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?" +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -149,7 +150,8 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	protected CoachingNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-CoachingNotification nextResult = null;
+
+CoachingNotification nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -374,4 +376,4 @@ propertyCounter++;
 	
 	
 }
-
+
