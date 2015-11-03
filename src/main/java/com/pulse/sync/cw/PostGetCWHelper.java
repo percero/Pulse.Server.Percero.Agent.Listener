@@ -14,6 +14,7 @@ import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.cw.ChangeWatcherHelper;
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
@@ -27,6 +28,7 @@ import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Notification;
+import com.pulse.mo.Scorecard;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
@@ -171,12 +173,25 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 			if (existingCoachingNotification == null) {
 				existingCoachingNotification = new CoachingNotification();
 				existingCoachingNotification.setID(UUID.randomUUID().toString());
-				existingCoachingNotification.setCreatedOn(new Date());
+				existingCoachingNotification.setCreatedOn(nextWeekDate);
 				existingCoachingNotification.setName("Available for Coaching");
 				existingCoachingNotification.setType("CoachingNotification");
 				existingCoachingNotification.setTeamLeader(host);
 				existingCoachingNotification.setWeekDate(nextWeekDate);
 				existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
+				
+				Iterator<AgentScorecard> itrAgentScorecards = existingCoachingNotification.getAgentScorecards().iterator();
+				while (itrAgentScorecards.hasNext()) {
+					AgentScorecard nextAgentScorecard = itrAgentScorecards.next();
+					if (nextAgentScorecard != null) {
+						Scorecard scorecard = syncAgentService.systemGetByObject(nextAgentScorecard.getScorecard());
+						if (scorecard != null && StringUtils.hasText(scorecard.getName())) {
+							existingCoachingNotification.setName(scorecard.getName());
+							syncAgentService.systemPutObject(existingCoachingNotification, null, null, null, true);
+							break;
+						}
+					}
+				}
 
 				createdNotifications.add(existingCoachingNotification);
 
@@ -234,7 +249,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 				existingShiftStatusNotification = new ShiftStatusNotification();
 				existingShiftStatusNotification.setID(UUID.randomUUID().toString());
 				existingShiftStatusNotification.setResolved(false);
-				existingShiftStatusNotification.setCreatedOn(new Date());
+				existingShiftStatusNotification.setCreatedOn(shiftDateTime.toDate());
 				existingShiftStatusNotification.setName("Shift Status");
 				existingShiftStatusNotification.setType("ShiftStatusNotification");
 				existingShiftStatusNotification.setTeamLeader(host);
