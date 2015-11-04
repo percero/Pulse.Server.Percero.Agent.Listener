@@ -2,32 +2,30 @@
 
 package com.pulse.mo.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.util.DateUtils;
-import com.pulse.dataprovider.IConnectionFactory;
+
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
+import com.percero.util.DateUtils;
 import com.pulse.dataprovider.IConnectionFactory;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.pulse.mo.Agent;
+import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.Scorecard;
+import com.pulse.mo.ScorecardWeeklyScore;
 
 @Component
 public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> implements IDataAccessObject<AgentScorecard> {
@@ -489,11 +487,12 @@ propertyCounter++;
 		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
 	
-	public List<Date> findCurrentWeekDates() throws SyncException {
+	public List<Date> findCurrentWeekDates(String teamLeaderId) throws SyncException {
 //		String sql = "SELECT * FROM AGENT_SCORECARD WHERE AGENT_ID=? AND WEEK_DATE>? ORDER BY WEEK_DATE DESC";
 
 		List<Date> results = new ArrayList<Date>();
-		String sql = "SELECT DISTINCT(\"WEEK_DATE\") FROM \"AGENT_SCORECARD\" WHERE \"WEEK_DATE\">?";
+//		String sql = "SELECT DISTINCT(\"WEEK_DATE\") FROM \"AGENT_SCORECARD\" WHERE \"WEEK_DATE\">?";
+		String sql = "select WEEK_DATE from (select  distinct ac.WEEK_DATE from Team_Leader t join Agent  a on a.Team_Leader_Id = t.Id join AGENT_SCORECARD ac on ac.Agent_Id = a.Id and ac.WEEK_DATE >= add_months(sysdate,-1) where t.ID =?) T order by WEEK_DATE desc";
 
 		long timeStart = System.currentTimeMillis();
 
@@ -508,9 +507,10 @@ propertyCounter++;
 			pstmt.setQueryTimeout(QUERY_TIMEOUT);
 
 			// Looking for past 4 weeks worth.
-			DateTime theDateTime = new DateTime();
-			theDateTime = theDateTime.minusMonths(1);
-			pstmt.setDate(1, DateUtils.utilDateToSqlDate(theDateTime.toDate()));
+//			DateTime theDateTime = new DateTime();
+//			theDateTime = theDateTime.minusMonths(1);
+//			pstmt.setDate(1, DateUtils.utilDateToSqlDate(theDateTime.toDate()));
+			pstmt.setString(1, teamLeaderId);
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {

@@ -20,18 +20,14 @@ import com.percero.agents.sync.cw.ChangeWatcherHelper;
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
-import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.percero.framework.vo.IPerceroObject;
-import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
-import com.pulse.mo.CoachingSession;
 import com.pulse.mo.Notification;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
-import com.pulse.mo.Timecard;
 import com.pulse.mo.dao.AgentScorecardDAO;
 
 // This should get picked up by Spring and be auto-wired.
@@ -40,7 +36,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 
 	private static final Logger log = Logger.getLogger(PostGetCWHelper.class);
 
-	// This is required for CUSTOM change watchers.
+	// This is required for POST_GET change watchers.
 	private static final String CATEGORY = "POST_GET";
 	// This is an optional sub category.
 	private static final String SUB_CATEGORY = "";
@@ -105,13 +101,12 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 
 
 	private boolean checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
-
 		TeamLeader host = (TeamLeader) syncAgentService.systemGetById(classIdPair);
 
 		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]");
 
 		// Get the most recent WeekDates from AgentScorecard.
-		List<Date> mostRecentWeekDates = agentScorecardDAO.findCurrentWeekDates();
+		List<Date> mostRecentWeekDates = agentScorecardDAO.findCurrentWeekDates(classIdPair.getID());
 
 		List<Notification> createdNotifications = new ArrayList<Notification>();
 

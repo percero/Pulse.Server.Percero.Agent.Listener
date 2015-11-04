@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 
 	static final Logger log = Logger.getLogger(SqlDataAccessObject.class);
 
-	public static long LONG_RUNNING_QUERY_TIME = 2500;
+	public static long LONG_RUNNING_QUERY_TIME = 2000;
 	public static int QUERY_TIMEOUT = 10;
 
 	public SqlDataAccessObject() {
@@ -358,7 +359,18 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+			String idsStr = "";
+			Iterator<String> itrIds = classIdPairs.getIds().iterator();
+			int counter = 0;
+			while (itrIds.hasNext()) {
+				String nextId = itrIds.next();
+				if (counter > 0) {
+					idsStr += ",";
+				}
+				idsStr += nextId;
+				counter++;
+			}
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql + "\n     Ids: " + idsStr);
 		}
 
 		return results;
@@ -473,7 +485,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString+"\nID: "+id);
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString+"\n     ID: "+id);
 		}
 
 		return results;
@@ -524,7 +536,25 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString);
+			String paramsString = "";
+			for(Object nextParamValue : paramValues) {
+				if (nextParamValue instanceof String) {
+					paramsString += "\n     String: \"" + (String) nextParamValue + "\"";
+				}
+				else if (nextParamValue instanceof Integer) {
+					paramsString += "\n     Integer: " + ((Integer) nextParamValue).toString();
+				}
+				else if (nextParamValue instanceof Double) {
+					paramsString += "\n     Double: " + ((Double) nextParamValue).toString();
+				}
+				else if (nextParamValue instanceof Date) {
+					paramsString += "\n     Date: " + ((Date) nextParamValue).toString();
+				}
+				else {
+					paramsString += "\n     UNKNOWN: " + nextParamValue.toString();
+				}
+			}
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + selectQueryString + paramsString);
 		}
 
 		return results;
@@ -594,7 +624,8 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		long timeEnd = System.currentTimeMillis();
 		long totalTime = timeEnd - timeStart;
 		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql + 
+					(useLimit ? "\n     LIMIT: " + pageSize.toString() + "\n     PAGE: " + pageNumber.toString() : ""));
 		}
 
 		PerceroList<T> results = new PerceroList<T>(objects);
