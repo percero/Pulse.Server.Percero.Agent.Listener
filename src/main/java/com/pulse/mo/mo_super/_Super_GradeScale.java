@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -306,23 +307,7 @@ public void setEndValue(Integer endValue)
 {
 	this.endValue = endValue;
 }/*
-SCMGoalId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String sCMGoalId;
-
-public String getSCMGoalId() 
-{
-	return this.sCMGoalId;
-}
-
-public void setSCMGoalId(String sCMGoalId)
-{
-	this.sCMGoalId = sCMGoalId;
-}/*
 Custom
 Notes:
 */
@@ -349,7 +334,8 @@ public void setCustom(Integer custom)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -590,27 +576,7 @@ public void setGoal(Goal value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the SCM Goal Id property
-		objectJson += ",\"sCMGoalId\":";
-		
-		if (getSCMGoalId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSCMGoalId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+
 		//Retrieve value of the Custom property
 		objectJson += ",\"custom\":";
 		
@@ -687,8 +653,6 @@ objectJson += ",\"goal\":";
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
 		//From value of the End Value property
 		setEndValue(JsonUtils.getJsonInteger(jsonObject, "endValue"));
-		//From value of the SCM Goal Id property
-		setSCMGoalId(JsonUtils.getJsonString(jsonObject, "sCMGoalId"));
 		//From value of the Custom property
 		setCustom(JsonUtils.getJsonInteger(jsonObject, "custom"));
 
@@ -712,4 +676,4 @@ objectJson += ",\"goal\":";
 		return listSetters;
 	}
 }
-
+

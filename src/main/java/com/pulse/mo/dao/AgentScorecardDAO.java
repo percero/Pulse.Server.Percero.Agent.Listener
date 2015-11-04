@@ -116,14 +116,14 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?" + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -211,7 +211,7 @@ nextResult.setScorecardWeeklyScore(scorecardweeklyscore);
 	}
 	
 	protected void setBaseStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 JdbcHelper.setDouble(pstmt,3, perceroObject.getPointsPossible());
@@ -308,7 +308,7 @@ else
 		pstmt.setString(9, perceroObject.getScorecardWeeklyScore().getID());
 }
 
-pstmt.setString(10, perceroObject.getID());
+		pstmt.setString(10, perceroObject.getID());
 
 		
 	}

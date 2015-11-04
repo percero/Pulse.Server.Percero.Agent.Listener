@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\"";
 	private String whereClause = "  WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"ADHOC_COACHING_SESSION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"ADHOC_COACHING_SESSION\".\"WEEK_DATE\" DESC";
 	
 	private String joinAgentScorecardIDAdhocCoachingSession = ",(select ? As SQL_ID From Dual) WHERE ADHOC_COACHING_SESSION.EMPLOYEE_ID= SUBSTR(SQL_ID,0,9) AND ADHOC_COACHING_SESSION.SCORECARD_ID=SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 1) + 1,INSTR(SQL_ID,'-', 1, 2)-INSTR(SQL_ID,'-', 1, 1)-1) AND ADHOC_COACHING_SESSION.WEEK_DATE= SUBSTR(SQL_ID,INSTR(SQL_ID,'-', 1, 2) + 1,10)";
 
@@ -112,10 +113,10 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	{
 		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
 {
-return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDAdhocCoachingSession;
+return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentScorecardIDAdhocCoachingSession + orderByTableName;
 }
 
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 	
 	@Override
@@ -123,10 +124,10 @@ return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromS
 	{
 		if (joinColumnName.equalsIgnoreCase("\"AGENT_SCORECARD_ID\""))
 {
-return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDAdhocCoachingSession;
+return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + joinAgentScorecardIDAdhocCoachingSession + orderByTableName;
 }
 
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -158,7 +159,8 @@ return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableNam
 	protected AdhocCoachingSession extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-AdhocCoachingSession nextResult = null;
+
+AdhocCoachingSession nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -486,7 +488,8 @@ propertyCounter++;
 	}
 	
 	
-public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, String userId)
+
+public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -549,9 +552,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

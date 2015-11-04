@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
 	private String whereClause = "  WHERE \"ADHOC_TASK\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"WEEK_DATE\" DESC";
 	
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
@@ -114,18 +115,18 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	{
 		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName;
 }
 if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName;
 }
 if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName;
 }
 
-		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName;
 	}
 	
 	@Override
@@ -133,18 +134,18 @@ return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTabl
 	{
 		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName;
 }
 if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName;
 }
 if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
 {
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
+return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName;
 }
 
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -176,7 +177,8 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	protected AdhocTask extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-AdhocTask nextResult = null;
+
+AdhocTask nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -614,7 +616,8 @@ propertyCounter++;
 	}
 	
 	
-public AdhocTask createObject(AdhocTask perceroObject, String userId)
+
+public AdhocTask createObject(AdhocTask perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -677,9 +680,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

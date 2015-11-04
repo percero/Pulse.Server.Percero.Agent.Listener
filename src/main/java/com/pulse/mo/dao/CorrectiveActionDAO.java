@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION\" \"CORRECTIVE_ACTION\"";
 	private String whereClause = "  WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION\".\"EXPIRE_DATE\" DESC";
 	
 	
 
@@ -110,14 +111,14 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION\"." + joinColumnName + "=?";
+		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"CORRECTIVE_ACTION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -149,7 +150,8 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	protected CorrectiveAction extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-CorrectiveAction nextResult = null;
+
+CorrectiveAction nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -887,7 +889,8 @@ propertyCounter++;
 	}
 	
 	
-public CorrectiveAction createObject(CorrectiveAction perceroObject, String userId)
+
+public CorrectiveAction createObject(CorrectiveAction perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -950,9 +953,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+
