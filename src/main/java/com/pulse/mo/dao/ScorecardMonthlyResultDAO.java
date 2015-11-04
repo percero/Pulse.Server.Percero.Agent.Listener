@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -138,7 +137,7 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCARD_MONTHLY_RESULT SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"METRIC_TYPE\"=?,\"METRIC_UNIT\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"METRIC_RESULT\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"EXCLUDED\"=?,\"GRADE\"=?,\"ROLLUP_TYPE\"=?,\"TENURE\"=?,\"AGENT_ID\"=?,\"PREV-SCARD-MONTHLY-RESULT-ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCARD_MONTHLY_RESULT SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"METRIC_TYPE\"=?,\"METRIC_UNIT\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"METRIC_RESULT\"=?,\"PERCENTAGE_ATTAINMENT\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"EXCLUDED\"=?,\"GRADE\"=?,\"ROLLUP_TYPE\"=?,\"TENURE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_MONTHLY_RESULT_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,8 +149,7 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	protected ScorecardMonthlyResult extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-
-ScorecardMonthlyResult nextResult = null;
+ScorecardMonthlyResult nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -761,8 +759,7 @@ propertyCounter++;
 	}
 	
 	
-
-public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject, String userId)
+public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -825,10 +822,9 @@ public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject,
 		return null;
 	}
 }
-
-
+
 
 	
 	
 }
-
+

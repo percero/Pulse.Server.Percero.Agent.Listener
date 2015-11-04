@@ -374,23 +374,6 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
-}/*
 IsCoachable
 Notes:
 */
@@ -432,14 +415,14 @@ public void setDurationTo(Integer durationTo)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=DevelopmentPlan.class, mappedBy="scorecardWeeklyResult", cascade=javax.persistence.CascadeType.REMOVE)
-private List<DevelopmentPlan> developmentPlans;
-public List<DevelopmentPlan> getDevelopmentPlans() {
-	return this.developmentPlans;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=WeeklyDevelopmentPlan.class, mappedBy="scorecardWeeklyResult", cascade=javax.persistence.CascadeType.REMOVE)
+private List<WeeklyDevelopmentPlan> weeklyDevelopmentPlans;
+public List<WeeklyDevelopmentPlan> getWeeklyDevelopmentPlans() {
+	return this.weeklyDevelopmentPlans;
 }
 
-public void setDevelopmentPlans(List<DevelopmentPlan> value) {
-	this.developmentPlans = value;
+public void setWeeklyDevelopmentPlans(List<WeeklyDevelopmentPlan> value) {
+	this.weeklyDevelopmentPlans = value;
 }
 
 
@@ -781,27 +764,6 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Is Coachable property
 		objectJson += ",\"isCoachable\":";
 		if (getIsCoachable() == null)
@@ -920,17 +882,17 @@ objectJson += ",\"previousScorecardWeeklyResult\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Scorecard Weekly Result of Development Plan relationship
-objectJson += ",\"developmentPlans\":[";
+//Retrieve value of the Scorecard Weekly Result of Weekly Development Plan relationship
+objectJson += ",\"weeklyDevelopmentPlans\":[";
 		
-		if (getDevelopmentPlans() != null) {
-			int developmentPlansCounter = 0;
-			for(DevelopmentPlan nextDevelopmentPlans : getDevelopmentPlans()) {
-				if (developmentPlansCounter > 0)
+		if (getWeeklyDevelopmentPlans() != null) {
+			int weeklyDevelopmentPlansCounter = 0;
+			for(WeeklyDevelopmentPlan nextWeeklyDevelopmentPlans : getWeeklyDevelopmentPlans()) {
+				if (weeklyDevelopmentPlansCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextDevelopmentPlans).toEmbeddedJson();
-					developmentPlansCounter++;
+					objectJson += ((BaseDataObject) nextWeeklyDevelopmentPlans).toEmbeddedJson();
+					weeklyDevelopmentPlansCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -982,8 +944,6 @@ objectJson += ",\"developmentPlans\":[";
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Is Coachable property
 		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
 		//From value of the Duration To property
@@ -1001,7 +961,7 @@ objectJson += ",\"developmentPlans\":[";
 
 
 		// Target Relationships
-		this.developmentPlans = (List<DevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "developmentPlans");
+		this.weeklyDevelopmentPlans = (List<WeeklyDevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "weeklyDevelopmentPlans");
 
 
 	}
@@ -1011,7 +971,7 @@ objectJson += ",\"developmentPlans\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(DevelopmentPlan.class, "scorecardweeklyresult"));
+		listSetters.add(MappedClass.getFieldSetters(WeeklyDevelopmentPlan.class, "scorecardweeklyresult"));
 
 		
 		return listSetters;

@@ -77,17 +77,17 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName;
+		return SQL_VIEW  +  orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) " + orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14)";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 
 	@Override

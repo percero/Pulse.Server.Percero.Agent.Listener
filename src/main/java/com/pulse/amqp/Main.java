@@ -1,7 +1,26 @@
 package com.pulse.amqp;
 
+import java.util.Date;
+import java.util.Iterator;
+import java.util.UUID;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.percero.agents.sync.services.ISyncAgentService;
+import com.percero.agents.sync.services.SyncAgentService;
+import com.percero.agents.sync.vo.ClassIDPair;
+import com.pulse.mo.Agent;
+import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.DevelopmentActivity;
+import com.pulse.mo.DevelopmentPlan;
+import com.pulse.mo.LOBConfiguration;
+import com.pulse.mo.Scorecard;
+import com.pulse.mo.TeamLeader;
+import com.pulse.mo.ThresholdExceededNotification;
+import com.percero.agents.sync.vo.BaseDataObject;
+
+import com.pulse.mo.*;
 /**
  * This class supplies the main method that creates the spring context
  * and then all processing is invoked asynchronously by messaging.
@@ -79,52 +98,52 @@ public class Main{
 		
 		
 //		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
-//		
+//
 //		Agent agent = new Agent();
 //		agent.setID("RANDOM_ID");
 ////		teamLeader.setID("100458644");
-//		
+//
 //		TeamLeader teamLeader = new TeamLeader();
 //		teamLeader.setID("100500731");
 //		try {
 //			teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
-////			Iterator<TeamLeader> itrTeamLeaders = (Iterator<TeamLeader>) syncAgentService.getAllByName(TeamLeader.class.getCanonicalName(), false, null).iterator();
-////			while (itrTeamLeaders.hasNext()) {
-////			teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(itrTeamLeaders.next()));
+//			Iterator<TeamLeader> itrTeamLeaders = (Iterator<TeamLeader>) syncAgentService.getAllByName(TeamLeader.class.getCanonicalName(), false, null).iterator();
+//			while (itrTeamLeaders.hasNext()) {
+//			teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(itrTeamLeaders.next()));
+
+//			teamLeader = (TeamLeader) syncAgentService.findById(BaseDataObject.toClassIdPair(teamLeader), null);
+//			Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
+//			while (itrNotifications.hasNext()) {
+//				Notification nextNotification = itrNotifications.next();
+//				if (nextNotification instanceof ShiftStatusNotification) {
+//					ShiftStatusNotification shiftStatusNotification = (ShiftStatusNotification) nextNotification;
+//					System.out.println(ShiftStatusNotificationCWHelper.NOT_YET_STARTED_STATE_COUNT + ": " + shiftStatusNotification.getNotYetStartedStateCount());
+//					System.out.println(ShiftStatusNotificationCWHelper.APPROVED_STATE_COUNT + ": " + shiftStatusNotification.getApprovedStateCount());
+//					System.out.println(ShiftStatusNotificationCWHelper.COMPLETED_STATE_COUNT + ": " + shiftStatusNotification.getCompletedStateCount());
+//					System.out.println(ShiftStatusNotificationCWHelper.IN_PROGRESS_STATE_COUNT + ": " + shiftStatusNotification.getInProgressStateCount());
+////					System.out.println(shiftStatusNotification.getPendingCoachStateCount());
+////					System.out.println(shiftStatusNotification.getPendingEmployeeStateCount());
+////					System.out.println(shiftStatusNotification.getPendingStateCount());
+////					System.out.println(shiftStatusNotification.getSkippedStateCount());
+////					System.out.println(shiftStatusNotification.getSubmittedStateCount());
+//				}
+//				else if (nextNotification instanceof CoachingNotification) {
+//					CoachingNotification coachingNotification = (CoachingNotification) nextNotification;
+//					System.out.println(coachingNotification.getAcknowledgementStateCount());
+//					System.out.println(coachingNotification.getPendingCoachStateCount());
+//					System.out.println(coachingNotification.getPendingEmployeeStateCount());
+//					System.out.println(coachingNotification.getPendingStateCount());
+//					System.out.println(coachingNotification.getSkippedStateCount());
+//					System.out.println(coachingNotification.getSubmittedStateCount());
+//				}
+//			}
 //
-////			teamLeader = (TeamLeader) syncAgentService.findById(BaseDataObject.toClassIdPair(teamLeader), null);
-////			Iterator<Notification> itrNotifications = teamLeader.getNotifications().iterator();
-////			while (itrNotifications.hasNext()) {
-////				Notification nextNotification = itrNotifications.next();
-////				if (nextNotification instanceof ShiftStatusNotification) {
-////					ShiftStatusNotification shiftStatusNotification = (ShiftStatusNotification) nextNotification;
-////					System.out.println(ShiftStatusNotificationCWHelper.NOT_YET_STARTED_STATE_COUNT + ": " + shiftStatusNotification.getNotYetStartedStateCount());
-////					System.out.println(ShiftStatusNotificationCWHelper.APPROVED_STATE_COUNT + ": " + shiftStatusNotification.getApprovedStateCount());
-////					System.out.println(ShiftStatusNotificationCWHelper.COMPLETED_STATE_COUNT + ": " + shiftStatusNotification.getCompletedStateCount());
-////					System.out.println(ShiftStatusNotificationCWHelper.IN_PROGRESS_STATE_COUNT + ": " + shiftStatusNotification.getInProgressStateCount());
-//////					System.out.println(shiftStatusNotification.getPendingCoachStateCount());
-//////					System.out.println(shiftStatusNotification.getPendingEmployeeStateCount());
-//////					System.out.println(shiftStatusNotification.getPendingStateCount());
-//////					System.out.println(shiftStatusNotification.getSkippedStateCount());
-//////					System.out.println(shiftStatusNotification.getSubmittedStateCount());
-////				}
-////				else if (nextNotification instanceof CoachingNotification) {
-////					CoachingNotification coachingNotification = (CoachingNotification) nextNotification;
-////					System.out.println(coachingNotification.getAcknowledgementStateCount());
-////					System.out.println(coachingNotification.getPendingCoachStateCount());
-////					System.out.println(coachingNotification.getPendingEmployeeStateCount());
-////					System.out.println(coachingNotification.getPendingStateCount());
-////					System.out.println(coachingNotification.getSkippedStateCount());
-////					System.out.println(coachingNotification.getSubmittedStateCount());
-////				}
-////			}
-//			
-//			
+//
 //			Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
 //			while (itrAgents.hasNext()) {
-//				Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
+//				Agent nextAgent = itrAgents.next();
 //				if (nextAgent != null) {
-//					
+//
 ////					Iterator<CMSEntry> itrCmsEntries = nextAgent.getCMSEntries().iterator();
 ////					while (itrCmsEntries.hasNext()) {
 ////						CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCmsEntries.next());
@@ -136,9 +155,9 @@ public class Main{
 ////								System.out.println(cmsEntryLob);
 ////							}
 ////						}
-////						
+////
 ////					}
-////					
+////
 ////					Iterator<Schedule> itrSchedules = nextAgent.getSchedules().iterator();
 ////					while (itrSchedules.hasNext()) {
 ////						Schedule schedule = syncAgentService.systemGetByObject(itrSchedules.next());
@@ -148,7 +167,7 @@ public class Main{
 ////							System.out.println(scheduleEntry);
 ////						}
 ////					}
-//					
+//
 ////					Iterator<DevelopmentActivity> itrDevelopmentActivities = nextAgent.getDevelopmentActivities().iterator();
 ////					while (itrDevelopmentActivities.hasNext()) {
 ////						DevelopmentActivity nextDevelopmentActivity = syncAgentService.systemGetByObject(itrDevelopmentActivities.next());
@@ -160,7 +179,7 @@ public class Main{
 ////					}
 ////
 ////					List<Timecard> timecards = nextAgent.getTimecards();
-////					
+////
 //					Iterator<AgentScorecard> itrAgentScorecards = nextAgent.getAgentScorecards().iterator();
 //					while (itrAgentScorecards.hasNext()) {
 //						AgentScorecard agentScorecard = (AgentScorecard) syncAgentService.systemGetById(AgentScorecard.class.getCanonicalName(), itrAgentScorecards.next().getID());
@@ -173,10 +192,10 @@ public class Main{
 ////
 ////								if (nextCoachingSession != null) {
 ////									Iterator<BehaviorResponse> itrBehaviorResponses = nextCoachingSession.getBehaviorResponses().iterator();
-////							
+////
 ////									while (itrBehaviorResponses.hasNext()) {
 ////										BehaviorResponse nextBehaviorResponse = syncAgentService.systemGetByObject(itrBehaviorResponses.next());
-////			
+////
 ////										if (nextBehaviorResponse != null) {
 ////											BehaviorResponse prevBehaviorResponse = nextBehaviorResponse.getPreviousBehaviorResponse();
 ////											System.out.println(prevBehaviorResponse);
@@ -184,7 +203,7 @@ public class Main{
 ////									}
 ////								}
 ////							}
-//							
+//
 ////							Iterator<ScorecardWeeklyScore> itrScorecardWeeklyScores = agentScorecard.getScorecardWeeklyScores().iterator();
 ////							while (itrScorecardWeeklyScores.hasNext()) {
 ////								ScorecardWeeklyScore nextWeeklyScore = syncAgentService.systemGetByObject(itrScorecardWeeklyScores.next());
@@ -198,13 +217,14 @@ public class Main{
 ////								ScorecardWeeklyScore previousWeeklyScore = nextWeeklyScore.getPreviousScorecardWeeklyScore();
 ////								System.out.println(previousWeeklyScore);
 ////							}
-//							
+//
 //							Iterator<ScorecardWeeklyResult> itrScorecardWeeklyResults = agentScorecard.getScorecardWeeklyResults().iterator();
 //							while (itrScorecardWeeklyResults.hasNext()) {
-//								ScorecardWeeklyResult nextWeeklyResult = syncAgentService.systemGetByObject(itrScorecardWeeklyResults.next());
-//								ScorecardMonthlyResult currentMonthlyResult = syncAgentService.systemGetByObject(nextWeeklyResult.getScorecardMonthlyResult());
+//								ScorecardWeeklyResult nextWeeklyResult = itrScorecardWeeklyResults.next();
+//								ScorecardMonthlyResult currentMonthlyResult = nextWeeklyResult.getScorecardMonthlyResult();
 ////								ScorecardMonthlyResult currentMonthlyResult2 = nextWeeklyResult.getCurrentScorecardMonthlyResult();
 //								System.out.println(currentMonthlyResult);
+//								nextWeeklyResult.getWeeklyDevelopmentPlans();
 //								if (currentMonthlyResult != null) {
 //									ScorecardMonthlyResult previousMonthlyResult = currentMonthlyResult.getPreviousScorecardMonthlyResult();
 //									System.out.println(previousMonthlyResult);
@@ -238,7 +258,7 @@ public class Main{
 ////					while (itrTimecards.hasNext()) {
 ////						Timecard timecard = (Timecard) syncAgentService.systemGetById(Timecard.class.getCanonicalName(), itrTimecards.next().getID());
 ////						System.out.println(timecard);
-////						
+////
 ////						if (timecard != null) {
 ////							Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
 ////							while (itrTimecardEntries.hasNext()) {
@@ -247,16 +267,16 @@ public class Main{
 ////							}
 ////						}
 ////					}
-//					
+//
 //				}
 //			}
 ////			}
 //		} catch(Exception e) {
 //			e.printStackTrace();
-//			
+//
 //		}
 //		System.out.println("HERE");
-		
+//
 //		Timecard timecard;
 //		timecard.getTimecardEntries();
 		

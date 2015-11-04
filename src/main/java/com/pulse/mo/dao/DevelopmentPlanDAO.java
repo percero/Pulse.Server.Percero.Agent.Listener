@@ -45,7 +45,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"DEVELOPMENT_PLAN\".\"ID\"";
-	public static final String SQL_VIEW = ",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\"";
+	public static final String SQL_VIEW = ",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\"";
 	private String whereClause = "  WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_PLAN\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DEVELOPMENT_PLAN (\"ID\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"RANK\",\"CREATED_BY\",\"DESCRIPTION\",\"NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DEVELOPMENT_PLAN (\"ID\",\"CREATED_ON\",\"END_DATE\",\"UPDATED_BY\",\"START_DATE\",\"UPDATED_ON\",\"RANK\",\"CREATED_BY\",\"DESCRIPTION\",\"NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DEVELOPMENT_PLAN SET \"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DEVELOPMENT_PLAN SET \"CREATED_ON\"=?,\"END_DATE\"=?,\"UPDATED_BY\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,13 +162,13 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
     	
     	if (!shellOnly) 
 		{
-			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
-
-
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
 nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
+
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
@@ -205,9 +205,9 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 	protected void setBaseStatmentInsertParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setString(4, perceroObject.getUpdatedBy());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,7, perceroObject.getRank());
@@ -247,9 +247,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getUpdatedBy());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setString(3, perceroObject.getUpdatedBy());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,6, perceroObject.getRank());
@@ -295,28 +295,11 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-sql += " WHERE ";
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -336,6 +319,23 @@ sql += " WHERE ";
 }
 sql += " \"END_DATE\" =? ";
 paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +41,7 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements 
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  '' as \"ID\", CLIENT_SITE.SITE_ID as \"SITE_ID\", CMS_ENTRY.EMPLOYEEID as \"EMPLOYEE_ID\", AGENT_LOB_SITE.SITE_DESCR as \"SITE_NAME\", AGENT_LOB_SITE.CLIENT_DESCR as \"LOB_NAME\", AGENT_LOB_SITE.CLIENT_DESCR as \"CLIENT_NAME\", AGENT_LOB_SITE.CLIENT_ID as \"CLIENT_ID\", CMS_ENTRY.ID as \"CMS_ENTRY_ID\", AGENT_LOB_SITE.ECP_LOB_ID as \"LOB_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY_LOB\" ";
+	public static final String SQL_VIEW = "SELECT  '' as \"ID\", AGENT_LOB_SITE.CLIENT_DESCR as \"LOB_NAME\", AGENT_LOB_SITE.CLIENT_DESCR as \"CLIENT_NAME\", AGENT_LOB_SITE.CLIENT_ID as \"CLIENT_ID\", CMS_ENTRY.EMPLOYEEID as \"EMPLOYEE_ID\", AGENT_LOB_SITE.SITE_DESCR as \"SITE_NAME\", CLIENT_SITE.SITE_ID as \"SITE_ID\", AGENT_LOB_SITE.ECP_LOB_ID as \"LOB_ID\", CMS_ENTRY.ID as \"CMS_ENTRY_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY_LOB\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY_LOB\"";
 	private String whereClause = "Join PULSE.MOB_EMP_LOB_VW AGENT_LOB On AGENT_LOB.EMPLOYEE_ID = CMS_ENTRY.EMPLOYEE_ID Join PULSE.MOB_CLIENT_SITE_VW CLIENT_SITE On CLIENT_SITE.ID =AGENT_LOB.CLIENT_ID Join PULSE.MOB_LOB_SITE_CLIENT_VW AGENT_LOB_SITE On AGENT_LOB_SITE.CLIENT_ID =AGENT_LOB.CLIENT_ID And AGENT_LOB_SITE.SITE_ID =CLIENT_SITE.SITE_ID WHERE AGENT_LOB.ECP_LOB_ID=?";
 	private String whereInClause = "Join PULSE.MOB_EMP_LOB_VW AGENT_LOB On AGENT_LOB.EMPLOYEE_ID = CMS_ENTRY.EMPLOYEE_ID Join PULSE.MOB_CLIENT_SITE_VW CLIENT_SITE On CLIENT_SITE.ID =AGENT_LOB.CLIENT_ID Join PULSE.MOB_LOB_SITE_CLIENT_VW AGENT_LOB_SITE On AGENT_LOB_SITE.CLIENT_ID =AGENT_LOB.CLIENT_ID And AGENT_LOB_SITE.SITE_ID =CLIENT_SITE.SITE_ID Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On AGENT_LOB.ECP_LOB_ID= SQLLIST.column_value";
@@ -110,8 +111,10 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
 
+		if (joinColumnName.equalsIgnoreCase("\"CMS_ENTRY_ID\"")) {
+			return "SELECT '' as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY_LOB\"." + joinColumnName + "=?";
+		}
 		return "SELECT '' as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY_LOB\"." + joinColumnName + "=?";
 	}
 
@@ -145,7 +148,8 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements 
 	protected CMSEntryLOB extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-CMSEntryLOB nextResult = null;
+
+CMSEntryLOB nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -355,7 +359,8 @@ propertyCounter++;
 	}
 
 	
-public CMSEntryLOB createObject(CMSEntryLOB perceroObject, String userId)
+
+public CMSEntryLOB createObject(CMSEntryLOB perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -418,8 +423,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

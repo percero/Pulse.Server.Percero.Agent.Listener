@@ -45,7 +45,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"CORRECTIVE_ACTION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"EXPIRE_DATE\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"CLIENT_ID\",\"CORRECTIVE_ACTION\".\"DISCIPLINE_TYPE\",\"CORRECTIVE_ACTION\".\"FORM_ID\",\"CORRECTIVE_ACTION\".\"SESSION_ID\",\"CORRECTIVE_ACTION\".\"REASON\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_COMMENT\",\"CORRECTIVE_ACTION\".\"DETAILS\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_COMMENT\",\"CORRECTIVE_ACTION\".\"METRIC_REF\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS\",\"CORRECTIVE_ACTION\".\"PROGRAM\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"EXPIRE_DATE\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"CLIENT_ID\",\"CORRECTIVE_ACTION\".\"DISCIPLINE_TYPE\",\"CORRECTIVE_ACTION\".\"FORM_ID\",\"CORRECTIVE_ACTION\".\"SESSION_ID\",\"CORRECTIVE_ACTION\".\"METRIC_REF\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS\",\"CORRECTIVE_ACTION\".\"PROGRAM\",\"CORRECTIVE_ACTION\".\"REASON\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_COMMENT\",\"CORRECTIVE_ACTION\".\"DETAILS\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_COMMENT\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION\" \"CORRECTIVE_ACTION\"";
 	private String whereClause = "  WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_CORRECTIVE_ACTION (\"ID\",\"EXPIRE_DATE\",\"HR_APPROVAL_DATE\",\"MANAGER_APPROVAL_DATE\",\"SUPERVISOR_ACK_DATE\",\"COMPLETION_DATE\",\"CLIENT_ID\",\"DISCIPLINE_TYPE\",\"FORM_ID\",\"SESSION_ID\",\"REASON\",\"SUPERVISOR_COMMENT\",\"DETAILS\",\"EMPLOYEE_COMMENT\",\"METRIC_REF\",\"NEXT_STEPS\",\"PROGRAM\",\"HR_EMPLOYEE_ID\",\"MANAGER_EMPLOYEE_ID\",\"SUPERVISOR_ID\",\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"AGENT_ID\",\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION_TYPE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_CORRECTIVE_ACTION (\"ID\",\"EXPIRE_DATE\",\"HR_APPROVAL_DATE\",\"MANAGER_APPROVAL_DATE\",\"SUPERVISOR_ACK_DATE\",\"COMPLETION_DATE\",\"CLIENT_ID\",\"DISCIPLINE_TYPE\",\"FORM_ID\",\"SESSION_ID\",\"METRIC_REF\",\"NEXT_STEPS\",\"PROGRAM\",\"REASON\",\"SUPERVISOR_COMMENT\",\"DETAILS\",\"EMPLOYEE_COMMENT\",\"HR_EMPLOYEE_ID\",\"MANAGER_EMPLOYEE_ID\",\"SUPERVISOR_ID\",\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"AGENT_ID\",\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION_TYPE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_CORRECTIVE_ACTION SET \"EXPIRE_DATE\"=?,\"HR_APPROVAL_DATE\"=?,\"MANAGER_APPROVAL_DATE\"=?,\"SUPERVISOR_ACK_DATE\"=?,\"COMPLETION_DATE\"=?,\"CLIENT_ID\"=?,\"DISCIPLINE_TYPE\"=?,\"FORM_ID\"=?,\"SESSION_ID\"=?,\"REASON\"=?,\"SUPERVISOR_COMMENT\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"METRIC_REF\"=?,\"NEXT_STEPS\"=?,\"PROGRAM\"=?,\"HR_EMPLOYEE_ID\"=?,\"MANAGER_EMPLOYEE_ID\"=?,\"SUPERVISOR_ID\"=?,\"SUPERVISOR_MANAGER_EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_CORRECTIVE_ACTION SET \"EXPIRE_DATE\"=?,\"HR_APPROVAL_DATE\"=?,\"MANAGER_APPROVAL_DATE\"=?,\"SUPERVISOR_ACK_DATE\"=?,\"COMPLETION_DATE\"=?,\"CLIENT_ID\"=?,\"DISCIPLINE_TYPE\"=?,\"FORM_ID\"=?,\"SESSION_ID\"=?,\"METRIC_REF\"=?,\"NEXT_STEPS\"=?,\"PROGRAM\"=?,\"REASON\"=?,\"SUPERVISOR_COMMENT\"=?,\"DETAILS\"=?,\"EMPLOYEE_COMMENT\"=?,\"HR_EMPLOYEE_ID\"=?,\"MANAGER_EMPLOYEE_ID\"=?,\"SUPERVISOR_ID\"=?,\"SUPERVISOR_MANAGER_EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"CORRECTIVE_ACTION_STATE_ID\"=?,\"CORRECTIVE_ACTION_TYPE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -189,6 +189,15 @@ nextResult.setFormId(rs.getInt("FORM_ID"));
 nextResult.setSessionId(rs.getInt("SESSION_ID"));
 
 
+nextResult.setMetricRef(rs.getString("METRIC_REF"));
+
+
+nextResult.setNextSteps(rs.getString("NEXT_STEPS"));
+
+
+nextResult.setProgram(rs.getString("PROGRAM"));
+
+
 nextResult.setReason(rs.getString("REASON"));
 
 
@@ -199,15 +208,6 @@ nextResult.setDetails(rs.getString("DETAILS"));
 
 
 nextResult.setEmployeeComment(rs.getString("EMPLOYEE_COMMENT"));
-
-
-nextResult.setMetricRef(rs.getString("METRIC_REF"));
-
-
-nextResult.setNextSteps(rs.getString("NEXT_STEPS"));
-
-
-nextResult.setProgram(rs.getString("PROGRAM"));
 
 
 Employee hremployee = new Employee();
@@ -265,13 +265,13 @@ JdbcHelper.setInt(pstmt,7, perceroObject.getClientId());
 JdbcHelper.setInt(pstmt,8, perceroObject.getDisciplineType());
 JdbcHelper.setInt(pstmt,9, perceroObject.getFormId());
 JdbcHelper.setInt(pstmt,10, perceroObject.getSessionId());
-pstmt.setString(11, perceroObject.getReason());
-pstmt.setString(12, perceroObject.getSupervisorComment());
-pstmt.setString(13, perceroObject.getDetails());
-pstmt.setString(14, perceroObject.getEmployeeComment());
-pstmt.setString(15, perceroObject.getMetricRef());
-pstmt.setString(16, perceroObject.getNextSteps());
-pstmt.setString(17, perceroObject.getProgram());
+pstmt.setString(11, perceroObject.getMetricRef());
+pstmt.setString(12, perceroObject.getNextSteps());
+pstmt.setString(13, perceroObject.getProgram());
+pstmt.setString(14, perceroObject.getReason());
+pstmt.setString(15, perceroObject.getSupervisorComment());
+pstmt.setString(16, perceroObject.getDetails());
+pstmt.setString(17, perceroObject.getEmployeeComment());
 
 if (perceroObject.getHREmployee() == null)
 {
@@ -374,13 +374,13 @@ JdbcHelper.setInt(pstmt,6, perceroObject.getClientId());
 JdbcHelper.setInt(pstmt,7, perceroObject.getDisciplineType());
 JdbcHelper.setInt(pstmt,8, perceroObject.getFormId());
 JdbcHelper.setInt(pstmt,9, perceroObject.getSessionId());
-pstmt.setString(10, perceroObject.getReason());
-pstmt.setString(11, perceroObject.getSupervisorComment());
-pstmt.setString(12, perceroObject.getDetails());
-pstmt.setString(13, perceroObject.getEmployeeComment());
-pstmt.setString(14, perceroObject.getMetricRef());
-pstmt.setString(15, perceroObject.getNextSteps());
-pstmt.setString(16, perceroObject.getProgram());
+pstmt.setString(10, perceroObject.getMetricRef());
+pstmt.setString(11, perceroObject.getNextSteps());
+pstmt.setString(12, perceroObject.getProgram());
+pstmt.setString(13, perceroObject.getReason());
+pstmt.setString(14, perceroObject.getSupervisorComment());
+pstmt.setString(15, perceroObject.getDetails());
+pstmt.setString(16, perceroObject.getEmployeeComment());
 
 if (perceroObject.getHREmployee() == null)
 {
@@ -626,6 +626,57 @@ paramValues.add(theQueryObject.getSessionId());
 propertyCounter++;
 }
 
+boolean useMetricRef = StringUtils.hasText(theQueryObject.getMetricRef()) && (excludeProperties == null || !excludeProperties.contains("metricRef"));
+
+if (useMetricRef)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"METRIC_REF\" =? ";
+paramValues.add(theQueryObject.getMetricRef());
+propertyCounter++;
+}
+
+boolean useNextSteps = StringUtils.hasText(theQueryObject.getNextSteps()) && (excludeProperties == null || !excludeProperties.contains("nextSteps"));
+
+if (useNextSteps)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"NEXT_STEPS\" =? ";
+paramValues.add(theQueryObject.getNextSteps());
+propertyCounter++;
+}
+
+boolean useProgram = StringUtils.hasText(theQueryObject.getProgram()) && (excludeProperties == null || !excludeProperties.contains("program"));
+
+if (useProgram)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"PROGRAM\" =? ";
+paramValues.add(theQueryObject.getProgram());
+propertyCounter++;
+}
+
 boolean useReason = StringUtils.hasText(theQueryObject.getReason()) && (excludeProperties == null || !excludeProperties.contains("reason"));
 
 if (useReason)
@@ -691,57 +742,6 @@ sql += " WHERE ";
 }
 sql += " \"EMPLOYEE_COMMENT\" =? ";
 paramValues.add(theQueryObject.getEmployeeComment());
-propertyCounter++;
-}
-
-boolean useMetricRef = StringUtils.hasText(theQueryObject.getMetricRef()) && (excludeProperties == null || !excludeProperties.contains("metricRef"));
-
-if (useMetricRef)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"METRIC_REF\" =? ";
-paramValues.add(theQueryObject.getMetricRef());
-propertyCounter++;
-}
-
-boolean useNextSteps = StringUtils.hasText(theQueryObject.getNextSteps()) && (excludeProperties == null || !excludeProperties.contains("nextSteps"));
-
-if (useNextSteps)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NEXT_STEPS\" =? ";
-paramValues.add(theQueryObject.getNextSteps());
-propertyCounter++;
-}
-
-boolean useProgram = StringUtils.hasText(theQueryObject.getProgram()) && (excludeProperties == null || !excludeProperties.contains("program"));
-
-if (useProgram)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"PROGRAM\" =? ";
-paramValues.add(theQueryObject.getProgram());
 propertyCounter++;
 }
 

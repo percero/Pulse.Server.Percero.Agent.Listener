@@ -138,7 +138,7 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV-SCARD-WEEKLY-SCORE-ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_WEEKLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override

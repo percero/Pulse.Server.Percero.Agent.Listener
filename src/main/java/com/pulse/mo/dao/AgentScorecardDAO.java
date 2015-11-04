@@ -5,27 +5,32 @@ package com.pulse.mo.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import com.percero.agents.sync.exceptions.SyncDataException;
+import com.percero.util.DateUtils;
+import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.StringUtils;
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
-import com.percero.util.DateUtils;
+import java.sql.Connection;
+import java.sql.Statement;
 import com.pulse.dataprovider.IConnectionFactory;
-import com.pulse.mo.Agent;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.Scorecard;
-import com.pulse.mo.ScorecardWeeklyScore;
+import com.percero.agents.sync.exceptions.SyncDataException;
+import com.pulse.mo.*;
 
 @Component
 public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> implements IDataAccessObject<AgentScorecard> {
@@ -111,14 +116,14 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?" + orderByTableName;
+		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?" + orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"AGENT_SCORECARD\"." + joinColumnName + "=?";
 	}
 
 	@Override

@@ -434,7 +434,7 @@ public void setManagerEmployee(Employee value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SUPERVISORMANAGER_EMPLOYEE_ID")
+@JoinColumn(name="SUPERVISOR_MANAGER_EMPLOYEE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_SupervisorManagerEmployeeOfSupervisorCorrectiveAction")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private Employee supervisorManagerEmployee;
