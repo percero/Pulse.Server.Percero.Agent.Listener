@@ -55,6 +55,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
+	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
 
 
 	
@@ -111,41 +112,33 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
-	{
-		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName;
-}
-if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName;
-}
-if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName;
-}
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
 
-		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName;
+		return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName  + " ) " + extendedWhereClause ;
 	}
-	
-	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
-	{
-		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName;
-}
-if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName;
-}
-if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName;
-}
 
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName;
+	@Override
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+
+		return "SELECT * FROM (" + "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName  + " ) " + extendedWhereClause ;
 	}
 
 	@Override
