@@ -50,7 +50,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"WEEK_DATE\"";
+	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"WEEK_DATE\" DESC";
 	
 	
 
