@@ -47,7 +47,8 @@ public class WeeklyDevelopmentPlanDAO extends SqlDataAccessObject<WeeklyDevelopm
 	public static final String SHELL_ONLY_SELECT = "\"WEEKLY_DEVELOPMENT_PLAN\".\"ID\"";
 	public static final String SQL_VIEW = ",\"WEEKLY_DEVELOPMENT_PLAN\".\"WEEK_DATE\",\"WEEKLY_DEVELOPMENT_PLAN\".\"DEVELOPMENT_PLAN_ID\",\"WEEKLY_DEVELOPMENT_PLAN\".\"SCORECARD_ID\",\"WEEKLY_DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\",\"WEEKLY_DEVELOPMENT_PLAN\".\"SCORECARD_WEEKLY_RESULT_ID\"";
 	private String selectFromStatementTableName = " FROM \"WEEKLY_DEVELOPMENT_PLAN\" \"WEEKLY_DEVELOPMENT_PLAN\"";
-	private String whereClause = "  WHERE \"WEEKLY_DEVELOPMENT_PLAN\".\"ID\"=?";
+//	private String whereClause = "  WHERE \"WEEKLY_DEVELOPMENT_PLAN\".\"ID\"=?";
+	private String whereClause = " ,(select ? As SQLID From Dual) WHERE \"WEEKLY_DEVELOPMENT_PLAN\".\"SCORECARD_WEEKLY_RESULT_ID\"= SUBSTR(SQLID,0,9) AND \"WEEKLY_DEVELOPMENT_PLAN\".\"DEVELOPMENT_PLAN_ID\"=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,4) ";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WEEKLY_DEVELOPMENT_PLAN\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"WEEKLY_DEVELOPMENT_PLAN\".\"ID\"";
 	

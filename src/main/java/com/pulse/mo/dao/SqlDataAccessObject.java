@@ -467,7 +467,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects\n" + selectQueryString, e);
+			log.error("Unable to retrieveObjects\n" + selectQueryString + "\n     ID: " + id, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
