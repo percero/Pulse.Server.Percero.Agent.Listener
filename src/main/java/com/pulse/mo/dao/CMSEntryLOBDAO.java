@@ -109,24 +109,26 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+		// TODO: Turned off for now
 		if ("\"CMS_ENTRY_ID\"".equalsIgnoreCase(joinColumnName)) {
-			return SQL_VIEW + "  \"CMS_ENTRY_LOB\".\"ID\"=?";
+			return SQL_VIEW + "  \"CMS_ENTRY_LOB\".\"ID\"=? AND 0=1";
 		}
-		return SQL_VIEW + "  \"CMS_ENTRY_LOB\"." + joinColumnName + "=?";
+		return SQL_VIEW + "  \"CMS_ENTRY_LOB\"." + joinColumnName + "=? AND 0=1";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
 
+		// TODO: Turned off for now
 		if ("\"CMS_ENTRY_ID\"".equalsIgnoreCase(joinColumnName)) {
 			return "SELECT AGENT_LOB.ECP_LOB_ID as \"ID\" "
 					+ selectFromStatementTableName
-					+ " Join PULSE.MOB_EMP_LOB_VW AGENT_LOB On AGENT_LOB.EMPLOYEE_ID = CMS_ENTRY_LOB.EMPLOYEE_ID Join PULSE.MOB_CLIENT_SITE_VW CLIENT_SITE On CLIENT_SITE.ID =AGENT_LOB.CLIENT_ID Join PULSE.MOB_LOB_SITE_CLIENT_VW AGENT_LOB_SITE On AGENT_LOB_SITE.CLIENT_ID =AGENT_LOB.CLIENT_ID And AGENT_LOB_SITE.SITE_ID =CLIENT_SITE.SITE_ID WHERE \"CMS_ENTRY_LOB\".\"ID\"=?";
+					+ " Join PULSE.MOB_EMP_LOB_VW AGENT_LOB On AGENT_LOB.EMPLOYEE_ID = CMS_ENTRY_LOB.EMPLOYEE_ID Join PULSE.MOB_CLIENT_SITE_VW CLIENT_SITE On CLIENT_SITE.ID =AGENT_LOB.CLIENT_ID Join PULSE.MOB_LOB_SITE_CLIENT_VW AGENT_LOB_SITE On AGENT_LOB_SITE.CLIENT_ID =AGENT_LOB.CLIENT_ID And AGENT_LOB_SITE.SITE_ID =CLIENT_SITE.SITE_ID WHERE \"CMS_ENTRY_LOB\".\"ID\"=? AND 0=1";
 		}
 		return "SELECT AGENT_LOB.ECP_LOB_ID as \"ID\" "
 				+ selectFromStatementTableName
 				+ " Join PULSE.MOB_EMP_LOB_VW AGENT_LOB On AGENT_LOB.EMPLOYEE_ID = CMS_ENTRY_LOB.EMPLOYEE_ID Join PULSE.MOB_CLIENT_SITE_VW CLIENT_SITE On CLIENT_SITE.ID =AGENT_LOB.CLIENT_ID Join PULSE.MOB_LOB_SITE_CLIENT_VW AGENT_LOB_SITE On AGENT_LOB_SITE.CLIENT_ID =AGENT_LOB.CLIENT_ID And AGENT_LOB_SITE.SITE_ID =CLIENT_SITE.SITE_ID WHERE \"CMS_ENTRY_LOB\"."
-				+ joinColumnName + "=?";
+				+ joinColumnName + "=? AND 0=1";
 	}
 
 	@Override
