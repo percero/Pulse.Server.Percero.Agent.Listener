@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncDataException;
@@ -285,6 +286,11 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	public T retrieveObject(ClassIDPair classIdPair, String userId,
 			Boolean shellOnly) throws SyncException {
 		T result = null;
+		
+		if (!StringUtils.hasText(classIdPair.getID())) {
+			// Empty or NULL ID.
+			return result;
+		}
 
 		String sql = getSelect(shellOnly);
 		List<T> results = executeSelectById(sql, classIdPair.getID(), shellOnly);

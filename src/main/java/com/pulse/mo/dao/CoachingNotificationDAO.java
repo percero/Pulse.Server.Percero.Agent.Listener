@@ -176,9 +176,12 @@ nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_
 nextResult.setName(rs.getString("NAME"));
 
 
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
-nextResult.setTeamLeader(teamleader);
+String teamLeaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamLeaderID)) {
+	TeamLeader teamleader = new TeamLeader();
+	teamleader.setID(teamLeaderID);
+	nextResult.setTeamLeader(teamleader);
+}
 
 
 
