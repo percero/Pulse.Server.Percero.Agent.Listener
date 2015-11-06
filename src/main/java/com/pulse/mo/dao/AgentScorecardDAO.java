@@ -496,7 +496,7 @@ propertyCounter++;
 
 		List<Date> results = new ArrayList<Date>();
 //		String sql = "SELECT DISTINCT(\"WEEK_DATE\") FROM \"AGENT_SCORECARD\" WHERE \"WEEK_DATE\">?";
-		String sql = "select WEEK_DATE from (select  distinct ac.WEEK_DATE from Team_Leader t join Agent  a on a.Team_Leader_Id = t.Id join AGENT_SCORECARD ac on ac.Agent_Id = a.Id and ac.WEEK_DATE >= add_months(sysdate,-1) where t.ID =?) T order by WEEK_DATE desc";
+		String sql = "select WEEK_DATE from (select distinct ac.WEEK_DATE from Team_Leader t join Agent  a on a.Team_Leader_Id = t.Id join AGENT_SCORECARD ac on ac.Agent_Id = a.Id and ac.START_DATE >= (add_months(sysdate,-1)-6) where t.ID =?) T order by WEEK_DATE desc";
 
 		long timeStart = System.currentTimeMillis();
 
