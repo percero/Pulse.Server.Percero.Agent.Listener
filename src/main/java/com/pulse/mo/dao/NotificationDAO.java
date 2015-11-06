@@ -50,7 +50,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
 	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"CREATED_ON\"";
+	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"CREATED_ON\" DESC";
 	
 	
 
