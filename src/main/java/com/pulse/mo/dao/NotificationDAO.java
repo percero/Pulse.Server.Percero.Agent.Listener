@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
 	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"CREATED_ON\"";
 	
 	
 
@@ -107,17 +108,15 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
+	protected String getSelectByRelationshipStarSQL(String joinColumnName)
 	{
-		
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
-	
+
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName)
 	{
-		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
@@ -149,7 +148,8 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 	protected Notification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-Notification nextResult = null;
+
+Notification nextResult = null;
     	
 		String type = rs.getString("TYPE");
 		
@@ -364,4 +364,4 @@ propertyCounter++;
 	
 	
 }
-
+
