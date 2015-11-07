@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.CoachingSession;
@@ -105,81 +104,6 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 		return result;
 	}
 
-//	private Object calc_skippedStateCount(ClassIDPair pair) {
-//		Integer skippedStateCount = 0;
-//
-//		try {
-//			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
-//			if (host == null) {
-//				log.warn("Unable to calculate pendingStateCount: Invalid objectId");
-//				return skippedStateCount;
-//			}
-//
-//			// Setup fieldsToWatch.
-//			Collection<String> fieldsToWatch = new HashSet<String>();
-//
-//			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
-//			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
-//			Date weekDate = host.getWeekDate();
-//
-//			accessManager.addWatcherField(pair, "teamLeader", fieldsToWatch);
-//			TeamLeader teamLeader = syncAgentService.systemGetByObject(host.getTeamLeader());
-//
-//			if (weekDate != null && weekDate.getTime() > 0 && teamLeader != null) {
-//				DateTime coachingNotificationWeekDate = new DateTime(host.getWeekDate().getTime());
-//
-//				accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "agents", fieldsToWatch);
-//				Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
-//				while (itrAgents.hasNext()) {
-//					Agent agent = syncAgentService.systemGetByObject(itrAgents.next());
-//					if (agent != null) {
-//						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentScorecards", fieldsToWatch);
-//						Iterator<AgentScorecard> itrAgentScorecards = agent.getAgentScorecards().iterator();
-//						while (itrAgentScorecards.hasNext()) {
-//							AgentScorecard agentScorecard = syncAgentService.systemGetByObject(itrAgentScorecards.next());
-//
-//							if (agentScorecard != null) {
-//								accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "weekDate", fieldsToWatch);
-//								if (agentScorecard.getWeekDate() != null && agentScorecard.getWeekDate().getTime() > 0) {
-//									DateTime scorecardDateTime = new DateTime(agentScorecard.getWeekDate().getTime());
-//
-//									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, coachingNotificationWeekDate) == 0) {
-//										accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
-//										Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
-//
-//										while (itrCoachingSession.hasNext()) {
-//											CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
-//											if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
-//												ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
-//												accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
-//
-//												String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
-//												if (coachingSessionStateID.equals("7")) {
-//													skippedStateCount++;
-//												}
-//											}
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//			// Register all the fields to watch for this ChangeWatcher. Whenever
-//			// ANY of these fields change, this ChangeWatcher will get re-run
-//			accessManager.updateWatcherFields(pair, "skippedStateCount", fieldsToWatch);
-//
-//			// Store the result for caching, and also for comparing new results to see if there has been a change.
-//			accessManager.saveChangeWatcherResult(pair, "skippedStateCount", skippedStateCount);
-//		} catch(Exception e) {
-//			log.error("Unable to calculate skippedStateCount", e);
-//		}
-//
-//		return skippedStateCount;
-//	}
-
 
 	public Integer calc_skippedStateCount(ClassIDPair pair) {
 		Set<String> ids = new HashSet<String>(2);
@@ -247,26 +171,24 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 
 			if (weekDate != null && weekDate.getTime() > 0 && teamLeader != null) {
 				DateTime coachingNotificationWeekDate = new DateTime(host.getWeekDate().getTime());
-
-				accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "agents", fieldsToWatch);
-				Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
-				while (itrAgents.hasNext()) {
-					Agent agent = syncAgentService.systemGetByObject(itrAgents.next());
-					if (agent != null) {
-						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentScorecards", fieldsToWatch);
-						Iterator<AgentScorecard> itrAgentScorecards = agent.getAgentScorecards().iterator();
-						while (itrAgentScorecards.hasNext()) {
-							AgentScorecard agentScorecard = syncAgentService.systemGetByObject(itrAgentScorecards.next());
-
-							if (agentScorecard != null) {
-								accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "weekDate", fieldsToWatch);
-								if (agentScorecard.getWeekDate() != null && agentScorecard.getWeekDate().getTime() > 0) {
-									DateTime scorecardDateTime = new DateTime(agentScorecard.getWeekDate().getTime());
-
-									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, coachingNotificationWeekDate) == 0) {
-										agentScorecards.add(agentScorecard);
-									}
-								}
+				
+				// Use TeamLeader.AgentScorecards Derived Collection
+				// instead of iterating through TeamLeader.Agents here (since
+				// that work has already been done in
+				// TeamLeader.AgentScorecards)
+				accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "agentScorecards", fieldsToWatch);
+				Iterator<AgentScorecard> itrAgentScorecards = teamLeader.getAgentScorecards().iterator();
+				while (itrAgentScorecards.hasNext()) {
+					// Since this is a Derived Collection, the AgentScorecard objects are already fully loaded (ie. they are NOT "shell" objects).
+					AgentScorecard agentScorecard = itrAgentScorecards.next();
+					
+					if (agentScorecard != null) {
+						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "weekDate", fieldsToWatch);
+						if (agentScorecard.getWeekDate() != null && agentScorecard.getWeekDate().getTime() > 0) {
+							DateTime scorecardDateTime = new DateTime(agentScorecard.getWeekDate().getTime());
+							
+							if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, coachingNotificationWeekDate) == 0) {
+								agentScorecards.add(agentScorecard);
 							}
 						}
 					}
@@ -331,54 +253,6 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 					}
 				}
 			}
-
-//
-//			Date weekDate = host.getWeekDate();
-//
-//			accessManager.addWatcherField(pair, "teamLeader", fieldsToWatch);
-//			TeamLeader teamLeader = syncAgentService.systemGetByObject(host.getTeamLeader());
-//
-//			if (weekDate != null && weekDate.getTime() > 0 && teamLeader != null) {
-//				DateTime coachingNotificationWeekDate = new DateTime(host.getWeekDate().getTime());
-//
-//				accessManager.addWatcherField(BaseDataObject.toClassIdPair(teamLeader), "agents", fieldsToWatch);
-//				Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
-//				while (itrAgents.hasNext()) {
-//					Agent agent = syncAgentService.systemGetByObject(itrAgents.next());
-//					if (agent != null) {
-//						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentScorecards", fieldsToWatch);
-//						Iterator<AgentScorecard> itrAgentScorecards = agent.getAgentScorecards().iterator();
-//						while (itrAgentScorecards.hasNext()) {
-//							AgentScorecard agentScorecard = syncAgentService.systemGetByObject(itrAgentScorecards.next());
-//
-//							if (agentScorecard != null) {
-//								accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "weekDate", fieldsToWatch);
-//								if (agentScorecard.getWeekDate() != null && agentScorecard.getWeekDate().getTime() > 0) {
-//									DateTime scorecardDateTime = new DateTime(agentScorecard.getWeekDate().getTime());
-//
-//									if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, coachingNotificationWeekDate) == 0) {
-//										accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "coachingSessions", fieldsToWatch);
-//										Iterator<CoachingSession> itrCoachingSession  = agentScorecard.getCoachingSessions().iterator();
-//
-//										while (itrCoachingSession.hasNext()) {
-//											CoachingSession nextCoachingSession = syncAgentService.systemGetByObject(itrCoachingSession.next());
-//											if (nextCoachingSession != null && nextCoachingSession instanceof CoachingSession) {
-//												ClassIDPair coachingSessionPair = BaseDataObject.toClassIdPair(nextCoachingSession);
-//												accessManager.addWatcherField(coachingSessionPair, "coachingSessionState", fieldsToWatch);
-//
-//												String coachingSessionStateID = nextCoachingSession.getCoachingSessionState().getID();
-//												if (coachingSessionStateIds.contains(coachingSessionStateID)) {
-//													totalCount++;
-//												}
-//											}
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
 
 			// Register all the fields to watch for this ChangeWatcher. Whenever
 			// ANY of these fields change, this ChangeWatcher will get re-run
