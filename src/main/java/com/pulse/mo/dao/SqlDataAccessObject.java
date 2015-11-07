@@ -452,6 +452,13 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	protected List<T> executeSelectById(String selectQueryString, String id, Boolean shellOnly)
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
+		
+		if (!StringUtils.hasText(id)) {
+			// Make sure we have a valid ID.
+			log.debug("SelectById: Skipping NULL or empty Id");
+			return results;
+		}
+		
 		log.debug("running selectById query: \n"+selectQueryString+"\nID: "+id);
 
 		long timeStart = System.currentTimeMillis();
@@ -473,7 +480,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
-			log.error("Unable to retrieveObjects\n" + selectQueryString + "\n     ID: " + id, e);
+			log.error("Unable to retrieveObject:\n" + selectQueryString + "\n     ID: " + id, e);
 			throw new SyncDataException(e);
 		} finally {
 			try {
