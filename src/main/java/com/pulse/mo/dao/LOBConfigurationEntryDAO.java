@@ -177,14 +177,20 @@ nextResult.setOccurrenceToleranceInterval(rs.getInt("OCC_TOLERANCE_INTERVAL"));
 nextResult.setReminderInterval(rs.getInt("REMINDER_INTERVAL"));
 
 
+String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
+if (StringUtils.hasText(lobconfigurationID)) {
 LOBConfiguration lobconfiguration = new LOBConfiguration();
-lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
+lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
+}
 
 
+String notificationfrequencyID = rs.getString("NOTIFICATION_FREQUENCY_ID");
+if (StringUtils.hasText(notificationfrequencyID)) {
 NotificationFrequency notificationfrequency = new NotificationFrequency();
-notificationfrequency.setID(rs.getString("NOTIFICATION_FREQUENCY_ID"));
+notificationfrequency.setID(notificationfrequencyID);
 nextResult.setNotificationFrequency(notificationfrequency);
+}
 
 
 

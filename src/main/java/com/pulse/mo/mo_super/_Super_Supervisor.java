@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-PhotoUri
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String photoUri;
-
-public String getPhotoUri() 
-{
-	return this.photoUri;
-}
-
-public void setPhotoUri(String photoUri)
-{
-	this.photoUri = photoUri;
-}/*
 FullName
 Notes:
 */
@@ -119,22 +102,22 @@ public void setFullName(String fullName)
 {
 	this.fullName = fullName;
 }/*
-LastName
+PhotoUri
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String lastName;
+private String photoUri;
 
-public String getLastName() 
+public String getPhotoUri() 
 {
-	return this.lastName;
+	return this.photoUri;
 }
 
-public void setLastName(String lastName)
+public void setPhotoUri(String photoUri)
 {
-	this.lastName = lastName;
+	this.photoUri = photoUri;
 }/*
 EmailAddress
 Notes:
@@ -152,6 +135,23 @@ public String getEmailAddress()
 public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
+}/*
+LastName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String lastName;
+
+public String getLastName() 
+{
+	return this.lastName;
+}
+
+public void setLastName(String lastName)
+{
+	this.lastName = lastName;
 }/*
 FirstName
 Notes:
@@ -229,27 +229,6 @@ public void setManagerSupervisor(Supervisor value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Photo Uri property
-		objectJson += ",\"photoUri\":";
-		
-		if (getPhotoUri() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPhotoUri());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Full Name property
 		objectJson += ",\"fullName\":";
 		
@@ -271,16 +250,16 @@ public void setManagerSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Last Name property
-		objectJson += ",\"lastName\":";
+		//Retrieve value of the Photo Uri property
+		objectJson += ",\"photoUri\":";
 		
-		if (getLastName() == null)
+		if (getPhotoUri() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLastName());
+				objectJson += objectMapper.writeValueAsString(getPhotoUri());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -302,6 +281,27 @@ public void setManagerSupervisor(Supervisor value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Last Name property
+		objectJson += ",\"lastName\":";
+		
+		if (getLastName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getLastName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -397,14 +397,14 @@ objectJson += ",\"subordinateSupervisors\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Photo Uri property
-		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the Full Name property
 		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
-		//From value of the Last Name property
-		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
+		//From value of the Photo Uri property
+		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the Email Address property
 		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
+		//From value of the Last Name property
+		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 

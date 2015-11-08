@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class ScorecardMonthlyResultDAO extends SqlDataAccessObject<ScorecardMont
 	protected ScorecardMonthlyResult extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ScorecardMonthlyResult nextResult = null;
+
+ScorecardMonthlyResult nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -204,29 +206,44 @@ nextResult.setRollupType(rs.getInt("ROLLUP_TYPE"));
 nextResult.setTenure(rs.getInt("TENURE"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String previousscorecardmonthlyresultID = rs.getString("PREV_SCARD_MONTHLY_RESULT_ID");
+if (StringUtils.hasText(previousscorecardmonthlyresultID)) {
 ScorecardMonthlyResult previousscorecardmonthlyresult = new ScorecardMonthlyResult();
-previousscorecardmonthlyresult.setID(rs.getString("PREV_SCARD_MONTHLY_RESULT_ID"));
+previousscorecardmonthlyresult.setID(previousscorecardmonthlyresultID);
 nextResult.setPreviousScorecardMonthlyResult(previousscorecardmonthlyresult);
+}
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
 
 
+String goalID = rs.getString("GOAL_ID");
+if (StringUtils.hasText(goalID)) {
 Goal goal = new Goal();
-goal.setID(rs.getString("GOAL_ID"));
+goal.setID(goalID);
 nextResult.setGoal(goal);
+}
 
 
 
@@ -759,7 +776,8 @@ propertyCounter++;
 	}
 	
 	
-public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject, String userId)
+
+public ScorecardMonthlyResult createObject(ScorecardMonthlyResult perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -822,9 +840,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

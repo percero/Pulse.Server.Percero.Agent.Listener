@@ -208,9 +208,12 @@ nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 nextResult.setEndExpression(rs.getString("END_EXPRESSION"));
 
 
+String goalID = rs.getString("GOAL_ID");
+if (StringUtils.hasText(goalID)) {
 Goal goal = new Goal();
-goal.setID(rs.getString("GOAL_ID"));
+goal.setID(goalID);
 nextResult.setGoal(goal);
+}
 
 
 
@@ -224,28 +227,29 @@ nextResult.setGoal(goal);
 	protected void setBaseStatmentInsertParams(GradeScale perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getStartExp());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,8, perceroObject.getCustom());
-JdbcHelper.setInt(pstmt,9, perceroObject.getEndValue());
-JdbcHelper.setInt(pstmt,10, perceroObject.getGrade());
-JdbcHelper.setInt(pstmt,11, perceroObject.getStartValue());
-pstmt.setString(12, perceroObject.getANDOR());
-pstmt.setString(13, perceroObject.getColor());
-pstmt.setString(14, perceroObject.getCreatedBy());
-pstmt.setString(15, perceroObject.getEndExpression());
+
+pstmt.setString(3, perceroObject.getStartExp());
+pstmt.setString(4, perceroObject.getUpdatedBy());
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,9, perceroObject.getCustom());
+JdbcHelper.setInt(pstmt,10, perceroObject.getEndValue());
+JdbcHelper.setInt(pstmt,11, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,12, perceroObject.getStartValue());
+pstmt.setString(13, perceroObject.getANDOR());
+pstmt.setString(14, perceroObject.getColor());
+pstmt.setString(15, perceroObject.getCreatedBy());
+pstmt.setString(16, perceroObject.getEndExpression());
 
 if (perceroObject.getGoal() == null)
 {
-pstmt.setString(16, null);
+pstmt.setString(17, null);
 }
 else
 {
-		pstmt.setString(16, perceroObject.getGoal().getID());
+		pstmt.setString(17, perceroObject.getGoal().getID());
 }
 
 
@@ -323,7 +327,7 @@ pstmt.setString(16, perceroObject.getID());
 		
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
-		
+
 
 
 boolean useStartExp = StringUtils.hasText(theQueryObject.getStartExp()) && (excludeProperties == null || !excludeProperties.contains("startExp"));

@@ -192,9 +192,12 @@ nextResult.setUpdatedOn(rs.getString("UPDATED_ON"));
 nextResult.setVersion(rs.getString("VERSION"));
 
 
+String adhoccoachingsessionID = rs.getString("ADHOC_COACHING_SESSION_ID");
+if (StringUtils.hasText(adhoccoachingsessionID)) {
 AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
-adhoccoachingsession.setID(rs.getString("ADHOC_COACHING_SESSION_ID"));
+adhoccoachingsession.setID(adhoccoachingsessionID);
 nextResult.setAdhocCoachingSession(adhoccoachingsession);
+}
 
 
 

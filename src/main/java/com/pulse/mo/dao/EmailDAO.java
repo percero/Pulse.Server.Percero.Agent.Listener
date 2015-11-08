@@ -165,9 +165,12 @@ public class EmailDAO extends SqlDataAccessObject<Email> implements IDataAccessO
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
 
+String pulseuserID = rs.getString("PULSE_USER_ID");
+if (StringUtils.hasText(pulseuserID)) {
 PulseUser pulseuser = new PulseUser();
-pulseuser.setID(rs.getString("PULSE_USER_ID"));
+pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
+}
 
 
 

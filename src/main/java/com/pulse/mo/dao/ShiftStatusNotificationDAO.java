@@ -179,14 +179,20 @@ nextResult.setShiftEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("S
 nextResult.setName(rs.getString("NAME"));
 
 
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
 
+String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
+if (StringUtils.hasText(timecardactivityID)) {
 TimecardActivity timecardactivity = new TimecardActivity();
-timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
+timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);
+}
 
 
 

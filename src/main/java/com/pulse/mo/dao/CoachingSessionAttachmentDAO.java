@@ -45,7 +45,7 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"COACH_ATTACHMENT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"COACH_ATTACHMENT\".\"NAME\",\"COACH_ATTACHMENT\".\"CREATED_ON\",\"COACH_ATTACHMENT\".\"UPDATED_ON\",\"COACH_ATTACHMENT\".\"TYPE\",\"COACH_ATTACHMENT\".\"CREATED_BY\",\"COACH_ATTACHMENT\".\"DESCRIPTION\",\"COACH_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACH_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACH_ATTACHMENT\".\"UPDATED_BY\",\"COACH_ATTACHMENT\".\"VERSION\",\"COACH_ATTACHMENT\".\"COACHING_SESSION_ID\"";
+	public static final String SQL_VIEW = ",\"COACH_ATTACHMENT\".\"NAME\",\"COACH_ATTACHMENT\".\"CREATED_ON\",\"COACH_ATTACHMENT\".\"UPDATED_ON\",\"COACH_ATTACHMENT\".\"CREATED_BY\",\"COACH_ATTACHMENT\".\"DESCRIPTION\",\"COACH_ATTACHMENT\".\"EMPLOYEE_ID\",\"COACH_ATTACHMENT\".\"TEMP_STORE_ID\",\"COACH_ATTACHMENT\".\"TYPE\",\"COACH_ATTACHMENT\".\"UPDATED_BY\",\"COACH_ATTACHMENT\".\"VERSION\",\"COACH_ATTACHMENT\".\"COACHING_SESSION_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACH_ATTACHMENT\" \"COACH_ATTACHMENT\"";
 	private String whereClause = "  WHERE \"COACH_ATTACHMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACH_ATTACHMENT\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class CoachingSessionAttachmentDAO extends SqlDataAccessObject<CoachingSe
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACH_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"TYPE\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"UPDATED_BY\",\"VERSION\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COACH_ATTACHMENT (\"ID\",\"NAME\",\"CREATED_ON\",\"UPDATED_ON\",\"CREATED_BY\",\"DESCRIPTION\",\"EMPLOYEE_ID\",\"TEMP_STORE_ID\",\"TYPE\",\"UPDATED_BY\",\"VERSION\",\"COACHING_SESSION_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACH_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COACH_ATTACHMENT SET \"NAME\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"EMPLOYEE_ID\"=?,\"TEMP_STORE_ID\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"VERSION\"=?,\"COACHING_SESSION_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -171,9 +171,6 @@ nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREA
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
 
-nextResult.setType(rs.getInt("TYPE"));
-
-
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 
@@ -186,15 +183,21 @@ nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
 nextResult.setTempStoreId(rs.getString("TEMP_STORE_ID"));
 
 
+nextResult.setType(rs.getString("TYPE"));
+
+
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
 nextResult.setVersion(rs.getString("VERSION"));
 
 
+String coachingsessionID = rs.getString("COACHING_SESSION_ID");
+if (StringUtils.hasText(coachingsessionID)) {
 CoachingSession coachingsession = new CoachingSession();
-coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
+coachingsession.setID(coachingsessionID);
 nextResult.setCoachingSession(coachingsession);
+}
 
 
 
@@ -211,11 +214,11 @@ nextResult.setCoachingSession(coachingsession);
 pstmt.setString(2, perceroObject.getName());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,5, perceroObject.getType());
-pstmt.setString(6, perceroObject.getCreatedBy());
-pstmt.setString(7, perceroObject.getDescription());
-pstmt.setString(8, perceroObject.getEmployeeId());
-pstmt.setString(9, perceroObject.getTempStoreId());
+pstmt.setString(5, perceroObject.getCreatedBy());
+pstmt.setString(6, perceroObject.getDescription());
+pstmt.setString(7, perceroObject.getEmployeeId());
+pstmt.setString(8, perceroObject.getTempStoreId());
+pstmt.setString(9, perceroObject.getType());
 pstmt.setString(10, perceroObject.getUpdatedBy());
 pstmt.setString(11, perceroObject.getVersion());
 
@@ -254,11 +257,11 @@ else
 		pstmt.setString(1, perceroObject.getName());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,4, perceroObject.getType());
-pstmt.setString(5, perceroObject.getCreatedBy());
-pstmt.setString(6, perceroObject.getDescription());
-pstmt.setString(7, perceroObject.getEmployeeId());
-pstmt.setString(8, perceroObject.getTempStoreId());
+pstmt.setString(4, perceroObject.getCreatedBy());
+pstmt.setString(5, perceroObject.getDescription());
+pstmt.setString(6, perceroObject.getEmployeeId());
+pstmt.setString(7, perceroObject.getTempStoreId());
+pstmt.setString(8, perceroObject.getType());
 pstmt.setString(9, perceroObject.getUpdatedBy());
 pstmt.setString(10, perceroObject.getVersion());
 
@@ -344,23 +347,6 @@ paramValues.add(theQueryObject.getUpdatedOn());
 propertyCounter++;
 }
 
-boolean useType = theQueryObject.getType() != null && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
 boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
 
 if (useCreatedBy)
@@ -426,6 +412,23 @@ sql += " WHERE ";
 }
 sql += " \"TEMP_STORE_ID\" =? ";
 paramValues.add(theQueryObject.getTempStoreId());
+propertyCounter++;
+}
+
+boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 

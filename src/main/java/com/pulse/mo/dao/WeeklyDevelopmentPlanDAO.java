@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -150,7 +151,8 @@ public class WeeklyDevelopmentPlanDAO extends SqlDataAccessObject<WeeklyDevelopm
 	protected WeeklyDevelopmentPlan extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-WeeklyDevelopmentPlan nextResult = null;
+
+WeeklyDevelopmentPlan nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -166,24 +168,36 @@ public class WeeklyDevelopmentPlanDAO extends SqlDataAccessObject<WeeklyDevelopm
 			nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 
+String developmentplanID = rs.getString("DEVELOPMENT_PLAN_ID");
+if (StringUtils.hasText(developmentplanID)) {
 DevelopmentPlan developmentplan = new DevelopmentPlan();
-developmentplan.setID(rs.getString("DEVELOPMENT_PLAN_ID"));
+developmentplan.setID(developmentplanID);
 nextResult.setDevelopmentPlan(developmentplan);
+}
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
 
 
+String scorecardweeklyresultID = rs.getString("SCORECARD_WEEKLY_RESULT_ID");
+if (StringUtils.hasText(scorecardweeklyresultID)) {
 ScorecardWeeklyResult scorecardweeklyresult = new ScorecardWeeklyResult();
-scorecardweeklyresult.setID(rs.getString("SCORECARD_WEEKLY_RESULT_ID"));
+scorecardweeklyresult.setID(scorecardweeklyresultID);
 nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
+}
 
 
 
@@ -432,7 +446,74 @@ propertyCounter++;
 	}
 	
 	
+
+public WeeklyDevelopmentPlan createObject(WeeklyDevelopmentPlan perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select WEEKLY_DEVELOPMENT_PLAN_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
+
 	
 	
 }
-
+

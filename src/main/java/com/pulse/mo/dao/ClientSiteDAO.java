@@ -40,7 +40,7 @@ public class ClientSiteDAO extends SqlDataAccessObject<ClientSite> implements ID
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  ID || '-' || SITEID as \"ID\", \"CLIENT_SITE\".\"ID\" as \"CLIENT_ID\", \"CLIENT_SITE\".\"SITE_ID\" as \"SITE_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT_SITE\" ";
+	public static final String SQL_VIEW = "SELECT  ID || '-' || SITEID as \"ID\", \"CLIENT_SITE\".\"SITE_ID\" as \"SITE_ID\", \"CLIENT_SITE\".\"ID\" as \"CLIENT_ID\" FROM \"MOB_CLIENT_SITE_VW\" \"CLIENT_SITE\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CLIENT_SITE_VW\" \"CLIENT_SITE\"";
 	private String whereClause = " WHERE \"CLIENT_SITE\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CLIENT_SITE\".\"ID\"= SQLLIST.column_value";
@@ -158,14 +158,20 @@ public class ClientSiteDAO extends SqlDataAccessObject<ClientSite> implements ID
 
 		if (!shellOnly) 
 		{
-			Client client = new Client();
-client.setID(rs.getString("CLIENT_ID"));
+			String clientID = rs.getString("CLIENT_ID");
+if (StringUtils.hasText(clientID)) {
+Client client = new Client();
+client.setID(clientID);
 nextResult.setClient(client);
+}
 
 
+String siteID = rs.getString("SITE_ID");
+if (StringUtils.hasText(siteID)) {
 Site site = new Site();
-site.setID(rs.getString("SITE_ID"));
+site.setID(siteID);
 nextResult.setSite(site);
+}
 
 
 

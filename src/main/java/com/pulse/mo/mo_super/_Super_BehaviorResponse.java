@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
-}/*
 CreatedBy
 Notes:
 */
@@ -119,39 +102,22 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
-CreatedOn
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private String updatedBy;
 
-public Date getCreatedOn() 
+public String getUpdatedBy() 
 {
-	return this.createdOn;
+	return this.updatedBy;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setUpdatedBy(String updatedBy)
 {
-	this.createdOn = createdOn;
-}/*
-Response
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer response;
-
-public Integer getResponse() 
-{
-	return this.response;
-}
-
-public void setResponse(Integer response)
-{
-	this.response = response;
+	this.updatedBy = updatedBy;
 }/*
 WeekDate
 Notes:
@@ -170,22 +136,56 @@ public void setWeekDate(Date weekDate)
 {
 	this.weekDate = weekDate;
 }/*
-UpdatedBy
+UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String updatedBy;
+private Date updatedOn;
 
-public String getUpdatedBy() 
+public Date getUpdatedOn() 
 {
-	return this.updatedBy;
+	return this.updatedOn;
 }
 
-public void setUpdatedBy(String updatedBy)
+public void setUpdatedOn(Date updatedOn)
 {
-	this.updatedBy = updatedBy;
+	this.updatedOn = updatedOn;
+}/*
+Response
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer response;
+
+public Integer getResponse() 
+{
+	return this.response;
+}
+
+public void setResponse(Integer response)
+{
+	this.response = response;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -259,13 +259,6 @@ public void setCoachingSession(CoachingSession value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
 		
@@ -287,12 +280,40 @@ public void setCoachingSession(CoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCreatedOn().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Response property
 		objectJson += ",\"response\":";
@@ -315,33 +336,12 @@ public void setCoachingSession(CoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getWeekDate().getTime();
-		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getCreatedOn().getTime();
 		}
 
 				
@@ -408,18 +408,18 @@ objectJson += ",\"coachingSession\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Response property
-		setResponse(JsonUtils.getJsonInteger(jsonObject, "response"));
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Response property
+		setResponse(JsonUtils.getJsonInteger(jsonObject, "response"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 
 		
 		// Source Relationships

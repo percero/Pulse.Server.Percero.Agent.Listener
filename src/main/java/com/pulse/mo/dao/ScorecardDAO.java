@@ -45,7 +45,7 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"LOCK_LEVEL\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\"";
+	public static final String SQL_VIEW = ",\"SCORECARD\".\"CREATED_ON\",\"SCORECARD\".\"UPDATED_ON\",\"SCORECARD\".\"CREATED_BY\",\"SCORECARD\".\"DESCRIPTION\",\"SCORECARD\".\"ECOACHING_LOB_ID\",\"SCORECARD\".\"GROUP_ID\",\"SCORECARD\".\"NAME\",\"SCORECARD\".\"REGION_ID\",\"SCORECARD\".\"UPDATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD\" \"SCORECARD\"";
 	private String whereClause = "  WHERE \"SCORECARD\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class ScorecardDAO extends SqlDataAccessObject<Scorecard> implements IDat
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"CREATED_BY\",\"DESCRIPTION\",\"ECOACHING_LOB_ID\",\"GROUP_ID\",\"LOCK_LEVEL\",\"NAME\",\"REGION_ID\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD (\"ID\",\"CREATED_ON\",\"UPDATED_ON\",\"CREATED_BY\",\"DESCRIPTION\",\"ECOACHING_LOB_ID\",\"GROUP_ID\",\"NAME\",\"REGION_ID\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=?,\"LOCK_LEVEL\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD SET \"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"ECOACHING_LOB_ID\"=?,\"GROUP_ID\"=?,\"NAME\"=?,\"REGION_ID\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -180,9 +180,6 @@ nextResult.setECoachingLOBId(rs.getString("ECOACHING_LOB_ID"));
 nextResult.setGroupId(rs.getString("GROUP_ID"));
 
 
-nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
-
-
 nextResult.setName(rs.getString("NAME"));
 
 
@@ -209,10 +206,9 @@ pstmt.setString(4, perceroObject.getCreatedBy());
 pstmt.setString(5, perceroObject.getDescription());
 pstmt.setString(6, perceroObject.getECoachingLOBId());
 pstmt.setString(7, perceroObject.getGroupId());
-pstmt.setString(8, perceroObject.getLockLevel());
-pstmt.setString(9, perceroObject.getName());
-pstmt.setString(10, perceroObject.getRegionId());
-pstmt.setString(11, perceroObject.getUpdatedBy());
+pstmt.setString(8, perceroObject.getName());
+pstmt.setString(9, perceroObject.getRegionId());
+pstmt.setString(10, perceroObject.getUpdatedBy());
 
 		
 	}
@@ -242,11 +238,10 @@ pstmt.setString(3, perceroObject.getCreatedBy());
 pstmt.setString(4, perceroObject.getDescription());
 pstmt.setString(5, perceroObject.getECoachingLOBId());
 pstmt.setString(6, perceroObject.getGroupId());
-pstmt.setString(7, perceroObject.getLockLevel());
-pstmt.setString(8, perceroObject.getName());
-pstmt.setString(9, perceroObject.getRegionId());
-pstmt.setString(10, perceroObject.getUpdatedBy());
-pstmt.setString(11, perceroObject.getID());
+pstmt.setString(7, perceroObject.getName());
+pstmt.setString(8, perceroObject.getRegionId());
+pstmt.setString(9, perceroObject.getUpdatedBy());
+pstmt.setString(10, perceroObject.getID());
 
 		
 	}
@@ -370,23 +365,6 @@ paramValues.add(theQueryObject.getGroupId());
 propertyCounter++;
 }
 
-boolean useLockLevel = StringUtils.hasText(theQueryObject.getLockLevel()) && (excludeProperties == null || !excludeProperties.contains("lockLevel"));
-
-if (useLockLevel)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"LOCK_LEVEL\" =? ";
-paramValues.add(theQueryObject.getLockLevel());
-propertyCounter++;
-}
-
 boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
 if (useName)
@@ -449,11 +427,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD(?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

@@ -214,19 +214,28 @@ nextResult.setPlanId(rs.getInt("PLAN_ID"));
 nextResult.setType(rs.getInt("TYPE"));
 
 
+String adhoctaskstateID = rs.getString("ADHOC_TASK_STATE_ID");
+if (StringUtils.hasText(adhoctaskstateID)) {
 AdhocTaskState adhoctaskstate = new AdhocTaskState();
-adhoctaskstate.setID(rs.getString("ADHOC_TASK_STATE_ID"));
+adhoctaskstate.setID(adhoctaskstateID);
 nextResult.setAdhocTaskState(adhoctaskstate);
+}
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
 
 

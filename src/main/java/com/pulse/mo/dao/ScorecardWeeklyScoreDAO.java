@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -46,7 +45,7 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_WEEKLY_SCORE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_WEEKLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_WEEKLY_SCORE\".\"CREATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"END_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"START_DATE\",\"SCORECARD_WEEKLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_WEEKLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_WEEKLY_SCORE\".\"SCORE\",\"SCORECARD_WEEKLY_SCORE\".\"GRADE\",\"SCORECARD_WEEKLY_SCORE\".\"AGENT_ID\",\"SCORECARD_WEEKLY_SCORE\".\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MEASURE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"SCORECARD_MONTHLY_SCORE_ID\",\"SCORECARD_WEEKLY_SCORE\".\"GOAL_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_WEEKLY_SCORE\" \"SCORECARD_WEEKLY_SCORE\"";
 	private String whereClause = "  WHERE \"SCORECARD_WEEKLY_SCORE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_WEEKLY_SCORE\".\"ID\"= SQLLIST.column_value";
@@ -133,12 +132,12 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_WEEKLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PREV_SCARD_WEEKLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MEASURE_ID\",\"SCORECARD_MONTHLY_SCORE_ID\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_WEEKLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_WEEKLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_WEEKLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCORECARD_MONTHLY_SCORE_ID\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,8 +149,7 @@ public class ScorecardWeeklyScoreDAO extends SqlDataAccessObject<ScorecardWeekly
 	protected ScorecardWeeklyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-
-ScorecardWeeklyScore nextResult = null;
+ScorecardWeeklyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -194,24 +192,52 @@ nextResult.setScore(rs.getDouble("SCORE"));
 nextResult.setGrade(rs.getInt("GRADE"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String previousscorecardweeklyscoreID = rs.getString("PREV_SCARD_WEEKLY_SCORE_ID");
+if (StringUtils.hasText(previousscorecardweeklyscoreID)) {
 ScorecardWeeklyScore previousscorecardweeklyscore = new ScorecardWeeklyScore();
-previousscorecardweeklyscore.setID(rs.getString("PREV_SCARD_WEEKLY_SCORE_ID"));
+previousscorecardweeklyscore.setID(previousscorecardweeklyscoreID);
 nextResult.setPreviousScorecardWeeklyScore(previousscorecardweeklyscore);
+}
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
+ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
+scorecardmeasure.setID(scorecardmeasureID);
+nextResult.setScorecardMeasure(scorecardmeasure);
+}
+
+
+String scorecardmonthlyscoreID = rs.getString("SCORECARD_MONTHLY_SCORE_ID");
+if (StringUtils.hasText(scorecardmonthlyscoreID)) {
 ScorecardMonthlyScore scorecardmonthlyscore = new ScorecardMonthlyScore();
-scorecardmonthlyscore.setID(rs.getString("SCORECARD_MONTHLY_SCORE_ID"));
+scorecardmonthlyscore.setID(scorecardmonthlyscoreID);
 nextResult.setScorecardMonthlyScore(scorecardmonthlyscore);
+}
+
+
+String goalID = rs.getString("GOAL_ID");
+if (StringUtils.hasText(goalID)) {
+Goal goal = new Goal();
+goal.setID(goalID);
+nextResult.setGoal(goal);
+}
 
 
 
@@ -266,13 +292,33 @@ else
 }
 
 
-if (perceroObject.getScorecardMonthlyScore() == null)
+if (perceroObject.getScorecardMeasure() == null)
 {
 pstmt.setString(15, null);
 }
 else
 {
-		pstmt.setString(15, perceroObject.getScorecardMonthlyScore().getID());
+		pstmt.setString(15, perceroObject.getScorecardMeasure().getID());
+}
+
+
+if (perceroObject.getScorecardMonthlyScore() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getScorecardMonthlyScore().getID());
+}
+
+
+if (perceroObject.getGoal() == null)
+{
+pstmt.setString(17, null);
+}
+else
+{
+		pstmt.setString(17, perceroObject.getGoal().getID());
 }
 
 
@@ -339,16 +385,36 @@ else
 }
 
 
-if (perceroObject.getScorecardMonthlyScore() == null)
+if (perceroObject.getScorecardMeasure() == null)
 {
 pstmt.setString(14, null);
 }
 else
 {
-		pstmt.setString(14, perceroObject.getScorecardMonthlyScore().getID());
+		pstmt.setString(14, perceroObject.getScorecardMeasure().getID());
 }
 
-pstmt.setString(15, perceroObject.getID());
+
+if (perceroObject.getScorecardMonthlyScore() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getScorecardMonthlyScore().getID());
+}
+
+
+if (perceroObject.getGoal() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getGoal().getID());
+}
+
+pstmt.setString(17, perceroObject.getID());
 
 		
 	}
@@ -591,6 +657,23 @@ paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
+boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
+
+if (useScorecardMeasureID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_MEASURE_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardMeasure().getID());
+propertyCounter++;
+}
+
 boolean useScorecardMonthlyScoreID = theQueryObject.getScorecardMonthlyScore() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMonthlyScore"));
 
 if (useScorecardMonthlyScoreID)
@@ -608,6 +691,23 @@ paramValues.add(theQueryObject.getScorecardMonthlyScore().getID());
 propertyCounter++;
 }
 
+boolean useGoalID = theQueryObject.getGoal() != null && (excludeProperties == null || !excludeProperties.contains("goal"));
+
+if (useGoalID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"GOAL_ID\" =? ";
+paramValues.add(theQueryObject.getGoal().getID());
+propertyCounter++;
+}
+
 
 
 		if (propertyCounter == 0) {
@@ -619,11 +719,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD_WEEKLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD_WEEKLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD_WEEKLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD_WEEKLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -631,8 +731,7 @@ propertyCounter++;
 	}
 	
 	
-
-public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
+public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -695,10 +794,9 @@ public ScorecardWeeklyScore createObject(ScorecardWeeklyScore perceroObject, Str
 		return null;
 	}
 }
-
-
+
 
 	
 	
 }
-
+

@@ -51,7 +51,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"AGENT_SCORECARD\".\"ID\"";
-	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\",\"AGENT_SCORECARD\".\"SCORECARD_WEEKLY_SCORE_ID\"";
+	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"END_DATE\",\"AGENT_SCORECARD\".\"START_DATE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"LOCK_LEVEL\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\",\"AGENT_SCORECARD\".\"SCORECARD_WEEKLY_SCORE_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	private String whereClause = " ,(select ? As SQLID From Dual) WHERE AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLID,0,9) AND AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 	private String whereInClause = " Join Table(sys.dbmsdebugvc2coll(?)) SQLLIST On AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLLIST.columnvalue,0,9) And AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 1) + 1,INSTR(SQLLIST.columnvalue,'-', 1, 2)-INSTR(SQLLIST.columnvalue,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 2) + 1,10)";
@@ -138,12 +138,12 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_AGENT_SCORECARD (\"ID\",\"WEEK_DATE\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"QUARTILE\",\"AGENT_ID\",\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_AGENT_SCORECARD (\"ID\",\"END_DATE\",\"START_DATE\",\"WEEK_DATE\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"QUARTILE\",\"LOCK_LEVEL\",\"AGENT_ID\",\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_AGENT_SCORECARD SET \"WEEK_DATE\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_WEEKLY_SCORE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_AGENT_SCORECARD SET \"END_DATE\"=?,\"START_DATE\"=?,\"WEEK_DATE\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"LOCK_LEVEL\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_WEEKLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -169,7 +169,13 @@ AgentScorecard nextResult = null;
     	
     	if (!shellOnly) 
 		{
-			nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
+			nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
+
+
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+
+
+nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
 
 nextResult.setPointsPossible(rs.getDouble("POINTS_POSSIBLE"));
@@ -187,19 +193,31 @@ nextResult.setGrade(rs.getInt("GRADE"));
 nextResult.setQuartile(rs.getInt("QUARTILE"));
 
 
+nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
+
+
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String scorecardweeklyscoreID = rs.getString("SCORECARD_WEEKLY_SCORE_ID");
+if (StringUtils.hasText(scorecardweeklyscoreID)) {
 ScorecardWeeklyScore scorecardweeklyscore = new ScorecardWeeklyScore();
-scorecardweeklyscore.setID(rs.getString("SCORECARD_WEEKLY_SCORE_ID"));
+scorecardweeklyscore.setID(scorecardweeklyscoreID);
 nextResult.setScorecardWeeklyScore(scorecardweeklyscore);
+}
 
 
 
@@ -211,41 +229,45 @@ nextResult.setScorecardWeeklyScore(scorecardweeklyscore);
 	}
 	
 	protected void setBaseStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
-
+		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setDouble(pstmt,3, perceroObject.getPointsPossible());
-JdbcHelper.setDouble(pstmt,4, perceroObject.getPointsReceived());
-JdbcHelper.setDouble(pstmt,5, perceroObject.getScore());
-JdbcHelper.setInt(pstmt,6, perceroObject.getGrade());
-JdbcHelper.setInt(pstmt,7, perceroObject.getQuartile());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setDouble(pstmt,5, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,6, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,7, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,8, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,9, perceroObject.getQuartile());
+pstmt.setString(10, perceroObject.getLockLevel());
 
-if (perceroObject.getAgent() == null) {
-pstmt.setString(8, null);
+if (perceroObject.getAgent() == null)
+{
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getAgent().getID());
+		pstmt.setString(11, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(9, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getScorecard().getID());
+		pstmt.setString(12, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getScorecardWeeklyScore() == null)
 {
-pstmt.setString(10, null);
+pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getScorecardWeeklyScore().getID());
+		pstmt.setString(13, perceroObject.getScorecardWeeklyScore().getID());
 }
 
 
@@ -271,43 +293,46 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setDouble(pstmt,2, perceroObject.getPointsPossible());
-JdbcHelper.setDouble(pstmt,3, perceroObject.getPointsReceived());
-JdbcHelper.setDouble(pstmt, 4, perceroObject.getScore());
-JdbcHelper.setInt(pstmt,5, perceroObject.getGrade());
-JdbcHelper.setInt(pstmt,6, perceroObject.getQuartile());
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setDouble(pstmt,4, perceroObject.getPointsPossible());
+JdbcHelper.setDouble(pstmt,5, perceroObject.getPointsReceived());
+JdbcHelper.setDouble(pstmt,6, perceroObject.getScore());
+JdbcHelper.setInt(pstmt,7, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,8, perceroObject.getQuartile());
+pstmt.setString(9, perceroObject.getLockLevel());
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(7, null);
+pstmt.setString(10, null);
 }
 else
 {
-		pstmt.setString(7, perceroObject.getAgent().getID());
+		pstmt.setString(10, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(8, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(8, perceroObject.getScorecard().getID());
+		pstmt.setString(11, perceroObject.getScorecard().getID());
 }
 
 
 if (perceroObject.getScorecardWeeklyScore() == null)
 {
-pstmt.setString(9, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(9, perceroObject.getScorecardWeeklyScore().getID());
+		pstmt.setString(12, perceroObject.getScorecardWeeklyScore().getID());
 }
 
-		pstmt.setString(10, perceroObject.getID());
+pstmt.setString(13, perceroObject.getID());
 
 		
 	}
@@ -336,11 +361,45 @@ else
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
+		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+
+if (useEndDate)
+{
+sql += " WHERE ";
+sql += " \"END_DATE\" =? ";
+paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
+
+if (useStartDate)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"START_DATE\" =? ";
+paramValues.add(theQueryObject.getStartDate());
+propertyCounter++;
+}
+
+boolean useWeekDate = theQueryObject.getWeekDate() != null && (excludeProperties == null || !excludeProperties.contains("weekDate"));
 
 if (useWeekDate)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"WEEK_DATE\" =? ";
 paramValues.add(theQueryObject.getWeekDate());
 propertyCounter++;
@@ -428,6 +487,23 @@ sql += " WHERE ";
 }
 sql += " \"QUARTILE\" =? ";
 paramValues.add(theQueryObject.getQuartile());
+propertyCounter++;
+}
+
+boolean useLockLevel = StringUtils.hasText(theQueryObject.getLockLevel()) && (excludeProperties == null || !excludeProperties.contains("lockLevel"));
+
+if (useLockLevel)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"LOCK_LEVEL\" =? ";
+paramValues.add(theQueryObject.getLockLevel());
 propertyCounter++;
 }
 
@@ -548,11 +624,11 @@ propertyCounter++;
 
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_AGENT_SCORECARD(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

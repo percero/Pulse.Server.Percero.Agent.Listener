@@ -180,9 +180,12 @@ nextResult.setFullName(rs.getString("FULL_NAME"));
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
 
 

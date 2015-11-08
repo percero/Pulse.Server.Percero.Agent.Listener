@@ -176,11 +176,11 @@ nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_
 nextResult.setName(rs.getString("NAME"));
 
 
-String teamLeaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamLeaderID)) {
-	TeamLeader teamleader = new TeamLeader();
-	teamleader.setID(teamLeaderID);
-	nextResult.setTeamLeader(teamleader);
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
+TeamLeader teamleader = new TeamLeader();
+teamleader.setID(teamleaderID);
+nextResult.setTeamLeader(teamleader);
 }
 
 
@@ -199,6 +199,8 @@ pstmt.setString(2, perceroObject.getType());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setString(5, perceroObject.getName());
+
+
 
 if (perceroObject.getTeamLeader() == null)
 {
@@ -231,22 +233,24 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(4, perceroObject.getName());
+
+		pstmt.setString(1, perceroObject.getID());
+		pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setString(5, perceroObject.getName());
+
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(6, perceroObject.getID());
+
 
 		
 	}
@@ -335,6 +339,8 @@ sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
+
+
 
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 

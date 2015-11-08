@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -46,7 +45,7 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SCORECARD_MONTHLY_SCORE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SCORECARD_MONTHLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_MONTHLY_SCORE\".\"CREATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"END_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"START_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_MONTHLY_SCORE\".\"SCORE\",\"SCORECARD_MONTHLY_SCORE\".\"GRADE\",\"SCORECARD_MONTHLY_SCORE\".\"AGENT_ID\",\"SCORECARD_MONTHLY_SCORE\".\"PREV_SCARD_MONTHLY_SCORE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"SCORECARD_ID\"";
+	public static final String SQL_VIEW = ",\"SCORECARD_MONTHLY_SCORE\".\"EMPLOYEE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"INTERVAL_TYPE\",\"SCORECARD_MONTHLY_SCORE\".\"CREATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"END_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"START_DATE\",\"SCORECARD_MONTHLY_SCORE\".\"UPDATED_ON\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_POSSIBLE\",\"SCORECARD_MONTHLY_SCORE\".\"POINTS_RECEIVED\",\"SCORECARD_MONTHLY_SCORE\".\"SCORE\",\"SCORECARD_MONTHLY_SCORE\".\"GRADE\",\"SCORECARD_MONTHLY_SCORE\".\"AGENT_ID\",\"SCORECARD_MONTHLY_SCORE\".\"PREV_SCARD_MONTHLY_SCORE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"SCORECARD_ID\",\"SCORECARD_MONTHLY_SCORE\".\"SCORECARD_MEASURE_ID\",\"SCORECARD_MONTHLY_SCORE\".\"GOAL_ID\"";
 	private String selectFromStatementTableName = " FROM \"SCORECARD_MONTHLY_SCORE\" \"SCORECARD_MONTHLY_SCORE\"";
 	private String whereClause = "  WHERE \"SCORECARD_MONTHLY_SCORE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCORECARD_MONTHLY_SCORE\".\"ID\"= SQLLIST.column_value";
@@ -133,12 +132,12 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SCORECARD_MONTHLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PREV_SCARD_MONTHLY_SCORE_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SCORECARD_MONTHLY_SCORE (\"ID\",\"EMPLOYEE_ID\",\"INTERVAL_TYPE\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"AGENT_ID\",\"PREV_SCARD_MONTHLY_SCORE_ID\",\"SCORECARD_ID\",\"SCORECARD_MEASURE_ID\",\"GOAL_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SCORECARD_MONTHLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_MONTHLY_SCORE_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SCORECARD_MONTHLY_SCORE SET \"EMPLOYEE_ID\"=?,\"INTERVAL_TYPE\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"AGENT_ID\"=?,\"PREV_SCARD_MONTHLY_SCORE_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"GOAL_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -150,8 +149,7 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	protected ScorecardMonthlyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-
-ScorecardMonthlyScore nextResult = null;
+ScorecardMonthlyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -194,19 +192,44 @@ nextResult.setScore(rs.getDouble("SCORE"));
 nextResult.setGrade(rs.getInt("GRADE"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String previousscorecardmonthlyscoreID = rs.getString("PREV_SCARD_MONTHLY_SCORE_ID");
+if (StringUtils.hasText(previousscorecardmonthlyscoreID)) {
 ScorecardMonthlyScore previousscorecardmonthlyscore = new ScorecardMonthlyScore();
-previousscorecardmonthlyscore.setID(rs.getString("PREV_SCARD_MONTHLY_SCORE_ID"));
+previousscorecardmonthlyscore.setID(previousscorecardmonthlyscoreID);
 nextResult.setPreviousScorecardMonthlyScore(previousscorecardmonthlyscore);
+}
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
+
+
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
+ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
+scorecardmeasure.setID(scorecardmeasureID);
+nextResult.setScorecardMeasure(scorecardmeasure);
+}
+
+
+String goalID = rs.getString("GOAL_ID");
+if (StringUtils.hasText(goalID)) {
+Goal goal = new Goal();
+goal.setID(goalID);
+nextResult.setGoal(goal);
+}
 
 
 
@@ -258,6 +281,26 @@ pstmt.setString(14, null);
 else
 {
 		pstmt.setString(14, perceroObject.getScorecard().getID());
+}
+
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getScorecardMeasure().getID());
+}
+
+
+if (perceroObject.getGoal() == null)
+{
+pstmt.setString(16, null);
+}
+else
+{
+		pstmt.setString(16, perceroObject.getGoal().getID());
 }
 
 
@@ -323,7 +366,27 @@ else
 		pstmt.setString(13, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(14, perceroObject.getID());
+
+if (perceroObject.getScorecardMeasure() == null)
+{
+pstmt.setString(14, null);
+}
+else
+{
+		pstmt.setString(14, perceroObject.getScorecardMeasure().getID());
+}
+
+
+if (perceroObject.getGoal() == null)
+{
+pstmt.setString(15, null);
+}
+else
+{
+		pstmt.setString(15, perceroObject.getGoal().getID());
+}
+
+pstmt.setString(16, perceroObject.getID());
 
 		
 	}
@@ -566,6 +629,40 @@ paramValues.add(theQueryObject.getScorecard().getID());
 propertyCounter++;
 }
 
+boolean useScorecardMeasureID = theQueryObject.getScorecardMeasure() != null && (excludeProperties == null || !excludeProperties.contains("scorecardMeasure"));
+
+if (useScorecardMeasureID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"SCORECARD_MEASURE_ID\" =? ";
+paramValues.add(theQueryObject.getScorecardMeasure().getID());
+propertyCounter++;
+}
+
+boolean useGoalID = theQueryObject.getGoal() != null && (excludeProperties == null || !excludeProperties.contains("goal"));
+
+if (useGoalID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"GOAL_ID\" =? ";
+paramValues.add(theQueryObject.getGoal().getID());
+propertyCounter++;
+}
+
 
 
 		if (propertyCounter == 0) {
@@ -577,11 +674,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SCORECARD_MONTHLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SCORECARD_MONTHLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SCORECARD_MONTHLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SCORECARD_MONTHLY_SCORE(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -589,8 +686,7 @@ propertyCounter++;
 	}
 	
 	
-
-public ScorecardMonthlyScore createObject(ScorecardMonthlyScore perceroObject, String userId)
+public ScorecardMonthlyScore createObject(ScorecardMonthlyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -653,10 +749,9 @@ public ScorecardMonthlyScore createObject(ScorecardMonthlyScore perceroObject, S
 		return null;
 	}
 }
-
-
+
 
 	
 	
 }
-
+

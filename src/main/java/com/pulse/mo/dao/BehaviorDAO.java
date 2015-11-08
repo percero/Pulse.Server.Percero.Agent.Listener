@@ -195,9 +195,12 @@ nextResult.setName(rs.getString("NAME"));
 nextResult.setScope(rs.getString("SCOPE"));
 
 
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
 
 
 

@@ -196,14 +196,20 @@ nextResult.setDuration(rs.getDouble("DURATION"));
 nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String scheduleID = rs.getString("SCHEDULE_ID");
+if (StringUtils.hasText(scheduleID)) {
 Schedule schedule = new Schedule();
-schedule.setID(rs.getString("SCHEDULE_ID"));
+schedule.setID(scheduleID);
 nextResult.setSchedule(schedule);
+}
 
 
 

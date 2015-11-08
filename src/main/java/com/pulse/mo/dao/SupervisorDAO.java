@@ -177,9 +177,12 @@ nextResult.setFullName(rs.getString("FULL_NAME"));
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
+String managersupervisorID = rs.getString("MANAGER_SUPERVISOR_ID");
+if (StringUtils.hasText(managersupervisorID)) {
 Supervisor managersupervisor = new Supervisor();
-managersupervisor.setID(rs.getString("MANAGER_SUPERVISOR_ID"));
+managersupervisor.setID(managersupervisorID);
 nextResult.setManagerSupervisor(managersupervisor);
+}
 
 
 

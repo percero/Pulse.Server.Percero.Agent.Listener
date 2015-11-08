@@ -85,73 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Type
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private Date createdOn;
 
-public String getType() 
+public Date getCreatedOn() 
 {
-	return this.type;
+	return this.createdOn;
 }
 
-public void setType(String type)
+public void setCreatedOn(Date createdOn)
 {
-	this.type = type;
-}/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer employeeId;
-
-public Integer getEmployeeId() 
-{
-	return this.employeeId;
-}
-
-public void setEmployeeId(Integer employeeId)
-{
-	this.employeeId = employeeId;
-}/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
+	this.createdOn = createdOn;
 }/*
 CreatedBy
 Notes:
@@ -170,22 +119,22 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
-CreatedOn
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private Date weekDate;
 
-public Date getCreatedOn() 
+public Date getWeekDate() 
 {
-	return this.createdOn;
+	return this.weekDate;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setWeekDate(Date weekDate)
 {
-	this.createdOn = createdOn;
+	this.weekDate = weekDate;
 }/*
 IsRequired
 Notes:
@@ -204,22 +153,73 @@ public void setIsRequired(Boolean isRequired)
 {
 	this.isRequired = isRequired;
 }/*
-WeekDate
+Type
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date weekDate;
+private String type;
 
-public Date getWeekDate() 
+public String getType() 
 {
-	return this.weekDate;
+	return this.type;
 }
 
-public void setWeekDate(Date weekDate)
+public void setType(String type)
 {
-	this.weekDate = weekDate;
+	this.type = type;
+}/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer employeeId;
+
+public Integer getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(Integer employeeId)
+{
+	this.employeeId = employeeId;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }/*
 ClosedOn
 Notes:
@@ -349,16 +349,23 @@ public void setAgentScorecard(AgentScorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Type property
-		objectJson += ",\"type\":";
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
 		
-		if (getType() == null)
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -370,23 +377,30 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getUpdatedOn().getTime();
+			objectJson += getWeekDate().getTime();
 		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
+		//Retrieve value of the Is Required property
+		objectJson += ",\"isRequired\":";
+		if (getIsRequired() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRequired();
+		}
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
 		
-		if (getEmployeeId() == null)
+		if (getType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -419,16 +433,16 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
 		
-		if (getCreatedBy() == null)
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -440,26 +454,12 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Is Required property
-		objectJson += ",\"isRequired\":";
-		if (getIsRequired() == null)
-			objectJson += "null";
-		else {
-			objectJson += getIsRequired();
-		}
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWeekDate().getTime();
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Closed On property
 		objectJson += ",\"closedOn\":";
@@ -579,22 +579,22 @@ objectJson += ",\"coachingSessionAttachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Is Required property
-		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Week Date property
 		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Is Required property
+		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Closed On property
 		setClosedOn(JsonUtils.getJsonDate(jsonObject, "closedOn"));
 

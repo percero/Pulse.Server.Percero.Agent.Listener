@@ -96,7 +96,20 @@ public void setWeekDate(Date weekDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardOfCoachingNotification")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private Scorecard scorecard;
+public Scorecard getScorecard() {
+	return this.scorecard;
+}
+
+public void setScorecard(Scorecard value) {
+	this.scorecard = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -117,6 +130,18 @@ public void setWeekDate(Date weekDate)
 
 				
 		// Source Relationships
+//Retrieve value of the Scorecard of Coaching Notification relationship
+objectJson += ",\"scorecard\":";
+		if (getScorecard() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecard()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -136,6 +161,7 @@ public void setWeekDate(Date weekDate)
 
 		
 		// Source Relationships
+		this.scorecard = (Scorecard) JsonUtils.getJsonPerceroObject(jsonObject, "scorecard");
 
 
 		// Target Relationships

@@ -70,23 +70,6 @@ public class _Super_DurationMismatchNotification extends DiscrepancyDetectedNoti
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Duration
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double duration;
-
-public Double getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Double duration)
-{
-	this.duration = duration;
-}/*
 EndTime
 Notes:
 */
@@ -103,6 +86,23 @@ public Date getEndTime()
 public void setEndTime(Date endTime)
 {
 	this.endTime = endTime;
+}/*
+Duration
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double duration;
+
+public Double getDuration() 
+{
+	return this.duration;
+}
+
+public void setDuration(Double duration)
+{
+	this.duration = duration;
 }
 
 	//////////////////////////////////////////////////////
@@ -124,19 +124,19 @@ public void setEndTime(Date endTime)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		if (getDuration() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDuration();
-		}
 		//Retrieve value of the End Time property
 		objectJson += ",\"endTime\":";
 		if (getEndTime() == null)
 			objectJson += "null";
 		else {
 			objectJson += getEndTime().getTime();
+		}
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDuration();
 		}
 
 				
@@ -155,10 +155,10 @@ public void setEndTime(Date endTime)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 		//From value of the End Time property
 		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
+		//From value of the Duration property
+		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
 
 		
 		// Source Relationships

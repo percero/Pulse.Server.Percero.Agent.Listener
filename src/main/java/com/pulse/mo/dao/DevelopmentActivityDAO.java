@@ -195,19 +195,28 @@ nextResult.setPlanId(rs.getString("PLAN_ID"));
 nextResult.setStatus(rs.getString("STATUS"));
 
 
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String developmentplanID = rs.getString("DEVELOPMENT_PLAN_ID");
+if (StringUtils.hasText(developmentplanID)) {
 DevelopmentPlan developmentplan = new DevelopmentPlan();
-developmentplan.setID(rs.getString("DEVELOPMENT_PLAN_ID"));
+developmentplan.setID(developmentplanID);
 nextResult.setDevelopmentPlan(developmentplan);
+}
 
 
 

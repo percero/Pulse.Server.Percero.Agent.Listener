@@ -40,7 +40,7 @@ public class TimecardEntryDAO extends SqlDataAccessObject<TimecardEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", \"TIMECARD_ENTRY\".\"NOTE\" as \"NOTE\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", '' as \"POS\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", \"TIMECARD_ENTRY\".\"ACTION\" as \"ACTION_NAME\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"EWA_2\" as \"EWA_2\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"EWA_1\" as \"EWA_1\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"MINUTES\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", \"TIMECARD_ENTRY\".\"CODE_TYPE\" as \"CODE_TYPE\", \"TIMECARD_ENTRY\".CENTRE || \"TIMECARD_ENTRY\".POS as \"TIMECARD_ACTIVITY_ID\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"DURATION\", '' as \"NOTIFICATION_RESOLVED\", \"TIMECARD_ENTRY\".\"CODE\" as \"ACTION_CODE\", \"TIMECARD_ENTRY\".\"EWA_1\" as \"EWA_1\", \"TIMECARD_ENTRY\".\"CENTRE\" as \"ESTART_PROJECT_NAME\", '' as \"POS\", \"TIMECARD_ENTRY\".\"NOTE\" as \"NOTE\", '' as \"NOTIFICATION_DETECTED\", \"TIMECARD_ENTRY\".\"MINUTES\" as \"MINUTES\", \"TIMECARD_ENTRY\".\"ON_TIME\" as \"FROM_TIME\", \"TIMECARD_ENTRY\".\"EWA_2\" as \"EWA_2\", \"TIMECARD_ENTRY\".\"CODE_TYPE\" as \"CODE_TYPE\", \"TIMECARD_ENTRY\".\"ACTION\" as \"ACTION_NAME\", \"TIMECARD_ENTRY\".\"OFF_TIME\" as \"TO_TIME\", \"TIMECARD_ENTRY\".\"ID\" as \"TIMECARD_ID\", \"TIMECARD_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", \"TIMECARD_ENTRY\".CENTRE || \"TIMECARD_ENTRY\".POS as \"TIMECARD_ACTIVITY_ID\" FROM \"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_ENTRY_VW\" \"TIMECARD_ENTRY\"";
 	private String whereClause = "WHERE TIMECARD_ENTRY.WORKED_ID=?";
 	private String whereInClause = "Join Table(sys.dbms_debug_vc2coll(?)) SQLLIST On TIMECARD_ENTRY.WORKED_ID= SQLLIST.columnvalue";
@@ -209,19 +209,28 @@ nextResult.setActionCode(rs.getString("ACTION_CODE"));
 nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
+if (StringUtils.hasText(timecardactivityID)) {
 TimecardActivity timecardactivity = new TimecardActivity();
-timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
+timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);
+}
 
 
+String timecardID = rs.getString("TIMECARD_ID");
+if (StringUtils.hasText(timecardID)) {
 Timecard timecard = new Timecard();
-timecard.setID(rs.getString("TIMECARD_ID"));
+timecard.setID(timecardID);
 nextResult.setTimecard(timecard);
+}
 
 
 

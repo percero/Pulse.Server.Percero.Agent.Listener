@@ -159,25 +159,29 @@ Schedule nextResult = null;
 		// ID
 		nextResult.setID(rs.getString("ID"));
 
-		if (!shellOnly) {
+		if (!shellOnly) 
+		{
 			nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
 
-			nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 
-			nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
+nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
 
 
-			nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
+nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
 
 
 nextResult.setShift(rs.getInt("SHIFT"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
 
@@ -236,7 +240,7 @@ else
 sql += " WHERE ";
 }
 sql += " START_DATE=? ";
-	paramValues.add(theQueryObject.getStartDate());
+paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
@@ -270,7 +274,7 @@ else
 sql += " WHERE ";
 }
 sql += " START_TIME=? ";
-	paramValues.add(theQueryObject.getStartTime());
+paramValues.add(theQueryObject.getStartTime());
 propertyCounter++;
 }
 

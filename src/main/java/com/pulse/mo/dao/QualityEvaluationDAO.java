@@ -204,24 +204,36 @@ nextResult.setNiceAppServer(rs.getString("NICE_APP_SERVER"));
 nextResult.setResponsibleCoach(rs.getString("RESPONSIBLE_COACH"));
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String agentscorecardID = rs.getString("AGENT_SCORECARD_ID");
+if (StringUtils.hasText(agentscorecardID)) {
 AgentScorecard agentscorecard = new AgentScorecard();
-agentscorecard.setID(rs.getString("AGENT_SCORECARD_ID"));
+agentscorecard.setID(agentscorecardID);
 nextResult.setAgentScorecard(agentscorecard);
+}
 
 
+String employeeID = rs.getString("EMPLOYEE_ID");
+if (StringUtils.hasText(employeeID)) {
 Employee employee = new Employee();
-employee.setID(rs.getString("EMPLOYEE_ID"));
+employee.setID(employeeID);
 nextResult.setEmployee(employee);
+}
 
 
 

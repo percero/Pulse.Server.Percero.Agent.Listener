@@ -171,14 +171,20 @@ nextResult.setTraceType(rs.getString("TRACE_TYPE"));
 nextResult.setLogMessage(rs.getString("LOG_MESSAGE"));
 
 
+String pulseuserID = rs.getString("PULSE_USER_ID");
+if (StringUtils.hasText(pulseuserID)) {
 PulseUser pulseuser = new PulseUser();
-pulseuser.setID(rs.getString("PULSE_USER_ID"));
+pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
+}
 
 
+String tracelogID = rs.getString("TRACE_LOG_ID");
+if (StringUtils.hasText(tracelogID)) {
 TraceLog tracelog = new TraceLog();
-tracelog.setID(rs.getString("TRACE_LOG_ID"));
+tracelog.setID(tracelogID);
 nextResult.setTraceLog(tracelog);
+}
 
 
 

@@ -85,22 +85,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-FromTime
+Minutes
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date fromTime;
+private Integer minutes;
 
-public Date getFromTime() 
+public Integer getMinutes() 
 {
-	return this.fromTime;
+	return this.minutes;
 }
 
-public void setFromTime(Date fromTime)
+public void setMinutes(Integer minutes)
 {
-	this.fromTime = fromTime;
+	this.minutes = minutes;
+}/*
+ActionCode
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String actionCode;
+
+public String getActionCode() 
+{
+	return this.actionCode;
+}
+
+public void setActionCode(String actionCode)
+{
+	this.actionCode = actionCode;
 }/*
 EWA1
 Notes:
@@ -119,23 +136,6 @@ public void setEWA1(String eWA1)
 {
 	this.eWA1 = eWA1;
 }/*
-NotificationResolved
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean notificationResolved;
-
-public Boolean getNotificationResolved() 
-{
-	return this.notificationResolved;
-}
-
-public void setNotificationResolved(Boolean notificationResolved)
-{
-	this.notificationResolved = notificationResolved;
-}/*
 ToTime
 Notes:
 */
@@ -152,40 +152,6 @@ public Date getToTime()
 public void setToTime(Date toTime)
 {
 	this.toTime = toTime;
-}/*
-CodeType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer codeType;
-
-public Integer getCodeType() 
-{
-	return this.codeType;
-}
-
-public void setCodeType(Integer codeType)
-{
-	this.codeType = codeType;
-}/*
-POS
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String pOS;
-
-public String getPOS() 
-{
-	return this.pOS;
-}
-
-public void setPOS(String pOS)
-{
-	this.pOS = pOS;
 }/*
 EStartProjectName
 Notes:
@@ -204,40 +170,6 @@ public void setEStartProjectName(String eStartProjectName)
 {
 	this.eStartProjectName = eStartProjectName;
 }/*
-Duration
-Notes:Number of minutes
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double duration;
-
-public Double getDuration() 
-{
-	return this.duration;
-}
-
-public void setDuration(Double duration)
-{
-	this.duration = duration;
-}/*
-EWA2
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String eWA2;
-
-public String getEWA2() 
-{
-	return this.eWA2;
-}
-
-public void setEWA2(String eWA2)
-{
-	this.eWA2 = eWA2;
-}/*
 ActionName
 Notes:
 */
@@ -254,6 +186,23 @@ public String getActionName()
 public void setActionName(String actionName)
 {
 	this.actionName = actionName;
+}/*
+POS
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String pOS;
+
+public String getPOS() 
+{
+	return this.pOS;
+}
+
+public void setPOS(String pOS)
+{
+	this.pOS = pOS;
 }/*
 Note
 Notes:
@@ -272,23 +221,6 @@ public void setNote(String note)
 {
 	this.note = note;
 }/*
-Minutes
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer minutes;
-
-public Integer getMinutes() 
-{
-	return this.minutes;
-}
-
-public void setMinutes(Integer minutes)
-{
-	this.minutes = minutes;
-}/*
 NotificationDetected
 Notes:
 */
@@ -306,22 +238,90 @@ public void setNotificationDetected(Boolean notificationDetected)
 {
 	this.notificationDetected = notificationDetected;
 }/*
-ActionCode
+Duration
+Notes:Number of minutes
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double duration;
+
+public Double getDuration() 
+{
+	return this.duration;
+}
+
+public void setDuration(Double duration)
+{
+	this.duration = duration;
+}/*
+NotificationResolved
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String actionCode;
+private Boolean notificationResolved;
 
-public String getActionCode() 
+public Boolean getNotificationResolved() 
 {
-	return this.actionCode;
+	return this.notificationResolved;
 }
 
-public void setActionCode(String actionCode)
+public void setNotificationResolved(Boolean notificationResolved)
 {
-	this.actionCode = actionCode;
+	this.notificationResolved = notificationResolved;
+}/*
+FromTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date fromTime;
+
+public Date getFromTime() 
+{
+	return this.fromTime;
+}
+
+public void setFromTime(Date fromTime)
+{
+	this.fromTime = fromTime;
+}/*
+CodeType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer codeType;
+
+public Integer getCodeType() 
+{
+	return this.codeType;
+}
+
+public void setCodeType(Integer codeType)
+{
+	this.codeType = codeType;
+}/*
+EWA2
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String eWA2;
+
+public String getEWA2() 
+{
+	return this.eWA2;
+}
+
+public void setEWA2(String eWA2)
+{
+	this.eWA2 = eWA2;
 }
 
 	//////////////////////////////////////////////////////
@@ -382,12 +382,47 @@ public void setTimecard(Timecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the From Time property
-		objectJson += ",\"fromTime\":";
-		if (getFromTime() == null)
+		//Retrieve value of the Minutes property
+		objectJson += ",\"minutes\":";
+		
+		if (getMinutes() == null)
 			objectJson += "null";
 		else {
-			objectJson += getFromTime().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getMinutes());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Action Code property
+		objectJson += ",\"actionCode\":";
+		
+		if (getActionCode() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getActionCode());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the EWA 1 property
 		objectJson += ",\"eWA1\":";
@@ -410,61 +445,12 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Notification Resolved property
-		objectJson += ",\"notificationResolved\":";
-		if (getNotificationResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationResolved();
-		}
 		//Retrieve value of the To Time property
 		objectJson += ",\"toTime\":";
 		if (getToTime() == null)
 			objectJson += "null";
 		else {
 			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the Code Type property
-		objectJson += ",\"codeType\":";
-		
-		if (getCodeType() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCodeType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the POS property
-		objectJson += ",\"pOS\":";
-		
-		if (getPOS() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPOS());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
@@ -476,34 +462,6 @@ public void setTimecard(Timecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEStartProjectName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		if (getDuration() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDuration();
-		}
-		//Retrieve value of the EWA 2 property
-		objectJson += ",\"eWA2\":";
-		
-		if (getEWA2() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEWA2());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -536,6 +494,27 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the POS property
+		objectJson += ",\"pOS\":";
+		
+		if (getPOS() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPOS());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Note property
 		objectJson += ",\"note\":";
 		
@@ -557,16 +536,44 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Minutes property
-		objectJson += ",\"minutes\":";
+		//Retrieve value of the Notification Detected property
+		objectJson += ",\"notificationDetected\":";
+		if (getNotificationDetected() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNotificationDetected();
+		}
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDuration();
+		}
+		//Retrieve value of the Notification Resolved property
+		objectJson += ",\"notificationResolved\":";
+		if (getNotificationResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNotificationResolved();
+		}
+		//Retrieve value of the From Time property
+		objectJson += ",\"fromTime\":";
+		if (getFromTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getFromTime().getTime();
+		}
+		//Retrieve value of the Code Type property
+		objectJson += ",\"codeType\":";
 		
-		if (getMinutes() == null)
+		if (getCodeType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMinutes());
+				objectJson += objectMapper.writeValueAsString(getCodeType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -578,23 +585,16 @@ public void setTimecard(Timecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Notification Detected property
-		objectJson += ",\"notificationDetected\":";
-		if (getNotificationDetected() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNotificationDetected();
-		}
-		//Retrieve value of the Action Code property
-		objectJson += ",\"actionCode\":";
+		//Retrieve value of the EWA 2 property
+		objectJson += ",\"eWA2\":";
 		
-		if (getActionCode() == null)
+		if (getEWA2() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getActionCode());
+				objectJson += objectMapper.writeValueAsString(getEWA2());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -659,34 +659,34 @@ objectJson += ",\"timecard\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the From Time property
-		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the EWA 1 property
-		setEWA1(JsonUtils.getJsonString(jsonObject, "eWA1"));
-		//From value of the Notification Resolved property
-		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the Code Type property
-		setCodeType(JsonUtils.getJsonInteger(jsonObject, "codeType"));
-		//From value of the POS property
-		setPOS(JsonUtils.getJsonString(jsonObject, "pOS"));
-		//From value of the EStart Project Name property
-		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
-		//From value of the EWA 2 property
-		setEWA2(JsonUtils.getJsonString(jsonObject, "eWA2"));
-		//From value of the Action Name property
-		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
-		//From value of the Note property
-		setNote(JsonUtils.getJsonString(jsonObject, "note"));
 		//From value of the Minutes property
 		setMinutes(JsonUtils.getJsonInteger(jsonObject, "minutes"));
-		//From value of the Notification Detected property
-		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
 		//From value of the Action Code property
 		setActionCode(JsonUtils.getJsonString(jsonObject, "actionCode"));
+		//From value of the EWA 1 property
+		setEWA1(JsonUtils.getJsonString(jsonObject, "eWA1"));
+		//From value of the To Time property
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		//From value of the EStart Project Name property
+		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
+		//From value of the Action Name property
+		setActionName(JsonUtils.getJsonString(jsonObject, "actionName"));
+		//From value of the POS property
+		setPOS(JsonUtils.getJsonString(jsonObject, "pOS"));
+		//From value of the Note property
+		setNote(JsonUtils.getJsonString(jsonObject, "note"));
+		//From value of the Notification Detected property
+		setNotificationDetected(JsonUtils.getJsonBoolean(jsonObject, "notificationDetected"));
+		//From value of the Duration property
+		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+		//From value of the Notification Resolved property
+		setNotificationResolved(JsonUtils.getJsonBoolean(jsonObject, "notificationResolved"));
+		//From value of the From Time property
+		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+		//From value of the Code Type property
+		setCodeType(JsonUtils.getJsonInteger(jsonObject, "codeType"));
+		//From value of the EWA 2 property
+		setEWA2(JsonUtils.getJsonString(jsonObject, "eWA2"));
 
 		
 		// Source Relationships

@@ -168,14 +168,20 @@ public class ScorecardMeasureDAO extends SqlDataAccessObject<ScorecardMeasure> i
 nextResult.setRewardActive(rs.getString("REWARD_ACTIVE"));
 
 
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID)) {
 Scorecard scorecard = new Scorecard();
-scorecard.setID(rs.getString("SCORECARD_ID"));
+scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
+}
 
 
+String measureID = rs.getString("MEASURE_ID");
+if (StringUtils.hasText(measureID)) {
 Measure measure = new Measure();
-measure.setID(rs.getString("MEASURE_ID"));
+measure.setID(measureID);
 nextResult.setMeasure(measure);
+}
 
 
 

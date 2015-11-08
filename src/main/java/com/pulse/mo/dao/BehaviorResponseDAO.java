@@ -180,24 +180,36 @@ nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDA
 nextResult.setResponse(rs.getInt("RESPONSE"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String behaviorID = rs.getString("BEHAVIOR_ID");
+if (StringUtils.hasText(behaviorID)) {
 Behavior behavior = new Behavior();
-behavior.setID(rs.getString("BEHAVIOR_ID"));
+behavior.setID(behaviorID);
 nextResult.setBehavior(behavior);
+}
 
 
+String coachingsessionID = rs.getString("COACHING_SESSION_ID");
+if (StringUtils.hasText(coachingsessionID)) {
 CoachingSession coachingsession = new CoachingSession();
-coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
+coachingsession.setID(coachingsessionID);
 nextResult.setCoachingSession(coachingsession);
+}
 
 
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
 
 
 

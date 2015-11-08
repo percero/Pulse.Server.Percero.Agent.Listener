@@ -1,3 +1,5 @@
+
+
 package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
@@ -25,6 +27,7 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements
 		IDataAccessObject<CMSEntryLOB> {
 
 	static final Logger log = Logger.getLogger(CMSEntryLOBDAO.class);
+
 
 	public CMSEntryLOBDAO() {
 		super();
@@ -183,13 +186,24 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements
 
 			nextResult.setClientName(rs.getString("CLIENT_NAME"));
 
-			CMSEntry cmsentry = new CMSEntry();
-			cmsentry.setID(rs.getString("CMS_ENTRY_ID"));
-			nextResult.setCMSEntry(cmsentry);
 
-			LOB lob = new LOB();
-			lob.setID(rs.getString("LOB_ID"));
-			nextResult.setLOB(lob);
+String cmsentryID = rs.getString("CMS_ENTRY_ID");
+if (StringUtils.hasText(cmsentryID)) {
+CMSEntry cmsentry = new CMSEntry();
+cmsentry.setID(cmsentryID);
+nextResult.setCMSEntry(cmsentry);
+}
+
+
+String lobID = rs.getString("LOB_ID");
+if (StringUtils.hasText(lobID)) {
+LOB lob = new LOB();
+lob.setID(lobID);
+nextResult.setLOB(lob);
+}
+
+
+
 
 		}
 
@@ -197,210 +211,234 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements
 	}
 
 	@Override
-	protected void setPreparedStatmentInsertParams(CMSEntryLOB perceroObject,
-			PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentInsertParams(CMSEntryLOB perceroObject, PreparedStatement pstmt) throws SQLException {
+
+
 
 	}
 
 	@Override
-	protected void setPreparedStatmentUpdateParams(CMSEntryLOB perceroObject,
-			PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentUpdateParams(CMSEntryLOB perceroObject, PreparedStatement pstmt) throws SQLException {
+
+
 
 	}
 
 	@Override
 	public List<CMSEntryLOB> findByExample(CMSEntryLOB theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly)
-			throws SyncException {
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
+	{
+
+
 
 		String sql = getFindByExampleSelectSql(shellOnly);
 
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 
-		boolean useLOBName = StringUtils.hasText(theQueryObject.getLOBName())
-				&& (excludeProperties == null || !excludeProperties
-						.contains("lOBName"));
+		boolean useLOBName = StringUtils.hasText(theQueryObject.getLOBName()) && (excludeProperties == null || !excludeProperties.contains("lOBName"));
 
-		if (useLOBName) {
-			sql += " WHERE ";
-			sql += " LOB_NAME=? ";
-			paramValues.add(theQueryObject.getLOBName());
-			propertyCounter++;
-		}
+if (useLOBName)
+{
+sql += " WHERE ";
+sql += " LOB_NAME=? ";
+paramValues.add(theQueryObject.getLOBName());
+propertyCounter++;
+}
 
-		boolean useSiteName = StringUtils.hasText(theQueryObject.getSiteName())
-				&& (excludeProperties == null || !excludeProperties
-						.contains("siteName"));
+boolean useSiteName = StringUtils.hasText(theQueryObject.getSiteName()) && (excludeProperties == null || !excludeProperties.contains("siteName"));
 
-		if (useSiteName) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " SITE_NAME=? ";
-			paramValues.add(theQueryObject.getSiteName());
-			propertyCounter++;
-		}
+if (useSiteName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " SITE_NAME=? ";
+paramValues.add(theQueryObject.getSiteName());
+propertyCounter++;
+}
 
-		boolean useClientId = theQueryObject.getClientId() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("clientId"));
+boolean useClientId = theQueryObject.getClientId() != null && (excludeProperties == null || !excludeProperties.contains("clientId"));
 
-		if (useClientId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " CLIENT_ID=? ";
-			paramValues.add(theQueryObject.getClientId());
-			propertyCounter++;
-		}
+if (useClientId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CLIENT_ID=? ";
+paramValues.add(theQueryObject.getClientId());
+propertyCounter++;
+}
 
-		boolean useEmployeeId = theQueryObject.getEmployeeId() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("employeeId"));
+boolean useEmployeeId = theQueryObject.getEmployeeId() != null && (excludeProperties == null || !excludeProperties.contains("employeeId"));
 
-		if (useEmployeeId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " EMPLOYEE_ID=? ";
-			paramValues.add(theQueryObject.getEmployeeId());
-			propertyCounter++;
-		}
+if (useEmployeeId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " EMPLOYEE_ID=? ";
+paramValues.add(theQueryObject.getEmployeeId());
+propertyCounter++;
+}
 
-		boolean useSiteId = theQueryObject.getSiteId() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("siteId"));
+boolean useSiteId = theQueryObject.getSiteId() != null && (excludeProperties == null || !excludeProperties.contains("siteId"));
 
-		if (useSiteId) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " SITE_ID=? ";
-			paramValues.add(theQueryObject.getSiteId());
-			propertyCounter++;
-		}
+if (useSiteId)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " SITE_ID=? ";
+paramValues.add(theQueryObject.getSiteId());
+propertyCounter++;
+}
 
-		boolean useClientName = StringUtils.hasText(theQueryObject
-				.getClientName())
-				&& (excludeProperties == null || !excludeProperties
-						.contains("clientName"));
+boolean useClientName = StringUtils.hasText(theQueryObject.getClientName()) && (excludeProperties == null || !excludeProperties.contains("clientName"));
 
-		if (useClientName) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " CLIENT_NAME=? ";
-			paramValues.add(theQueryObject.getClientName());
-			propertyCounter++;
-		}
+if (useClientName)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CLIENT_NAME=? ";
+paramValues.add(theQueryObject.getClientName());
+propertyCounter++;
+}
 
-		boolean useCMSEntryID = theQueryObject.getCMSEntry() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("cMSEntry"));
+boolean useCMSEntryID = theQueryObject.getCMSEntry() != null && (excludeProperties == null || !excludeProperties.contains("cMSEntry"));
 
-		if (useCMSEntryID) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " ID=? ";
-			paramValues.add(theQueryObject.getCMSEntry().getID());
-			propertyCounter++;
-		}
+if (useCMSEntryID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " CMS_ENTRY_ID=? ";
+paramValues.add(theQueryObject.getCMSEntry().getID());
+propertyCounter++;
+}
 
-		boolean useLOBID = theQueryObject.getLOB() != null
-				&& (excludeProperties == null || !excludeProperties
-						.contains("lOB"));
+boolean useLOBID = theQueryObject.getLOB() != null && (excludeProperties == null || !excludeProperties.contains("lOB"));
 
-		if (useLOBID) {
-			if (propertyCounter > 0) {
-				sql += " AND ";
-			} else {
-				sql += " WHERE ";
-			}
-			sql += " LOB_ID=? ";
-			paramValues.add(theQueryObject.getLOB().getID());
-			propertyCounter++;
-		}
+if (useLOBID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " LOB_ID=? ";
+paramValues.add(theQueryObject.getLOB().getID());
+propertyCounter++;
+}
 
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+
+
+
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
 
-	public CMSEntryLOB createObject(CMSEntryLOB perceroObject, String userId)
-			throws SyncException {
-		if (!hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject),
-				userId)) {
-			return null;
+	
+
+public CMSEntryLOB createObject(CMSEntryLOB perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select MOB_CMS_DATA_VW_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
 		}
 
-		long timeStart = System.currentTimeMillis();
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
 
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		Statement stmt = null;
-		String query = "Select MOB_CMS_DATA_VW_SEQ.NEXTVAL from dual";
-		String sql = null;
-		String insertedId = "0";
-		int result = 0;
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
 		try {
-			IConnectionFactory connectionFactory = getConnectionRegistry()
-					.getConnectionFactory(getConnectionFactoryName());
-			conn = connectionFactory.getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				insertedId = rs.getString(1);
+			if (pstmt != null) {
+				pstmt.close();
 			}
-
-			perceroObject.setID(insertedId);
-			sql = getInsertIntoSQL();
-			pstmt = conn.prepareStatement(sql);
-
-			setPreparedStatmentInsertParams(perceroObject, pstmt);
-			result = pstmt.executeUpdate();
-			conn.commit();
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
 		} catch (Exception e) {
-			log.error("Unable to executeUpdate\n" + sql, e);
-			throw new SyncDataException(e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.setAutoCommit(true);
-					conn.close();
-				}
-			} catch (Exception e) {
-				log.error("Error closing database statement/connection", e);
-			}
-		}
-
-		long timeEnd = System.currentTimeMillis();
-		long totalTime = timeEnd - timeStart;
-		if (totalTime > LONG_RUNNING_QUERY_TIME) {
-			log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
-		}
-
-		if (result > 0) {
-			return retrieveObject(BaseDataObject.toClassIdPair(perceroObject),
-					userId, false);
-		} else {
-			return null;
+			log.error("Error closing database statement/connection", e);
 		}
 	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
+
 
 }
+

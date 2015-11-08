@@ -171,14 +171,20 @@ nextResult.setConnectedState(rs.getString("CONNECTED_STATE"));
 nextResult.setIPAddress(rs.getString("IP_ADDRESS"));
 
 
+String pulseuserID = rs.getString("PULSE_USER_ID");
+if (StringUtils.hasText(pulseuserID)) {
 PulseUser pulseuser = new PulseUser();
-pulseuser.setID(rs.getString("PULSE_USER_ID"));
+pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
+}
 
 
+String currentteamleaderID = rs.getString("CURRENT_TEAM_LEADER_ID");
+if (StringUtils.hasText(currentteamleaderID)) {
 TeamLeader currentteamleader = new TeamLeader();
-currentteamleader.setID(rs.getString("CURRENT_TEAM_LEADER_ID"));
+currentteamleader.setID(currentteamleaderID);
 nextResult.setCurrentTeamLeader(currentteamleader);
+}
 
 
 

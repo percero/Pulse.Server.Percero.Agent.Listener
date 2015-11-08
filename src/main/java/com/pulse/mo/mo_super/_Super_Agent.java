@@ -85,73 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-LastName
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String lastName;
+private String employeeId;
 
-public String getLastName() 
+public String getEmployeeId() 
 {
-	return this.lastName;
+	return this.employeeId;
 }
 
-public void setLastName(String lastName)
+public void setEmployeeId(String employeeId)
 {
-	this.lastName = lastName;
-}/*
-FirstName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String firstName;
-
-public String getFirstName() 
-{
-	return this.firstName;
-}
-
-public void setFirstName(String firstName)
-{
-	this.firstName = firstName;
-}/*
-EmailAddress
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String emailAddress;
-
-public String getEmailAddress() 
-{
-	return this.emailAddress;
-}
-
-public void setEmailAddress(String emailAddress)
-{
-	this.emailAddress = emailAddress;
-}/*
-FullName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String fullName;
-
-public String getFullName() 
-{
-	return this.fullName;
-}
-
-public void setFullName(String fullName)
-{
-	this.fullName = fullName;
+	this.employeeId = employeeId;
 }/*
 PhotoUri
 Notes:
@@ -170,41 +119,79 @@ public void setPhotoUri(String photoUri)
 {
 	this.photoUri = photoUri;
 }/*
-EmployeeId
+LastName
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String employeeId;
+private String lastName;
 
-public String getEmployeeId() 
+public String getLastName() 
 {
-	return this.employeeId;
+	return this.lastName;
 }
 
-public void setEmployeeId(String employeeId)
+public void setLastName(String lastName)
 {
-	this.employeeId = employeeId;
+	this.lastName = lastName;
+}/*
+EmailAddress
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String emailAddress;
+
+public String getEmailAddress() 
+{
+	return this.emailAddress;
+}
+
+public void setEmailAddress(String emailAddress)
+{
+	this.emailAddress = emailAddress;
+}/*
+FirstName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String firstName;
+
+public String getFirstName() 
+{
+	return this.firstName;
+}
+
+public void setFirstName(String firstName)
+{
+	this.firstName = firstName;
+}/*
+FullName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String fullName;
+
+public String getFullName() 
+{
+	return this.fullName;
+}
+
+public void setFullName(String fullName)
+{
+	this.fullName = fullName;
 }
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
 	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocTask> adhocTasks;
-public List<AdhocTask> getAdhocTasks() {
-	return this.adhocTasks;
-}
-
-public void setAdhocTasks(List<AdhocTask> value) {
-	this.adhocTasks = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=Timecard.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
@@ -220,6 +207,19 @@ public void setTimecards(List<Timecard> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntry.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+private List<CMSEntry> cMSEntries;
+public List<CMSEntry> getCMSEntries() {
+	return this.cMSEntries;
+}
+
+public void setCMSEntries(List<CMSEntry> value) {
+	this.cMSEntries = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CorrectiveAction> correctiveActions;
 public List<CorrectiveAction> getCorrectiveActions() {
@@ -228,6 +228,19 @@ public List<CorrectiveAction> getCorrectiveActions() {
 
 public void setCorrectiveActions(List<CorrectiveAction> value) {
 	this.correctiveActions = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocTask.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AdhocTask> adhocTasks;
+public List<AdhocTask> getAdhocTasks() {
+	return this.adhocTasks;
+}
+
+public void setAdhocTasks(List<AdhocTask> value) {
+	this.adhocTasks = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -254,19 +267,6 @@ public List<Schedule> getSchedules() {
 
 public void setSchedules(List<Schedule> value) {
 	this.schedules = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntry.class, mappedBy="agent", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CMSEntry> cMSEntries;
-public List<CMSEntry> getCMSEntries() {
-	return this.cMSEntries;
-}
-
-public void setCMSEntries(List<CMSEntry> value) {
-	this.cMSEntries = value;
 }
 
 
@@ -298,79 +298,16 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Last Name property
-		objectJson += ",\"lastName\":";
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
 		
-		if (getLastName() == null)
+		if (getEmployeeId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLastName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the First Name property
-		objectJson += ",\"firstName\":";
-		
-		if (getFirstName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getFirstName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
-		
-		if (getEmailAddress() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Full Name property
-		objectJson += ",\"fullName\":";
-		
-		if (getFullName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getFullName());
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -403,16 +340,79 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
+		//Retrieve value of the Last Name property
+		objectJson += ",\"lastName\":";
 		
-		if (getEmployeeId() == null)
+		if (getLastName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+				objectJson += objectMapper.writeValueAsString(getLastName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
+		
+		if (getEmailAddress() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the First Name property
+		objectJson += ",\"firstName\":";
+		
+		if (getFirstName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getFirstName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Full Name property
+		objectJson += ",\"fullName\":";
+		
+		if (getFullName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getFullName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -442,23 +442,6 @@ objectJson += ",\"teamLeader\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Agent of Adhoc Task relationship
-objectJson += ",\"adhocTasks\":[";
-		
-		if (getAdhocTasks() != null) {
-			int adhocTasksCounter = 0;
-			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
-				if (adhocTasksCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
-					adhocTasksCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Agent of Timecard relationship
 objectJson += ",\"timecards\":[";
 		
@@ -476,6 +459,23 @@ objectJson += ",\"timecards\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Agent of CMS Entry relationship
+objectJson += ",\"cMSEntries\":[";
+		
+		if (getCMSEntries() != null) {
+			int cMSEntriesCounter = 0;
+			for(CMSEntry nextCMSEntries : getCMSEntries()) {
+				if (cMSEntriesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextCMSEntries).toEmbeddedJson();
+					cMSEntriesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Agent of Corrective Action relationship
 objectJson += ",\"correctiveActions\":[";
 		
@@ -487,6 +487,23 @@ objectJson += ",\"correctiveActions\":[";
 				try {
 					objectJson += ((BaseDataObject) nextCorrectiveActions).toEmbeddedJson();
 					correctiveActionsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the Agent of Adhoc Task relationship
+objectJson += ",\"adhocTasks\":[";
+		
+		if (getAdhocTasks() != null) {
+			int adhocTasksCounter = 0;
+			for(AdhocTask nextAdhocTasks : getAdhocTasks()) {
+				if (adhocTasksCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAdhocTasks).toEmbeddedJson();
+					adhocTasksCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -527,23 +544,6 @@ objectJson += ",\"schedules\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of CMS Entry relationship
-objectJson += ",\"cMSEntries\":[";
-		
-		if (getCMSEntries() != null) {
-			int cMSEntriesCounter = 0;
-			for(CMSEntry nextCMSEntries : getCMSEntries()) {
-				if (cMSEntriesCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCMSEntries).toEmbeddedJson();
-					cMSEntriesCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -555,18 +555,18 @@ objectJson += ",\"cMSEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Last Name property
-		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
-		//From value of the First Name property
-		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the Full Name property
-		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
-		//From value of the Photo Uri property
-		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Photo Uri property
+		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
+		//From value of the Last Name property
+		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
+		//From value of the First Name property
+		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
+		//From value of the Full Name property
+		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
 
 		
 		// Source Relationships
@@ -574,13 +574,13 @@ objectJson += ",\"cMSEntries\":[";
 
 
 		// Target Relationships
-		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
-
 		this.timecards = (List<Timecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "timecards");
+		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
 		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
+		this.adhocTasks = (List<AdhocTask>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocTasks");
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
-		this.cMSEntries = (List<CMSEntry>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntries");
+
 
 
 	}
@@ -590,12 +590,12 @@ objectJson += ",\"cMSEntries\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
+		listSetters.add(MappedClass.getFieldSetters(AdhocTask.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentScorecard.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(Schedule.class, "agent"));
-		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "agent"));
 
 		
 		return listSetters;

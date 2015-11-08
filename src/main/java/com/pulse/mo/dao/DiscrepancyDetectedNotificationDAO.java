@@ -189,24 +189,36 @@ nextResult.setMessage(rs.getString("MESSAGE"));
 nextResult.setName(rs.getString("NAME"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
+String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
+if (StringUtils.hasText(lobconfigurationID)) {
 LOBConfiguration lobconfiguration = new LOBConfiguration();
-lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
+lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
+}
 
 
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
 
+String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
+if (StringUtils.hasText(timecardactivityID)) {
 TimecardActivity timecardactivity = new TimecardActivity();
-timecardactivity.setID(rs.getString("TIMECARD_ACTIVITY_ID"));
+timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);
+}
 
 
 

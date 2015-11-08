@@ -162,9 +162,12 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
     	
     	if (!shellOnly) 
 		{
-			LOB lob = new LOB();
-lob.setID(rs.getString("LOB_ID"));
+			String lobID = rs.getString("LOB_ID");
+if (StringUtils.hasText(lobID)) {
+LOB lob = new LOB();
+lob.setID(lobID);
 nextResult.setLOB(lob);
+}
 
 
 

@@ -36,7 +36,7 @@ import com.percero.agents.sync.metadata.MappedClass;
 /*
 Imports based on semantic requirements
 */
-import javax.persistence.Inheritance;import javax.persistence.InheritanceType;
+
 
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.serial.BDODeserializer;
@@ -48,9 +48,9 @@ import com.pulse.mo.*;
 /*
 Entity Tags based on semantic requirements
 */
-@SecondaryTable(name="ShiftStatusNotification")
+
 @MappedSuperclass
-public class _Super_ShiftStatusNotification extends Notification implements Serializable
+public class _Super_WeeklyDevelopmentActivity extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,48 +62,29 @@ public class _Super_ShiftStatusNotification extends Notification implements Seri
 
 	
 	/*
-	Keys of ShiftStatusNotification
+	Keys of WeeklyDevelopmentActivity
 	*/
-	
+	//////////////////////////////////////////////////////
+// ID
+//////////////////////////////////////////////////////
+@Id
+@com.percero.agents.sync.metadata.annotations.Externalize
+@Column(unique=true,name="ID")
+private String ID;
+@JsonProperty(value="ID")
+public String getID() {
+	return this.ID;
+}
+
+@JsonProperty(value="ID")
+public void setID(String value) {
+	this.ID = value;
+}
 	
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	/*
-Resolved
-Notes:Flag that determines if the notification has been resolved
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean resolved;
-
-public Boolean getResolved() 
-{
-	return this.resolved;
-}
-
-public void setResolved(Boolean resolved)
-{
-	this.resolved = resolved;
-}/*
-ShiftEndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date shiftEndDate;
-
-public Date getShiftEndDate() 
-{
-	return this.shiftEndDate;
-}
-
-public void setShiftEndDate(Date shiftEndDate)
-{
-	this.shiftEndDate = shiftEndDate;
-}
+	
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -116,16 +97,16 @@ public void setShiftEndDate(Date shiftEndDate)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TIMECARD_ACTIVITY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TimecardActivityOfShiftStatusNotification")
+@JoinColumn(name="DEVELOPMENT_ACTIVITY_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_DevelopmentActivityOfWeeklyDevelopmentActivity")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TimecardActivity timecardActivity;
-public TimecardActivity getTimecardActivity() {
-	return this.timecardActivity;
+private DevelopmentActivity developmentActivity;
+public DevelopmentActivity getDevelopmentActivity() {
+	return this.developmentActivity;
 }
 
-public void setTimecardActivity(TimecardActivity value) {
-	this.timecardActivity = value;
+public void setDevelopmentActivity(DevelopmentActivity value) {
+	this.developmentActivity = value;
 }
 
 	
@@ -137,30 +118,16 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Resolved property
-		objectJson += ",\"resolved\":";
-		if (getResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getResolved();
-		}
-		//Retrieve value of the Shift End Date property
-		objectJson += ",\"shiftEndDate\":";
-		if (getShiftEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getShiftEndDate().getTime();
-		}
 
 				
 		// Source Relationships
-//Retrieve value of the Timecard Activity of Shift Status Notification relationship
-objectJson += ",\"timecardActivity\":";
-		if (getTimecardActivity() == null)
+//Retrieve value of the Development Activity of Weekly Development Activity relationship
+objectJson += ",\"developmentActivity\":";
+		if (getDevelopmentActivity() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getTimecardActivity()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getDevelopmentActivity()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -180,14 +147,10 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Resolved property
-		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
-		//From value of the Shift End Date property
-		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
 
 		
 		// Source Relationships
-		this.timecardActivity = (TimecardActivity) JsonUtils.getJsonPerceroObject(jsonObject, "timecardActivity");
+		this.developmentActivity = (DevelopmentActivity) JsonUtils.getJsonPerceroObject(jsonObject, "developmentActivity");
 
 
 		// Target Relationships

@@ -180,9 +180,12 @@ nextResult.setFullName(rs.getString("FULL_NAME"));
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
+String supervisorID = rs.getString("SUPERVISOR_ID");
+if (StringUtils.hasText(supervisorID)) {
 Supervisor supervisor = new Supervisor();
-supervisor.setID(rs.getString("SUPERVISOR_ID"));
+supervisor.setID(supervisorID);
 nextResult.setSupervisor(supervisor);
+}
 
 
 

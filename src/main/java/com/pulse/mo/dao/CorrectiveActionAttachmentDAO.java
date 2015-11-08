@@ -189,9 +189,12 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 nextResult.setVersion(rs.getString("VERSION"));
 
 
+String correctiveactionID = rs.getString("CORRECTIVE_ACTION_ID");
+if (StringUtils.hasText(correctiveactionID)) {
 CorrectiveAction correctiveaction = new CorrectiveAction();
-correctiveaction.setID(rs.getString("CORRECTIVE_ACTION_ID"));
+correctiveaction.setID(correctiveactionID);
 nextResult.setCorrectiveAction(correctiveaction);
+}
 
 
 

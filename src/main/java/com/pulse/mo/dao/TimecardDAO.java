@@ -189,9 +189,12 @@ nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 nextResult.setTimecardState(rs.getString("TIMECARD_STATE"));
 
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
 
 
