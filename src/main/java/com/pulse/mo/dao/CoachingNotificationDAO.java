@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import com.percero.agents.sync.exceptions.SyncDataException;
@@ -18,14 +16,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNotification> implements IDataAccessObject<CoachingNotification> {
@@ -45,11 +45,12 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"COACHING_NOTIFICATION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"COACHING_NOTIFICATION\".\"WEEK_DATE\" DESC";
 	
 	
 
@@ -61,7 +62,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -71,12 +72,12 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -103,26 +104,26 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT \"COACHING_NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?" +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COACHING_NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COACHING_NOTIFICATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -147,26 +148,17 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	
 	@Override
 	protected CoachingNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-
-		CoachingNotification nextResult = null;
-		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (CoachingNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
-
-
-		if (nextResult == null) {
-			nextResult = new CoachingNotification();
-		}
-
-
     	
+		
+
+CoachingNotification nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new CoachingNotification();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -174,19 +166,29 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
+
 nextResult.setName(rs.getString("NAME"));
 
+
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
+
+
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -198,6 +200,8 @@ pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setString(5, perceroObject.getName());
 
+
+
 if (perceroObject.getTeamLeader() == null)
 {
 pstmt.setString(6, null);
@@ -206,7 +210,6 @@ else
 {
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
-
 
 
 		
@@ -230,22 +233,24 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setString(4, perceroObject.getName());
+
+		pstmt.setString(1, perceroObject.getID());
+		pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+pstmt.setString(5, perceroObject.getName());
+
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(5, null);
+pstmt.setString(6, null);
 }
 else
 {
-		pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		pstmt.setString(6, perceroObject.getTeamLeader().getID());
 }
 
-pstmt.setString(6, perceroObject.getID());
+
 
 		
 	}
@@ -335,6 +340,8 @@ paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
 
+
+
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
 if (useTeamLeaderID)
@@ -351,7 +358,6 @@ sql += " \"TEAM_LEADER_ID\" =? ";
 paramValues.add(theQueryObject.getTeamLeader().getID());
 propertyCounter++;
 }
-
 
 
 

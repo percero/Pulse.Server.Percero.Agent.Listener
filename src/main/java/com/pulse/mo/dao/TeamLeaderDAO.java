@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements IDataAccessObject<TeamLeader> {
@@ -41,6 +44,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"TEAM_LEADER\".\"ID\"";
 	public static final String SQL_VIEW = ",\"TEAM_LEADER\".\"EMAIL_ADDRESS\",\"TEAM_LEADER\".\"FIRST_NAME\",\"TEAM_LEADER\".\"LAST_NAME\",\"TEAM_LEADER\".\"EMPLOYEE_ID\",\"TEAM_LEADER\".\"FULL_NAME\",\"TEAM_LEADER\".\"PHOTO_URI\",\"TEAM_LEADER\".\"SUPERVISOR_ID\"";
 	private String selectFromStatementTableName = " FROM \"TEAM_LEADER\" \"TEAM_LEADER\"";
 	private String whereClause = "  WHERE \"TEAM_LEADER\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName + " WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"TEAM_LEADER\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"TEAM_LEADER\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 	
 	@Override
 	protected TeamLeader extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	TeamLeader nextResult = new TeamLeader();
     	
+		
+TeamLeader nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new TeamLeader();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,24 +164,35 @@ public class TeamLeaderDAO extends SqlDataAccessObject<TeamLeader> implements ID
 		{
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
+
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
+
 
 nextResult.setLastName(rs.getString("LAST_NAME"));
 
+
 nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+
 
 nextResult.setFullName(rs.getString("FULL_NAME"));
 
+
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
+
+String supervisorID = rs.getString("SUPERVISOR_ID");
+if (StringUtils.hasText(supervisorID)) {
 Supervisor supervisor = new Supervisor();
-supervisor.setID(rs.getString("SUPERVISOR_ID"));
+supervisor.setID(supervisorID);
 nextResult.setSupervisor(supervisor);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -395,6 +418,71 @@ propertyCounter++;
 	}
 	
 	
+public TeamLeader createObject(TeamLeader perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select TEAM_LEADER_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

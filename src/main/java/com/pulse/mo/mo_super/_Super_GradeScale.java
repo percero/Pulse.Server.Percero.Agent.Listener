@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -85,90 +86,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Grade
+StartExp
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer grade;
+private String startExp;
 
-public Integer getGrade() 
+public String getStartExp() 
 {
-	return this.grade;
+	return this.startExp;
 }
 
-public void setGrade(Integer grade)
+public void setStartExp(String startExp)
 {
-	this.grade = grade;
+	this.startExp = startExp;
 }/*
-CreatedBy
+Custom
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String createdBy;
+private Integer custom;
 
-public String getCreatedBy() 
+public Integer getCustom() 
 {
-	return this.createdBy;
+	return this.custom;
 }
 
-public void setCreatedBy(String createdBy)
+public void setCustom(Integer custom)
 {
-	this.createdBy = createdBy;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
-}/*
-ANDOR
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String aNDOR;
-
-public String getANDOR() 
-{
-	return this.aNDOR;
-}
-
-public void setANDOR(String aNDOR)
-{
-	this.aNDOR = aNDOR;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
+	this.custom = custom;
 }/*
 UpdatedBy
 Notes:
@@ -186,6 +136,41 @@ public String getUpdatedBy()
 public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
+}/*
+Color
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String color;
+
+public String getColor() 
+{
+	return this.color;
+}
+
+public void setColor(String color)
+{
+	this.color = color;
+}/*
+
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
 }/*
 EndExpression
 Notes:
@@ -221,57 +206,6 @@ public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
 }/*
-StartExp
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String startExp;
-
-public String getStartExp() 
-{
-	return this.startExp;
-}
-
-public void setStartExp(String startExp)
-{
-	this.startExp = startExp;
-}/*
-Color
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String color;
-
-public String getColor() 
-{
-	return this.color;
-}
-
-public void setColor(String color)
-{
-	this.color = color;
-}/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
-}/*
 EndValue
 Notes:
 */
@@ -289,39 +223,107 @@ public void setEndValue(Integer endValue)
 {
 	this.endValue = endValue;
 }/*
-SCMGoalId
+StartDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String sCMGoalId;
+private Date startDate;
 
-public String getSCMGoalId() 
+public Date getStartDate() 
 {
-	return this.sCMGoalId;
+	return this.startDate;
 }
 
-public void setSCMGoalId(String sCMGoalId)
+public void setStartDate(Date startDate)
 {
-	this.sCMGoalId = sCMGoalId;
+	this.startDate = startDate;
 }/*
-Custom
+Grade
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer custom;
+private Integer grade;
 
-public Integer getCustom() 
+public Integer getGrade() 
 {
-	return this.custom;
+	return this.grade;
 }
 
-public void setCustom(Integer custom)
+public void setGrade(Integer grade)
 {
-	this.custom = custom;
+	this.grade = grade;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+ANDOR
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String aNDOR;
+
+public String getANDOR() 
+{
+	return this.aNDOR;
+}
+
+public void setANDOR(String aNDOR)
+{
+	this.aNDOR = aNDOR;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
+StartValue
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer startValue;
+
+public Integer getStartValue() 
+{
+	return this.startValue;
+}
+
+public void setStartValue(Integer startValue)
+{
+	this.startValue = startValue;
 }
 
 	//////////////////////////////////////////////////////
@@ -332,7 +334,8 @@ public void setCustom(Integer custom)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -356,16 +359,16 @@ public void setGoal(Goal value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Grade property
-		objectJson += ",\"grade\":";
+		//Retrieve value of the Start Exp property
+		objectJson += ",\"startExp\":";
 		
-		if (getGrade() == null)
+		if (getStartExp() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGrade());
+				objectJson += objectMapper.writeValueAsString(getStartExp());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -377,16 +380,16 @@ public void setGoal(Goal value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
+		//Retrieve value of the Custom property
+		objectJson += ",\"custom\":";
 		
-		if (getCreatedBy() == null)
+		if (getCustom() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+				objectJson += objectMapper.writeValueAsString(getCustom());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -397,41 +400,6 @@ public void setGoal(Goal value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the AND OR property
-		objectJson += ",\"aNDOR\":";
-		
-		if (getANDOR() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getANDOR());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
@@ -443,55 +411,6 @@ public void setGoal(Goal value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the End Expression property
-		objectJson += ",\"endExpression\":";
-		
-		if (getEndExpression() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEndExpression());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
-		//Retrieve value of the Start Exp property
-		objectJson += ",\"startExp\":";
-		
-		if (getStartExp() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartExp());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -524,12 +443,41 @@ public void setGoal(Goal value) {
 				e.printStackTrace();
 			}
 		}
+
 		//Retrieve value of the End Date property
 		objectJson += ",\"endDate\":";
 		if (getEndDate() == null)
 			objectJson += "null";
 		else {
 			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the End Expression property
+		objectJson += ",\"endExpression\":";
+		
+		if (getEndExpression() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEndExpression());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the End Value property
 		objectJson += ",\"endValue\":";
@@ -552,16 +500,23 @@ public void setGoal(Goal value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the SCM Goal Id property
-		objectJson += ",\"sCMGoalId\":";
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the Grade property
+		objectJson += ",\"grade\":";
 		
-		if (getSCMGoalId() == null)
+		if (getGrade() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getSCMGoalId());
+				objectJson += objectMapper.writeValueAsString(getGrade());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -573,16 +528,65 @@ public void setGoal(Goal value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Custom property
-		objectJson += ",\"custom\":";
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the AND OR property
+		objectJson += ",\"aNDOR\":";
 		
-		if (getCustom() == null)
+		if (getANDOR() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCustom());
+				objectJson += objectMapper.writeValueAsString(getANDOR());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Start Value property
+		objectJson += ",\"startValue\":";
+		
+		if (getStartValue() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getStartValue());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -623,34 +627,34 @@ objectJson += ",\"goal\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the AND OR property
-		setANDOR(JsonUtils.getJsonString(jsonObject, "aNDOR"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the End Expression property
-		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Start Exp property
 		setStartExp(JsonUtils.getJsonString(jsonObject, "startExp"));
+		//From value of the Custom property
+		setCustom(JsonUtils.getJsonInteger(jsonObject, "custom"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Color property
 		setColor(JsonUtils.getJsonString(jsonObject, "color"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the End Expression property
+		setEndExpression(JsonUtils.getJsonString(jsonObject, "endExpression"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the End Value property
 		setEndValue(JsonUtils.getJsonInteger(jsonObject, "endValue"));
-		//From value of the SCM Goal Id property
-		setSCMGoalId(JsonUtils.getJsonString(jsonObject, "sCMGoalId"));
-		//From value of the Custom property
-		setCustom(JsonUtils.getJsonInteger(jsonObject, "custom"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the AND OR property
+		setANDOR(JsonUtils.getJsonString(jsonObject, "aNDOR"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Start Value property
+		setStartValue(JsonUtils.getJsonInteger(jsonObject, "startValue"));
 
 		
 		// Source Relationships
@@ -672,4 +676,4 @@ objectJson += ",\"goal\":";
 		return listSetters;
 	}
 }
-
+

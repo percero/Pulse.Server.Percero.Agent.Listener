@@ -85,22 +85,90 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-WeekDate
+Status
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date weekDate;
+private String status;
 
-public Date getWeekDate() 
+public String getStatus() 
 {
-	return this.weekDate;
+	return this.status;
 }
 
-public void setWeekDate(Date weekDate)
+public void setStatus(String status)
 {
-	this.weekDate = weekDate;
+	this.status = status;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer employeeId;
+
+public Integer getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(Integer employeeId)
+{
+	this.employeeId = employeeId;
+}/*
+ResponsibleCoach
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String responsibleCoach;
+
+public String getResponsibleCoach() 
+{
+	return this.responsibleCoach;
+}
+
+public void setResponsibleCoach(String responsibleCoach)
+{
+	this.responsibleCoach = responsibleCoach;
+}/*
+IsRequired
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isRequired;
+
+public Boolean getIsRequired() 
+{
+	return this.isRequired;
+}
+
+public void setIsRequired(Boolean isRequired)
+{
+	this.isRequired = isRequired;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
 }/*
 SessionType
 Notes:
@@ -119,22 +187,22 @@ public void setSessionType(String sessionType)
 {
 	this.sessionType = sessionType;
 }/*
-Status
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String status;
+private Date weekDate;
 
-public String getStatus() 
+public Date getWeekDate() 
 {
-	return this.status;
+	return this.weekDate;
 }
 
-public void setStatus(String status)
+public void setWeekDate(Date weekDate)
 {
-	this.status = status;
+	this.weekDate = weekDate;
 }/*
 ScorecardId
 Notes:
@@ -153,22 +221,73 @@ public void setScorecardId(Integer scorecardId)
 {
 	this.scorecardId = scorecardId;
 }/*
-EmployeeId
+UpdatedBY
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer employeeId;
+private String updatedBY;
 
-public Integer getEmployeeId() 
+public String getUpdatedBY() 
 {
-	return this.employeeId;
+	return this.updatedBY;
 }
 
-public void setEmployeeId(Integer employeeId)
+public void setUpdatedBY(String updatedBY)
 {
-	this.employeeId = employeeId;
+	this.updatedBY = updatedBY;
+}/*
+ClosedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date closedOn;
+
+public Date getClosedOn() 
+{
+	return this.closedOn;
+}
+
+public void setClosedOn(Date closedOn)
+{
+	this.closedOn = closedOn;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -242,34 +361,6 @@ public void setAgentScorecard(AgentScorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWeekDate().getTime();
-		}
-		//Retrieve value of the Session Type property
-		objectJson += ",\"sessionType\":";
-		
-		if (getSessionType() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSessionType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Status property
 		objectJson += ",\"status\":";
 		
@@ -280,27 +371,6 @@ public void setAgentScorecard(AgentScorecard value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getStatus());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Scorecard Id property
-		objectJson += ",\"scorecardId\":";
-		
-		if (getScorecardId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getScorecardId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -332,6 +402,146 @@ public void setAgentScorecard(AgentScorecard value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Responsible Coach property
+		objectJson += ",\"responsibleCoach\":";
+		
+		if (getResponsibleCoach() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getResponsibleCoach());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Is Required property
+		objectJson += ",\"isRequired\":";
+		if (getIsRequired() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRequired();
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Session Type property
+		objectJson += ",\"sessionType\":";
+		
+		if (getSessionType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSessionType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
+		}
+		//Retrieve value of the Scorecard Id property
+		objectJson += ",\"scorecardId\":";
+		
+		if (getScorecardId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getScorecardId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated BY property
+		objectJson += ",\"updatedBY\":";
+		
+		if (getUpdatedBY() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBY());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Closed On property
+		objectJson += ",\"closedOn\":";
+		if (getClosedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getClosedOn().getTime();
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 
 				
@@ -403,16 +613,30 @@ objectJson += ",\"adhocCoachingSessionAttachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
-		//From value of the Session Type property
-		setSessionType(JsonUtils.getJsonString(jsonObject, "sessionType"));
 		//From value of the Status property
 		setStatus(JsonUtils.getJsonString(jsonObject, "status"));
-		//From value of the Scorecard Id property
-		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
+		//From value of the Responsible Coach property
+		setResponsibleCoach(JsonUtils.getJsonString(jsonObject, "responsibleCoach"));
+		//From value of the Is Required property
+		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Session Type property
+		setSessionType(JsonUtils.getJsonString(jsonObject, "sessionType"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Scorecard Id property
+		setScorecardId(JsonUtils.getJsonInteger(jsonObject, "scorecardId"));
+		//From value of the Updated BY property
+		setUpdatedBY(JsonUtils.getJsonString(jsonObject, "updatedBY"));
+		//From value of the Closed On property
+		setClosedOn(JsonUtils.getJsonDate(jsonObject, "closedOn"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 
 		
 		// Source Relationships

@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataAccessObject<Employee> {
@@ -41,6 +44,7 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"EMPLOYEE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"EMPLOYEE\".\"EMAIL_ADDRESS\",\"EMPLOYEE\".\"FIRST_NAME\",\"EMPLOYEE\".\"FULL_NAME\",\"EMPLOYEE\".\"LAST_NAME\",\"EMPLOYEE\".\"PHOTO_URI\"";
 	private String selectFromStatementTableName = " FROM \"EMPLOYEE\" \"EMPLOYEE\"";
 	private String whereClause = "  WHERE \"EMPLOYEE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName + " WHERE \"EMPLOYEE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"EMPLOYEE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"EMPLOYEE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 	
 	@Override
 	protected Employee extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Employee nextResult = new Employee();
     	
+		
+Employee nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Employee();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,18 +164,24 @@ public class EmployeeDAO extends SqlDataAccessObject<Employee> implements IDataA
 		{
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
 
+
 nextResult.setFirstName(rs.getString("FIRST_NAME"));
+
 
 nextResult.setFullName(rs.getString("FULL_NAME"));
 
+
 nextResult.setLastName(rs.getString("LAST_NAME"));
+
 
 nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -333,6 +351,71 @@ propertyCounter++;
 	}
 	
 	
+public Employee createObject(Employee perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select EMPLOYEE_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

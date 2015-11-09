@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAccessObject<Comment> {
@@ -41,7 +44,8 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"COMMENT\".\"DESCRIPTION\",\"COMMENT\".\"CREATED_ON\",\"COMMENT\".\"UPDATED_ON\",\"COMMENT\".\"DATAREF_ID\",\"COMMENT\".\"SESSION_ID\",\"COMMENT\".\"TYPE\",\"COMMENT\".\"CREATED_BY\",\"COMMENT\".\"UPDATED_BY\"";
+	public static final String SHELL_ONLY_SELECT = "\"COMMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"COMMENT\".\"DESCRIPTION\",\"COMMENT\".\"UPDATED_BY\",\"COMMENT\".\"CREATED_ON\",\"COMMENT\".\"UPDATED_ON\",\"COMMENT\".\"DATAREF_ID\",\"COMMENT\".\"SESSION_ID\",\"COMMENT\".\"TYPE\",\"COMMENT\".\"CREATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"COMMENT\" \"COMMENT\"";
 	private String whereClause = "  WHERE \"COMMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COMMENT\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"COMMENT\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COMMENT (\"ID\",\"DESCRIPTION\",\"CREATED_ON\",\"UPDATED_ON\",\"DATAREF_ID\",\"SESSION_ID\",\"TYPE\",\"CREATED_BY\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_COMMENT (\"ID\",\"DESCRIPTION\",\"UPDATED_BY\",\"CREATED_ON\",\"UPDATED_ON\",\"DATAREF_ID\",\"SESSION_ID\",\"TYPE\",\"CREATED_BY\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COMMENT SET \"DESCRIPTION\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_COMMENT SET \"DESCRIPTION\"=?,\"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,8 +147,16 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected Comment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Comment nextResult = new Comment();
     	
+		
+Comment nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Comment();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,24 +164,33 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 		{
 			nextResult.setDescription(rs.getString("DESCRIPTION"));
 
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
-
-nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
-
-nextResult.setDatarefId(rs.getInt("DATAREF_ID"));
-
-nextResult.setSessionId(rs.getInt("SESSION_ID"));
-
-nextResult.setType(rs.getInt("TYPE"));
-
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
 
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
+
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+
+
+nextResult.setDatarefId(rs.getInt("DATAREF_ID"));
+
+
+nextResult.setSessionId(rs.getInt("SESSION_ID"));
+
+
+nextResult.setType(rs.getInt("TYPE"));
+
+
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -177,13 +198,13 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getDescription());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,5, perceroObject.getDatarefId());
-JdbcHelper.setInt(pstmt,6, perceroObject.getSessionId());
-JdbcHelper.setInt(pstmt,7, perceroObject.getType());
-pstmt.setString(8, perceroObject.getCreatedBy());
-pstmt.setString(9, perceroObject.getUpdatedBy());
+pstmt.setString(3, perceroObject.getUpdatedBy());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,6, perceroObject.getDatarefId());
+JdbcHelper.setInt(pstmt,7, perceroObject.getSessionId());
+JdbcHelper.setInt(pstmt,8, perceroObject.getType());
+pstmt.setString(9, perceroObject.getCreatedBy());
 
 		
 	}
@@ -208,13 +229,13 @@ pstmt.setString(9, perceroObject.getUpdatedBy());
 	protected void setPreparedStatmentUpdateParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getDescription());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,4, perceroObject.getDatarefId());
-JdbcHelper.setInt(pstmt,5, perceroObject.getSessionId());
-JdbcHelper.setInt(pstmt,6, perceroObject.getType());
-pstmt.setString(7, perceroObject.getCreatedBy());
-pstmt.setString(8, perceroObject.getUpdatedBy());
+pstmt.setString(2, perceroObject.getUpdatedBy());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,5, perceroObject.getDatarefId());
+JdbcHelper.setInt(pstmt,6, perceroObject.getSessionId());
+JdbcHelper.setInt(pstmt,7, perceroObject.getType());
+pstmt.setString(8, perceroObject.getCreatedBy());
 pstmt.setString(9, perceroObject.getID());
 
 		
@@ -251,6 +272,23 @@ if (useDescription)
 sql += " WHERE ";
 sql += " \"DESCRIPTION\" =? ";
 paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
@@ -356,23 +394,6 @@ paramValues.add(theQueryObject.getCreatedBy());
 propertyCounter++;
 }
 
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
 
 
 		if (propertyCounter == 0) {
@@ -396,6 +417,71 @@ propertyCounter++;
 	}
 	
 	
+public Comment createObject(Comment perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select COMMENT_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

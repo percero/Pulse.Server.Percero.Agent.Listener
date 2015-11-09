@@ -1,5 +1,6 @@
 
-package com.pulse.mo;
+
+package com.pulse.mo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,4 +89,4 @@ public class CoachingNotification extends _Super_CoachingNotification
 		return result;
 	}
 }
-
+

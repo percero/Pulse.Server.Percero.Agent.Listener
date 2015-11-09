@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> implements IDataAccessObject<BehaviorResponse> {
@@ -41,6 +44,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"BEHAVIOR_RESPONSE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\"";
 	private String whereClause = "  WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName + " WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"BEHAVIOR_RESPONSE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected BehaviorResponse extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	BehaviorResponse nextResult = new BehaviorResponse();
     	
+		
+BehaviorResponse nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new BehaviorResponse();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,36 +164,59 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 		{
 			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
+
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
 
 nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
+
 nextResult.setResponse(rs.getInt("RESPONSE"));
 
+
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
+
+String behaviorID = rs.getString("BEHAVIOR_ID");
+if (StringUtils.hasText(behaviorID)) {
 Behavior behavior = new Behavior();
-behavior.setID(rs.getString("BEHAVIOR_ID"));
+behavior.setID(behaviorID);
 nextResult.setBehavior(behavior);
+}
 
+
+String coachingsessionID = rs.getString("COACHING_SESSION_ID");
+if (StringUtils.hasText(coachingsessionID)) {
 CoachingSession coachingsession = new CoachingSession();
-coachingsession.setID(rs.getString("COACHING_SESSION_ID"));
+coachingsession.setID(coachingsessionID);
 nextResult.setCoachingSession(coachingsession);
+}
 
+
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -518,6 +553,71 @@ propertyCounter++;
 	}
 	
 	
+public BehaviorResponse createObject(BehaviorResponse perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

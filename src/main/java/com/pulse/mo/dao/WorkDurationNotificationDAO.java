@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,14 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDurationNotification> implements IDataAccessObject<WorkDurationNotification> {
@@ -43,6 +44,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"WORK_DURATION_NOTIFICATION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"CREATED_ON\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
@@ -59,7 +61,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +71,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +117,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"WORK_DURATION_NOTIFICATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"WORK_DURATION_NOTIFICATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"WORK_DURATION_NOTIFICATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -145,25 +147,16 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	
 	@Override
 	protected WorkDurationNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-
-		WorkDurationNotification nextResult = null;
-		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (WorkDurationNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
-
-
-		if (nextResult == null) {
-			nextResult = new WorkDurationNotification();
-		}
-
     	
+		
+WorkDurationNotification nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new WorkDurationNotification();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -171,32 +164,53 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 		{
 			nextResult.setType(rs.getString("TYPE"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
+
 nextResult.setName(rs.getString("NAME"));
 
+
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
+
+String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
+if (StringUtils.hasText(lobconfigurationID)) {
 LOBConfiguration lobconfiguration = new LOBConfiguration();
-lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
+lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
+}
 
+
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
+
+String lobconfigurationentryID = rs.getString("LOB_CONFIGURATION_ENTRY_ID");
+if (StringUtils.hasText(lobconfigurationentryID)) {
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
-lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
+lobconfigurationentry.setID(lobconfigurationentryID);
 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -498,4 +512,4 @@ propertyCounter++;
 	
 	
 }
-
+

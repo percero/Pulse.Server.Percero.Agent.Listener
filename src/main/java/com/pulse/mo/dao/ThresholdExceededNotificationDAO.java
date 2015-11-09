@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,14 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.metadata.MappedClass;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<ThresholdExceededNotification> implements IDataAccessObject<ThresholdExceededNotification> {
@@ -43,7 +44,8 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"THRSH_EXCEEDED_NOTIF\".\"CREATED_ON\",\"THRSH_EXCEEDED_NOTIF\".\"MESSAGE\",\"THRSH_EXCEEDED_NOTIF\".\"NAME\",\"THRSH_EXCEEDED_NOTIF\".\"TYPE\",\"THRSH_EXCEEDED_NOTIF\".\"AGENT_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"THRSH_EXCEEDED_NOTIF\".\"TEAM_LEADER_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"THRSH_EXCEEDED_NOTIF\".\"ID\",\"THRSH_EXCEEDED_NOTIF\".\"TYPE\"";
+	public static final String SQL_VIEW = ",\"THRSH_EXCEEDED_NOTIF\".\"TYPE\",\"THRSH_EXCEEDED_NOTIF\".\"CREATED_ON\",\"THRSH_EXCEEDED_NOTIF\".\"MESSAGE\",\"THRSH_EXCEEDED_NOTIF\".\"NAME\",\"THRSH_EXCEEDED_NOTIF\".\"AGENT_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ID\",\"THRSH_EXCEEDED_NOTIF\".\"TEAM_LEADER_ID\",\"THRSH_EXCEEDED_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\"";
 	private String selectFromStatementTableName = " FROM \"THRSH_EXCEEDED_NOTIF\" \"THRSH_EXCEEDED_NOTIF\"";
 	private String whereClause = "  WHERE \"THRSH_EXCEEDED_NOTIF\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"THRSH_EXCEEDED_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -59,7 +61,7 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -69,12 +71,12 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -115,12 +117,12 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName + " WHERE \"THRSH_EXCEEDED_NOTIF\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"THRSH_EXCEEDED_NOTIF\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"THRSH_EXCEEDED_NOTIF\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -130,12 +132,12 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_THRSH_EXCEEDED_NOTIF (\"ID\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"TYPE\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_THRSH_EXCEEDED_NOTIF (\"ID\",\"TYPE\",\"CREATED_ON\",\"MESSAGE\",\"NAME\",\"AGENT_ID\",\"LOB_CONFIGURATION_ID\",\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_ENTRY_ID\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_THRSH_EXCEEDED_NOTIF SET \"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"TYPE\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_THRSH_EXCEEDED_NOTIF SET \"TYPE\"=?,\"CREATED_ON\"=?,\"MESSAGE\"=?,\"NAME\"=?,\"AGENT_ID\"=?,\"LOB_CONFIGURATION_ID\"=?,\"TEAM_LEADER_ID\"=?,\"LOB_CONFIGURATION_ENTRY_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -145,69 +147,92 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	
 	@Override
 	protected ThresholdExceededNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-
-		ThresholdExceededNotification nextResult = null;
-		String type = rs.getString("TYPE");
-		String className = type;
-		if (className.indexOf("com.pulse.mo.") != 0) {
-			className = "com.pulse.mo." + className;
-		}
-		try {
-			nextResult = (ThresholdExceededNotification) MappedClass.forName(className).newInstance();
-		} catch(Exception e) {
-			// Do nothing.
-		}
-
-
-		if (nextResult == null) {
-			nextResult = new ThresholdExceededNotification();
-		}
-
-
     	
+		
+ThresholdExceededNotification nextResult = null;
+    	
+		String type = rs.getString("TYPE");
+		
+    	String className = type;
+		
+    	if (className.indexOf("com.pulse.mo.") != 0) {
+    		className = "com.pulse.mo." + className;
+    	}
+    	try {
+    		nextResult = (ThresholdExceededNotification) MappedClass.forName(className).newInstance();
+    	} catch(Exception e) {
+    		// Do nothing.
+    	}
+    	
+    	if (nextResult == null) {
+    		nextResult = new ThresholdExceededNotification();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+			nextResult.setType(rs.getString("TYPE"));
+
+
+nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setMessage(rs.getString("MESSAGE"));
 
+
 nextResult.setName(rs.getString("NAME"));
 
-nextResult.setType(rs.getString("TYPE"));
 
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
+
+String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
+if (StringUtils.hasText(lobconfigurationID)) {
 LOBConfiguration lobconfiguration = new LOBConfiguration();
-lobconfiguration.setID(rs.getString("LOB_CONFIGURATION_ID"));
+lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
+}
 
+
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
 
+
+String lobconfigurationentryID = rs.getString("LOB_CONFIGURATION_ENTRY_ID");
+if (StringUtils.hasText(lobconfigurationentryID)) {
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
-lobconfigurationentry.setID(rs.getString("LOB_CONFIGURATION_ENTRY_ID"));
+lobconfigurationentry.setID(lobconfigurationentryID);
 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
 	protected void setBaseStatmentInsertParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
-pstmt.setString(5, perceroObject.getType());
+pstmt.setString(2, perceroObject.getType());
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(4, perceroObject.getMessage());
+pstmt.setString(5, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -271,10 +296,10 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(2, perceroObject.getMessage());
-pstmt.setString(3, perceroObject.getName());
-pstmt.setString(4, perceroObject.getType());
+		pstmt.setString(1, perceroObject.getType());
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setString(3, perceroObject.getMessage());
+pstmt.setString(4, perceroObject.getName());
 
 if (perceroObject.getAgent() == null)
 {
@@ -344,11 +369,28 @@ pstmt.setString(9, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+if (useType)
+{
+sql += " WHERE ";
+sql += " \"TYPE\" =? ";
+paramValues.add(theQueryObject.getType());
+propertyCounter++;
+}
+
+boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -385,23 +427,6 @@ sql += " WHERE ";
 }
 sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
@@ -499,4 +524,4 @@ propertyCounter++;
 	
 	
 }
-
+

@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObject<Goal> {
@@ -41,6 +44,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"GOAL\".\"ID\"";
 	public static final String SQL_VIEW = ",\"GOAL\".\"UPDATED_BY\",\"GOAL\".\"CREATED_ON\",\"GOAL\".\"END_DATE\",\"GOAL\".\"START_DATE\",\"GOAL\".\"UPDATED_ON\",\"GOAL\".\"DURATION_FROM\",\"GOAL\".\"DURATION_TO\",\"GOAL\".\"GOAL_TYPE\",\"GOAL\".\"GOAL_VALUE\",\"GOAL\".\"CREATED_BY\",\"GOAL\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"GOAL\" \"GOAL\"";
 	private String whereClause = "  WHERE \"GOAL\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName + " WHERE \"GOAL\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"GOAL\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"GOAL\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	
 	@Override
 	protected Goal extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Goal nextResult = new Goal();
     	
+		
+Goal nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Goal();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,32 +164,47 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 		{
 			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+
 
 nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
+
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+
 
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
+
 nextResult.setDurationFrom(rs.getInt("DURATION_FROM"));
+
 
 nextResult.setDurationTo(rs.getInt("DURATION_TO"));
 
+
 nextResult.setGoalType(rs.getInt("GOAL_TYPE"));
+
 
 nextResult.setGoalValue(rs.getInt("GOAL_VALUE"));
 
+
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
+
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -479,6 +506,71 @@ propertyCounter++;
 	}
 	
 	
+public Goal createObject(Goal perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select GOAL_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

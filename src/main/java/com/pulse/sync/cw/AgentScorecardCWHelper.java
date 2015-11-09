@@ -38,7 +38,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 	public Object calculate(String fieldName, ClassIDPair pair) {
 		return calculate(fieldName, pair, null);
 	}
-	
+
 	@Override
 	public Object calculate(String fieldName, ClassIDPair pair, String[] params) {
 		Object result = null;
@@ -46,7 +46,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			oldValue = accessManager.getChangeWatcherResult(pair, fieldName, params);
 		} catch(Exception e) {}
-		
+
 		if (fieldName.equalsIgnoreCase("scorecardMonthlyResults")) {
 			try {
 				result = calc_scorecardMonthlyResults(pair);
@@ -66,10 +66,10 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 		else {
 			result = super.calculate(fieldName, pair, params);
 		}
-		
+
 		return result;
 	}
-	
+
 	public ClassIDPair calc_coachingNotification(ClassIDPair pair) {
 		ClassIDPair result = null;
 
@@ -79,20 +79,20 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 				log.warn("Unable to calculate coachingNotification: Invalid objectId");
 				return result;
 			}
-			
+
 			// Setup fieldsToWatch.
 			Collection<String> fieldsToWatch = new HashSet<String>();
-			
+
 			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
 			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
-			
+
 			if (host != null) {
 				log.debug("[CoachingNotification]");
 				Date currentDate = new Date();
 				DateTime currentDateTime = new DateTime(currentDate);
 				DateTime scorecardDateTime = new DateTime(host.getWeekDate());
 				int daysBetween = Math.abs(Days.daysBetween(scorecardDateTime, currentDateTime).getDays());
-				
+
 				// If agentScorecard < 4 weeks old
 				log.debug("[CoachingNotification]  daysBetween" + daysBetween);
 				if ( daysBetween < 7 * 4) {
@@ -115,11 +115,11 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 								Notification nextNotification = itrNotifications.next();
 								if (nextNotification != null && nextNotification instanceof CoachingNotification) {
 									CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
-									
+
 									if (nextCoachingNotification == null) {
 										continue;
 									}
-									
+
 									// Re-trigger this change watcher when CoachingNotification.weekDate changes.
 									accessManager.addWatcherField(BaseDataObject.toClassIdPair(nextCoachingNotification), "weekDate", fieldsToWatch);
 
@@ -136,7 +136,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 									}
 								}
 							}
-							
+
 							if (existingCoachingNotification == null) {
 								existingCoachingNotification = new CoachingNotification();
 								existingCoachingNotification.setID(UUID.randomUUID().toString());
@@ -154,115 +154,115 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 					}
 				}
 			}
-			
+
 			// Register all the fields to watch for this ChangeWatcher. Whenever
 			// ANY of these fields change, this ChangeWatcher will get re-run
 			accessManager.updateWatcherFields(pair, "coachingNotification", fieldsToWatch);
-			
+
 			// Store the result for caching, and also for comparing new results to see if there has been a change.
 			accessManager.saveChangeWatcherResult(pair, "coachingNotification", result);
 		} catch(Exception e) {
 			log.error("Unable to calculate coachingNotification", e);
 		}
-		
+
 		return result;
 	}
-	
+
 	public List<ClassIDPair> calc_scorecardMonthlyResults(ClassIDPair pair) {
 		List<ClassIDPair> results = new ArrayList<ClassIDPair>();
-		
-		try {
-			AgentScorecard host = (AgentScorecard) syncAgentService.systemGetById(pair);
-			if (host == null) {
-				log.warn("Unable to calculate scorecardMonthlyResults: Invalid objectId");
-				return results;
-			}
-			
-			// Setup fieldsToWatch.
-			Collection<String> fieldsToWatch = new HashSet<String>();
-			
-			List<ScorecardMonthlyResult> scorecardMonthlyResults = new ArrayList<ScorecardMonthlyResult>();
-			
-			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
-			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
-			Date weekDate = host.getWeekDate();
-			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-			
-			if (agent!= null && weekDate != null && weekDate.getTime() > 0) {
-				DateTime weekDateTime = new DateTime(weekDate.getTime());
-				
-				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "scorecardMonthlyResults", fieldsToWatch);
-				Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = agent.getScorecardMonthlyResults().iterator();
-				while (itrScorecardMonthlyResults.hasNext()) {
-					ScorecardMonthlyResult scorecardMonthlyResult = syncAgentService.systemGetByObject(itrScorecardMonthlyResults.next());
-					if (scorecardMonthlyResult != null) {
-						accessManager.addWatcherField(BaseDataObject.toClassIdPair(scorecardMonthlyResult), "endDate", fieldsToWatch);
-						Date endDate = scorecardMonthlyResult.getEndDate();
-						if (endDate != null && endDate.getTime() > 0) {
-							DateTime endDateTime = new DateTime(endDate.getTime());
-							
-							int monthsBetween = Months.monthsBetween(endDateTime, weekDateTime).getMonths();
-							
-							if (monthsBetween <= 5 && monthsBetween >= 0) {
-								scorecardMonthlyResults.add(scorecardMonthlyResult);
-							}
-						}
-					}
-				}
-			}
-			
-			Comparator<ScorecardMonthlyResult> cmp = new Comparator<ScorecardMonthlyResult>() {
-				
-				@Override
-				public int compare(ScorecardMonthlyResult o1, ScorecardMonthlyResult o2) {
-					if (o1 == null && o2 == null) {
-						return 0;
-					}
-					else if (o1 == null) {
-						return 1;
-					}
-					else if (o2 == null) {
-						return -1;
-					}
-					else {
-						Date endDate1 = o1.getEndDate();
-						Date endDate2 = o2.getEndDate();
-						
-						if (endDate1 == null && endDate2 == null) {
-							return 0;
-						}
-						else if (endDate1 == null) {
-							return 1;
-						}
-						else if (endDate2 == null) {
-							return -1;
-						}
-						else {
-							return endDate1.compareTo(endDate2) * -1;
-						}
-					}
-				}
-			};
-			
-			Collections.sort(scorecardMonthlyResults, cmp);
-			
-			Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = scorecardMonthlyResults.iterator();
-			while (itrScorecardMonthlyResults.hasNext()) {
-				ScorecardMonthlyResult nextResult = itrScorecardMonthlyResults.next();
-				results.add(new ClassIDPair(nextResult.getID(), nextResult.getClass().getCanonicalName()));
-			}
+//
+//		try {
+//			AgentScorecard host = (AgentScorecard) syncAgentService.systemGetById(pair);
+//			if (host == null) {
+//				log.warn("Unable to calculate scorecardMonthlyResults: Invalid objectId");
+//				return results;
+//			}
+//
+//			// Setup fieldsToWatch.
+//			Collection<String> fieldsToWatch = new HashSet<String>();
+//
+//			List<ScorecardMonthlyResult> scorecardMonthlyResults = new ArrayList<ScorecardMonthlyResult>();
+//
+//			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+//			accessManager.addWatcherField(pair, "weekDate", fieldsToWatch);
+//			Date weekDate = host.getWeekDate();
+//			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+//			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+//
+//			if (agent!= null && weekDate != null && weekDate.getTime() > 0) {
+//				DateTime weekDateTime = new DateTime(weekDate.getTime());
+//
+//				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "scorecardMonthlyResults", fieldsToWatch);
+//				Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = agent.getScorecardMonthlyResults().iterator();
+//				while (itrScorecardMonthlyResults.hasNext()) {
+//					ScorecardMonthlyResult scorecardMonthlyResult = syncAgentService.systemGetByObject(itrScorecardMonthlyResults.next());
+//					if (scorecardMonthlyResult != null) {
+//						accessManager.addWatcherField(BaseDataObject.toClassIdPair(scorecardMonthlyResult), "endDate", fieldsToWatch);
+//						Date endDate = scorecardMonthlyResult.getEndDate();
+//						if (endDate != null && endDate.getTime() > 0) {
+//							DateTime endDateTime = new DateTime(endDate.getTime());
+//
+//							int monthsBetween = Months.monthsBetween(endDateTime, weekDateTime).getMonths();
+//
+//							if (monthsBetween <= 5 && monthsBetween >= 0) {
+//								scorecardMonthlyResults.add(scorecardMonthlyResult);
+//							}
+//						}
+//					}
+//				}
+//			}
+//
+//			Comparator<ScorecardMonthlyResult> cmp = new Comparator<ScorecardMonthlyResult>() {
+//
+//				@Override
+//				public int compare(ScorecardMonthlyResult o1, ScorecardMonthlyResult o2) {
+//					if (o1 == null && o2 == null) {
+//						return 0;
+//					}
+//					else if (o1 == null) {
+//						return 1;
+//					}
+//					else if (o2 == null) {
+//						return -1;
+//					}
+//					else {
+//						Date endDate1 = o1.getEndDate();
+//						Date endDate2 = o2.getEndDate();
+//
+//						if (endDate1 == null && endDate2 == null) {
+//							return 0;
+//						}
+//						else if (endDate1 == null) {
+//							return 1;
+//						}
+//						else if (endDate2 == null) {
+//							return -1;
+//						}
+//						else {
+//							return endDate1.compareTo(endDate2) * -1;
+//						}
+//					}
+//				}
+//			};
+//
+//			Collections.sort(scorecardMonthlyResults, cmp);
+//
+//			Iterator<ScorecardMonthlyResult> itrScorecardMonthlyResults = scorecardMonthlyResults.iterator();
+//			while (itrScorecardMonthlyResults.hasNext()) {
+//				ScorecardMonthlyResult nextResult = itrScorecardMonthlyResults.next();
+//				results.add(new ClassIDPair(nextResult.getID(), nextResult.getClass().getCanonicalName()));
+//			}
+//
+//			// Register all the fields to watch for this ChangeWatcher. Whenever
+//			// ANY of these fields change, this ChangeWatcher will get re-run
+//			accessManager.updateWatcherFields(pair, "scorecardMonthlyResults", fieldsToWatch);
+//
+//			// Store the result for caching, and also for comparing new results to see if there has been a change.
+//			accessManager.saveChangeWatcherResult(pair, "scorecardMonthlyResults", results);
+//		} catch(Exception e) {
+//			log.error("Unable to calculate scorecardMonthlyResults", e);
+//		}
 
-			// Register all the fields to watch for this ChangeWatcher. Whenever
-			// ANY of these fields change, this ChangeWatcher will get re-run
-			accessManager.updateWatcherFields(pair, "scorecardMonthlyResults", fieldsToWatch);
-			
-			// Store the result for caching, and also for comparing new results to see if there has been a change.
-			accessManager.saveChangeWatcherResult(pair, "scorecardMonthlyResults", results);
-		} catch(Exception e) {
-			log.error("Unable to calculate scorecardMonthlyResults", e);
-		}
-		
 		return results;
 	}
 

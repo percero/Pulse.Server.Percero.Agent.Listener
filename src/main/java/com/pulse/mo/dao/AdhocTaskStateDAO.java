@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> implements IDataAccessObject<AdhocTaskState> {
@@ -41,6 +44,7 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"ADHOC_TASK_STATE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"ADHOC_TASK_STATE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK_STATE\" \"ADHOC_TASK_STATE\"";
 	private String whereClause = "  WHERE \"ADHOC_TASK_STATE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_TASK_STATE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK_STATE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK_STATE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 	
 	@Override
 	protected AdhocTaskState extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	AdhocTaskState nextResult = new AdhocTaskState();
     	
+		
+AdhocTaskState nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new AdhocTaskState();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -153,9 +165,11 @@ public class AdhocTaskStateDAO extends SqlDataAccessObject<AdhocTaskState> imple
 			nextResult.setName(rs.getString("NAME"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

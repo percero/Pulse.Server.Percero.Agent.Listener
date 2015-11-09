@@ -106,20 +106,7 @@ public void setName(String name)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ScorecardMeasure.class, mappedBy="measure", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ScorecardMeasure> scorecardMeasures;
-public List<ScorecardMeasure> getScorecardMeasures() {
-	return this.scorecardMeasures;
-}
-
-public void setScorecardMeasures(List<ScorecardMeasure> value) {
-	this.scorecardMeasures = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -162,23 +149,6 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Measure of Scorecard Measure relationship
-objectJson += ",\"scorecardMeasures\":[";
-		
-		if (getScorecardMeasures() != null) {
-			int scorecardMeasuresCounter = 0;
-			for(ScorecardMeasure nextScorecardMeasures : getScorecardMeasures()) {
-				if (scorecardMeasuresCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextScorecardMeasures).toEmbeddedJson();
-					scorecardMeasuresCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -198,7 +168,6 @@ objectJson += ",\"scorecardMeasures\":[";
 
 
 		// Target Relationships
-		this.scorecardMeasures = (List<ScorecardMeasure>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardMeasures");
 
 
 	}
@@ -208,7 +177,6 @@ objectJson += ",\"scorecardMeasures\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ScorecardMeasure.class, "measure"));
 
 		
 		return listSetters;

@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+EmailAddress
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String emailAddress;
+
+public String getEmailAddress() 
+{
+	return this.emailAddress;
+}
+
+public void setEmailAddress(String emailAddress)
+{
+	this.emailAddress = emailAddress;
+}/*
 FirstName
 Notes:
 */
@@ -136,23 +153,6 @@ public void setLastName(String lastName)
 {
 	this.lastName = lastName;
 }/*
-EmailAddress
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String emailAddress;
-
-public String getEmailAddress() 
-{
-	return this.emailAddress;
-}
-
-public void setEmailAddress(String emailAddress)
-{
-	this.emailAddress = emailAddress;
-}/*
 FullName
 Notes:
 */
@@ -177,19 +177,6 @@ public void setFullName(String fullName)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="managerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> managerCorrectiveActions;
-public List<CorrectiveAction> getManagerCorrectiveActions() {
-	return this.managerCorrectiveActions;
-}
-
-public void setManagerCorrectiveActions(List<CorrectiveAction> value) {
-	this.managerCorrectiveActions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="supervisorManagerEmployee", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CorrectiveAction> supervisorCorrectiveActions;
 public List<CorrectiveAction> getSupervisorCorrectiveActions() {
@@ -198,19 +185,6 @@ public List<CorrectiveAction> getSupervisorCorrectiveActions() {
 
 public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
 	this.supervisorCorrectiveActions = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="hREmployee", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> hRCorrectiveActions;
-public List<CorrectiveAction> getHRCorrectiveActions() {
-	return this.hRCorrectiveActions;
-}
-
-public void setHRCorrectiveActions(List<CorrectiveAction> value) {
-	this.hRCorrectiveActions = value;
 }
 
 
@@ -229,6 +203,27 @@ public void setHRCorrectiveActions(List<CorrectiveAction> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Email Address property
+		objectJson += ",\"emailAddress\":";
+		
+		if (getEmailAddress() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the First Name property
 		objectJson += ",\"firstName\":";
 		
@@ -292,27 +287,6 @@ public void setHRCorrectiveActions(List<CorrectiveAction> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Email Address property
-		objectJson += ",\"emailAddress\":";
-		
-		if (getEmailAddress() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmailAddress());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Full Name property
 		objectJson += ",\"fullName\":";
 		
@@ -340,23 +314,6 @@ public void setHRCorrectiveActions(List<CorrectiveAction> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Manager Employee of Manager Corrective Action relationship
-objectJson += ",\"managerCorrectiveActions\":[";
-		
-		if (getManagerCorrectiveActions() != null) {
-			int managerCorrectiveActionsCounter = 0;
-			for(CorrectiveAction nextManagerCorrectiveActions : getManagerCorrectiveActions()) {
-				if (managerCorrectiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextManagerCorrectiveActions).toEmbeddedJson();
-					managerCorrectiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the Supervisor Manager Employee of Supervisor Corrective Action relationship
 objectJson += ",\"supervisorCorrectiveActions\":[";
 		
@@ -374,23 +331,6 @@ objectJson += ",\"supervisorCorrectiveActions\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the HR Employee of HR Corrective Action relationship
-objectJson += ",\"hRCorrectiveActions\":[";
-		
-		if (getHRCorrectiveActions() != null) {
-			int hRCorrectiveActionsCounter = 0;
-			for(CorrectiveAction nextHRCorrectiveActions : getHRCorrectiveActions()) {
-				if (hRCorrectiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextHRCorrectiveActions).toEmbeddedJson();
-					hRCorrectiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -402,14 +342,14 @@ objectJson += ",\"hRCorrectiveActions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the First Name property
 		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
 		//From value of the Last Name property
 		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the Full Name property
 		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
 
@@ -418,9 +358,7 @@ objectJson += ",\"hRCorrectiveActions\":[";
 
 
 		// Target Relationships
-		this.managerCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "managerCorrectiveActions");
 		this.supervisorCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "supervisorCorrectiveActions");
-		this.hRCorrectiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "hRCorrectiveActions");
 
 
 	}
@@ -430,8 +368,6 @@ objectJson += ",\"hRCorrectiveActions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "employee"));
 
 		

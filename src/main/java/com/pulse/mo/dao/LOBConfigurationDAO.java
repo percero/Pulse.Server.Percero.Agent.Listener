@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> implements IDataAccessObject<LOBConfiguration> {
@@ -41,7 +44,8 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = "";
+	public static final String SHELL_ONLY_SELECT = "\"LOB_CONFIGURATION\".\"ID\"";
+	public static final String SQL_VIEW = ",\"LOB_CONFIGURATION\".\"LOB_ID\"";
 	private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION\" \"LOB_CONFIGURATION\"";
 	private String whereClause = "  WHERE \"LOB_CONFIGURATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"LOB_CONFIGURATION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"LOB_CONFIGURATION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_LOB_CONFIGURATION (\"ID\") VALUES (?)";
+		return "INSERT INTO TBL_LOB_CONFIGURATION (\"ID\",\"LOB_ID\") VALUES (?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_LOB_CONFIGURATION SET  WHERE \"ID\"=?";
+		return "UPDATE TBL_LOB_CONFIGURATION SET \"LOB_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,23 +147,50 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected LOBConfiguration extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	LOBConfiguration nextResult = new LOBConfiguration();
     	
+		
+LOBConfiguration nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new LOBConfiguration();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			
+			String lobID = rs.getString("LOB_ID");
+if (StringUtils.hasText(lobID)) {
+LOB lob = new LOB();
+lob.setID(lobID);
+nextResult.setLOB(lob);
+}
+
+
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
 	protected void setBaseStatmentInsertParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
+
+if (perceroObject.getLOB() == null)
+{
+pstmt.setString(2, null);
+}
+else
+{
+		pstmt.setString(2, perceroObject.getLOB().getID());
+}
+
 
 		
 	}
@@ -183,7 +214,17 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	@Override
 	protected void setPreparedStatmentUpdateParams(LOBConfiguration perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getID());
+		
+if (perceroObject.getLOB() == null)
+{
+pstmt.setString(1, null);
+}
+else
+{
+		pstmt.setString(1, perceroObject.getLOB().getID());
+}
+
+pstmt.setString(2, perceroObject.getID());
 
 		
 	}
@@ -212,7 +253,17 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		
+		boolean useLOBID = theQueryObject.getLOB() != null && (excludeProperties == null || !excludeProperties.contains("lOB"));
+
+if (useLOBID)
+{
+sql += " WHERE ";
+sql += " \"LOB_ID\" =? ";
+paramValues.add(theQueryObject.getLOB().getID());
+propertyCounter++;
+}
+
+
 
 		if (propertyCounter == 0) {
 			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -223,11 +274,11 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_LOB_CONFIGURATION(?)}";
+		return "{call UPDATE_LOB_CONFIGURATION(?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_LOB_CONFIGURATION(?)}";
+		return "{call CREATE_LOB_CONFIGURATION(?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
