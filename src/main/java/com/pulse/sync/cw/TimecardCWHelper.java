@@ -20,6 +20,7 @@ import com.pulse.mo.Notification;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
+import com.pulse.sync.enums.TimecardStatus;
 
 @Component
 public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
@@ -27,6 +28,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     private static final Logger log = Logger.getLogger(TimecardCWHelper.class);
 
 
+    public static final String SHIFT_STATUS_NOTIFICATION = "shiftStatusNotification";
     public static final String SHIFT = "shift";
     public static final String CURRENTSTATUS = "currentStatus";
 
@@ -45,19 +47,19 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         } catch (Exception e) {
         }
 
-        if (fieldName.equalsIgnoreCase("shiftStatusNotification")) {
+        if (fieldName.equalsIgnoreCase(SHIFT_STATUS_NOTIFICATION)) {
             try {
                 result = calc_shiftStatusNotification(pair);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
-                log.error("Unable to calculate shiftStatusNotification", e);
+                log.error("Unable to calculate " + SHIFT_STATUS_NOTIFICATION, e);
             }
-        } else if (fieldName.equalsIgnoreCase("shift")) {
+        } else if (SHIFT.equalsIgnoreCase(fieldName)) {
             try {
                 result = calc_shift(pair, SHIFT);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
-                log.error("Unable to calculate shift", e);
+                log.error("Unable to calculate " + SHIFT, e);
             }
         } else if (fieldName.equalsIgnoreCase("currentStatus")) {
             try {
@@ -77,9 +79,9 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         Boolean result = Boolean.FALSE;
 
         try {
-                       Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+        	Timecard host = (Timecard) syncAgentService.systemGetById(pair);
             if (host == null) {
-                log.warn("Unable to calculate shift: Invalid objectId");
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
                 return result;
             }
 
@@ -112,7 +114,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
 
         } catch (Exception e) {
-            log.error("Unable to calculate shift", e);
+            log.error("Unable to calculate " + derivedValueName, e);
         }
         return result;
     }
@@ -123,7 +125,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         try {
             Timecard host = (Timecard) syncAgentService.systemGetById(pair);
             if (host == null) {
-                log.warn("Unable to calculate currentStatus: Invalid objectId");
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
                 return result;
             }
 
@@ -131,16 +133,11 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // Setup fieldsToWatch.
             Collection<String> fieldsToWatch = new HashSet<String>();
 
-            // We want to re-trigger this change watcher when Timecard.date changes.
-            accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
-            // We want to re-trigger this change watcher when Timecard.endDate changes.
-            accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
-
-            DateTime timecardDateTime = new DateTime(host.getDate());
-            DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-
-
-/*
+            // We want to re-trigger this change watcher when Timecard.shift changes.
+            accessManager.addWatcherField(pair, "shift", fieldsToWatch);
+            Boolean shift = host.getShift();
+            
+            /**
             UNKNOWN --> NOT STARTED --> IN PROGRESS --> COMPLETED
             
             IN PROGRESS - would be based on the ON_TIME field and the OFF_TIME field for the
@@ -152,7 +149,39 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             time of day it is for the agents current time zone, then their shift is complete. For example if
             the OFF_TIME field equals 13:30 on 11/5 and teh current time is 14:12 CST (and that is the agents
             local time), then that agents shift is COMPLETED
-*/
+             */
+            
+            if (shift) {
+            	// The Timecard DOES have a shift.
+            	// We want to re-trigger this change watcher when Timecard.date changes.
+            	accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
+            	// We want to re-trigger this change watcher when Timecard.endDate changes.
+            	accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
+            	
+            	DateTime timecardStartDateTime = new DateTime(host.getStartDate());
+            	DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+            	
+            	DateTime agentsLocalTime = new DateTime(System.currentTimeMillis());
+            	
+            	if (agentsLocalTime.isBefore(timecardStartDateTime)) {
+            		// Local time is BEFORE the time card start date, so status is NOT_STARTED
+            		result = TimecardStatus.NOT_STARTED.getValue();
+            	}
+            	else if (agentsLocalTime.isBefore(timecardEndDateTime)) {
+            		// Local time is AFTER the time card start date and BEFORE the timecard end dtae, so status is IN_PROGRESS
+            		result = TimecardStatus.IN_PROGRESS.getValue();
+            	}
+            	else {
+            		// Local time is AFTER the timecard end dtae, so status is COMPLETED
+            		result = TimecardStatus.COMPLETED.getValue();
+            	}
+            }
+            else {
+            	// The Timecard does NOT have a shift.
+            	result = TimecardStatus.UNKNOWN.getValue();
+            }
+
+            
 
             accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
 
@@ -160,7 +189,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
 
         } catch (Exception e) {
-            log.error("Unable to calculate currentStatus", e);
+            log.error("Unable to calculate " + derivedValueName, e);
         }
         return result;
     }
