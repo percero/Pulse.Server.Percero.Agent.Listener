@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObject<Site> {
@@ -41,6 +44,7 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"SITE\".\"ID\"";
 	public static final String SQL_VIEW = ",\"SITE\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"SITE\" \"SITE\"";
 	private String whereClause = "  WHERE \"SITE\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName + " WHERE \"SITE\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SITE\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"SITE\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 	
 	@Override
 	protected Site extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	Site nextResult = new Site();
     	
+		
+Site nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new Site();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -153,9 +165,11 @@ public class SiteDAO extends SqlDataAccessObject<Site> implements IDataAccessObj
 			nextResult.setName(rs.getString("NAME"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -249,6 +263,71 @@ propertyCounter++;
 	}
 	
 	
+public Site createObject(Site perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select SITE_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

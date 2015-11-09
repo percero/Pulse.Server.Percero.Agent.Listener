@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> implements IDataAccessObject<DevelopmentPlan> {
@@ -41,7 +44,8 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SQL_VIEW = ",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"DEVELOPMENT_PLAN\".\"ID\"";
+	public static final String SQL_VIEW = ",\"DEVELOPMENT_PLAN\".\"CREATED_ON\",\"DEVELOPMENT_PLAN\".\"END_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_BY\",\"DEVELOPMENT_PLAN\".\"START_DATE\",\"DEVELOPMENT_PLAN\".\"UPDATED_ON\",\"DEVELOPMENT_PLAN\".\"RANK\",\"DEVELOPMENT_PLAN\".\"CREATED_BY\",\"DEVELOPMENT_PLAN\".\"DESCRIPTION\",\"DEVELOPMENT_PLAN\".\"NAME\",\"DEVELOPMENT_PLAN\".\"SCORECARD_MEASURE_ID\"";
 	private String selectFromStatementTableName = " FROM \"DEVELOPMENT_PLAN\" \"DEVELOPMENT_PLAN\"";
 	private String whereClause = "  WHERE \"DEVELOPMENT_PLAN\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DEVELOPMENT_PLAN\".\"ID\"= SQLLIST.column_value";
@@ -57,7 +61,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName + " WHERE \"DEVELOPMENT_PLAN\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"DEVELOPMENT_PLAN\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"DEVELOPMENT_PLAN\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -128,12 +132,12 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DEVELOPMENT_PLAN (\"ID\",\"UPDATED_BY\",\"CREATED_ON\",\"END_DATE\",\"START_DATE\",\"UPDATED_ON\",\"RANK\",\"CREATED_BY\",\"DESCRIPTION\",\"NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_DEVELOPMENT_PLAN (\"ID\",\"CREATED_ON\",\"END_DATE\",\"UPDATED_BY\",\"START_DATE\",\"UPDATED_ON\",\"RANK\",\"CREATED_BY\",\"DESCRIPTION\",\"NAME\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DEVELOPMENT_PLAN SET \"UPDATED_BY\"=?,\"CREATED_ON\"=?,\"END_DATE\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_DEVELOPMENT_PLAN SET \"CREATED_ON\"=?,\"END_DATE\"=?,\"UPDATED_BY\"=?,\"START_DATE\"=?,\"UPDATED_ON\"=?,\"RANK\"=?,\"CREATED_BY\"=?,\"DESCRIPTION\"=?,\"NAME\"=?,\"SCORECARD_MEASURE_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -143,48 +147,70 @@ public class DevelopmentPlanDAO extends SqlDataAccessObject<DevelopmentPlan> imp
 	
 	@Override
 	protected DevelopmentPlan extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	DevelopmentPlan nextResult = new DevelopmentPlan();
     	
+		
+DevelopmentPlan nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new DevelopmentPlan();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
     	if (!shellOnly) 
 		{
-			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+			nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+
 
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
 
+
 nextResult.setRank(rs.getInt("RANK"));
+
 
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
+
 nextResult.setDescription(rs.getString("DESCRIPTION"));
+
 
 nextResult.setName(rs.getString("NAME"));
 
+
+String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
+if (StringUtils.hasText(scorecardmeasureID)) {
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
-scorecardmeasure.setID(rs.getString("SCORECARD_MEASURE_ID"));
+scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
 	protected void setBaseStatmentInsertParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setString(4, perceroObject.getUpdatedBy());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,7, perceroObject.getRank());
@@ -224,9 +250,9 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(DevelopmentPlan perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		pstmt.setString(1, perceroObject.getUpdatedBy());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setString(3, perceroObject.getUpdatedBy());
 pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,6, perceroObject.getRank());
@@ -272,28 +298,11 @@ pstmt.setString(11, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
-
-if (useUpdatedBy)
-{
-sql += " WHERE ";
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+		boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
 
 if (useCreatedOn)
 {
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
 sql += " WHERE ";
-}
 sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
@@ -313,6 +322,23 @@ sql += " WHERE ";
 }
 sql += " \"END_DATE\" =? ";
 paramValues.add(theQueryObject.getEndDate());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
@@ -458,6 +484,71 @@ propertyCounter++;
 	}
 	
 	
+public DevelopmentPlan createObject(DevelopmentPlan perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select DEVELOPMENT_PLAN_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
 	
 	
 }

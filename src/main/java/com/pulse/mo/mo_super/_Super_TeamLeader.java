@@ -102,40 +102,6 @@ public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
 }/*
-LastName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String lastName;
-
-public String getLastName() 
-{
-	return this.lastName;
-}
-
-public void setLastName(String lastName)
-{
-	this.lastName = lastName;
-}/*
-FirstName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String firstName;
-
-public String getFirstName() 
-{
-	return this.firstName;
-}
-
-public void setFirstName(String firstName)
-{
-	this.firstName = firstName;
-}/*
 PhotoUri
 Notes:
 */
@@ -152,6 +118,23 @@ public String getPhotoUri()
 public void setPhotoUri(String photoUri)
 {
 	this.photoUri = photoUri;
+}/*
+LastName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String lastName;
+
+public String getLastName() 
+{
+	return this.lastName;
+}
+
+public void setLastName(String lastName)
+{
+	this.lastName = lastName;
 }/*
 EmployeeId
 Notes:
@@ -186,6 +169,23 @@ public String getFullName()
 public void setFullName(String fullName)
 {
 	this.fullName = fullName;
+}/*
+FirstName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String firstName;
+
+public String getFirstName() 
+{
+	return this.firstName;
+}
+
+public void setFirstName(String firstName)
+{
+	this.firstName = firstName;
 }
 
 	//////////////////////////////////////////////////////
@@ -233,14 +233,14 @@ public void setAlerts(List<Alert> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=Setting.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<Setting> settings;
-public List<Setting> getSettings() {
-	return this.settings;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=UserSession.class, mappedBy="currentTeamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+private List<UserSession> userSessions;
+public List<UserSession> getUserSessions() {
+	return this.userSessions;
 }
 
-public void setSettings(List<Setting> value) {
-	this.settings = value;
+public void setUserSessions(List<UserSession> value) {
+	this.userSessions = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -259,14 +259,14 @@ public void setTeamLeaderImpersonations(List<TeamLeaderImpersonation> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=UserSession.class, mappedBy="currentTeamLeader", cascade=javax.persistence.CascadeType.REMOVE)
-private List<UserSession> userSessions;
-public List<UserSession> getUserSessions() {
-	return this.userSessions;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=Setting.class, mappedBy="teamLeader", cascade=javax.persistence.CascadeType.REMOVE)
+private List<Setting> settings;
+public List<Setting> getSettings() {
+	return this.settings;
 }
 
-public void setUserSessions(List<UserSession> value) {
-	this.userSessions = value;
+public void setSettings(List<Setting> value) {
+	this.settings = value;
 }
 
 
@@ -319,48 +319,6 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Last Name property
-		objectJson += ",\"lastName\":";
-		
-		if (getLastName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getLastName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the First Name property
-		objectJson += ",\"firstName\":";
-		
-		if (getFirstName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getFirstName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Photo Uri property
 		objectJson += ",\"photoUri\":";
 		
@@ -371,6 +329,27 @@ public void setSupervisor(Supervisor value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getPhotoUri());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Last Name property
+		objectJson += ",\"lastName\":";
+		
+		if (getLastName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getLastName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -413,6 +392,27 @@ public void setSupervisor(Supervisor value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getFullName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the First Name property
+		objectJson += ",\"firstName\":";
+		
+		if (getFirstName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getFirstName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -493,17 +493,17 @@ objectJson += ",\"alerts\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Team Leader of Setting relationship
-objectJson += ",\"settings\":[";
+//Retrieve value of the Current Team Leader of User Session relationship
+objectJson += ",\"userSessions\":[";
 		
-		if (getSettings() != null) {
-			int settingsCounter = 0;
-			for(Setting nextSettings : getSettings()) {
-				if (settingsCounter > 0)
+		if (getUserSessions() != null) {
+			int userSessionsCounter = 0;
+			for(UserSession nextUserSessions : getUserSessions()) {
+				if (userSessionsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextSettings).toEmbeddedJson();
-					settingsCounter++;
+					objectJson += ((BaseDataObject) nextUserSessions).toEmbeddedJson();
+					userSessionsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -527,17 +527,17 @@ objectJson += ",\"teamLeaderImpersonations\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Current Team Leader of User Session relationship
-objectJson += ",\"userSessions\":[";
+//Retrieve value of the Team Leader of Setting relationship
+objectJson += ",\"settings\":[";
 		
-		if (getUserSessions() != null) {
-			int userSessionsCounter = 0;
-			for(UserSession nextUserSessions : getUserSessions()) {
-				if (userSessionsCounter > 0)
+		if (getSettings() != null) {
+			int settingsCounter = 0;
+			for(Setting nextSettings : getSettings()) {
+				if (settingsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextUserSessions).toEmbeddedJson();
-					userSessionsCounter++;
+					objectJson += ((BaseDataObject) nextSettings).toEmbeddedJson();
+					settingsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -557,16 +557,16 @@ objectJson += ",\"userSessions\":[";
 		// Properties
 		//From value of the Email Address property
 		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the Last Name property
-		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
-		//From value of the First Name property
-		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
+		//From value of the Last Name property
+		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Full Name property
 		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
+		//From value of the First Name property
+		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 
 		
 		// Source Relationships
@@ -577,9 +577,9 @@ objectJson += ",\"userSessions\":[";
 		this.notifications = (List<Notification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 		this.agents = (List<Agent>) JsonUtils.getJsonListPerceroObject(jsonObject, "agents");
 		this.alerts = (List<Alert>) JsonUtils.getJsonListPerceroObject(jsonObject, "alerts");
-		this.settings = (List<Setting>) JsonUtils.getJsonListPerceroObject(jsonObject, "settings");
-		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
 		this.userSessions = (List<UserSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "userSessions");
+		this.teamLeaderImpersonations = (List<TeamLeaderImpersonation>) JsonUtils.getJsonListPerceroObject(jsonObject, "teamLeaderImpersonations");
+		this.settings = (List<Setting>) JsonUtils.getJsonListPerceroObject(jsonObject, "settings");
 
 
 	}
@@ -592,9 +592,9 @@ objectJson += ",\"userSessions\":[";
 		listSetters.add(MappedClass.getFieldSetters(Notification.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Agent.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(Alert.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(Setting.class, "teamleader"));
-		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamleader"));
 		listSetters.add(MappedClass.getFieldSetters(UserSession.class, "teamleader"));
+		listSetters.add(MappedClass.getFieldSetters(TeamLeaderImpersonation.class, "teamleader"));
+		listSetters.add(MappedClass.getFieldSetters(Setting.class, "teamleader"));
 
 		
 		return listSetters;

@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFrequency> implements IDataAccessObject<NotificationFrequency> {
@@ -41,6 +44,7 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"NOTIFICATION_FREQUENCY\".\"ID\"";
 	public static final String SQL_VIEW = ",\"NOTIFICATION_FREQUENCY\".\"NAME\"";
 	private String selectFromStatementTableName = " FROM \"NOTIFICATION_FREQUENCY\" \"NOTIFICATION_FREQUENCY\"";
 	private String whereClause = "  WHERE \"NOTIFICATION_FREQUENCY\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName + " WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION_FREQUENCY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"NOTIFICATION_FREQUENCY\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 	
 	@Override
 	protected NotificationFrequency extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	NotificationFrequency nextResult = new NotificationFrequency();
     	
+		
+NotificationFrequency nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new NotificationFrequency();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -153,9 +165,11 @@ public class NotificationFrequencyDAO extends SqlDataAccessObject<NotificationFr
 			nextResult.setName(rs.getString("NAME"));
 
 
+
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	

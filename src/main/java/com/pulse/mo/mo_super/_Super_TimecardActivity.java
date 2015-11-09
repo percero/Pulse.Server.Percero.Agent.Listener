@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+Code
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String code;
+
+public String getCode() 
+{
+	return this.code;
+}
+
+public void setCode(String code)
+{
+	this.code = code;
+}/*
 Name
 Notes:
 */
@@ -101,23 +118,6 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
-}/*
-Description
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String description;
-
-public String getDescription() 
-{
-	return this.description;
-}
-
-public void setDescription(String description)
-{
-	this.description = description;
 }/*
 NonBillable
 Notes:
@@ -136,22 +136,22 @@ public void setNonBillable(Boolean nonBillable)
 {
 	this.nonBillable = nonBillable;
 }/*
-Code
+Description
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String code;
+private String description;
 
-public String getCode() 
+public String getDescription() 
 {
-	return this.code;
+	return this.description;
 }
 
-public void setCode(String code)
+public void setDescription(String description)
 {
-	this.code = code;
+	this.description = description;
 }
 
 	//////////////////////////////////////////////////////
@@ -173,6 +173,27 @@ public void setCode(String code)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Code property
+		objectJson += ",\"code\":";
+		
+		if (getCode() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCode());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
 		
@@ -194,6 +215,13 @@ public void setCode(String code)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Non Billable property
+		objectJson += ",\"nonBillable\":";
+		if (getNonBillable() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNonBillable();
+		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
 		
@@ -204,34 +232,6 @@ public void setCode(String code)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Non Billable property
-		objectJson += ",\"nonBillable\":";
-		if (getNonBillable() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNonBillable();
-		}
-		//Retrieve value of the Code property
-		objectJson += ",\"code\":";
-		
-		if (getCode() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCode());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -260,14 +260,14 @@ public void setCode(String code)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Non Billable property
-		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
 		//From value of the Code property
 		setCode(JsonUtils.getJsonString(jsonObject, "code"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Non Billable property
+		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 
 		
 		// Source Relationships

@@ -12,7 +12,7 @@
 
 	<groupId>com.pulse</groupId>
 	<artifactId>Pulse_Listener</artifactId>
-	<version>0.0.24-SNAPSHOT</version>
+	<version>0.0.40-SNAPSHOT</version>
 
 
 	<name>Pulse SyncAgentListener</name>
@@ -20,7 +20,7 @@
 	<properties>
 		<repoSshUri>git@github.com:percero/Pulse.Server.Percero.Agent.Listener.git</repoSshUri>
 		<mockito-core.version>1.9.5</mockito-core.version>
-		<syncengine.version>1.1.33-SNAPSHOT</syncengine.version>
+		<syncengine.version>1.1.38-SNAPSHOT</syncengine.version>
     </properties>
 
 	<scm>
@@ -66,6 +66,13 @@
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0</version>
 		</dependency>
+		
+		<!-- Connection Pool -->
+	    <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>2.4.1</version>
+	    </dependency>
 	</dependencies>
 
 	<build>

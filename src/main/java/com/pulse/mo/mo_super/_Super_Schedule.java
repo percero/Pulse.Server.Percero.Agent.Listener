@@ -102,73 +102,22 @@ public void setEndTime(Date endTime)
 {
 	this.endTime = endTime;
 }/*
-StartTime
+TotalTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String startTime;
+private Double totalTime;
 
-public String getStartTime() 
+public Double getTotalTime() 
 {
-	return this.startTime;
+	return this.totalTime;
 }
 
-public void setStartTime(String startTime)
+public void setTotalTime(Double totalTime)
 {
-	this.startTime = startTime;
-}/*
-Shift
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer shift;
-
-public Integer getShift() 
-{
-	return this.shift;
-}
-
-public void setShift(Integer shift)
-{
-	this.shift = shift;
-}/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
+	this.totalTime = totalTime;
 }/*
 StateName
 Notes:
@@ -187,22 +136,73 @@ public void setStateName(String stateName)
 {
 	this.stateName = stateName;
 }/*
-TotalTime
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double totalTime;
+private Date endDate;
 
-public Double getTotalTime() 
+public Date getEndDate() 
 {
-	return this.totalTime;
+	return this.endDate;
 }
 
-public void setTotalTime(Double totalTime)
+public void setEndDate(Date endDate)
 {
-	this.totalTime = totalTime;
+	this.endDate = endDate;
+}/*
+StartTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startTime;
+
+public Date getStartTime() 
+{
+	return this.startTime;
+}
+
+public void setStartTime(Date startTime)
+{
+	this.startTime = startTime;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
+}/*
+Shift
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer shift;
+
+public Integer getShift() 
+{
+	return this.shift;
+}
+
+public void setShift(Integer shift)
+{
+	this.shift = shift;
 }
 
 	//////////////////////////////////////////////////////
@@ -257,61 +257,12 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getEndTime().getTime();
 		}
-		//Retrieve value of the Start Time property
-		objectJson += ",\"startTime\":";
-		
-		if (getStartTime() == null)
+		//Retrieve value of the Total Time property
+		objectJson += ",\"totalTime\":";
+		if (getTotalTime() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getStartTime());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Shift property
-		objectJson += ",\"shift\":";
-		
-		if (getShift() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getShift());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndDate().getTime();
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
+			objectJson += getTotalTime();
 		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
@@ -334,12 +285,47 @@ public void setAgent(Agent value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getTotalTime();
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Start Time property
+		objectJson += ",\"startTime\":";
+		if (getStartTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartTime().getTime();
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the Shift property
+		objectJson += ",\"shift\":";
+		
+		if (getShift() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getShift());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -389,18 +375,18 @@ objectJson += ",\"scheduleEntries\":[";
 		// Properties
 		//From value of the End Time property
 		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
-		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonString(jsonObject, "startTime"));
-		//From value of the Shift property
-		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the State Name property
-		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
 		//From value of the Total Time property
 		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
+		//From value of the State Name property
+		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Start Time property
+		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Shift property
+		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
 
 		
 		// Source Relationships

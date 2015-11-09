@@ -7,12 +7,12 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import com.percero.agents.auth.vo.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,8 +30,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
 import com.percero.agents.auth.services.IAuthProvider;
+import com.percero.agents.auth.vo.AuthCode;
+import com.percero.agents.auth.vo.AuthProviderResponse;
+import com.percero.agents.auth.vo.BasicAuthCredential;
+import com.percero.agents.auth.vo.ServiceIdentifier;
+import com.percero.agents.auth.vo.ServiceUser;
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.services.DataProviderManager;
+import com.percero.agents.sync.services.IDataProvider;
+import com.percero.agents.sync.services.ISyncAgentService;
+import com.percero.framework.vo.IPerceroObject;
 import com.pulse.auth.vo.PulseUserInfo;
+import com.pulse.mo.Email;
+import com.pulse.mo.PulseUser;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.dao.TeamLeaderDAO;
 
@@ -49,7 +60,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     public String getID() {
         return ID;
     }
-    private TeamLeaderDAO teamLeaderDAO;
+//    private TeamLeaderDAO teamLeaderDAO;
+	private ISyncAgentService syncAgentService = null;
     private boolean insecureMode;
 
 
@@ -92,6 +104,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                 pulseUserInfo = new PulseUserInfo();
                 pulseUserInfo.setEmployeeId(employeeId);
                 pulseUserInfo.setUserLogin(cred.getUsername());
+
             }
             else {
                 endpoint = hostPortAndContext + "/retrieve_user";
@@ -105,28 +118,34 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                     pulseUserInfo = objectMapper.readValue(body, PulseUserInfo.class);
                     // Uncomment this line when we start getting non-static employeeIds... or never, it shouldn't matter
                     // result.getIdentifiers().add(new ServiceIdentifier("pulseEmployeeId", pulseUserInfo.getEmployeeId()));
-                    if(pulseUserInfo.getEmployeeId() == null)
+                    if(pulseUserInfo.getEmployeeId() == null) {
                         response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                        logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+                    }
 
                 } catch (JsonMappingException jme) {
                     logger.warn(jme.getMessage(), jme);
                     response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
                     response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
                 }
             }
 
             try {
             	if ( pulseUserInfo != null && StringUtils.hasText(pulseUserInfo.getEmployeeId()) ) {
+            		long timeStart = System.currentTimeMillis();
 	            	logger.debug("Retrieving TeamLeader object for user/employee " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
 	                TeamLeader example = new TeamLeader();
 	                example.setEmployeeId(pulseUserInfo.getEmployeeId());
-	                List<TeamLeader> list = teamLeaderDAO.findByExample(example, null, null, false);
+	                IDataProvider teamLeaderDataProvider = DataProviderManager.getInstance().getDataProviderByName(TeamLeader.class.getCanonicalName());
+	                List<IPerceroObject> list = teamLeaderDataProvider.findByExample(example, null, null, false);
 	
 	                // If we found one
-	                if (list.size() > 0) {
-	                    TeamLeader teamLeader = list.get(0);
+	                if (list.size() == 1) {
+	                    TeamLeader teamLeader = (TeamLeader) list.get(0);
 	                    serviceUser = new ServiceUser();
 	                    serviceUser.setId(pulseUserInfo.getEmployeeId());
 	                    serviceUser.setFirstName(teamLeader.getFirstName());
@@ -136,26 +155,93 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 	                    serviceUser.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
 	                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
                         response.serviceUser = serviceUser;
+                        
+                        validateTeamLeader(teamLeader);
+
                         response.authCode = AuthCode.SUCCESS;
+	                }
+	                else if (list.size() > 1) {
+	                	logger.error("LOGIN FAILED: " + list.size() + "s TeamLeader objects found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
+                        response.authCode = PulseAuthCode.MULTIPLE_TEAM_LEADERS;
 	                }
 	                else {
                         logger.warn("LOGIN FAILED: No TeamLeader object found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
                         response.authCode = PulseAuthCode.NO_TEAM_LEADER;
                     }
-            	} else if(response.authCode == null) // code hasn't been set
+	                
+	        		logger.debug("Auth Retrieve PulseUser Time: " + (System.currentTimeMillis() - timeStart) + "ms [TeamLeader: " + pulseUserInfo.getEmployeeId() + "]");
+            	} else if(response.authCode == null) {// code hasn't been set
                     response.authCode = PulseAuthCode.EMPLOYEEID_NOT_FOUND;
+                    logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+            	}
 
             }catch (SyncException se) {
                 logger.warn(se.getMessage(), se);
                 response.authCode = new AuthCode(500, se.getMessage());
+                logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
             }
     	}
-        else
+        else {
             response.authCode = PulseAuthCode.BAD_USER_PASS;
+            logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+        }
 
 
     	return response;
     }
+
+	/**
+	 * @param teamLeader
+	 * @throws SyncException
+	 */
+	private void validateTeamLeader(TeamLeader teamLeader) throws SyncException {
+		// Make sure a valid PulseUser exists for this TeamLeader.
+		IDataProvider pulseUserDataProvider = DataProviderManager.getInstance().getDataProviderByName(PulseUser.class.getCanonicalName());
+		PulseUser thePulseUser = null;
+
+		PulseUser pulseUserExample = new PulseUser();
+		pulseUserExample.setTeamLeader(teamLeader);
+		List<IPerceroObject> listPulseUsers = pulseUserDataProvider.findByExample(pulseUserExample, null, null, false);
+		if (listPulseUsers != null && !listPulseUsers.isEmpty()) {
+			if (listPulseUsers.size() > 1) {
+				logger.error("[PulseHttpAuthProvider] " + listPulseUsers.size() + " PulseUsers found for TeamLeader " + teamLeader.getID());
+			}
+			thePulseUser = (PulseUser) listPulseUsers.get(0);
+		}
+		else {
+			// No valid PulseUser, so create one.
+			logger.debug("[PulseHttpAuthProvider] NO PulseUser found for TeamLeader " + teamLeader.getID() + ", creating new PulseUser");
+			PulseUser newPulseUser = new PulseUser();
+			newPulseUser.setID(UUID.randomUUID().toString());
+			newPulseUser.setTeamLeader(teamLeader);
+			newPulseUser.setEmployeeId(teamLeader.getEmployeeId());
+			newPulseUser.setFirstName(teamLeader.getFirstName());
+			newPulseUser.setLastName(teamLeader.getLastName());
+			thePulseUser = syncAgentService.systemCreateObject(newPulseUser, null);
+			logger.debug("[PulseHttpAuthProvider] PulseUser created");
+		}
+		
+		// Now make sure there is a valid Email for this PulseUser.
+		IDataProvider emailDataProvider = DataProviderManager.getInstance().getDataProviderByName(Email.class.getCanonicalName());
+		Email emailExample = new Email();
+		emailExample.setPulseUser(thePulseUser);
+		List<IPerceroObject> listEmails = emailDataProvider.findByExample(emailExample, null, null, false);
+		if (listEmails != null && !listEmails.isEmpty()) {
+			if (listEmails.size() > 1) {
+				logger.error("[PulseHttpAuthProvider] " + listEmails.size() + " Emails found for PulseUser " + thePulseUser.getID());
+			}
+		}
+		else {
+			// No valid PulseUser, so create one.
+			logger.debug("[PulseHttpAuthProvider] NO Email found for PulseUser " + thePulseUser.getID() + ", creating new Email");
+			Email newEmail = new Email();
+			newEmail.setID(UUID.randomUUID().toString());
+			newEmail.setPulseUser(thePulseUser);
+			newEmail.setEmailAddress(teamLeader.getEmailAddress());
+			syncAgentService.systemCreateObject(newEmail, null);
+			logger.debug("[PulseHttpAuthProvider] Email created");
+		}
+	}
 
     /**
      * @param url
@@ -178,6 +264,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
             HttpResponse response = client.execute(request);
             logger.debug("Got response from auth hostPortAndContext: (" + response.getStatusLine().getStatusCode() + ")" + response.getStatusLine().getReasonPhrase());
             body = IOUtils.toString(response.getEntity().getContent(), "UTF8");
+            logger.debug("Auth Request Time: " + url + " - " + (System.currentTimeMillis()-timeStart) + "ms [" + this.getClass().getName() + "]");
         } catch(ClientProtocolException e){
             logger.warn(e.getMessage(), e);
         } catch(IOException ioe){
@@ -247,11 +334,11 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @param objectMapper
      */
     public PulseHttpAuthProvider(String hostPortAndContext, ObjectMapper objectMapper, boolean trustAllCerts,
-                                 TeamLeaderDAO teamLeaderDAO, boolean insecureMode){
+                                 ISyncAgentService syncAgentService, boolean insecureMode){
         this.hostPortAndContext = hostPortAndContext;
         this.objectMapper = objectMapper;
         this.trustAllCerts = trustAllCerts;
-        this.teamLeaderDAO = teamLeaderDAO;
+        this.syncAgentService  = syncAgentService;
         this.insecureMode = insecureMode;
     }
 

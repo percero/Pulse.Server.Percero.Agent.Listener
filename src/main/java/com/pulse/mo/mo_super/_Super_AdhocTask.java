@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
 WeekDate
 Notes:
 */
@@ -119,22 +136,73 @@ public void setType(Integer type)
 {
 	this.type = type;
 }/*
-TaskDetail
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String taskDetail;
+private Date createdOn;
 
-public String getTaskDetail() 
+public Date getCreatedOn() 
 {
-	return this.taskDetail;
+	return this.createdOn;
 }
 
-public void setTaskDetail(String taskDetail)
+public void setCreatedOn(Date createdOn)
 {
-	this.taskDetail = taskDetail;
+	this.createdOn = createdOn;
+}/*
+PlanId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer planId;
+
+public Integer getPlanId() 
+{
+	return this.planId;
+}
+
+public void setPlanId(Integer planId)
+{
+	this.planId = planId;
+}/*
+DueDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date dueDate;
+
+public Date getDueDate() 
+{
+	return this.dueDate;
+}
+
+public void setDueDate(Date dueDate)
+{
+	this.dueDate = dueDate;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }/*
 UpdatedBy
 Notes:
@@ -170,90 +238,22 @@ public void setCompletedOn(Date completedOn)
 {
 	this.completedOn = completedOn;
 }/*
-DueDate
+TaskDetail
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date dueDate;
+private String taskDetail;
 
-public Date getDueDate() 
+public String getTaskDetail() 
 {
-	return this.dueDate;
+	return this.taskDetail;
 }
 
-public void setDueDate(Date dueDate)
+public void setTaskDetail(String taskDetail)
 {
-	this.dueDate = dueDate;
-}/*
-PlanId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer planId;
-
-public Integer getPlanId() 
-{
-	return this.planId;
-}
-
-public void setPlanId(Integer planId)
-{
-	this.planId = planId;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
-}/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
+	this.taskDetail = taskDetail;
 }
 
 	//////////////////////////////////////////////////////
@@ -314,6 +314,27 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Week Date property
 		objectJson += ",\"weekDate\":";
 		if (getWeekDate() == null)
@@ -342,16 +363,23 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Task Detail property
-		objectJson += ",\"taskDetail\":";
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Plan Id property
+		objectJson += ",\"planId\":";
 		
-		if (getTaskDetail() == null)
+		if (getPlanId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTaskDetail());
+				objectJson += objectMapper.writeValueAsString(getPlanId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -362,6 +390,20 @@ public void setTeamLeader(TeamLeader value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Due Date property
+		objectJson += ",\"dueDate\":";
+		if (getDueDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDueDate().getTime();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Updated By property
 		objectJson += ",\"updatedBy\":";
@@ -391,23 +433,16 @@ public void setTeamLeader(TeamLeader value) {
 		else {
 			objectJson += getCompletedOn().getTime();
 		}
-		//Retrieve value of the Due Date property
-		objectJson += ",\"dueDate\":";
-		if (getDueDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDueDate().getTime();
-		}
-		//Retrieve value of the Plan Id property
-		objectJson += ",\"planId\":";
+		//Retrieve value of the Task Detail property
+		objectJson += ",\"taskDetail\":";
 		
-		if (getPlanId() == null)
+		if (getTaskDetail() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getPlanId());
+				objectJson += objectMapper.writeValueAsString(getTaskDetail());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -418,41 +453,6 @@ public void setTeamLeader(TeamLeader value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
 		}
 
 				
@@ -507,26 +507,26 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Week Date property
 		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Type property
 		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
-		//From value of the Task Detail property
-		setTaskDetail(JsonUtils.getJsonString(jsonObject, "taskDetail"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Plan Id property
+		setPlanId(JsonUtils.getJsonInteger(jsonObject, "planId"));
+		//From value of the Due Date property
+		setDueDate(JsonUtils.getJsonDate(jsonObject, "dueDate"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Completed On property
 		setCompletedOn(JsonUtils.getJsonDate(jsonObject, "completedOn"));
-		//From value of the Due Date property
-		setDueDate(JsonUtils.getJsonDate(jsonObject, "dueDate"));
-		//From value of the Plan Id property
-		setPlanId(JsonUtils.getJsonInteger(jsonObject, "planId"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Task Detail property
+		setTaskDetail(JsonUtils.getJsonString(jsonObject, "taskDetail"));
 
 		
 		// Source Relationships

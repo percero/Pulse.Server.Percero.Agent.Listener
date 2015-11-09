@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -15,13 +16,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDataAccessObject<AdhocTask> {
@@ -41,15 +45,17 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"ADHOC_TASK\".\"ID\"";
 	public static final String SQL_VIEW = ",\"ADHOC_TASK\".\"UPDATED_BY\",\"ADHOC_TASK\".\"CREATED_BY\",\"ADHOC_TASK\".\"TASK_DETAIL\",\"ADHOC_TASK\".\"DUE_DATE\",\"ADHOC_TASK\".\"WEEK_DATE\",\"ADHOC_TASK\".\"COMPLETED_ON\",\"ADHOC_TASK\".\"CREATED_ON\",\"ADHOC_TASK\".\"UPDATED_ON\",\"ADHOC_TASK\".\"PLAN_ID\",\"ADHOC_TASK\".\"TYPE\",\"ADHOC_TASK\".\"ADHOC_TASK_STATE_ID\",\"ADHOC_TASK\".\"AGENT_ID\",\"ADHOC_TASK\".\"TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_TASK\" \"ADHOC_TASK\"";
 	private String whereClause = "  WHERE \"ADHOC_TASK\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_TASK\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"ID\"";
+	private String orderByTableName = "  ORDER BY \"ADHOC_TASK\".\"CREATED_ON\" DESC";
 	
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
+	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
 
 
 	
@@ -60,7 +66,7 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -70,12 +76,12 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -102,50 +108,42 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
-	{
-		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
-}
-if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask;
-}
-if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
-}
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
 
-		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
+		return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName  + " ) " + extendedWhereClause ;
 	}
-	
-	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
-	{
-		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask;
-}
-if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask;
-}
-if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\""))
-{
-return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask;
-}
 
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?";
+	@Override
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
+		if (joinColumnName.equalsIgnoreCase("\"ADHOC_TASK_STATE_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAdhocTaskStateIDAdhocTask + orderByTableName  + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+		if (joinColumnName.equalsIgnoreCase("\"TEAM_LEADER_ID\"")) {
+			return "SELECT * FROM (" + "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeamLeaderIDAdhocTask + orderByTableName + " ) " + extendedWhereClause ;
+		}
+
+		return "SELECT * FROM (" + "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_TASK\"." + joinColumnName + "=?" + orderByTableName  + " ) " + extendedWhereClause ;
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -170,8 +168,17 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 	
 	@Override
 	protected AdhocTask extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	AdhocTask nextResult = new AdhocTask();
     	
+		
+
+AdhocTask nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new AdhocTask();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -179,40 +186,63 @@ return "SELECT \"ADHOC_TASK\".\"ID\" " + selectFromStatementTableName + joinTeam
 		{
 			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 
+
 nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
 
 nextResult.setTaskDetail(rs.getString("TASK_DETAIL"));
 
+
 nextResult.setDueDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DUE_DATE")));
+
 
 nextResult.setWeekDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("WEEK_DATE")));
 
+
 nextResult.setCompletedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("COMPLETED_ON")));
+
 
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
+
 nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+
 
 nextResult.setPlanId(rs.getInt("PLAN_ID"));
 
+
 nextResult.setType(rs.getInt("TYPE"));
 
+
+String adhoctaskstateID = rs.getString("ADHOC_TASK_STATE_ID");
+if (StringUtils.hasText(adhoctaskstateID)) {
 AdhocTaskState adhoctaskstate = new AdhocTaskState();
-adhoctaskstate.setID(rs.getString("ADHOC_TASK_STATE_ID"));
+adhoctaskstate.setID(adhoctaskstateID);
 nextResult.setAdhocTaskState(adhoctaskstate);
+}
 
+
+String agentID = rs.getString("AGENT_ID");
+if (StringUtils.hasText(agentID)) {
 Agent agent = new Agent();
-agent.setID(rs.getString("AGENT_ID"));
+agent.setID(agentID);
 nextResult.setAgent(agent);
+}
 
+
+String teamleaderID = rs.getString("TEAM_LEADER_ID");
+if (StringUtils.hasText(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
-teamleader.setID(rs.getString("TEAM_LEADER_ID"));
+teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
@@ -588,7 +618,74 @@ propertyCounter++;
 	}
 	
 	
+
+public AdhocTask createObject(AdhocTask perceroObject, String userId)
+		throws SyncException {
+	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
+		return null;
+	}
+
+	long timeStart = System.currentTimeMillis();
+
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	String query = "Select ADHOC_TASK_SEQ.NEXTVAL from dual";
+	String sql = null;
+	String insertedId = "0";
+	int result = 0;
+	try {
+		IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(getConnectionFactoryName());
+		conn = connectionFactory.getConnection();
+		conn.setAutoCommit(false);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next()) {
+			insertedId = rs.getString(1);
+		}
+
+		perceroObject.setID(insertedId);
+		sql = getInsertIntoSQL();
+		pstmt = conn.prepareStatement(sql);
+
+
+		setPreparedStatmentInsertParams(perceroObject, pstmt);
+		result = pstmt.executeUpdate();
+		conn.commit();
+	} catch(Exception e) {
+		log.error("Unable to executeUpdate\n" + sql, e);
+		throw new SyncDataException(e);
+	} finally {
+		try {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (conn != null) {
+				conn.setAutoCommit(true);
+				conn.close();
+			}
+		} catch (Exception e) {
+			log.error("Error closing database statement/connection", e);
+		}
+	}
+
+	long timeEnd = System.currentTimeMillis();
+	long totalTime = timeEnd - timeStart;
+	if (totalTime > LONG_RUNNING_QUERY_TIME) {
+		log.warn("LONG RUNNING QUERY: " + totalTime + "ms\n" + sql);
+	}
+
+	if (result > 0) {
+		return retrieveObject(BaseDataObject.toClassIdPair(perceroObject), userId, false);
+	}
+	else {
+		return null;
+	}
+}
+
+
+
 	
 	
 }
-
+

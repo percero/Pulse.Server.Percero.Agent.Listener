@@ -15,13 +15,16 @@ import com.pulse.dataprovider.IConnectionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.percero.agents.sync.metadata.MappedClass;
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
-
+import com.percero.agents.sync.vo.BaseDataObject;
+import java.sql.Connection;
+import java.sql.Statement;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
-
 
 @Component
 public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements IDataAccessObject<UserSession> {
@@ -41,6 +44,7 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
+	public static final String SHELL_ONLY_SELECT = "\"USER_SESSION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"USER_SESSION\".\"DATE\",\"USER_SESSION\".\"CONNECTED_STATE\",\"USER_SESSION\".\"IP_ADDRESS\",\"USER_SESSION\".\"PULSE_USER_ID\",\"USER_SESSION\".\"CURRENT_TEAM_LEADER_ID\"";
 	private String selectFromStatementTableName = " FROM \"USER_SESSION\" \"USER_SESSION\"";
 	private String whereClause = "  WHERE \"USER_SESSION\".\"ID\"=?";
@@ -57,7 +61,7 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 
 	@Override
 	protected String getSelectShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + whereClause;
+		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -67,12 +71,12 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName +  orderByTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	
 	@Override
 	protected String getSelectInShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + whereInClause;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
 	}
 
 	@Override
@@ -113,12 +117,12 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName + " WHERE \"USER_SESSION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"USER_SESSION\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT \"USER_SESSION\".\"ID\" " + selectFromStatementTableName;
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -143,8 +147,16 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 	
 	@Override
 	protected UserSession extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	UserSession nextResult = new UserSession();
     	
+		
+UserSession nextResult = null;
+    	
+		    	
+    	if (nextResult == null) {
+    		nextResult = new UserSession();
+    	}
+
+		
     	// ID
     	nextResult.setID(rs.getString("ID"));
     	
@@ -152,22 +164,34 @@ public class UserSessionDAO extends SqlDataAccessObject<UserSession> implements 
 		{
 			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
+
 nextResult.setConnectedState(rs.getString("CONNECTED_STATE"));
+
 
 nextResult.setIPAddress(rs.getString("IP_ADDRESS"));
 
-PulseUser pulseuser = new PulseUser();
-pulseuser.setID(rs.getString("PULSE_USER_ID"));
-nextResult.setPulseUser(pulseuser);
 
+String pulseuserID = rs.getString("PULSE_USER_ID");
+if (StringUtils.hasText(pulseuserID)) {
+PulseUser pulseuser = new PulseUser();
+pulseuser.setID(pulseuserID);
+nextResult.setPulseUser(pulseuser);
+}
+
+
+String currentteamleaderID = rs.getString("CURRENT_TEAM_LEADER_ID");
+if (StringUtils.hasText(currentteamleaderID)) {
 TeamLeader currentteamleader = new TeamLeader();
-currentteamleader.setID(rs.getString("CURRENT_TEAM_LEADER_ID"));
+currentteamleader.setID(currentteamleaderID);
 nextResult.setCurrentTeamLeader(currentteamleader);
+}
+
 
 
 			
     	}
-    	
+		
+		
     	return nextResult;
 	}
 	
