@@ -97,9 +97,12 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             DateTime timecardStartDateTime = new DateTime(host.getStartDate());
             DateTime timecardEndDateTime = new DateTime(host.getEndDate());
 
-            //Business Logic: NO SHIFT -- would be based on the ON_TIME/startDate field and the OFF_TIME/endDate field having dates but 0:00 as the time in both fields
+			// Business Logic: NO SHIFT -- would be based on the
+			// ON_TIME/startDate field and the OFF_TIME/endDate field having
+			// dates but 0:00 as the time in both fields
+            // OR ON_TIME/startDate >= OFF_TIME/endDate
 
-            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime) || timecardEndDateTime.isBefore(timecardStartDateTime) || timecardEndDateTime.isEqual(timecardStartDateTime)) {
                 //Shift yet not started
                 result = Boolean.FALSE;
             }
@@ -157,17 +160,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             	accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
             	// We want to re-trigger this change watcher when Timecard.endDate changes.
             	accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
-            	
+
+				// Timecard.StartDate and Timecard.EndDate appear to also carry
+				// the timezone. We can compare
+				// to the current time using milliseconds since 0 (ie. compare
+				// UTC time) using the Joda DateTime object.
+            	// http://www.joda.org/joda-time/
             	DateTime timecardStartDateTime = new DateTime(host.getStartDate());
             	DateTime timecardEndDateTime = new DateTime(host.getEndDate());
             	
-            	DateTime agentsLocalTime = new DateTime(System.currentTimeMillis());
+            	DateTime currentTime = new DateTime(System.currentTimeMillis());
             	
-            	if (agentsLocalTime.isBefore(timecardStartDateTime)) {
+            	if (currentTime.isBefore(timecardStartDateTime)) {
             		// Local time is BEFORE the time card start date, so status is NOT_STARTED
             		result = TimecardStatus.NOT_STARTED.getValue();
             	}
-            	else if (agentsLocalTime.isBefore(timecardEndDateTime)) {
+            	else if (currentTime.isBefore(timecardEndDateTime)) {
             		// Local time is AFTER the time card start date and BEFORE the timecard end dtae, so status is IN_PROGRESS
             		result = TimecardStatus.IN_PROGRESS.getValue();
             	}
@@ -178,7 +186,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             }
             else {
             	// The Timecard does NOT have a shift.
-            	result = TimecardStatus.UNKNOWN.getValue();
+            	result = TimecardStatus.NO_SHIFT.getValue();
             }
 
             
