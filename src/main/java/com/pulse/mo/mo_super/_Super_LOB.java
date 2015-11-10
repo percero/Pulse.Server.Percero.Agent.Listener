@@ -109,19 +109,6 @@ public void setName(String name)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfiguration.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
-private List<LOBConfiguration> lOBConfigurations;
-public List<LOBConfiguration> getLOBConfigurations() {
-	return this.lOBConfigurations;
-}
-
-public void setLOBConfigurations(List<LOBConfiguration> value) {
-	this.lOBConfigurations = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
 private List<CMSEntryLOB> cMSEntryLOBs;
 public List<CMSEntryLOB> getCMSEntryLOBs() {
@@ -130,6 +117,19 @@ public List<CMSEntryLOB> getCMSEntryLOBs() {
 
 public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
 	this.cMSEntryLOBs = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfiguration.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
+private List<LOBConfiguration> lOBConfigurations;
+public List<LOBConfiguration> getLOBConfigurations() {
+	return this.lOBConfigurations;
+}
+
+public void setLOBConfigurations(List<LOBConfiguration> value) {
+	this.lOBConfigurations = value;
 }
 
 
@@ -153,19 +153,6 @@ public void setClient(Client value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PULSE_CONFIGURATION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_PulseConfigurationOfLOB")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private PulseConfiguration pulseConfiguration;
-public PulseConfiguration getPulseConfiguration() {
-	return this.pulseConfiguration;
-}
-
-public void setPulseConfiguration(PulseConfiguration value) {
-	this.pulseConfiguration = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_SITE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ClientSiteOfLOB")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -176,6 +163,19 @@ public ClientSite getClientSite() {
 
 public void setClientSite(ClientSite value) {
 	this.clientSite = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="PULSE_CONFIGURATION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_PulseConfigurationOfLOB")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private PulseConfiguration pulseConfiguration;
+public PulseConfiguration getPulseConfiguration() {
+	return this.pulseConfiguration;
+}
+
+public void setPulseConfiguration(PulseConfiguration value) {
+	this.pulseConfiguration = value;
 }
 
 	
@@ -223,18 +223,6 @@ objectJson += ",\"client\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Pulse Configuration of LOB relationship
-objectJson += ",\"pulseConfiguration\":";
-		if (getPulseConfiguration() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getPulseConfiguration()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 //Retrieve value of the Client Site of LOB relationship
 objectJson += ",\"clientSite\":";
 		if (getClientSite() == null)
@@ -247,26 +235,21 @@ objectJson += ",\"clientSite\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Pulse Configuration of LOB relationship
+objectJson += ",\"pulseConfiguration\":";
+		if (getPulseConfiguration() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getPulseConfiguration()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
-//Retrieve value of the LOB of LOB Configuration relationship
-objectJson += ",\"lOBConfigurations\":[";
-		
-		if (getLOBConfigurations() != null) {
-			int lOBConfigurationsCounter = 0;
-			for(LOBConfiguration nextLOBConfigurations : getLOBConfigurations()) {
-				if (lOBConfigurationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextLOBConfigurations).toEmbeddedJson();
-					lOBConfigurationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 //Retrieve value of the LOB of CMS Entry LOB relationship
 objectJson += ",\"cMSEntryLOBs\":[";
 		
@@ -278,6 +261,23 @@ objectJson += ",\"cMSEntryLOBs\":[";
 				try {
 					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
 					cMSEntryLOBsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
+//Retrieve value of the LOB of LOB Configuration relationship
+objectJson += ",\"lOBConfigurations\":[";
+		
+		if (getLOBConfigurations() != null) {
+			int lOBConfigurationsCounter = 0;
+			for(LOBConfiguration nextLOBConfigurations : getLOBConfigurations()) {
+				if (lOBConfigurationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextLOBConfigurations).toEmbeddedJson();
+					lOBConfigurationsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -301,13 +301,13 @@ objectJson += ",\"cMSEntryLOBs\":[";
 		
 		// Source Relationships
 		this.client = (Client) JsonUtils.getJsonPerceroObject(jsonObject, "client");
-		this.pulseConfiguration = (PulseConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "pulseConfiguration");
 		this.clientSite = (ClientSite) JsonUtils.getJsonPerceroObject(jsonObject, "clientSite");
+		this.pulseConfiguration = (PulseConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "pulseConfiguration");
 
 
 		// Target Relationships
-		this.lOBConfigurations = (List<LOBConfiguration>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurations");
 		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+		this.lOBConfigurations = (List<LOBConfiguration>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurations");
 
 
 	}
@@ -317,8 +317,8 @@ objectJson += ",\"cMSEntryLOBs\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(LOBConfiguration.class, "lob"));
 		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
+		listSetters.add(MappedClass.getFieldSetters(LOBConfiguration.class, "lob"));
 
 		
 		return listSetters;

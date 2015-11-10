@@ -102,23 +102,6 @@ public void setWeekDate(Date weekDate)
 {
 	this.weekDate = weekDate;
 }/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
 NiceEvalId
 Notes:
 */
@@ -136,23 +119,6 @@ public void setNiceEvalId(Integer niceEvalId)
 {
 	this.niceEvalId = niceEvalId;
 }/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
-}/*
 CreatedOn
 Notes:
 */
@@ -169,23 +135,6 @@ public Date getCreatedOn()
 public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
-}/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
 }/*
 EvaluationName
 Notes:
@@ -221,22 +170,22 @@ public void setNiceAppServer(String niceAppServer)
 {
 	this.niceAppServer = niceAppServer;
 }/*
-ManualDetails
+CreatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String manualDetails;
+private String createdBy;
 
-public String getManualDetails() 
+public String getCreatedBy() 
 {
-	return this.manualDetails;
+	return this.createdBy;
 }
 
-public void setManualDetails(String manualDetails)
+public void setCreatedBy(String createdBy)
 {
-	this.manualDetails = manualDetails;
+	this.createdBy = createdBy;
 }/*
 ResponsibleCoach
 Notes:
@@ -255,6 +204,40 @@ public void setResponsibleCoach(String responsibleCoach)
 {
 	this.responsibleCoach = responsibleCoach;
 }/*
+ManualDetails
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String manualDetails;
+
+public String getManualDetails() 
+{
+	return this.manualDetails;
+}
+
+public void setManualDetails(String manualDetails)
+{
+	this.manualDetails = manualDetails;
+}/*
+UpdatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBy;
+
+public String getUpdatedBy() 
+{
+	return this.updatedBy;
+}
+
+public void setUpdatedBy(String updatedBy)
+{
+	this.updatedBy = updatedBy;
+}/*
 IsRequired
 Notes:
 */
@@ -271,6 +254,23 @@ public Boolean getIsRequired()
 public void setIsRequired(Boolean isRequired)
 {
 	this.isRequired = isRequired;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
 }
 
 	//////////////////////////////////////////////////////
@@ -351,27 +351,6 @@ public void setAgentScorecard(AgentScorecard value) {
 		else {
 			objectJson += getWeekDate().getTime();
 		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Nice Eval Id property
 		objectJson += ",\"niceEvalId\":";
 		
@@ -393,40 +372,12 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
 		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
 			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the Evaluation Name property
 		objectJson += ",\"evaluationName\":";
@@ -470,16 +421,16 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Manual Details property
-		objectJson += ",\"manualDetails\":";
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
 		
-		if (getManualDetails() == null)
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getManualDetails());
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -512,12 +463,61 @@ public void setAgentScorecard(AgentScorecard value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Manual Details property
+		objectJson += ",\"manualDetails\":";
+		
+		if (getManualDetails() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getManualDetails());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Is Required property
 		objectJson += ",\"isRequired\":";
 		if (getIsRequired() == null)
 			objectJson += "null";
 		else {
 			objectJson += getIsRequired();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
 		}
 
 				
@@ -586,26 +586,26 @@ objectJson += ",\"agentScorecard\":";
 		// Properties
 		//From value of the Week Date property
 		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Nice Eval Id property
 		setNiceEvalId(JsonUtils.getJsonInteger(jsonObject, "niceEvalId"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Evaluation Name property
 		setEvaluationName(JsonUtils.getJsonString(jsonObject, "evaluationName"));
 		//From value of the Nice App Server property
 		setNiceAppServer(JsonUtils.getJsonString(jsonObject, "niceAppServer"));
-		//From value of the Manual Details property
-		setManualDetails(JsonUtils.getJsonString(jsonObject, "manualDetails"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Responsible Coach property
 		setResponsibleCoach(JsonUtils.getJsonString(jsonObject, "responsibleCoach"));
+		//From value of the Manual Details property
+		setManualDetails(JsonUtils.getJsonString(jsonObject, "manualDetails"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 		//From value of the Is Required property
 		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 
 		
 		// Source Relationships

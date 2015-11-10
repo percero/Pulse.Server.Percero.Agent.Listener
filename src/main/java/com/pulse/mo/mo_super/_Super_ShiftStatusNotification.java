@@ -70,23 +70,6 @@ public class _Super_ShiftStatusNotification extends Notification implements Seri
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Resolved
-Notes:Flag that determines if the notification has been resolved
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean resolved;
-
-public Boolean getResolved() 
-{
-	return this.resolved;
-}
-
-public void setResolved(Boolean resolved)
-{
-	this.resolved = resolved;
-}/*
 ShiftEndDate
 Notes:
 */
@@ -103,6 +86,23 @@ public Date getShiftEndDate()
 public void setShiftEndDate(Date shiftEndDate)
 {
 	this.shiftEndDate = shiftEndDate;
+}/*
+Resolved
+Notes:Flag that determines if the notification has been resolved
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean resolved;
+
+public Boolean getResolved() 
+{
+	return this.resolved;
+}
+
+public void setResolved(Boolean resolved)
+{
+	this.resolved = resolved;
 }
 
 	//////////////////////////////////////////////////////
@@ -137,19 +137,19 @@ public void setTimecardActivity(TimecardActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Resolved property
-		objectJson += ",\"resolved\":";
-		if (getResolved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getResolved();
-		}
 		//Retrieve value of the Shift End Date property
 		objectJson += ",\"shiftEndDate\":";
 		if (getShiftEndDate() == null)
 			objectJson += "null";
 		else {
 			objectJson += getShiftEndDate().getTime();
+		}
+		//Retrieve value of the Resolved property
+		objectJson += ",\"resolved\":";
+		if (getResolved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getResolved();
 		}
 
 				
@@ -180,10 +180,10 @@ objectJson += ",\"timecardActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Resolved property
-		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
 		//From value of the Shift End Date property
 		setShiftEndDate(JsonUtils.getJsonDate(jsonObject, "shiftEndDate"));
+		//From value of the Resolved property
+		setResolved(JsonUtils.getJsonBoolean(jsonObject, "resolved"));
 
 		
 		// Source Relationships

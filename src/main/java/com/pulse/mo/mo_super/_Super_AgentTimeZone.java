@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Setting extends BaseDataObject implements Serializable
+public class _Super_AgentTimeZone extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Setting extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Setting
+	Keys of AgentTimeZone
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,39 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Value
+TimeZone
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String value;
+private String timeZone;
 
-public String getValue() 
+public String getTimeZone() 
 {
-	return this.value;
+	return this.timeZone;
 }
 
-public void setValue(String value)
+public void setTimeZone(String timeZone)
 {
-	this.value = value;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
+	this.timeZone = timeZone;
 }
 
 	//////////////////////////////////////////////////////
@@ -131,16 +114,17 @@ public void setName(String name)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="TEAM_LEADER_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_TeamLeaderOfSetting")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private TeamLeader teamLeader;
-public TeamLeader getTeamLeader() {
-	return this.teamLeader;
+@JoinColumn(name="EMPLOYEE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AgentOfAgentTimeZone")
+@OneToOne(fetch=FetchType.LAZY, optional=false)
+private Agent agent;
+public Agent getAgent() {
+	return this.agent;
 }
 
-public void setTeamLeader(TeamLeader value) {
-	this.teamLeader = value;
+public void setAgent(Agent value) 
+{
+	this.agent = value;
 }
 
 	
@@ -152,37 +136,16 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Value property
-		objectJson += ",\"value\":";
+		//Retrieve value of the Time Zone property
+		objectJson += ",\"timeZone\":";
 		
-		if (getValue() == null)
+		if (getTimeZone() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getValue());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getTimeZone());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -197,13 +160,13 @@ public void setTeamLeader(TeamLeader value) {
 
 				
 		// Source Relationships
-//Retrieve value of the Team Leader of Setting relationship
-objectJson += ",\"teamLeader\":";
-		if (getTeamLeader() == null)
+//Retrieve value of the Agent of Agent Time Zone relationship
+objectJson += ",\"agent\":";
+		if (getAgent() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getTeamLeader()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -223,14 +186,12 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Value property
-		setValue(JsonUtils.getJsonString(jsonObject, "value"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Time Zone property
+		setTimeZone(JsonUtils.getJsonString(jsonObject, "timeZone"));
 
 		
 		// Source Relationships
-		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
+		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 
 
 		// Target Relationships

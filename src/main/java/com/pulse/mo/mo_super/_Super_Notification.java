@@ -102,23 +102,6 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-Type
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String type;
-
-public String getType() 
-{
-	return this.type;
-}
-
-public void setType(String type)
-{
-	this.type = type;
-}/*
 Name
 Notes:
 */
@@ -135,6 +118,23 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
+}/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String type;
+
+public String getType() 
+{
+	return this.type;
+}
+
+public void setType(String type)
+{
+	this.type = type;
 }
 
 	//////////////////////////////////////////////////////
@@ -176,16 +176,16 @@ public void setTeamLeader(TeamLeader value) {
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
-		//Retrieve value of the Type property
-		objectJson += ",\"type\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getType() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -197,16 +197,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
 		
-		if (getName() == null)
+		if (getType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -249,10 +249,10 @@ objectJson += ",\"teamLeader\":";
 		// Properties
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
 
 		
 		// Source Relationships

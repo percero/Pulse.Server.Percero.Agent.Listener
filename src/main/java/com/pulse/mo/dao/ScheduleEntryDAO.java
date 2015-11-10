@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,13 +40,13 @@ public class ScheduleEntryDAO extends SqlDataAccessObject<ScheduleEntry> impleme
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\",   (24 * (schedule_entry.end_time-schedule_entry.start_time) * 60)   as \"DURATION\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE_ENTRY\".\"ID\" as \"ID\", '' as \"DURATION\", \"SCHEDULE_ENTRY\".\"COST_POS_INDEX\" as \"COST_POS_INDEX\", \"SCHEDULE_ENTRY\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE_ENTRY\".\"PROJECT\" as \"PROJECT\", \"SCHEDULE_ENTRY\".\"START_TIME\" as \"SOURCE_START_TIME\", \"SCHEDULE_ENTRY\".\"END_TIME\" as \"SOURCE_END_TIME\", \"SCHEDULE_ENTRY\".\"MODIFIED_TIMESTAMP\" as \"MODIFIED_TIMESTAMP\", \"SCHEDULE_ENTRY\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE_ENTRY\".\"POSITION\" as \"POSITION\", \"SCHEDULE\".\"ID\" as \"SCHEDULE_ID\", \"SCHEDULE_ENTRY\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\" Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_DETAIL_VW\" \"SCHEDULE_ENTRY\"";
 	private String whereClause = " WHERE \"SCHEDULE_ENTRY\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE_ENTRY\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"SCHEDULE_ENTRY\".\"ID\"";
 
-	private String joinScheduleIDScheduleEntry = "  Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) WHERE SCHEDULE.ID=?";
+	private String joinScheduleIDScheduleEntry = "Join CONVERGYS.SCHEDULE_VW SCHEDULE On SCHEDULE.PAYROLL = SCHEDULE_ENTRY.PAYROLL And SCHEDULE_ENTRY.START_DATE >= SCHEDULE.START_DATE And (SCHEDULE_ENTRY.end_date Is Null Or SCHEDULE_ENTRY.end_date<=SCHEDULE.END_DATE) WHERE SCHEDULE.ID=?";
 
 
 
@@ -155,8 +154,7 @@ return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableN
 	protected ScheduleEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-
-ScheduleEntry nextResult = null;
+ScheduleEntry nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -181,13 +179,13 @@ nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DA
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 
-nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
-
-
 nextResult.setModifiedTimestamp(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("MODIFIED_TIMESTAMP")));
 
 
-nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
+nextResult.setSourceEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_END_TIME")));
+
+
+nextResult.setSourceStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_START_TIME")));
 
 
 nextResult.setDuration(rs.getDouble("DURATION"));
@@ -306,23 +304,6 @@ paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
-
-if (useEndTime)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " END_TIME=? ";
-paramValues.add(theQueryObject.getEndTime());
-propertyCounter++;
-}
-
 boolean useModifiedTimestamp = theQueryObject.getModifiedTimestamp() != null && (excludeProperties == null || !excludeProperties.contains("modifiedTimestamp"));
 
 if (useModifiedTimestamp)
@@ -340,9 +321,9 @@ paramValues.add(theQueryObject.getModifiedTimestamp());
 propertyCounter++;
 }
 
-boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+boolean useSourceEndTime = theQueryObject.getSourceEndTime() != null && (excludeProperties == null || !excludeProperties.contains("sourceEndTime"));
 
-if (useStartTime)
+if (useSourceEndTime)
 {
 if (propertyCounter > 0)
 {
@@ -352,8 +333,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
+sql += " SOURCE_END_TIME=? ";
+paramValues.add(theQueryObject.getSourceEndTime());
+propertyCounter++;
+}
+
+boolean useSourceStartTime = theQueryObject.getSourceStartTime() != null && (excludeProperties == null || !excludeProperties.contains("sourceStartTime"));
+
+if (useSourceStartTime)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " SOURCE_START_TIME=? ";
+paramValues.add(theQueryObject.getSourceStartTime());
 propertyCounter++;
 }
 
@@ -432,8 +430,7 @@ propertyCounter++;
 	}
 
 	
-
-public ScheduleEntry createObject(ScheduleEntry perceroObject, String userId)
+public ScheduleEntry createObject(ScheduleEntry perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -496,9 +493,8 @@ public ScheduleEntry createObject(ScheduleEntry perceroObject, String userId)
 		return null;
 	}
 }
-
-
+
 
 
 }
-
+

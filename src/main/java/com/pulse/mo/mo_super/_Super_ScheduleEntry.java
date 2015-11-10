@@ -85,57 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Project
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String project;
-
-public String getProject() 
-{
-	return this.project;
-}
-
-public void setProject(String project)
-{
-	this.project = project;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
-}/*
-EndTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endTime;
-
-public Date getEndTime() 
-{
-	return this.endTime;
-}
-
-public void setEndTime(Date endTime)
-{
-	this.endTime = endTime;
-}/*
 Position
 Notes:
 */
@@ -153,39 +102,39 @@ public void setPosition(String position)
 {
 	this.position = position;
 }/*
-CostPOSIndex
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer costPOSIndex;
+private Date endDate;
 
-public Integer getCostPOSIndex() 
+public Date getEndDate() 
 {
-	return this.costPOSIndex;
+	return this.endDate;
 }
 
-public void setCostPOSIndex(Integer costPOSIndex)
+public void setEndDate(Date endDate)
 {
-	this.costPOSIndex = costPOSIndex;
+	this.endDate = endDate;
 }/*
-StartTime
+SourceEndTime
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date startTime;
+private Date sourceEndTime;
 
-public Date getStartTime() 
+public Date getSourceEndTime() 
 {
-	return this.startTime;
+	return this.sourceEndTime;
 }
 
-public void setStartTime(Date startTime)
+public void setSourceEndTime(Date sourceEndTime)
 {
-	this.startTime = startTime;
+	this.sourceEndTime = sourceEndTime;
 }/*
 ModifiedTimestamp
 Notes:
@@ -221,22 +170,73 @@ public void setDuration(Double duration)
 {
 	this.duration = duration;
 }/*
-EndDate
+CostPOSIndex
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date endDate;
+private Integer costPOSIndex;
 
-public Date getEndDate() 
+public Integer getCostPOSIndex() 
 {
-	return this.endDate;
+	return this.costPOSIndex;
 }
 
-public void setEndDate(Date endDate)
+public void setCostPOSIndex(Integer costPOSIndex)
 {
-	this.endDate = endDate;
+	this.costPOSIndex = costPOSIndex;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
+}/*
+SourceStartTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date sourceStartTime;
+
+public Date getSourceStartTime() 
+{
+	return this.sourceStartTime;
+}
+
+public void setSourceStartTime(Date sourceStartTime)
+{
+	this.sourceStartTime = sourceStartTime;
+}/*
+Project
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String project;
+
+public String getProject() 
+{
+	return this.project;
+}
+
+public void setProject(String project)
+{
+	this.project = project;
 }
 
 	//////////////////////////////////////////////////////
@@ -284,41 +284,6 @@ public void setSchedule(Schedule value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Project property
-		objectJson += ",\"project\":";
-		
-		if (getProject() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getProject());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the End Time property
-		objectJson += ",\"endTime\":";
-		if (getEndTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndTime().getTime();
-		}
 		//Retrieve value of the Position property
 		objectJson += ",\"position\":";
 		
@@ -339,6 +304,34 @@ public void setSchedule(Schedule value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Source End Time property
+		objectJson += ",\"sourceEndTime\":";
+		if (getSourceEndTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSourceEndTime().getTime();
+		}
+		//Retrieve value of the Modified Timestamp property
+		objectJson += ",\"modifiedTimestamp\":";
+		if (getModifiedTimestamp() == null)
+			objectJson += "null";
+		else {
+			objectJson += getModifiedTimestamp().getTime();
+		}
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDuration();
 		}
 		//Retrieve value of the Cost POS Index property
 		objectJson += ",\"costPOSIndex\":";
@@ -361,33 +354,40 @@ public void setSchedule(Schedule value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Start Time property
-		objectJson += ",\"startTime\":";
-		if (getStartTime() == null)
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getStartTime().getTime();
+			objectJson += getStartDate().getTime();
 		}
-		//Retrieve value of the Modified Timestamp property
-		objectJson += ",\"modifiedTimestamp\":";
-		if (getModifiedTimestamp() == null)
+		//Retrieve value of the Source Start Time property
+		objectJson += ",\"sourceStartTime\":";
+		if (getSourceStartTime() == null)
 			objectJson += "null";
 		else {
-			objectJson += getModifiedTimestamp().getTime();
+			objectJson += getSourceStartTime().getTime();
 		}
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		if (getDuration() == null)
+		//Retrieve value of the Project property
+		objectJson += ",\"project\":";
+		
+		if (getProject() == null)
 			objectJson += "null";
 		else {
-			objectJson += getDuration();
-		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndDate().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getProject());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -430,24 +430,24 @@ objectJson += ",\"schedule\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Project property
-		setProject(JsonUtils.getJsonString(jsonObject, "project"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the End Time property
-		setEndTime(JsonUtils.getJsonDate(jsonObject, "endTime"));
 		//From value of the Position property
 		setPosition(JsonUtils.getJsonString(jsonObject, "position"));
-		//From value of the Cost POS Index property
-		setCostPOSIndex(JsonUtils.getJsonInteger(jsonObject, "costPOSIndex"));
-		//From value of the Start Time property
-		setStartTime(JsonUtils.getJsonDate(jsonObject, "startTime"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Source End Time property
+		setSourceEndTime(JsonUtils.getJsonDate(jsonObject, "sourceEndTime"));
 		//From value of the Modified Timestamp property
 		setModifiedTimestamp(JsonUtils.getJsonDate(jsonObject, "modifiedTimestamp"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Cost POS Index property
+		setCostPOSIndex(JsonUtils.getJsonInteger(jsonObject, "costPOSIndex"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Source Start Time property
+		setSourceStartTime(JsonUtils.getJsonDate(jsonObject, "sourceStartTime"));
+		//From value of the Project property
+		setProject(JsonUtils.getJsonString(jsonObject, "project"));
 
 		
 		// Source Relationships

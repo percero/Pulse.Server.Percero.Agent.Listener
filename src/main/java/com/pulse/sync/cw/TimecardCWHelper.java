@@ -25,6 +25,8 @@ import com.pulse.mo.Timecard;
 public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
 	private static final Logger log = Logger.getLogger(TimecardCWHelper.class);
+	public static final String STARTDATE = "startDate";
+	public static final String ENDDATE = "endDate";
 
 	@Override
 	public Object calculate(String fieldName, ClassIDPair pair) {
@@ -47,6 +49,24 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 				log.error("Unable to calculate shiftStatusNotification", e);
 			}
 		}
+
+		else if (fieldName.equalsIgnoreCase("startDate")) {
+			try {
+				result = calc_startDate(pair, fieldName);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate startDate", e);
+			}
+		}
+		else if (fieldName.equalsIgnoreCase("endDate")) {
+			try {
+				result = calc_endDate(pair, fieldName);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate endDate", e);
+			}
+		}
+
 		else {
 			result = super.calculate(fieldName, pair, params);
 		}
@@ -143,5 +163,67 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 		return result;
 	}
 
+
+	public Date calc_startDate(ClassIDPair pair, String derivedValueName) {
+		Date result = null;
+
+		try {
+			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "sourceStartDate", fieldsToWatch);
+
+			result = host.getSourceStartDate();
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return result;
+	}
+
+	public Date calc_endDate(ClassIDPair pair, String derivedValueName) {
+		Date result = null;
+
+		try {
+			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "sourceEndDate", fieldsToWatch);
+
+			result = host.getSourceEndDate();
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return result;
+	}
 
 }
