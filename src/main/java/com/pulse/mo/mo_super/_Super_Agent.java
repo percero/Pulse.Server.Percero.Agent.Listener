@@ -561,6 +561,19 @@ objectJson += ",\"agentScorecards\":[";
 		}
 		objectJson += "]";
 
+		//Retrieve value of the AgentTimeZone of Agent relationship
+		objectJson += ",\"agentTimeZone\":";
+				if (getTeamLeader() == null)
+					objectJson += "null";
+				else {
+					try {
+						objectJson += ((BaseDataObject) getAgentTimeZone()).toEmbeddedJson();
+					} catch(Exception e) {
+						objectJson += "null";
+					}
+				}
+				objectJson += "";
+
 		
 		return objectJson;
 	}
@@ -598,6 +611,7 @@ objectJson += ",\"agentScorecards\":[";
 		this.schedules = (List<Schedule>) JsonUtils.getJsonListPerceroObject(jsonObject, "schedules");
 
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
+		this.agentTimeZone = (AgentTimeZone) JsonUtils.getJsonPerceroObject(jsonObject, "agentTimeZone");
 
 
 	}
