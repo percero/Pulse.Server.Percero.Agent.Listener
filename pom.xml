@@ -20,7 +20,7 @@
 	<properties>
 		<repoSshUri>git@github.com:percero/Pulse.Server.Percero.Agent.Listener.git</repoSshUri>
 		<mockito-core.version>1.9.5</mockito-core.version>
-		<syncengine.version>1.1.39-SNAPSHOT</syncengine.version>
+		<syncengine.version>1.1.40-SNAPSHOT</syncengine.version>
     </properties>
 
 	<scm>
