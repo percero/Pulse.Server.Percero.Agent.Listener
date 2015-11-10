@@ -2,25 +2,27 @@
 
 package com.pulse.mo.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
+import com.percero.util.DateUtils;
 import com.pulse.dataprovider.IConnectionFactory;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.pulse.mo.Agent;
+import com.pulse.mo.Timecard;
 
 @Component
 public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataAccessObject<Timecard> {
