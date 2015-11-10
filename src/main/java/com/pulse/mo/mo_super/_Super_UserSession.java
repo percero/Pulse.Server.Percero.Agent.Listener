@@ -102,23 +102,6 @@ public void setConnectedState(String connectedState)
 {
 	this.connectedState = connectedState;
 }/*
-Date
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date date;
-
-public Date getDate() 
-{
-	return this.date;
-}
-
-public void setDate(Date date)
-{
-	this.date = date;
-}/*
 IPAddress
 Notes:???
 */
@@ -135,6 +118,23 @@ public String getIPAddress()
 public void setIPAddress(String iPAddress)
 {
 	this.iPAddress = iPAddress;
+}/*
+Date
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date date;
+
+public Date getDate() 
+{
+	return this.date;
+}
+
+public void setDate(Date date)
+{
+	this.date = date;
 }
 
 	//////////////////////////////////////////////////////
@@ -203,13 +203,6 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
 		//Retrieve value of the IP Address property
 		objectJson += ",\"iPAddress\":";
 		
@@ -230,6 +223,13 @@ public void setPulseUser(PulseUser value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
 		}
 
 				
@@ -274,10 +274,10 @@ objectJson += ",\"pulseUser\":";
 		// Properties
 		//From value of the Connected State property
 		setConnectedState(JsonUtils.getJsonString(jsonObject, "connectedState"));
-		//From value of the Date property
-		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 		//From value of the IP Address property
 		setIPAddress(JsonUtils.getJsonString(jsonObject, "iPAddress"));
+		//From value of the Date property
+		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 
 		
 		// Source Relationships

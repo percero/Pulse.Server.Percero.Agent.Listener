@@ -102,23 +102,6 @@ public void setTimestamp(Date timestamp)
 {
 	this.timestamp = timestamp;
 }/*
-TraceType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String traceType;
-
-public String getTraceType() 
-{
-	return this.traceType;
-}
-
-public void setTraceType(String traceType)
-{
-	this.traceType = traceType;
-}/*
 LogMessage
 Notes:
 */
@@ -135,6 +118,23 @@ public String getLogMessage()
 public void setLogMessage(String logMessage)
 {
 	this.logMessage = logMessage;
+}/*
+TraceType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String traceType;
+
+public String getTraceType() 
+{
+	return this.traceType;
+}
+
+public void setTraceType(String traceType)
+{
+	this.traceType = traceType;
 }
 
 	//////////////////////////////////////////////////////
@@ -189,16 +189,16 @@ public void setPulseUser(PulseUser value) {
 		else {
 			objectJson += getTimestamp().getTime();
 		}
-		//Retrieve value of the Trace Type property
-		objectJson += ",\"traceType\":";
+		//Retrieve value of the Log Message property
+		objectJson += ",\"logMessage\":";
 		
-		if (getTraceType() == null)
+		if (getLogMessage() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTraceType());
+				objectJson += objectMapper.writeValueAsString(getLogMessage());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -210,16 +210,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Log Message property
-		objectJson += ",\"logMessage\":";
+		//Retrieve value of the Trace Type property
+		objectJson += ",\"traceType\":";
 		
-		if (getLogMessage() == null)
+		if (getTraceType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getLogMessage());
+				objectJson += objectMapper.writeValueAsString(getTraceType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -274,10 +274,10 @@ objectJson += ",\"pulseUser\":";
 		// Properties
 		//From value of the Timestamp property
 		setTimestamp(JsonUtils.getJsonDate(jsonObject, "timestamp"));
-		//From value of the Trace Type property
-		setTraceType(JsonUtils.getJsonString(jsonObject, "traceType"));
 		//From value of the Log Message property
 		setLogMessage(JsonUtils.getJsonString(jsonObject, "logMessage"));
+		//From value of the Trace Type property
+		setTraceType(JsonUtils.getJsonString(jsonObject, "traceType"));
 
 		
 		// Source Relationships

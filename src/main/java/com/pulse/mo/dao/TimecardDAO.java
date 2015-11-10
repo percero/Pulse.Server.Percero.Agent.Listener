@@ -41,7 +41,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"ON_TIME\" as \"START_DATE\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"OFF_TIME\" as \"END_DATE\", \"TIMECARD\".\"APPROVED\" as \"APPROVED\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", 'USE TIMECARD.currentStatus' as \"TIMECARD_STATE\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"OFF_TIME\" as \"SOURCE_END_DATE\", \"TIMECARD\".\"ON_TIME\" as \"SOURCE_START_DATE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", '' as \"APPROVED\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
 	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=? AND \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
@@ -165,10 +165,10 @@ Timecard nextResult = null;
 			nextResult.setDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("DATE")));
 
 
-nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
+nextResult.setSourceEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_END_DATE")));
 
 
-nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
+nextResult.setSourceStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_START_DATE")));
 
 
 nextResult.setApproved(rs.getString("APPROVED"));
@@ -240,9 +240,9 @@ paramValues.add(theQueryObject.getDate());
 propertyCounter++;
 }
 
-boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
+boolean useSourceEndDate = theQueryObject.getSourceEndDate() != null && (excludeProperties == null || !excludeProperties.contains("sourceEndDate"));
 
-if (useEndDate)
+if (useSourceEndDate)
 {
 if (propertyCounter > 0)
 {
@@ -252,14 +252,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " END_DATE=? ";
-paramValues.add(theQueryObject.getEndDate());
+sql += " SOURCE_END_DATE=? ";
+paramValues.add(theQueryObject.getSourceEndDate());
 propertyCounter++;
 }
 
-boolean useStartDate = theQueryObject.getStartDate() != null && (excludeProperties == null || !excludeProperties.contains("startDate"));
+boolean useSourceStartDate = theQueryObject.getSourceStartDate() != null && (excludeProperties == null || !excludeProperties.contains("sourceStartDate"));
 
-if (useStartDate)
+if (useSourceStartDate)
 {
 if (propertyCounter > 0)
 {
@@ -269,8 +269,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " START_DATE=? ";
-paramValues.add(theQueryObject.getStartDate());
+sql += " SOURCE_START_DATE=? ";
+paramValues.add(theQueryObject.getSourceStartDate());
 propertyCounter++;
 }
 

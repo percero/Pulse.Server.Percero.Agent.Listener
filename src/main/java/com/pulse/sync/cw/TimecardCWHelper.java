@@ -4,18 +4,22 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
+import org.joda.time.tz.DateTimeZoneBuilder;
 import org.springframework.stereotype.Component;
 
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.Agent;
+import com.pulse.mo.AgentTimeZone;
 import com.pulse.mo.Notification;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
@@ -31,6 +35,9 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     public static final String SHIFT_STATUS_NOTIFICATION = "shiftStatusNotification";
     public static final String SHIFT = "shift";
     public static final String CURRENTSTATUS = "currentStatus";
+	public static final String STARTDATE = "startDate";
+	public static final String ENDDATE = "endDate";
+
 
 
     @Override
@@ -54,21 +61,40 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             } catch (Exception e) {
                 log.error("Unable to calculate " + SHIFT_STATUS_NOTIFICATION, e);
             }
-        } else if (SHIFT.equalsIgnoreCase(fieldName)) {
+        }
+        else if (SHIFT.equalsIgnoreCase(fieldName)) {
             try {
                 result = calc_shift(pair, SHIFT);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
                 log.error("Unable to calculate " + SHIFT, e);
             }
-        } else if (fieldName.equalsIgnoreCase("currentStatus")) {
+        }
+        else if (fieldName.equalsIgnoreCase("currentStatus")) {
             try {
                 result = calc_currentStatus(pair, CURRENTSTATUS);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
                 log.error("Unable to calculate currentStatus", e);
             }
-        } else {
+        }
+		else if (fieldName.equalsIgnoreCase("startDate")) {
+			try {
+				result = calc_startDate(pair, fieldName);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate startDate", e);
+			}
+		}
+		else if (fieldName.equalsIgnoreCase("endDate")) {
+			try {
+				result = calc_endDate(pair, fieldName);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate endDate", e);
+			}
+		}
+        else {
             result = super.calculate(fieldName, pair, params);
         }
 
@@ -301,4 +327,83 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         }
         return  false;
     }
+
+
+
+	public Date calc_startDate(ClassIDPair pair, String derivedValueName) {
+		Date result = null;
+
+		try {
+			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "sourceStartDate", fieldsToWatch);
+			Date sourceStartDate = host.getSourceStartDate();
+			
+			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+			if (agent != null) {
+				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
+				AgentTimeZone agentTimeZone = syncAgentService.systemGetByObject(agent.getAgentTimeZone());
+				if (agentTimeZone != null) {
+					DateTimeZone dateTimeZone = DateTimeZone.forID(agentTimeZone.getTimeZone());
+					System.out.println(agentTimeZone);
+				}
+			}
+			else {
+				log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+				result = sourceStartDate;
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return result;
+	}
+
+	public Date calc_endDate(ClassIDPair pair, String derivedValueName) {
+		Date result = null;
+
+		try {
+			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "sourceEndDate", fieldsToWatch);
+
+			result = host.getSourceEndDate();
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return result;
+	}
+
 }

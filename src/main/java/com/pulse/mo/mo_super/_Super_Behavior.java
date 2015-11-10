@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Description
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String description;
+private Date createdOn;
 
-public String getDescription() 
+public Date getCreatedOn() 
 {
-	return this.description;
+	return this.createdOn;
 }
 
-public void setDescription(String description)
+public void setCreatedOn(Date createdOn)
 {
-	this.description = description;
+	this.createdOn = createdOn;
 }/*
 Rank
 Notes:
@@ -119,73 +119,22 @@ public void setRank(Integer rank)
 {
 	this.rank = rank;
 }/*
-Name
+Scope
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String name;
+private String scope;
 
-public String getName() 
+public String getScope() 
 {
-	return this.name;
+	return this.scope;
 }
 
-public void setName(String name)
+public void setScope(String scope)
 {
-	this.name = name;
-}/*
-IsRemoved
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean isRemoved;
-
-public Boolean getIsRemoved() 
-{
-	return this.isRemoved;
-}
-
-public void setIsRemoved(Boolean isRemoved)
-{
-	this.isRemoved = isRemoved;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
-}/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
+	this.scope = scope;
 }/*
 CreatedBy
 Notes:
@@ -204,56 +153,73 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
-UpdatedBY
+IsRemoved
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String updatedBY;
+private Boolean isRemoved;
 
-public String getUpdatedBY() 
+public Boolean getIsRemoved() 
 {
-	return this.updatedBY;
+	return this.isRemoved;
 }
 
-public void setUpdatedBY(String updatedBY)
+public void setIsRemoved(Boolean isRemoved)
 {
-	this.updatedBY = updatedBY;
+	this.isRemoved = isRemoved;
 }/*
-Scope
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String scope;
+private Date endDate;
 
-public String getScope() 
+public Date getEndDate() 
 {
-	return this.scope;
+	return this.endDate;
 }
 
-public void setScope(String scope)
+public void setEndDate(Date endDate)
 {
-	this.scope = scope;
+	this.endDate = endDate;
 }/*
-CreatedOn
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private String name;
 
-public Date getCreatedOn() 
+public String getName() 
 {
-	return this.createdOn;
+	return this.name;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setName(String name)
 {
-	this.createdOn = createdOn;
+	this.name = name;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
 }/*
 UpdatedOn
 Notes:
@@ -271,6 +237,40 @@ public Date getUpdatedOn()
 public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
+}/*
+UpdatedBY
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String updatedBY;
+
+public String getUpdatedBY() 
+{
+	return this.updatedBY;
+}
+
+public void setUpdatedBY(String updatedBY)
+{
+	this.updatedBY = updatedBY;
+}/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
 }
 
 	//////////////////////////////////////////////////////
@@ -305,26 +305,12 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
-		
-		if (getDescription() == null)
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Rank property
 		objectJson += ",\"rank\":";
@@ -336,90 +322,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getRank());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Is Removed property
-		objectJson += ",\"isRemoved\":";
-		if (getIsRemoved() == null)
-			objectJson += "null";
-		else {
-			objectJson += getIsRemoved();
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndDate().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated BY property
-		objectJson += ",\"updatedBY\":";
-		
-		if (getUpdatedBY() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBY());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -452,12 +354,68 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCreatedOn().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Is Removed property
+		objectJson += ",\"isRemoved\":";
+		if (getIsRemoved() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRemoved();
+		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
+		
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
@@ -465,6 +423,48 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 			objectJson += "null";
 		else {
 			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Updated BY property
+		objectJson += ",\"updatedBY\":";
+		
+		if (getUpdatedBY() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBY());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
+		
+		if (getDescription() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDescription());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -495,28 +495,28 @@ objectJson += ",\"scorecardMeasure\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Rank property
-		setRank(JsonUtils.getJsonInteger(jsonObject, "rank"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Is Removed property
-		setIsRemoved(JsonUtils.getJsonBoolean(jsonObject, "isRemoved"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Updated BY property
-		setUpdatedBY(JsonUtils.getJsonString(jsonObject, "updatedBY"));
-		//From value of the Scope property
-		setScope(JsonUtils.getJsonString(jsonObject, "scope"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Rank property
+		setRank(JsonUtils.getJsonInteger(jsonObject, "rank"));
+		//From value of the Scope property
+		setScope(JsonUtils.getJsonString(jsonObject, "scope"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Is Removed property
+		setIsRemoved(JsonUtils.getJsonBoolean(jsonObject, "isRemoved"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Updated BY property
+		setUpdatedBY(JsonUtils.getJsonString(jsonObject, "updatedBY"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 
 		
 		// Source Relationships

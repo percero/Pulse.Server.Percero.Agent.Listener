@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 Description
 Notes:
 */
@@ -118,6 +101,23 @@ public String getDescription()
 public void setDescription(String description)
 {
 	this.description = description;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }
 
 	//////////////////////////////////////////////////////
@@ -152,16 +152,16 @@ public void setCorrectiveActions(List<CorrectiveAction> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
 		
-		if (getName() == null)
+		if (getDescription() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getDescription());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -173,16 +173,16 @@ public void setCorrectiveActions(List<CorrectiveAction> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getDescription() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -228,10 +228,10 @@ objectJson += ",\"correctiveActions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships
