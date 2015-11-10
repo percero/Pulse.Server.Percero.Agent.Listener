@@ -2,11 +2,11 @@ package com.pulse.sync.enums;
 
 public enum TimecardStatus {
 	
-	NOT_STARTED("Not Started"),
-	IN_PROGRESS("In Progress"),
-	COMPLETED("Completed"),
-	NO_SHIFT("No Shift"),
-	UNKNOWN("Unknown");
+	NOT_STARTED("NOT STARTED"),
+	IN_PROGRESS("IN PROGRESS"),
+	COMPLETED("COMPLETED"),
+	NO_SHIFT("NO SHIFT"),
+	UNKNOWN("UNKNOWN");
 	
 	private final String value;
 	public String getValue() {
