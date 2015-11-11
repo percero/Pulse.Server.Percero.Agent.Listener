@@ -171,6 +171,7 @@ public class TeamLeaderPostGetTask implements Runnable {
 					existingCoachingNotification.setType("CoachingNotification");
 					existingCoachingNotification.setTeamLeader(host);
 					existingCoachingNotification.setWeekDate(nextWeekDate);
+					existingCoachingNotification.setScorecard(nextTeamLeaderScorecard);
 					existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
 					
 					Iterator<AgentScorecard> itrAgentScorecards = existingCoachingNotification.getAgentScorecards().iterator();
