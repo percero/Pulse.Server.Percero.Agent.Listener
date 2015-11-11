@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.access.IAccessManager;
 import com.percero.agents.sync.cw.IChangeWatcherHelper;
@@ -72,7 +73,7 @@ public class TimerWorker {
 								while (itrTimecards.hasNext()) {
 									Timecard timecard = (Timecard) syncAgentService.systemGetById(Timecard.class.getCanonicalName(), itrTimecards.next().getID());
 
-									if (timecard != null) {
+									if (timecard != null && StringUtils.hasText(timecard.getID()) && !"null".equalsIgnoreCase(timecard.getID())) {
 										recalcChangeWatcher(timecard.getClass().getCanonicalName(), timecard.getID(), TimecardCWHelper.CURRENTSTATUS);
 									}
 								}
