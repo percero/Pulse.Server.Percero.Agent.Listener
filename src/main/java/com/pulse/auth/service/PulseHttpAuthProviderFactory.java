@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.percero.agents.auth.services.AuthProviderRegistry;
+import com.percero.agents.auth.services.AuthService2;
 import com.percero.agents.sync.services.ISyncAgentService;
 
 /**
@@ -36,13 +37,16 @@ public class PulseHttpAuthProviderFactory {
 
     @Autowired
     ISyncAgentService syncAgentService;
+    
+    @Autowired
+    AuthService2 authService2;
 
     @PostConstruct
     public void init(){
         if(hostPortAndContext != null){
             logger.info("Using PulseHttpAuthProvider with endpoint: "+hostPortAndContext + (insecureMode ? " (dev mode)" : ""));
             PulseHttpAuthProvider provider = new PulseHttpAuthProvider(hostPortAndContext, objectMapper,
-                    trustAllCerts, syncAgentService, insecureMode);
+                    trustAllCerts, syncAgentService, authService2, insecureMode);
             authProviderRegistry.addProvider(provider);
         }
     }
