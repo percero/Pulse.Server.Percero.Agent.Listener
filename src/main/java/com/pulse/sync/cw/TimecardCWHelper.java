@@ -35,6 +35,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     public static final String CURRENTSTATUS = "currentStatus";
 	public static final String STARTDATE = "startDate";
 	public static final String ENDDATE = "endDate";
+	public static final String AGENT_TIME_ZONE = "agentTimeZone";
+	public static final String TIME_ZONE = "agenttTimeZone";
 
 
 
@@ -59,6 +61,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             } catch (Exception e) {
                 log.error("Unable to calculate " + SHIFT_STATUS_NOTIFICATION, e);
             }
+        }
+        else if (fieldName.equalsIgnoreCase(TIME_ZONE)) {
+        	try {
+        		result = calc_timeZone(pair, TIME_ZONE);
+        		postCalculate(fieldName, pair, params, result, oldValue);
+        	} catch (Exception e) {
+        		log.error("Unable to calculate " + TIME_ZONE, e);
+        	}
+        }
+        else if (fieldName.equalsIgnoreCase(AGENT_TIME_ZONE)) {
+        	try {
+        		result = calc_agentTimeZone(pair, AGENT_TIME_ZONE);
+        		postCalculate(fieldName, pair, params, result, oldValue);
+        	} catch (Exception e) {
+        		log.error("Unable to calculate " + AGENT_TIME_ZONE, e);
+        	}
         }
         else if (SHIFT.equalsIgnoreCase(fieldName)) {
             try {
@@ -327,6 +345,91 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     }
 
 
+    
+    public ClassIDPair calc_agentTimeZone(ClassIDPair pair, String derivedValueName) {
+    	ClassIDPair result = null;
+    	
+    	try {
+    		Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+    		if (host == null) {
+    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+    			return result;
+    		}
+    		
+    		// Setup fieldsToWatch.
+    		Collection<String> fieldsToWatch = new HashSet<String>();
+    		
+    		// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+			Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+			if (agent != null) {
+				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
+				AgentTimeZone agentTimeZone = agent.getAgentTimeZone();	// We only need the ID here, so don't load from the database.
+				if (agentTimeZone != null) {
+					result = BaseDataObject.toClassIdPair(agentTimeZone);
+				}
+				else {
+					log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+				}
+			}
+			else {
+				log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+			}
+    		
+    		// Register all the fields to watch for this ChangeWatcher. Whenever
+    		// ANY of these fields change, this ChangeWatcher will get re-run
+    		accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+    		
+    		// Store the result for caching, and also for comparing new results to see if there has been a change.
+    		accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+    	} catch(Exception e) {
+    		log.error("Unable to calculate " + derivedValueName, e);
+    	}
+    	
+    	return result;
+    }
+    
+    public String calc_timeZone(ClassIDPair pair, String derivedValueName) {
+    	String result = null;
+    	
+    	try {
+    		Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+    		if (host == null) {
+    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+    			return result;
+    		}
+    		
+    		// Setup fieldsToWatch.
+    		Collection<String> fieldsToWatch = new HashSet<String>();
+    		
+    		// We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
+			accessManager.addWatcherField(pair, "agentTimeZone", fieldsToWatch);
+			AgentTimeZone agentTimeZone = host.getAgentTimeZone();
+			if (agentTimeZone != null) {
+				accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentTimeZone), "timeZone", fieldsToWatch);
+				try {
+					result = agentTimeZone.getTimeZone();
+				} catch(Exception e) {
+					// Invalid time zone.
+					log.error("Invalid time zone " + agentTimeZone.getTimeZone(), e);
+				}
+			}
+			else {
+				log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+			}
+    		
+    		// Register all the fields to watch for this ChangeWatcher. Whenever
+    		// ANY of these fields change, this ChangeWatcher will get re-run
+    		accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+    		
+    		// Store the result for caching, and also for comparing new results to see if there has been a change.
+    		accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+    	} catch(Exception e) {
+    		log.error("Unable to calculate " + derivedValueName, e);
+    	}
+    	
+    	return result;
+    }
 
 	public Date calc_startDate(ClassIDPair pair, String derivedValueName) {
 		Date result = null;
@@ -346,36 +449,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 			Date sourceStartDate = host.getSourceStartDate();
 			
 			if (sourceStartDate != null && sourceStartDate.getTime() > 0) {
-				accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-				Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-				if (agent != null) {
-					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
-					AgentTimeZone agentTimeZone = syncAgentService.systemGetByObject(agent.getAgentTimeZone());
-					if (agentTimeZone != null) {
-						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentTimeZone), "timeZone", fieldsToWatch);
-						try {
-							DateTimeZone dateTimeZone = DateTimeZone.forID(agentTimeZone.getTimeZone());
-							if (dateTimeZone != null) {
-								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
-								
-								// The Source Time MINUS the Offset gives us UTC.
-								DateTime startDate = new DateTime(sourceStartDate.getTime() - offsetInMs);
-								result = startDate.toDate();
-							}
-							else {
-								log.warn("Invalid time zone " + agentTimeZone.getTimeZone());
-							}
-						} catch(Exception e) {
-							// Invalid time zone.
-							log.error("Invalid time zone " + agentTimeZone.getTimeZone(), e);
-						}
+				accessManager.addWatcherField(pair, TIME_ZONE, fieldsToWatch);
+				try {
+					DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
+					if (dateTimeZone != null) {
+						int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+						
+						// The Source Time MINUS the Offset gives us UTC.
+						DateTime startDate = new DateTime(sourceStartDate.getTime() - offsetInMs);
+						result = startDate.toDate();
 					}
 					else {
-						log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+						log.warn("Invalid time zone " + host.getTimeZone());
 					}
-				}
-				else {
-					log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+				} catch(Exception e) {
+					// Invalid time zone.
+					log.error("Invalid time zone " + host.getTimeZone(), e);
 				}
 			}
 			
@@ -414,36 +503,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 			Date sourceEndDate = host.getSourceEndDate();
 			
 			if (sourceEndDate != null && sourceEndDate.getTime() > 0) {
-				accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-				Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-				if (agent != null) {
-					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
-					AgentTimeZone agentTimeZone = syncAgentService.systemGetByObject(agent.getAgentTimeZone());
-					if (agentTimeZone != null) {
-						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentTimeZone), "timeZone", fieldsToWatch);
-						try {
-							DateTimeZone dateTimeZone = DateTimeZone.forID(agentTimeZone.getTimeZone());
-							if (dateTimeZone != null) {
-								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
-								
-								// The Source Time MINUS the Offset gives us UTC.
-								DateTime endDate = new DateTime(sourceEndDate.getTime() - offsetInMs);
-								result = endDate.toDate();
-							}
-							else {
-								log.warn("Invalid time zone " + agentTimeZone.getTimeZone());
-							}
-						} catch(Exception e) {
-							// Invalid time zone.
-							log.error("Invalid time zone " + agentTimeZone.getTimeZone(), e);
-						}
+				accessManager.addWatcherField(pair, TIME_ZONE, fieldsToWatch);
+				try {
+					DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
+					if (dateTimeZone != null) {
+						int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+						
+						// The Source Time MINUS the Offset gives us UTC.
+						DateTime endDate = new DateTime(sourceEndDate.getTime() - offsetInMs);
+						result = endDate.toDate();
 					}
 					else {
-						log.warn("Unable to get AgentTimeZone, using SourceEndDate as EndDate");
+						log.warn("Invalid time zone " + host.getTimeZone());
 					}
-				}
-				else {
-					log.warn("Unable to get AgentTimeZone, using SourceEndDate as EndDate");
+				} catch(Exception e) {
+					// Invalid time zone.
+					log.error("Invalid time zone " + host.getTimeZone(), e);
 				}
 			}
 			
