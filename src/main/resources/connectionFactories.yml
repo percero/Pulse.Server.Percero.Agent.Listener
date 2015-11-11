@@ -1,6 +1,6 @@
 !com.pulse.dataprovider.SqlConnectionFactory
 name: default
-preferredConnectionPool: c3p0
+preferredConnectionPool: hikari
 driverClassName: oracle.jdbc.OracleDriver
 jdbcUrl: jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1523/edwrt.world
 username: PULSEUSER2
@@ -13,7 +13,7 @@ maxPoolSize: 52
 ---
 !com.pulse.dataprovider.SqlConnectionFactory
 name: estart
-preferredConnectionPool: c3p0
+preferredConnectionPool: hikari
 driverClassName: oracle.jdbc.OracleDriver
 jdbcUrl:  jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1524/cybtst.cmg.convergys.com
 username: pulse
@@ -26,7 +26,7 @@ maxPoolSize: 52
 ---
 !com.pulse.dataprovider.SqlConnectionFactory
 name: cms
-preferredConnectionPool: c3p0
+preferredConnectionPool: hikari
 driverClassName: oracle.jdbc.OracleDriver
 jdbcUrl: jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1523/dasht
 username: PULSEUSER

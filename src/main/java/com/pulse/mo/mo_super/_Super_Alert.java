@@ -119,23 +119,6 @@ public void setDate(Date date)
 {
 	this.date = date;
 }/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 Type
 Notes:The class type for the generalization tree
 */
@@ -152,6 +135,23 @@ public String getType()
 public void setType(String type)
 {
 	this.type = type;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }
 
 	//////////////////////////////////////////////////////
@@ -214,16 +214,16 @@ public void setTeamLeader(TeamLeader value) {
 		else {
 			objectJson += getDate().getTime();
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
 		
-		if (getName() == null)
+		if (getType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -235,16 +235,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Type property
-		objectJson += ",\"type\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getType() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -289,10 +289,10 @@ objectJson += ",\"teamLeader\":";
 		setHasBeenRead(JsonUtils.getJsonString(jsonObject, "hasBeenRead"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Type property
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships

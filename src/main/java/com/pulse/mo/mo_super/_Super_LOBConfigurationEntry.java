@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-DurationToleranceInterval
-Notes:
+DurationToleranceEnabled
+Notes:When there is no tolerance "None" this will be false
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer durationToleranceInterval;
+private Boolean durationToleranceEnabled;
 
-public Integer getDurationToleranceInterval() 
+public Boolean getDurationToleranceEnabled() 
 {
-	return this.durationToleranceInterval;
+	return this.durationToleranceEnabled;
 }
 
-public void setDurationToleranceInterval(Integer durationToleranceInterval)
+public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
 {
-	this.durationToleranceInterval = durationToleranceInterval;
+	this.durationToleranceEnabled = durationToleranceEnabled;
 }/*
 OccurrenceToleranceInterval
 Notes:The number of times a event can happen before a notification is sent
@@ -119,23 +119,6 @@ public void setOccurrenceToleranceInterval(Integer occurrenceToleranceInterval)
 {
 	this.occurrenceToleranceInterval = occurrenceToleranceInterval;
 }/*
-DurationToleranceEnabled
-Notes:When there is no tolerance "None" this will be false
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean durationToleranceEnabled;
-
-public Boolean getDurationToleranceEnabled() 
-{
-	return this.durationToleranceEnabled;
-}
-
-public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
-{
-	this.durationToleranceEnabled = durationToleranceEnabled;
-}/*
 ReminderInterval
 Notes:The number of minutes before notification are resent after being dismissed
 */
@@ -152,6 +135,23 @@ public Integer getReminderInterval()
 public void setReminderInterval(Integer reminderInterval)
 {
 	this.reminderInterval = reminderInterval;
+}/*
+DurationToleranceInterval
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationToleranceInterval;
+
+public Integer getDurationToleranceInterval() 
+{
+	return this.durationToleranceInterval;
+}
+
+public void setDurationToleranceInterval(Integer durationToleranceInterval)
+{
+	this.durationToleranceInterval = durationToleranceInterval;
 }/*
 DurationTolerance
 Notes:
@@ -230,26 +230,12 @@ public void setNotificationFrequency(NotificationFrequency value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Duration Tolerance Interval property
-		objectJson += ",\"durationToleranceInterval\":";
-		
-		if (getDurationToleranceInterval() == null)
+		//Retrieve value of the Duration Tolerance Enabled property
+		objectJson += ",\"durationToleranceEnabled\":";
+		if (getDurationToleranceEnabled() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getDurationToleranceEnabled();
 		}
 		//Retrieve value of the Occurrence Tolerance Interval property
 		objectJson += ",\"occurrenceToleranceInterval\":";
@@ -272,13 +258,6 @@ public void setNotificationFrequency(NotificationFrequency value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Duration Tolerance Enabled property
-		objectJson += ",\"durationToleranceEnabled\":";
-		if (getDurationToleranceEnabled() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDurationToleranceEnabled();
-		}
 		//Retrieve value of the Reminder Interval property
 		objectJson += ",\"reminderInterval\":";
 		
@@ -289,6 +268,27 @@ public void setNotificationFrequency(NotificationFrequency value)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getReminderInterval());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Duration Tolerance Interval property
+		objectJson += ",\"durationToleranceInterval\":";
+		
+		if (getDurationToleranceInterval() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -379,14 +379,14 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Duration Tolerance Interval property
-		setDurationToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "durationToleranceInterval"));
-		//From value of the Occurrence Tolerance Interval property
-		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
 		//From value of the Duration Tolerance Enabled property
 		setDurationToleranceEnabled(JsonUtils.getJsonBoolean(jsonObject, "durationToleranceEnabled"));
+		//From value of the Occurrence Tolerance Interval property
+		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
 		//From value of the Reminder Interval property
 		setReminderInterval(JsonUtils.getJsonInteger(jsonObject, "reminderInterval"));
+		//From value of the Duration Tolerance Interval property
+		setDurationToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "durationToleranceInterval"));
 		//From value of the Duration Tolerance property
 		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
 

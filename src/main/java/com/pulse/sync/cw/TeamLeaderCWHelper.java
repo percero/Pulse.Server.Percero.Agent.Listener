@@ -74,7 +74,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 				return results;
 			}
 
-			Set<AgentScorecard> agentScorecards = new HashSet<AgentScorecard>();
+			Set<String> agentScorecardIds = new HashSet<String>();
 
 			// Setup fieldsToWatch.
 			Collection<String> fieldsToWatch = new HashSet<String>();
@@ -89,19 +89,20 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentScorecards", fieldsToWatch);
 					Iterator<AgentScorecard> itrAgentScorecards = agent.getAgentScorecards().iterator();
 					while (itrAgentScorecards.hasNext()) {
-						AgentScorecard agentScorecard = syncAgentService.systemGetByObject(itrAgentScorecards.next());
+						// Since we only return a list of ClassIDPair's AND we are not doing any sorting, we only need to retrieve the ID here.
+						AgentScorecard agentScorecard = itrAgentScorecards.next();
 
-						if (agentScorecard != null) {
-							agentScorecards.add(agentScorecard);
+						if (agentScorecard != null && StringUtils.hasText(agentScorecard.getID())) {
+							agentScorecardIds.add(agentScorecard.getID());
 						}
 					}
 				}
 			}
 
-			Iterator<AgentScorecard> itrAgentScorecards = agentScorecards.iterator();
-			while (itrAgentScorecards.hasNext()) {
-				AgentScorecard nextResult = itrAgentScorecards.next();
-				results.add(BaseDataObject.toClassIdPair(nextResult));
+			Iterator<String> itrAgentScorecardIds = agentScorecardIds.iterator();
+			while (itrAgentScorecardIds.hasNext()) {
+				String nextResult = itrAgentScorecardIds.next();
+				results.add(new ClassIDPair(nextResult, AgentScorecard.class.getCanonicalName()));
 			}
 
 			// Register all the fields to watch for this ChangeWatcher. Whenever

@@ -85,39 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-CreatedOn
+Type
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String createdOn;
+private String type;
 
-public String getCreatedOn() 
+public String getType() 
 {
-	return this.createdOn;
+	return this.type;
 }
 
-public void setCreatedOn(String createdOn)
+public void setType(String type)
 {
-	this.createdOn = createdOn;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
+	this.type = type;
 }/*
 CreatedBy
 Notes:
@@ -153,22 +136,56 @@ public void setTempStoreId(String tempStoreId)
 {
 	this.tempStoreId = tempStoreId;
 }/*
-UpdatedOn
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String updatedOn;
+private String name;
 
-public String getUpdatedOn() 
+public String getName() 
 {
-	return this.updatedOn;
+	return this.name;
 }
 
-public void setUpdatedOn(String updatedOn)
+public void setName(String name)
 {
-	this.updatedOn = updatedOn;
+	this.name = name;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdOn;
+
+public String getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(String createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+Version
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String version;
+
+public String getVersion() 
+{
+	return this.version;
+}
+
+public void setVersion(String version)
+{
+	this.version = version;
 }/*
 EmployeeId
 Notes:
@@ -204,22 +221,22 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-Type
+UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private String updatedOn;
 
-public String getType() 
+public String getUpdatedOn() 
 {
-	return this.type;
+	return this.updatedOn;
 }
 
-public void setType(String type)
+public void setUpdatedOn(String updatedOn)
 {
-	this.type = type;
+	this.updatedOn = updatedOn;
 }/*
 Description
 Notes:
@@ -237,23 +254,6 @@ public String getDescription()
 public void setDescription(String description)
 {
 	this.description = description;
-}/*
-Version
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String version;
-
-public String getVersion() 
-{
-	return this.version;
-}
-
-public void setVersion(String version)
-{
-	this.version = version;
 }
 
 	//////////////////////////////////////////////////////
@@ -288,37 +288,16 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
+		//Retrieve value of the Type property
+		objectJson += ",\"type\":";
 		
-		if (getCreatedOn() == null)
+		if (getType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
-		
-		if (getName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -372,16 +351,58 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getUpdatedOn() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
+				objectJson += objectMapper.writeValueAsString(getName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedOn());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Version property
+		objectJson += ",\"version\":";
+		
+		if (getVersion() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getVersion());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -435,16 +456,16 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Type property
-		objectJson += ",\"type\":";
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
 		
-		if (getType() == null)
+		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getType());
+				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -466,27 +487,6 @@ public void setAdhocCoachingSession(AdhocCoachingSession value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Version property
-		objectJson += ",\"version\":";
-		
-		if (getVersion() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getVersion());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -527,26 +527,26 @@ objectJson += ",\"adhocCoachingSession\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonString(jsonObject, "createdOn"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Temp Store Id property
 		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonString(jsonObject, "createdOn"));
+		//From value of the Version property
+		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Version property
-		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
 
 		
 		// Source Relationships

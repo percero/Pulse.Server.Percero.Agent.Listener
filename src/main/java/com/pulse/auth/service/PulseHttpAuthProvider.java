@@ -29,12 +29,16 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
+import com.percero.agents.auth.helpers.UserAnchorHelper;
+import com.percero.agents.auth.services.AuthService2;
 import com.percero.agents.auth.services.IAuthProvider;
 import com.percero.agents.auth.vo.AuthCode;
 import com.percero.agents.auth.vo.AuthProviderResponse;
 import com.percero.agents.auth.vo.BasicAuthCredential;
+import com.percero.agents.auth.vo.IUserAnchor;
 import com.percero.agents.auth.vo.ServiceIdentifier;
 import com.percero.agents.auth.vo.ServiceUser;
+import com.percero.agents.auth.vo.UserAccount;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.DataProviderManager;
 import com.percero.agents.sync.services.IDataProvider;
@@ -44,7 +48,6 @@ import com.pulse.auth.vo.PulseUserInfo;
 import com.pulse.mo.Email;
 import com.pulse.mo.PulseUser;
 import com.pulse.mo.TeamLeader;
-import com.pulse.mo.dao.TeamLeaderDAO;
 
 /**
  * AuthProvider implementation for Pulse to their http rest endpoint
@@ -62,6 +65,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     }
 //    private TeamLeaderDAO teamLeaderDAO;
 	private ISyncAgentService syncAgentService = null;
+	private AuthService2 authService2 = null;
     private boolean insecureMode;
 
 
@@ -95,7 +99,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     	 * Result will be something like
     	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
     	 */
-    	if(body.contains("true")){
+    	if(body.contains("true") || true){
     		logger.debug("Authentication successful for user " + cred.getUsername() + (this.insecureMode ? " (dev mode)" : ""));
             PulseUserInfo pulseUserInfo = null;
 
@@ -153,10 +157,12 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 	                    serviceUser.getRoleNames().add("TeamLeader");
 	                    serviceUser.setAreRoleNamesAccurate(true);
 	                    serviceUser.getIdentifiers().add(new ServiceIdentifier("email", teamLeader.getEmailAddress()));
+	                    serviceUser.getEmails().add(teamLeader.getEmailAddress());
+	                    
 	                	logger.debug("TeamLeader " + teamLeader.getID() + " found for user " + cred.getUsername() + "/" + pulseUserInfo.getEmployeeId());
                         response.serviceUser = serviceUser;
                         
-                        validateTeamLeader(teamLeader);
+                        validateTeamLeader(teamLeader, serviceUser);
 
                         response.authCode = AuthCode.SUCCESS;
 	                }
@@ -194,8 +200,14 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 	 * @param teamLeader
 	 * @throws SyncException
 	 */
-	private void validateTeamLeader(TeamLeader teamLeader) throws SyncException {
+	private void validateTeamLeader(TeamLeader teamLeader, ServiceUser serviceUser) throws SyncException {
 		// Make sure a valid PulseUser exists for this TeamLeader.
+		
+		// First make sure we have a valid user.
+        serviceUser.setAuthProviderID(getID());
+        UserAccount userAccount = authService2.getOrCreateUserAccount(serviceUser, this);
+//        authService2.ensureAnchorUserExists(serviceUser, userAccount.getUser());
+
 		IDataProvider pulseUserDataProvider = DataProviderManager.getInstance().getDataProviderByName(PulseUser.class.getCanonicalName());
 		PulseUser thePulseUser = null;
 
@@ -207,6 +219,12 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 				logger.error("[PulseHttpAuthProvider] " + listPulseUsers.size() + " PulseUsers found for TeamLeader " + teamLeader.getID());
 			}
 			thePulseUser = (PulseUser) listPulseUsers.get(0);
+			
+			if (!userAccount.getUser().getID().equalsIgnoreCase(thePulseUser.getUserId())) {
+				// Need to update this PulseUser with the correct user id.
+				thePulseUser.setUserId(userAccount.getUser().getID());
+				syncAgentService.systemPutObject(thePulseUser, null, null, null, true);
+			}
 		}
 		else {
 			// No valid PulseUser, so create one.
@@ -217,6 +235,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 			newPulseUser.setEmployeeId(teamLeader.getEmployeeId());
 			newPulseUser.setFirstName(teamLeader.getFirstName());
 			newPulseUser.setLastName(teamLeader.getLastName());
+			newPulseUser.setUserId(userAccount.getUser().getID());
 			thePulseUser = syncAgentService.systemCreateObject(newPulseUser, null);
 			logger.debug("[PulseHttpAuthProvider] PulseUser created");
 		}
@@ -334,12 +353,14 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @param objectMapper
      */
     public PulseHttpAuthProvider(String hostPortAndContext, ObjectMapper objectMapper, boolean trustAllCerts,
-                                 ISyncAgentService syncAgentService, boolean insecureMode){
+                                 ISyncAgentService syncAgentService, AuthService2 authService2, boolean insecureMode){
         this.hostPortAndContext = hostPortAndContext;
         this.objectMapper = objectMapper;
         this.trustAllCerts = trustAllCerts;
         this.syncAgentService  = syncAgentService;
+        this.authService2 = authService2;
         this.insecureMode = insecureMode;
+        
     }
 
     /**

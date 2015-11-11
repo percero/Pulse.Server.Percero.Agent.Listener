@@ -85,6 +85,125 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
+}/*
+LockLevel
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String lockLevel;
+
+public String getLockLevel() 
+{
+	return this.lockLevel;
+}
+
+public void setLockLevel(String lockLevel)
+{
+	this.lockLevel = lockLevel;
+}/*
+Quartile
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer quartile;
+
+public Integer getQuartile() 
+{
+	return this.quartile;
+}
+
+public void setQuartile(Integer quartile)
+{
+	this.quartile = quartile;
+}/*
+WeekDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekDate;
+
+public Date getWeekDate() 
+{
+	return this.weekDate;
+}
+
+public void setWeekDate(Date weekDate)
+{
+	this.weekDate = weekDate;
+}/*
+Score
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double score;
+
+public Double getScore() 
+{
+	return this.score;
+}
+
+public void setScore(Double score)
+{
+	this.score = score;
+}/*
+PointsReceived
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsReceived;
+
+public Double getPointsReceived() 
+{
+	return this.pointsReceived;
+}
+
+public void setPointsReceived(Double pointsReceived)
+{
+	this.pointsReceived = pointsReceived;
+}/*
+Grade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer grade;
+
+public Integer getGrade() 
+{
+	return this.grade;
+}
+
+public void setGrade(Integer grade)
+{
+	this.grade = grade;
+}/*
 StartDate
 Notes:
 */
@@ -118,125 +237,6 @@ public Double getPointsPossible()
 public void setPointsPossible(Double pointsPossible)
 {
 	this.pointsPossible = pointsPossible;
-}/*
-Quartile
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer quartile;
-
-public Integer getQuartile() 
-{
-	return this.quartile;
-}
-
-public void setQuartile(Integer quartile)
-{
-	this.quartile = quartile;
-}/*
-LockLevel
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String lockLevel;
-
-public String getLockLevel() 
-{
-	return this.lockLevel;
-}
-
-public void setLockLevel(String lockLevel)
-{
-	this.lockLevel = lockLevel;
-}/*
-PointsReceived
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double pointsReceived;
-
-public Double getPointsReceived() 
-{
-	return this.pointsReceived;
-}
-
-public void setPointsReceived(Double pointsReceived)
-{
-	this.pointsReceived = pointsReceived;
-}/*
-WeekDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date weekDate;
-
-public Date getWeekDate() 
-{
-	return this.weekDate;
-}
-
-public void setWeekDate(Date weekDate)
-{
-	this.weekDate = weekDate;
-}/*
-Grade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer grade;
-
-public Integer getGrade() 
-{
-	return this.grade;
-}
-
-public void setGrade(Integer grade)
-{
-	this.grade = grade;
-}/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
-}/*
-Score
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double score;
-
-public Double getScore() 
-{
-	return this.score;
-}
-
-public void setScore(Double score)
-{
-	this.score = score;
 }
 
 	//////////////////////////////////////////////////////
@@ -350,40 +350,12 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the Points Possible property
-		objectJson += ",\"pointsPossible\":";
-		if (getPointsPossible() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsPossible();
-		}
-		//Retrieve value of the Quartile property
-		objectJson += ",\"quartile\":";
-		
-		if (getQuartile() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getQuartile());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getEndDate().getTime();
 		}
 		//Retrieve value of the Lock Level property
 		objectJson += ",\"lockLevel\":";
@@ -406,12 +378,26 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Points Received property
-		objectJson += ",\"pointsReceived\":";
-		if (getPointsReceived() == null)
+		//Retrieve value of the Quartile property
+		objectJson += ",\"quartile\":";
+		
+		if (getQuartile() == null)
 			objectJson += "null";
 		else {
-			objectJson += getPointsReceived();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getQuartile());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Week Date property
 		objectJson += ",\"weekDate\":";
@@ -419,6 +405,20 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 			objectJson += "null";
 		else {
 			objectJson += getWeekDate().getTime();
+		}
+		//Retrieve value of the Score property
+		objectJson += ",\"score\":";
+		if (getScore() == null)
+			objectJson += "null";
+		else {
+			objectJson += getScore();
+		}
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsReceived();
 		}
 		//Retrieve value of the Grade property
 		objectJson += ",\"grade\":";
@@ -441,19 +441,19 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getEndDate().getTime();
+			objectJson += getStartDate().getTime();
 		}
-		//Retrieve value of the Score property
-		objectJson += ",\"score\":";
-		if (getScore() == null)
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
 			objectJson += "null";
 		else {
-			objectJson += getScore();
+			objectJson += getPointsPossible();
 		}
 
 				
@@ -576,24 +576,24 @@ objectJson += ",\"qualityEvaluations\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Lock Level property
+		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
+		//From value of the Quartile property
+		setQuartile(JsonUtils.getJsonInteger(jsonObject, "quartile"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Score property
+		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
+		//From value of the Points Received property
+		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Points Possible property
 		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
-		//From value of the Quartile property
-		setQuartile(JsonUtils.getJsonInteger(jsonObject, "quartile"));
-		//From value of the Lock Level property
-		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
-		//From value of the Points Received property
-		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Score property
-		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
 
 		
 		// Source Relationships

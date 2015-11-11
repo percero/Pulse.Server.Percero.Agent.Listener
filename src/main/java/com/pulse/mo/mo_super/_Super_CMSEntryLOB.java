@@ -102,6 +102,23 @@ public void setLOBName(String lOBName)
 {
 	this.lOBName = lOBName;
 }/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer employeeId;
+
+public Integer getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(Integer employeeId)
+{
+	this.employeeId = employeeId;
+}/*
 ClientId
 Notes:
 */
@@ -118,6 +135,23 @@ public Integer getClientId()
 public void setClientId(Integer clientId)
 {
 	this.clientId = clientId;
+}/*
+SiteId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer siteId;
+
+public Integer getSiteId() 
+{
+	return this.siteId;
+}
+
+public void setSiteId(Integer siteId)
+{
+	this.siteId = siteId;
 }/*
 SiteName
 Notes:
@@ -152,40 +186,6 @@ public String getClientName()
 public void setClientName(String clientName)
 {
 	this.clientName = clientName;
-}/*
-SiteId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer siteId;
-
-public Integer getSiteId() 
-{
-	return this.siteId;
-}
-
-public void setSiteId(Integer siteId)
-{
-	this.siteId = siteId;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer employeeId;
-
-public Integer getEmployeeId() 
-{
-	return this.employeeId;
-}
-
-public void setEmployeeId(Integer employeeId)
-{
-	this.employeeId = employeeId;
 }
 
 	//////////////////////////////////////////////////////
@@ -254,6 +254,27 @@ public void setCMSEntry(CMSEntry value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Client Id property
 		objectJson += ",\"clientId\":";
 		
@@ -264,6 +285,27 @@ public void setCMSEntry(CMSEntry value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getClientId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Site Id property
+		objectJson += ",\"siteId\":";
+		
+		if (getSiteId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSiteId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -306,48 +348,6 @@ public void setCMSEntry(CMSEntry value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getClientName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Site Id property
-		objectJson += ",\"siteId\":";
-		
-		if (getSiteId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSiteId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
-		
-		if (getEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -402,16 +402,16 @@ objectJson += ",\"cMSEntry\":";
 		// Properties
 		//From value of the LOB Name property
 		setLOBName(JsonUtils.getJsonString(jsonObject, "lOBName"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 		//From value of the Client Id property
 		setClientId(JsonUtils.getJsonInteger(jsonObject, "clientId"));
+		//From value of the Site Id property
+		setSiteId(JsonUtils.getJsonInteger(jsonObject, "siteId"));
 		//From value of the Site Name property
 		setSiteName(JsonUtils.getJsonString(jsonObject, "siteName"));
 		//From value of the Client Name property
 		setClientName(JsonUtils.getJsonString(jsonObject, "clientName"));
-		//From value of the Site Id property
-		setSiteId(JsonUtils.getJsonInteger(jsonObject, "siteId"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonInteger(jsonObject, "employeeId"));
 
 		
 		// Source Relationships

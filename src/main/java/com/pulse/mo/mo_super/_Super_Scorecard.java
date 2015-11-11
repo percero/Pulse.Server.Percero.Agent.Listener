@@ -119,23 +119,6 @@ public void setECoachingLOBId(String eCoachingLOBId)
 {
 	this.eCoachingLOBId = eCoachingLOBId;
 }/*
-UpdatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date updatedOn;
-
-public Date getUpdatedOn() 
-{
-	return this.updatedOn;
-}
-
-public void setUpdatedOn(Date updatedOn)
-{
-	this.updatedOn = updatedOn;
-}/*
 Description
 Notes:
 */
@@ -152,23 +135,6 @@ public String getDescription()
 public void setDescription(String description)
 {
 	this.description = description;
-}/*
-RegionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String regionId;
-
-public String getRegionId() 
-{
-	return this.regionId;
-}
-
-public void setRegionId(String regionId)
-{
-	this.regionId = regionId;
 }/*
 UpdatedBy
 Notes:
@@ -187,22 +153,39 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-CreatedOn
+UpdatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private Date updatedOn;
 
-public Date getCreatedOn() 
+public Date getUpdatedOn() 
 {
-	return this.createdOn;
+	return this.updatedOn;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setUpdatedOn(Date updatedOn)
 {
-	this.createdOn = createdOn;
+	this.updatedOn = updatedOn;
+}/*
+RegionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String regionId;
+
+public String getRegionId() 
+{
+	return this.regionId;
+}
+
+public void setRegionId(String regionId)
+{
+	this.regionId = regionId;
 }/*
 Name
 Notes:
@@ -220,6 +203,23 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
 }/*
 CreatedBy
 Notes:
@@ -313,13 +313,6 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
 		
@@ -330,27 +323,6 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Region Id property
-		objectJson += ",\"regionId\":";
-		
-		if (getRegionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getRegionId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -383,12 +355,33 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
-			objectJson += getCreatedOn().getTime();
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Region Id property
+		objectJson += ",\"regionId\":";
+		
+		if (getRegionId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getRegionId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
@@ -410,6 +403,13 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
 		}
 		//Retrieve value of the Created By property
 		objectJson += ",\"createdBy\":";
@@ -470,18 +470,18 @@ objectJson += ",\"scorecardMeasures\":[";
 		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
 		//From value of the ECoaching LOB Id property
 		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
-		//From value of the Region Id property
-		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Region Id property
+		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 

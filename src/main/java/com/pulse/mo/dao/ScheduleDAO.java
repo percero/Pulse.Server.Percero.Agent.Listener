@@ -41,7 +41,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"END_TIME\" as \"END_TIME\", \"SCHEDULE\".\"START_TIME\" as \"START_TIME\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
+	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_TIME\" as \"SOURCE_START_TIME\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_TIME\" as \"SOURCE_END_TIME\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
 	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=? AND  \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) ";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) ";
@@ -167,10 +167,10 @@ Schedule nextResult = null;
 nextResult.setStartDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_DATE")));
 
 
-nextResult.setEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_TIME")));
+nextResult.setSourceEndTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_END_TIME")));
 
 
-nextResult.setStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("START_TIME")));
+nextResult.setSourceStartTime(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("SOURCE_START_TIME")));
 
 
 nextResult.setShift(rs.getInt("SHIFT"));
@@ -244,9 +244,9 @@ paramValues.add(theQueryObject.getStartDate());
 propertyCounter++;
 }
 
-boolean useEndTime = theQueryObject.getEndTime() != null && (excludeProperties == null || !excludeProperties.contains("endTime"));
+boolean useSourceEndTime = theQueryObject.getSourceEndTime() != null && (excludeProperties == null || !excludeProperties.contains("sourceEndTime"));
 
-if (useEndTime)
+if (useSourceEndTime)
 {
 if (propertyCounter > 0)
 {
@@ -256,14 +256,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " END_TIME=? ";
-paramValues.add(theQueryObject.getEndTime());
+sql += " SOURCE_END_TIME=? ";
+paramValues.add(theQueryObject.getSourceEndTime());
 propertyCounter++;
 }
 
-boolean useStartTime = theQueryObject.getStartTime() != null && (excludeProperties == null || !excludeProperties.contains("startTime"));
+boolean useSourceStartTime = theQueryObject.getSourceStartTime() != null && (excludeProperties == null || !excludeProperties.contains("sourceStartTime"));
 
-if (useStartTime)
+if (useSourceStartTime)
 {
 if (propertyCounter > 0)
 {
@@ -273,8 +273,8 @@ else
 {
 sql += " WHERE ";
 }
-sql += " START_TIME=? ";
-paramValues.add(theQueryObject.getStartTime());
+sql += " SOURCE_START_TIME=? ";
+paramValues.add(theQueryObject.getSourceStartTime());
 propertyCounter++;
 }
 
