@@ -94,20 +94,20 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 log.error("Unable to calculate currentStatus", e);
             }
         }
-		else if (fieldName.equalsIgnoreCase("startDate")) {
+		else if (fieldName.equalsIgnoreCase(STARTDATE)) {
 			try {
 				result = calc_startDate(pair, fieldName);
 				postCalculate(fieldName, pair, params, result, oldValue);
 			} catch(Exception e) {
-				log.error("Unable to calculate startDate", e);
+				log.error("Unable to calculate " + STARTDATE, e);
 			}
 		}
-		else if (fieldName.equalsIgnoreCase("endDate")) {
+		else if (fieldName.equalsIgnoreCase(ENDDATE)) {
 			try {
 				result = calc_endDate(pair, fieldName);
 				postCalculate(fieldName, pair, params, result, oldValue);
 			} catch(Exception e) {
-				log.error("Unable to calculate endDate", e);
+				log.error("Unable to calculate " + ENDDATE, e);
 			}
 		}
         else {

@@ -92,8 +92,8 @@ public class TimecardEntryCWHelper extends DerivedValueChangeWatcherHelper {
 								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
 								
 								// The Source Time MINUS the Offset gives us UTC.
-								DateTime startDate = new DateTime(sourceFromTime.getTime() - offsetInMs);
-								result = startDate.toDate();
+								DateTime fromDate = new DateTime(sourceFromTime.getTime() - offsetInMs);
+								result = fromDate.toDate();
 							}
 							else {
 								log.warn("Invalid time zone " + timeZone);
@@ -156,8 +156,8 @@ public class TimecardEntryCWHelper extends DerivedValueChangeWatcherHelper {
 								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
 								
 								// The Source Time MINUS the Offset gives us UTC.
-								DateTime startDate = new DateTime(sourceToTime.getTime() - offsetInMs);
-								result = startDate.toDate();
+								DateTime toDate = new DateTime(sourceToTime.getTime() - offsetInMs);
+								result = toDate.toDate();
 							}
 							else {
 								log.warn("Invalid time zone " + timeZone);
