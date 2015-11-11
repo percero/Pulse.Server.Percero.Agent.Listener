@@ -46,7 +46,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"COACHING_NOTIFICATION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -177,10 +177,17 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
+
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID)) {
+	Scorecard scorecard = new Scorecard();
+	scorecard.setID(scorecardID);
+	nextResult.setScorecard(scorecard);
 }
 
 
@@ -209,6 +216,15 @@ pstmt.setString(6, null);
 else
 {
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
+}
+
+if (perceroObject.getScorecard() == null)
+{
+	pstmt.setString(7, null);
+}
+else
+{
+	pstmt.setString(7, perceroObject.getScorecard().getID());
 }
 
 
@@ -248,6 +264,16 @@ pstmt.setString(6, null);
 else
 {
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getScorecard() == null)
+{
+	pstmt.setString(7, null);
+}
+else
+{
+	pstmt.setString(7, perceroObject.getScorecard().getID());
 }
 
 
@@ -360,6 +386,24 @@ propertyCounter++;
 }
 
 
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+	if (propertyCounter > 0)
+	{
+		sql += " AND ";
+	}
+	else
+	{
+		sql += " WHERE ";
+	}
+	sql += " \"SCORECARD_ID\" =? ";
+	paramValues.add(theQueryObject.getScorecard().getID());
+	propertyCounter++;
+}
+
+
 
 		if (propertyCounter == 0) {
 			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -370,11 +414,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
+		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
+		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
