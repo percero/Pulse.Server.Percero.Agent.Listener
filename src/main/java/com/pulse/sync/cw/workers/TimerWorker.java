@@ -19,6 +19,7 @@ import com.pulse.mo.PulseUser;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
 import com.pulse.mo.dao.AgentScorecardDAO;
+import com.pulse.mo.dao.CoachingNotificationDAO;
 import com.pulse.mo.dao.PulseUserDAO;
 import com.pulse.sync.cw.TimecardCWHelper;
 import com.pulse.sync.cw.task.TeamLeaderPostGetTask;
@@ -35,6 +36,8 @@ public class TimerWorker {
 	@Autowired
 	AgentScorecardDAO agentScorecardDAO;
 	
+	@Autowired
+	CoachingNotificationDAO coachingNotificationDAO;
 	@Autowired
 	ISyncAgentService syncAgentService;
 	
@@ -62,7 +65,7 @@ public class TimerWorker {
 				if (nextPulseUser != null) {
 					TeamLeader teamLeader = syncAgentService.systemGetByObject(nextPulseUser.getTeamLeader());
 					if (teamLeader != null) {
-						taskExecutor.execute(new TeamLeaderPostGetTask(syncAgentService, agentScorecardDAO, BaseDataObject.toClassIdPair(teamLeader)));
+						taskExecutor.execute(new TeamLeaderPostGetTask(syncAgentService, agentScorecardDAO, coachingNotificationDAO, BaseDataObject.toClassIdPair(teamLeader)));
 
 						Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
 						while (itrAgents.hasNext()) {

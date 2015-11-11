@@ -2,30 +2,27 @@
 
 package com.pulse.mo.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.util.DateUtils;
-import com.pulse.dataprovider.IConnectionFactory;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
-import com.pulse.dataprovider.IConnectionFactory;
 import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.util.DateUtils;
+import com.pulse.mo.CoachingNotification;
+import com.pulse.mo.Scorecard;
+import com.pulse.mo.TeamLeader;
 
 @Component
 public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNotification> implements IDataAccessObject<CoachingNotification> {
@@ -425,8 +422,32 @@ if (useScorecardID)
 		return "{call Delete_COACHING_NOTIFICATION(?)}";
 	}
 	
-	
-	
-	
+
+	public CoachingNotification fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
+		if (!StringUtils.hasText(teamLeaderId) || !StringUtils.hasText(scorecardId) || weekDate == null || weekDate.getTime() <= 0) {
+			log.warn("Invalid parameters fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
+			return null;
+		}
+
+		// Selecting for TeamLeader, Scorecard, and DATE ONLY of WeekDate.
+		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"TEAM_LEADER_ID\" =?  AND  \"SCORECARD_ID\" =? ";
+		Object[] paramValues = new Object[3];
+        
+		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);;
+		paramValues[1] = teamLeaderId;
+		paramValues[2] = scorecardId;
+		List<CoachingNotification> results;
+		try {
+			results = executeSelectWithParams(selectQueryString, paramValues, true);
+			
+			if (results != null && !results.isEmpty()) {
+				return results.get(0);
+			}
+		} catch (SyncDataException e) {
+			log.error("Error fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
+		}
+		
+		return null;
+	}
 }
 

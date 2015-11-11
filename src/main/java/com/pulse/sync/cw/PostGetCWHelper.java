@@ -14,6 +14,7 @@ import com.percero.agents.sync.vo.ClassIDPair;
 import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.dao.AgentScorecardDAO;
+import com.pulse.mo.dao.CoachingNotificationDAO;
 import com.pulse.sync.cw.task.TeamLeaderPostGetTask;
 
 // This should get picked up by Spring and be auto-wired.
@@ -45,6 +46,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	@Autowired
 	AgentScorecardDAO agentScorecardDAO;
 
+	@Autowired
+	CoachingNotificationDAO coachingNotificationDAO;
+	
 	@PostConstruct
 	public void initialize() {
 		ChangeWatcherHelperFactory.getInstance().registerChangeWatcherHelper(CATEGORY, this);
@@ -77,7 +81,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 
 	private IPerceroObject handleTeamLeader(ClassIDPair classIdPair, String[] params) {
 		try {
-			taskExecutor.execute(new TeamLeaderPostGetTask(syncAgentService, agentScorecardDAO, classIdPair));
+			taskExecutor.execute(new TeamLeaderPostGetTask(syncAgentService, agentScorecardDAO, coachingNotificationDAO, classIdPair));
 //			boolean shiftStatusResult = checkForOrCreateShiftStatusNotification(classIdPair);
 //			boolean coachingResult = checkForOrCreateCoachingNotification(classIdPair);
 //			if (shiftStatusResult || coachingResult) {

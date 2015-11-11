@@ -10,31 +10,32 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
-import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.Notification;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.dao.AgentScorecardDAO;
+import com.pulse.mo.dao.CoachingNotificationDAO;
 
 public class TeamLeaderPostGetTask implements Runnable {
 
 	private static final Logger log = Logger.getLogger(TeamLeaderPostGetTask.class);
 
-	public TeamLeaderPostGetTask(ISyncAgentService syncAgentService, AgentScorecardDAO agentScorecardDAO, ClassIDPair classIdPair) {
+	public TeamLeaderPostGetTask(ISyncAgentService syncAgentService, AgentScorecardDAO agentScorecardDAO, CoachingNotificationDAO coachingNotificationDAO, ClassIDPair classIdPair) {
 		this.syncAgentService = syncAgentService;
 		this.agentScorecardDAO = agentScorecardDAO;
+		this.coachingNotificationDAO = coachingNotificationDAO;
 		this.classIdPair = classIdPair;
 	}
 	
 	private ISyncAgentService syncAgentService;
 	private AgentScorecardDAO agentScorecardDAO;
+	private CoachingNotificationDAO coachingNotificationDAO;
 	private ClassIDPair classIdPair;
 	
 	public void run() {
@@ -76,10 +77,10 @@ public class TeamLeaderPostGetTask implements Runnable {
 		Iterator<Date> itrWeekDates = mostRecentWeekDates.iterator();
 		while ( itrWeekDates.hasNext() ) {
 			Date nextWeekDate = itrWeekDates.next();
-			DateTime nextWeekDateTime = new DateTime(nextWeekDate);
-			CoachingNotification existingCoachingNotification = null;
+//			DateTime nextWeekDateTime = new DateTime(nextWeekDate);
+//			CoachingNotification existingCoachingNotification = null;
 			
-			// TODO: Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
+			// Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
 			Iterator<Scorecard> itrTeamLeaderScorecards = teamLeaderScorecards.iterator();
 			while (itrTeamLeaderScorecards.hasNext()) {
 				// Since this was retrieved from a DerivedCollection, we know
@@ -92,109 +93,42 @@ public class TeamLeaderPostGetTask implements Runnable {
 					// Double-check that we have a valid TeamLeader Scorecard.
 					continue;
 				}
-
-				Iterator<Notification> itrNotifications = host.getNotifications().iterator();
-				while (itrNotifications.hasNext()) {
-					Notification nextNotification = itrNotifications.next();	// This only retrieves the "shell" object, meaning it only has the ID field set.
-					if (nextNotification != null && nextNotification instanceof CoachingNotification) {
-						// Retrieve the full object from the database since it is a CoachingNotification.
-						CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
-	
-						// Double-check we have a valid object.
-						if (nextCoachingNotification == null) {
-							continue;
-						}
-	
-						
-						// TODO: We also need to match on Scorecard, so we need to
-						// get the CoachingNotification Scorecard.
-						// NOTE: Since we will only be comparing ID's, we do NOT
-						// need to retrieve the full object from the database.
-						Scorecard coachingNotificationScorecard = nextCoachingNotification.getScorecard();
-						
-						if (coachingNotificationScorecard != null && coachingNotificationScorecard.getID() != null && coachingNotificationScorecard.getID().equalsIgnoreCase(nextTeamLeaderScorecard.getID())) {
-							// This CoachingNotification is for the same
-							// Scorecard, so we have a potential match. Now we
-							// need to compare week_date.
-							// Get the week date of this next CoachingNofication to compare it so the current week date.
-							DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
-							log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
-							log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
-							log.debug("[CoachingNotification]  AgentScoreCard DateTime" + nextWeekDateTime);
-							log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
-							
-							// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
-							if (DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, nextCoachingNotificationWeekDate) == 0) {
-								log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
-								existingCoachingNotification = nextCoachingNotification;
-								break;
-							}
-						}
-					}
-				}
 				
-				itrNotifications = createdNotifications.iterator();
-				while (itrNotifications.hasNext()) {
-					Notification nextNotification = itrNotifications.next();
-					if (nextNotification != null && nextNotification instanceof CoachingNotification) {
-						CoachingNotification nextCoachingNotification = (CoachingNotification) syncAgentService.systemGetByObject(nextNotification);
-						
-						if (nextCoachingNotification == null) {
-							continue;
-						}
-						
-						// NOTE: Since we will only be comparing ID's, we do NOT
-						// need to retrieve the full object from the database.
-						Scorecard coachingNotificationScorecard = nextCoachingNotification.getScorecard();
-
-						if (coachingNotificationScorecard != null && coachingNotificationScorecard.getID() != null && coachingNotificationScorecard.getID().equalsIgnoreCase(nextTeamLeaderScorecard.getID())) {
-							DateTime nextCoachingNotificationWeekDate = new DateTime(nextCoachingNotification.getWeekDate());
-							log.debug("[CoachingNotification]  CoachingNotification id - " + nextCoachingNotification.getID());
-							log.debug("[CoachingNotification]  nextCoachingNotificationWeekDate" + nextCoachingNotificationWeekDate);
-							log.debug("[CoachingNotification]  AgentScoreCard DateTime" + nextWeekDateTime);
-							log.debug("[CoachingNotification]  AgentScoreCard id" + host.getID());
-							// If AgentScorecard.weekDate == CoachingNotification.weekDate, we found a match.
-							if (DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, nextCoachingNotificationWeekDate) == 0) {
-								log.debug("[CoachingNotification]  Existing CoachingNotification found: " + nextCoachingNotification.getID());
-								existingCoachingNotification = nextCoachingNotification;
-								break;
-							}
-						}
-					}
-				}
-				
-				if (existingCoachingNotification == null) {
-					existingCoachingNotification = new CoachingNotification();
-					existingCoachingNotification.setID(UUID.randomUUID().toString());
-					existingCoachingNotification.setCreatedOn(nextWeekDate);
-					existingCoachingNotification.setName("Available for Coaching");
-					existingCoachingNotification.setType("CoachingNotification");
-					existingCoachingNotification.setTeamLeader(host);
-					existingCoachingNotification.setWeekDate(nextWeekDate);
-					existingCoachingNotification.setScorecard(nextTeamLeaderScorecard);
-					existingCoachingNotification = syncAgentService.systemCreateObject(existingCoachingNotification, null);
-					
-					Iterator<AgentScorecard> itrAgentScorecards = existingCoachingNotification.getAgentScorecards().iterator();
-					while (itrAgentScorecards.hasNext()) {
-						AgentScorecard nextAgentScorecard = itrAgentScorecards.next();
-						if (nextAgentScorecard != null) {
-							Scorecard scorecard = syncAgentService.systemGetByObject(nextAgentScorecard.getScorecard());
-							if (scorecard != null && StringUtils.hasText(scorecard.getName())) {
-								existingCoachingNotification.setName(scorecard.getName());
-								syncAgentService.systemPutObject(existingCoachingNotification, null, null, null, true);
-								break;
-							}
-						}
-					}
-					
-					createdNotifications.add(existingCoachingNotification);
-				}
+				validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(host, nextTeamLeaderScorecard, nextWeekDate);
 			}
 		}
 
 		return !createdNotifications.isEmpty();
 	}
 
+	public CoachingNotification validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(TeamLeader teamLeader, Scorecard scorecard, Date weekDate) {
+		
+		if (teamLeader == null || scorecard == null || weekDate == null || weekDate.getTime() <= 0) {
+			log.warn("Invalid data in validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate, ignoring request.");
+			return null;
+		}
+		
+		CoachingNotification existingCoachingNotification = coachingNotificationDAO.fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(teamLeader.getID(), scorecard.getID(), weekDate);
+		if (existingCoachingNotification == null) {
+			try {
+				// No matching CoachingNotification, so let's create one.
+				CoachingNotification newCoachingNotification = new CoachingNotification();
+				newCoachingNotification.setID(UUID.randomUUID().toString());
+				newCoachingNotification.setCreatedOn(weekDate);
+				newCoachingNotification.setName(scorecard.getName());
+				newCoachingNotification.setType("CoachingNotification");
+				newCoachingNotification.setTeamLeader(teamLeader);
+				newCoachingNotification.setWeekDate(weekDate);
+				newCoachingNotification.setScorecard(scorecard);
+				existingCoachingNotification = syncAgentService.systemCreateObject(newCoachingNotification, null);
+			} catch (SyncException e) {
+				log.error("Unable to query for existing CoachingNotification: " + e.getMessage(), e);
+			}
+		}
+		
+		return existingCoachingNotification;
+	}
+	
 	private boolean checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
 			throws SyncException {
 		TeamLeader host = (TeamLeader) syncAgentService
