@@ -15,7 +15,7 @@ maxPoolSize: 52
 name: estart
 preferredConnectionPool: hikari
 driverClassName: oracle.jdbc.OracleDriver
-jdbcUrl:  jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1524/cybtst.cmg.convergys.com
+jdbcUrl:  jdbc:oracle:thin:@//ec2-52-10-55-244.us-west-2.compute.amazonaws.com:1524/cybtim.cmg.convergys.com
 username: pulse
 password: pulse
 testQuery: SELECT 1 FROM dual
