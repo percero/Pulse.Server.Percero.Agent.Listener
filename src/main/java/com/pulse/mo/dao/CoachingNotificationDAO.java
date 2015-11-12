@@ -430,7 +430,7 @@ if (useScorecardID)
 		}
 
 		// Selecting for TeamLeader, Scorecard, and DATE ONLY of WeekDate.
-		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"TEAM_LEADER_ID\" =?  AND  \"SCORECARD_ID\" =? ";
+		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"COACHING_NOTIFICATION\".\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\" =?  AND  \"COACHING_NOTIFICATION\".\"SCORECARD_ID\" =? ";
 		Object[] paramValues = new Object[3];
         
 		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);;

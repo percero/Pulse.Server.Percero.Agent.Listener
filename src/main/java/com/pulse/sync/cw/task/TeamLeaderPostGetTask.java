@@ -1,6 +1,5 @@
 package com.pulse.sync.cw.task;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -8,34 +7,35 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
 
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.CoachingNotification;
-import com.pulse.mo.Notification;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.dao.AgentScorecardDAO;
 import com.pulse.mo.dao.CoachingNotificationDAO;
+import com.pulse.mo.dao.ShiftStatusNotificationDAO;
 
 public class TeamLeaderPostGetTask implements Runnable {
 
 	private static final Logger log = Logger.getLogger(TeamLeaderPostGetTask.class);
 
-	public TeamLeaderPostGetTask(ISyncAgentService syncAgentService, AgentScorecardDAO agentScorecardDAO, CoachingNotificationDAO coachingNotificationDAO, ClassIDPair classIdPair) {
+	public TeamLeaderPostGetTask(ISyncAgentService syncAgentService, AgentScorecardDAO agentScorecardDAO, CoachingNotificationDAO coachingNotificationDAO, ShiftStatusNotificationDAO shiftStatusNotificationDAO, ClassIDPair classIdPair) {
 		this.syncAgentService = syncAgentService;
 		this.agentScorecardDAO = agentScorecardDAO;
 		this.coachingNotificationDAO = coachingNotificationDAO;
+		this.shiftStatusNotificationDAO = shiftStatusNotificationDAO;
 		this.classIdPair = classIdPair;
 	}
 	
 	private ISyncAgentService syncAgentService;
 	private AgentScorecardDAO agentScorecardDAO;
 	private CoachingNotificationDAO coachingNotificationDAO;
+	private ShiftStatusNotificationDAO shiftStatusNotificationDAO;
 	private ClassIDPair classIdPair;
 	
 	public void run() {
@@ -57,18 +57,15 @@ public class TeamLeaderPostGetTask implements Runnable {
 	 * Scorecard.
 	 * 
 	 * @param classIdPair
-	 * @return
 	 * @throws SyncException
 	 */
-	private boolean checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
+	private void checkForOrCreateCoachingNotification(ClassIDPair classIdPair) throws SyncException {
 		TeamLeader host = (TeamLeader) syncAgentService.systemGetById(classIdPair);
 
 		log.debug("[PostGetCWHelper] [AgentScorecard] [CoachingNotification]");
 		
 		// Get the most recent WeekDates from AgentScorecard.
 		List<Date> mostRecentWeekDates = agentScorecardDAO.findCurrentWeekDates(classIdPair.getID());
-
-		List<Notification> createdNotifications = new ArrayList<Notification>();
 
 		// TODO: Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
 		List<Scorecard> teamLeaderScorecards = host.getScorecards();
@@ -97,8 +94,6 @@ public class TeamLeaderPostGetTask implements Runnable {
 				validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(host, nextTeamLeaderScorecard, nextWeekDate);
 			}
 		}
-
-		return !createdNotifications.isEmpty();
 	}
 
 	public CoachingNotification validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(TeamLeader teamLeader, Scorecard scorecard, Date weekDate) {
@@ -129,7 +124,7 @@ public class TeamLeaderPostGetTask implements Runnable {
 		return existingCoachingNotification;
 	}
 	
-	private boolean checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
+	private void checkForOrCreateShiftStatusNotification(ClassIDPair classIdPair)
 			throws SyncException {
 		TeamLeader host = (TeamLeader) syncAgentService
 				.systemGetById(classIdPair);
@@ -141,60 +136,85 @@ public class TeamLeaderPostGetTask implements Runnable {
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
 				+ daysBetween);
 
-		List<Notification> createdNotifications = new ArrayList<Notification>();
-
 		// If the Timecard.date < 3 days old
 		while ( daysBetween < 3) {
-			// Check to see if there is already a coaching notification created.
-			ShiftStatusNotification existingShiftStatusNotification = null;
-
-			Iterator<Notification> itrNotifications = host.getNotifications().iterator();
-			while (itrNotifications.hasNext()) {
-				Notification nextNotification = itrNotifications.next();
-				if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
-					ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
-
-					if (nextShiftStatusNotification == null) {
-						continue;
-					}
-
-					log.debug("[ShiftStatusNotification]  ShiftStatusNotification id - "
-							+ nextShiftStatusNotification.getID());
-					log.debug("[ShiftStatusNotification]  Timecard id"
-							+ host.getID());
-					DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
-					// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
-					if (DateTimeComparator.getDateOnlyInstance().compare(shiftDateTime, nextShiftStatusNotificationWeekDate) == 0) {
-						existingShiftStatusNotification = nextShiftStatusNotification;
-						log.debug("[ShiftStatusNotification]  Existing ShiftStatusNotification found: "
-								+ nextShiftStatusNotification.getID());
-						break;
-					}
-				}
-			}
-
-			if (existingShiftStatusNotification == null) {
-				existingShiftStatusNotification = new ShiftStatusNotification();
-				existingShiftStatusNotification.setID(UUID.randomUUID().toString());
-				existingShiftStatusNotification.setResolved(false);
-				existingShiftStatusNotification.setCreatedOn(shiftDateTime.toDate());
-				existingShiftStatusNotification.setName("Shift Status");
-				existingShiftStatusNotification.setType("ShiftStatusNotification");
-				existingShiftStatusNotification.setTeamLeader(host);
-				existingShiftStatusNotification.setShiftEndDate(shiftDateTime.toDate());
-				try {
-					existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
-					createdNotifications.add(existingShiftStatusNotification);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
+			validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(host, shiftDateTime.toDate());
+//			// Check to see if there is already a coaching notification created.
+//			ShiftStatusNotification existingShiftStatusNotification = null;
+//
+//			Iterator<Notification> itrNotifications = host.getNotifications().iterator();
+//			while (itrNotifications.hasNext()) {
+//				Notification nextNotification = itrNotifications.next();
+//				if (nextNotification != null && nextNotification instanceof ShiftStatusNotification) {
+//					ShiftStatusNotification nextShiftStatusNotification = (ShiftStatusNotification) syncAgentService.systemGetByObject(nextNotification);
+//
+//					if (nextShiftStatusNotification == null) {
+//						continue;
+//					}
+//
+//					log.debug("[ShiftStatusNotification]  ShiftStatusNotification id - "
+//							+ nextShiftStatusNotification.getID());
+//					log.debug("[ShiftStatusNotification]  Timecard id"
+//							+ host.getID());
+//					DateTime nextShiftStatusNotificationWeekDate = new DateTime(nextShiftStatusNotification.getShiftEndDate());
+//					// If AgentScorecard.weekDate == ShiftStatusNotification.weekDate, we found a match.
+//					if (DateTimeComparator.getDateOnlyInstance().compare(shiftDateTime, nextShiftStatusNotificationWeekDate) == 0) {
+//						existingShiftStatusNotification = nextShiftStatusNotification;
+//						log.debug("[ShiftStatusNotification]  Existing ShiftStatusNotification found: "
+//								+ nextShiftStatusNotification.getID());
+//						break;
+//					}
+//				}
+//			}
+//
+//			if (existingShiftStatusNotification == null) {
+//				existingShiftStatusNotification = new ShiftStatusNotification();
+//				existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+//				existingShiftStatusNotification.setResolved(false);
+//				existingShiftStatusNotification.setCreatedOn(shiftDateTime.toDate());
+//				existingShiftStatusNotification.setName("Shift Status");
+//				existingShiftStatusNotification.setType("ShiftStatusNotification");
+//				existingShiftStatusNotification.setTeamLeader(host);
+//				existingShiftStatusNotification.setShiftEndDate(shiftDateTime.toDate());
+//				try {
+//					existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+//					createdNotifications.add(existingShiftStatusNotification);
+//				} catch(Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
 
 			shiftDateTime = shiftDateTime.minusDays(1);
 			daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
 
 		}
-
-		return !createdNotifications.isEmpty();
+	}
+	
+	public ShiftStatusNotification validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(TeamLeader teamLeader, Date shiftDate) {
+		
+		if (teamLeader == null || shiftDate == null || shiftDate.getTime() <= 0) {
+			log.warn("Invalid data in validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate, ignoring request.");
+			return null;
+		}
+		
+		ShiftStatusNotification existingShiftStatusNotification = shiftStatusNotificationDAO.fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(teamLeader.getID(), shiftDate);
+		if (existingShiftStatusNotification == null) {
+			try {
+				// No matching ShiftStatusNotification, so let's create one.
+				existingShiftStatusNotification = new ShiftStatusNotification();
+				existingShiftStatusNotification.setID(UUID.randomUUID().toString());
+				existingShiftStatusNotification.setResolved(false);
+				existingShiftStatusNotification.setCreatedOn(shiftDate);
+				existingShiftStatusNotification.setName("Shift Status");
+				existingShiftStatusNotification.setType("ShiftStatusNotification");
+				existingShiftStatusNotification.setTeamLeader(teamLeader);
+				existingShiftStatusNotification.setShiftEndDate(shiftDate);
+				existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
+			} catch (SyncException e) {
+				log.error("Unable to query for existing ShiftStatusNotification: " + e.getMessage(), e);
+			}
+		}
+		
+		return existingShiftStatusNotification;
 	}
 }
