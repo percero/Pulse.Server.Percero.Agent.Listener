@@ -120,33 +120,33 @@ public class TeamLeaderPostGetTask implements Runnable {
 				newCoachingNotification.setScorecard(scorecard);
 				result = syncAgentService.systemCreateObject(newCoachingNotification, null);
 				
-				// There is a race condition here where we may create multiple records.  Because the unique index
-				// here spans multiple tables in the underlying database, we can't enforce the unique constraints at a 
-				// database level.  So we use this hack to remove any duplicate records.
-				existing = coachingNotificationDAO.fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(teamLeader.getID(), scorecard.getID(), weekDate);
-				if (existing != null) {
-					Iterator<CoachingNotification> itr = existing.iterator();
-					int countDown = existing.size();
-					while (itr.hasNext()) {
-						if (countDown <= 1) {
-							// We have our result.
-							result = itr.next();
-							break;
-						}
-						else {
-							// We have dups, need to delete this record.
-							try {
-								syncAgentService.systemDeleteObject(itr.next(), null, true);
-							} catch (Exception e) {
-								// This may mean that we have already deleted this dup in another process.
-							}
-						}
-						countDown--;
-					}
-				}
-				
 			} catch (SyncException e) {
 				log.debug("Unable to create CoachingNotification: " + e.getMessage());
+			}
+		}
+		
+		// There is a race condition here where we may create multiple records.  Because the unique index
+		// here spans multiple tables in the underlying database, we can't enforce the unique constraints at a 
+		// database level.  So we use this hack to remove any duplicate records.
+		existing = coachingNotificationDAO.fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(teamLeader.getID(), scorecard.getID(), weekDate);
+		if (existing != null) {
+			Iterator<CoachingNotification> itr = existing.iterator();
+			int countDown = existing.size();
+			while (itr.hasNext()) {
+				if (countDown <= 1) {
+					// We have our result.
+					result = itr.next();
+					break;
+				}
+				else {
+					// We have dups, need to delete this record.
+					try {
+						syncAgentService.systemDeleteObject(itr.next(), null, true);
+					} catch (Exception e) {
+						// This may mean that we have already deleted this dup in another process.
+					}
+				}
+				countDown--;
 			}
 		}
 		
@@ -214,33 +214,33 @@ public class TeamLeaderPostGetTask implements Runnable {
 				result.setTeamLeader(teamLeader);
 				result.setShiftEndDate(shiftDate);
 				result = syncAgentService.systemCreateObject(result, null);
-				
-				// There is a race condition here where we may create multiple records.  Because the unique index
-				// here spans multiple tables in the underlying database, we can't enforce the unique constraints at a 
-				// database level.  So we use this hack to remove any duplicate records.
-				existing = shiftStatusNotificationDAO.fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(teamLeader.getID(), shiftDate);
-				if (existing != null) {
-					Iterator<ShiftStatusNotification> itr = existing.iterator();
-					int countDown = existing.size();
-					while (itr.hasNext()) {
-						if (countDown <= 1) {
-							// We have our result.
-							result = itr.next();
-							break;
-						}
-						else {
-							// We have dups, need to delete this record.
-							try {
-								syncAgentService.systemDeleteObject(itr.next(), null, true);
-							} catch (Exception e) {
-								// This may mean that we have already deleted this dup in another process.
-							}
-						}
-						countDown--;
-					}
-				}
 			} catch (SyncException e) {
 				log.debug("Unable to create ShiftStatusNotification: " + e.getMessage());
+			}
+		}
+		
+		// There is a race condition here where we may create multiple records.  Because the unique index
+		// here spans multiple tables in the underlying database, we can't enforce the unique constraints at a 
+		// database level.  So we use this hack to remove any duplicate records.
+		existing = shiftStatusNotificationDAO.fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(teamLeader.getID(), shiftDate);
+		if (existing != null) {
+			Iterator<ShiftStatusNotification> itr = existing.iterator();
+			int countDown = existing.size();
+			while (itr.hasNext()) {
+				if (countDown <= 1) {
+					// We have our result.
+					result = itr.next();
+					break;
+				}
+				else {
+					// We have dups, need to delete this record.
+					try {
+						syncAgentService.systemDeleteObject(itr.next(), null, true);
+					} catch (Exception e) {
+						// This may mean that we have already deleted this dup in another process.
+					}
+				}
+				countDown--;
 			}
 		}
 		
