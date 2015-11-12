@@ -137,9 +137,9 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 							Timecard timecard = syncAgentService.systemGetByObject(itrTimecards.next());
 
 							if (timecard != null) {
-								accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecard), "startDate", fieldsToWatch);
-								if (timecard.getStartDate() != null && timecard.getStartDate().getTime() > 0) {
-									DateTime timecardStartDateTime = new DateTime(timecard.getStartDate().getTime());
+								accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecard), "sourceStartDate", fieldsToWatch);
+								if (timecard.getSourceStartDate() != null && timecard.getSourceStartDate().getTime() > 0) {
+									DateTime timecardStartDateTime = new DateTime(timecard.getSourceStartDate().getTime());
 									if (DateTimeComparator.getDateOnlyInstance().compare(timecardStartDateTime, shiftStatusNotificationEndDate) == 0) {
 										timecards.add(timecard);
 									}

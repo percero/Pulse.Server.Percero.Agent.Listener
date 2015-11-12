@@ -441,7 +441,7 @@ propertyCounter++;
 	
 	
 
-	public ShiftStatusNotification fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(String teamLeaderId, Date shiftEndDate) {
+	public List<ShiftStatusNotification> fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(String teamLeaderId, Date shiftEndDate) {
 		if (!StringUtils.hasText(teamLeaderId) || shiftEndDate == null || shiftEndDate.getTime() <= 0) {
 			log.warn("Invalid parameters fetching ShiftStatusNotification for TeamLeader " + teamLeaderId + ", shiftEndDate " + shiftEndDate.toString());
 			return null;
@@ -458,7 +458,7 @@ propertyCounter++;
 			results = executeSelectWithParams(selectQueryString, paramValues, true);
 			
 			if (results != null && !results.isEmpty()) {
-				return results.get(0);
+				return results;
 			}
 		} catch (SyncDataException e) {
 			log.error("Error fetching ShiftStatusNotification for TeamLeader " + teamLeaderId + ", shiftEndDate " + shiftEndDate.toString());
