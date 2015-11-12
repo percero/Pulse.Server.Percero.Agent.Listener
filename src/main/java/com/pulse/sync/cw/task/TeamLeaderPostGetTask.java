@@ -141,6 +141,7 @@ public class TeamLeaderPostGetTask implements Runnable {
 								// This may mean that we have already deleted this dup in another process.
 							}
 						}
+						countDown--;
 					}
 				}
 				
@@ -235,6 +236,7 @@ public class TeamLeaderPostGetTask implements Runnable {
 								// This may mean that we have already deleted this dup in another process.
 							}
 						}
+						countDown--;
 					}
 				}
 			} catch (SyncException e) {
