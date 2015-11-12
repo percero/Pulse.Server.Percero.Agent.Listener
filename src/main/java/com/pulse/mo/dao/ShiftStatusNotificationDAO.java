@@ -2,30 +2,27 @@
 
 package com.pulse.mo.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.util.DateUtils;
-import com.pulse.dataprovider.IConnectionFactory;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
-import com.pulse.dataprovider.IConnectionFactory;
 import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.util.DateUtils;
+import com.pulse.mo.ShiftStatusNotification;
+import com.pulse.mo.TeamLeader;
+import com.pulse.mo.TimecardActivity;
 
 @Component
 public class ShiftStatusNotificationDAO extends SqlDataAccessProcObject<ShiftStatusNotification> implements IDataAccessObject<ShiftStatusNotification> {
@@ -443,6 +440,32 @@ propertyCounter++;
 	}
 	
 	
+
+	public ShiftStatusNotification fetchShiftStatusNotificationForTeamLeaderAndShiftEndDate(String teamLeaderId, Date shiftEndDate) {
+		if (!StringUtils.hasText(teamLeaderId) || shiftEndDate == null || shiftEndDate.getTime() <= 0) {
+			log.warn("Invalid parameters fetching ShiftStatusNotification for TeamLeader " + teamLeaderId + ", shiftEndDate " + shiftEndDate.toString());
+			return null;
+		}
+
+		// Selecting for TeamLeader and DATE ONLY of WeekDate.
+		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"SHIFT_STATUS_NOTIFICATION\".\"SHIFT_END_DATE\",'rrrr/mm/dd') =?  AND  \"SHIFT_STATUS_NOTIFICATION\".\"TEAM_LEADER_ID\" =?  ";
+		Object[] paramValues = new Object[2];
+        
+		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(shiftEndDate);;
+		paramValues[1] = teamLeaderId;
+		List<ShiftStatusNotification> results;
+		try {
+			results = executeSelectWithParams(selectQueryString, paramValues, true);
+			
+			if (results != null && !results.isEmpty()) {
+				return results.get(0);
+			}
+		} catch (SyncDataException e) {
+			log.error("Error fetching ShiftStatusNotification for TeamLeader " + teamLeaderId + ", shiftEndDate " + shiftEndDate.toString());
+		}
+		
+		return null;
+	}
 	
 	
 }

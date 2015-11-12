@@ -2,30 +2,27 @@
 
 package com.pulse.mo.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.percero.util.DateUtils;
-import com.pulse.dataprovider.IConnectionFactory;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
-import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
-import com.pulse.dataprovider.IConnectionFactory;
 import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.util.DateUtils;
+import com.pulse.mo.CoachingNotification;
+import com.pulse.mo.Scorecard;
+import com.pulse.mo.TeamLeader;
 
 @Component
 public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNotification> implements IDataAccessObject<CoachingNotification> {
@@ -46,7 +43,7 @@ public class CoachingNotificationDAO extends SqlDataAccessProcObject<CoachingNot
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"COACHING_NOTIFICATION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"COACHING_NOTIFICATION\".\"TYPE\",\"COACHING_NOTIFICATION\".\"CREATED_ON\",\"COACHING_NOTIFICATION\".\"WEEK_DATE\",\"COACHING_NOTIFICATION\".\"NAME\",\"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\",\"COACHING_NOTIFICATION\".\"SCORECARD_ID\"";
 	private String selectFromStatementTableName = " FROM \"COACHING_NOTIFICATION\" \"COACHING_NOTIFICATION\"";
 	private String whereClause = "  WHERE \"COACHING_NOTIFICATION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COACHING_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -177,10 +174,17 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID)) {
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
+}
+
+String scorecardID = rs.getString("SCORECARD_ID");
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID)) {
+	Scorecard scorecard = new Scorecard();
+	scorecard.setID(scorecardID);
+	nextResult.setScorecard(scorecard);
 }
 
 
@@ -209,6 +213,15 @@ pstmt.setString(6, null);
 else
 {
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
+}
+
+if (perceroObject.getScorecard() == null)
+{
+	pstmt.setString(7, null);
+}
+else
+{
+	pstmt.setString(7, perceroObject.getScorecard().getID());
 }
 
 
@@ -248,6 +261,16 @@ pstmt.setString(6, null);
 else
 {
 		pstmt.setString(6, perceroObject.getTeamLeader().getID());
+}
+
+
+if (perceroObject.getScorecard() == null)
+{
+	pstmt.setString(7, null);
+}
+else
+{
+	pstmt.setString(7, perceroObject.getScorecard().getID());
 }
 
 
@@ -360,6 +383,24 @@ propertyCounter++;
 }
 
 
+boolean useScorecardID = theQueryObject.getScorecard() != null && (excludeProperties == null || !excludeProperties.contains("scorecard"));
+
+if (useScorecardID)
+{
+	if (propertyCounter > 0)
+	{
+		sql += " AND ";
+	}
+	else
+	{
+		sql += " WHERE ";
+	}
+	sql += " \"SCORECARD_ID\" =? ";
+	paramValues.add(theQueryObject.getScorecard().getID());
+	propertyCounter++;
+}
+
+
 
 		if (propertyCounter == 0) {
 			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -370,19 +411,43 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
+		return "{call UPDATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?)}";
+		return "{call CREATE_COACHING_NOTIFICATION(?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_COACHING_NOTIFICATION(?)}";
 	}
 	
-	
-	
-	
+
+	public CoachingNotification fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
+		if (!StringUtils.hasText(teamLeaderId) || !StringUtils.hasText(scorecardId) || weekDate == null || weekDate.getTime() <= 0) {
+			log.warn("Invalid parameters fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
+			return null;
+		}
+
+		// Selecting for TeamLeader, Scorecard, and DATE ONLY of WeekDate.
+		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"COACHING_NOTIFICATION\".\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\" =?  AND  \"COACHING_NOTIFICATION\".\"SCORECARD_ID\" =? ";
+		Object[] paramValues = new Object[3];
+        
+		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);;
+		paramValues[1] = teamLeaderId;
+		paramValues[2] = scorecardId;
+		List<CoachingNotification> results;
+		try {
+			results = executeSelectWithParams(selectQueryString, paramValues, true);
+			
+			if (results != null && !results.isEmpty()) {
+				return results.get(0);
+			}
+		} catch (SyncDataException e) {
+			log.error("Error fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
+		}
+		
+		return null;
+	}
 }
 

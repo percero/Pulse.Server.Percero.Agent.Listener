@@ -453,7 +453,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			throws SyncDataException {
 		List<T> results = new ArrayList<T>();
 		
-		if (!StringUtils.hasText(id)) {
+		if (!StringUtils.hasText(id) || "null".equalsIgnoreCase(id)) {
 			// Make sure we have a valid ID.
 			log.debug("SelectById: Skipping NULL or empty Id");
 			return results;

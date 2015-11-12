@@ -238,7 +238,7 @@ public void setCoachingSession(CoachingSession value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_WEEKLY_RESULT_ID")
+@JoinColumn(name="SCARD_WEEKLY_RESULT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_ScorecardWeeklyResultOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardWeeklyResult scorecardWeeklyResult;

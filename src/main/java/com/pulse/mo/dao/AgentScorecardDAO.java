@@ -197,7 +197,7 @@ nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -205,7 +205,7 @@ nextResult.setAgent(agent);
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(agentID)) {
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -213,7 +213,7 @@ nextResult.setScorecard(scorecard);
 
 
 String scorecardweeklyscoreID = rs.getString("SCORECARD_WEEKLY_SCORE_ID");
-if (StringUtils.hasText(scorecardweeklyscoreID)) {
+if (StringUtils.hasText(scorecardweeklyscoreID) && !"null".equalsIgnoreCase(agentID)) {
 ScorecardWeeklyScore scorecardweeklyscore = new ScorecardWeeklyScore();
 scorecardweeklyscore.setID(scorecardweeklyscoreID);
 nextResult.setScorecardWeeklyScore(scorecardweeklyscore);

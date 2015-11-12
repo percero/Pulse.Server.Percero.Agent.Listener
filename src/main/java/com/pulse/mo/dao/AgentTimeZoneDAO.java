@@ -40,11 +40,11 @@ public class AgentTimeZoneDAO extends SqlDataAccessObject<AgentTimeZone> impleme
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\" as \"ID\", \"AGENT_TIME_ZONE\".\"TIME_ZONE\" as \"TIME_ZONE\", \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_EMP_TZ_MAP\" \"AGENT_TIME_ZONE\" ";
-	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_EMP_TZ_MAP\" \"AGENT_TIME_ZONE\"";
-	private String whereClause = " WHERE \"AGENT_TIME_ZONE\".\"ID\"=?";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT_TIME_ZONE\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = " ORDER BY \"AGENT_TIME_ZONE\".\"ID\"";
+	public static final String SQL_VIEW = "SELECT  \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\" as \"ID\", \"AGENT_TIME_ZONE\".\"TIME_ZONE\" as \"TIME_ZONE\", \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"PULSE\".\"MOB_TZ_EMP_MAP_VW\" \"AGENT_TIME_ZONE\" ";
+	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_TZ_EMP_MAP_VW\" \"AGENT_TIME_ZONE\"";
+	private String whereClause = " WHERE \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\"= SQLLIST.column_value";
+	private String orderByTableName = " ORDER BY \"AGENT_TIME_ZONE\".\"EMPLOYEE_ID\"";
 
 	
 
@@ -247,7 +247,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select MOB_EMP_TZ_MAP_SEQ.NEXTVAL from dual";
+	String query = "Select MOB_TZ_EMP_MAP_VW_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;

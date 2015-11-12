@@ -1,16 +1,19 @@
 package com.pulse.sync.cw;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.springframework.stereotype.Component;
+
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.*;
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.Days;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
+import com.pulse.mo.Agent;
+import com.pulse.mo.ScheduleEntry;
 
 @Component
 public class ScheduleEntryCWHelper extends DerivedValueChangeWatcherHelper {
@@ -34,20 +37,20 @@ public class ScheduleEntryCWHelper extends DerivedValueChangeWatcherHelper {
 
 
 
-        if (fieldName.equalsIgnoreCase("startTime")) {
+        if (fieldName.equalsIgnoreCase(STARTTIME)) {
             try {
                 result = calc_startTime(pair, fieldName);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch(Exception e) {
-                log.error("Unable to calculate fromTime", e);
+                log.error("Unable to calculate " + STARTTIME, e);
             }
         }
-        else if (fieldName.equalsIgnoreCase("endTime")) {
+        else if (fieldName.equalsIgnoreCase(ENDTIME)) {
             try {
                 result = calc_endTime(pair, fieldName);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch(Exception e) {
-                log.error("Unable to calculate toTime", e);
+                log.error("Unable to calculate " + ENDTIME, e);
             }
         }
 
@@ -73,8 +76,41 @@ public class ScheduleEntryCWHelper extends DerivedValueChangeWatcherHelper {
 
             // We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
             accessManager.addWatcherField(pair, "sourceStartTime", fieldsToWatch);
+            Date sourceStartTime  = host.getSourceStartTime();
 
-            result = host.getSourceStartTime();
+			if (sourceStartTime != null && sourceStartTime.getTime() > 0) {
+				accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+				Agent agent = host.getAgent();
+				
+				if (agent != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "timeZone", fieldsToWatch);
+					String timeZone = agent.getTimeZone();
+					if (timeZone != null) {
+						try {
+							DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+							if (dateTimeZone != null) {
+								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+								
+								// The Source Time MINUS the Offset gives us UTC.
+								DateTime startDate = new DateTime(sourceStartTime.getTime() - offsetInMs);
+								result = startDate.toDate();
+							}
+							else {
+								log.warn("Invalid time zone " + timeZone);
+							}
+						} catch(Exception e) {
+							// Invalid time zone.
+							log.error("Invalid time zone " + timeZone, e);
+						}
+					}
+					else {
+						log.warn("Unable to get TimeZone, using SourceStartTime as StartTime");
+					}
+				}
+				else {
+					log.warn("Unable to get Timecard, using SourceStartTime as StartTime");
+				}
+			}
 
             // Register all the fields to watch for this ChangeWatcher. Whenever
             // ANY of these fields change, this ChangeWatcher will get re-run
@@ -104,8 +140,41 @@ public class ScheduleEntryCWHelper extends DerivedValueChangeWatcherHelper {
 
             // We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
             accessManager.addWatcherField(pair, "sourceEndTime", fieldsToWatch);
+            Date sourceEndTime = host.getSourceEndTime();
 
-            result = host.getSourceEndTime();
+			if (sourceEndTime != null && sourceEndTime.getTime() > 0) {
+				accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+				Agent agent = host.getAgent();
+				
+				if (agent != null) {
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "timeZone", fieldsToWatch);
+					String timeZone = agent.getTimeZone();
+					if (timeZone != null) {
+						try {
+							DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+							if (dateTimeZone != null) {
+								int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+								
+								// The Source Time MINUS the Offset gives us UTC.
+								DateTime endDate = new DateTime(sourceEndTime.getTime() - offsetInMs);
+								result = endDate.toDate();
+							}
+							else {
+								log.warn("Invalid time zone " + timeZone);
+							}
+						} catch(Exception e) {
+							// Invalid time zone.
+							log.error("Invalid time zone " + timeZone, e);
+						}
+					}
+					else {
+						log.warn("Unable to get TimeZone, using SourceEndTime as EndTime");
+					}
+				}
+				else {
+					log.warn("Unable to get Timecard, using SourceEndTime as EndTime");
+				}
+			}
 
             // Register all the fields to watch for this ChangeWatcher. Whenever
             // ANY of these fields change, this ChangeWatcher will get re-run
