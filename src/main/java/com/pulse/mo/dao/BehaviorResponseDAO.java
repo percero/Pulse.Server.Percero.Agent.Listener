@@ -45,7 +45,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"BEHAVIOR_RESPONSE\".\"ID\"";
-	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_WEEKLY_RESULT_ID\"";
+	public static final String SQL_VIEW = ",\"BEHAVIOR_RESPONSE\".\"UPDATED_BY\",\"BEHAVIOR_RESPONSE\".\"CREATED_BY\",\"BEHAVIOR_RESPONSE\".\"WEEK_DATE\",\"BEHAVIOR_RESPONSE\".\"CREATED_ON\",\"BEHAVIOR_RESPONSE\".\"UPDATED_ON\",\"BEHAVIOR_RESPONSE\".\"RESPONSE\",\"BEHAVIOR_RESPONSE\".\"AGENT_ID\",\"BEHAVIOR_RESPONSE\".\"BEHAVIOR_ID\",\"BEHAVIOR_RESPONSE\".\"COACHING_SESSION_ID\",\"BEHAVIOR_RESPONSE\".\"SCORECARD_MEASURE_ID\",\"BEHAVIOR_RESPONSE\".\"SCARD_WEEKLY_RESULT_ID\"";
 	private String selectFromStatementTableName = " FROM \"BEHAVIOR_RESPONSE\" \"BEHAVIOR_RESPONSE\"";
 	private String whereClause = "  WHERE \"BEHAVIOR_RESPONSE\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"BEHAVIOR_RESPONSE\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_BEHAVIOR_RESPONSE (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\",\"SCORECARD_WEEKLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_BEHAVIOR_RESPONSE (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\",\"SCARD_WEEKLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCORECARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -212,7 +212,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 }
 
 
-String scorecardweeklyresultID = rs.getString("SCORECARD_WEEKLY_RESULT_ID");
+String scorecardweeklyresultID = rs.getString("SCARD_WEEKLY_RESULT_ID");
 if (StringUtils.hasText(scorecardweeklyresultID)) {
 ScorecardWeeklyResult scorecardweeklyresult = new ScorecardWeeklyResult();
 scorecardweeklyresult.setID(scorecardweeklyresultID);
@@ -570,7 +570,7 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"SCORECARD_WEEKLY_RESULT_ID\" =? ";
+sql += " \"SCARD_WEEKLY_RESULT_ID\" =? ";
 paramValues.add(theQueryObject.getScorecardWeeklyResult().getID());
 propertyCounter++;
 }
