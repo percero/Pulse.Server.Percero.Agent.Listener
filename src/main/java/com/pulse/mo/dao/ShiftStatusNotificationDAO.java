@@ -436,7 +436,7 @@ propertyCounter++;
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_SHIFT_STATUS_NOTIFY(?)}";
+		return "{call DELETE_SHIFT_STATUS_NOTIFY(?)}";
 	}
 	
 	

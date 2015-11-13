@@ -20,6 +20,7 @@ import com.pulse.mo.Agent;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
+import com.pulse.sync.enums.TimecardStatus;
 
 @Component
 public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHelper {
@@ -237,9 +238,9 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 
 				if (timecard.getTimecardEntries().size() > 0 ){
 					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
+					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-					if ("Approved".equalsIgnoreCase(timecard.getTimecardState())) {
+					if (TimecardStatus.APPROVED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 						resultCount++;
 					}
 				}
@@ -284,9 +285,9 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 
 				if (timecard.getTimecardEntries().size() > 0 ){
 					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
+					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-					if ("Completed".equalsIgnoreCase(timecard.getTimecardState())) {
+					if (TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 						resultCount++;
 					}
 				}
@@ -331,9 +332,9 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 
 				if (timecard.getTimecardEntries().size() > 0 ){
 					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
+					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-					if ("In Progress".equalsIgnoreCase(timecard.getTimecardState())) {
+					if (TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 						resultCount++;
 					}
 				}
@@ -378,11 +379,12 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 
 				if (timecard.getTimecardEntries().size() > 0 ){
 					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
+					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-					if (!"Approved".equalsIgnoreCase(timecard.getTimecardState()) &&
-							!"Completed".equalsIgnoreCase(timecard.getTimecardState())
-							&& !"In Progress".equalsIgnoreCase(timecard.getTimecardState())) {
+					if (!TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+							!TimecardStatus.NO_SHIFT.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+							!TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+							!TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 						resultCount++;
 					}
 				}
