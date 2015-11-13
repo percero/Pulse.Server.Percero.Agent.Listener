@@ -2,25 +2,27 @@
 
 package com.pulse.mo.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import com.percero.util.DateUtils;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.percero.agents.sync.metadata.MappedClass;
+
 import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
+import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
-import java.sql.Connection;
-import java.sql.Statement;
+import com.percero.util.DateUtils;
 import com.pulse.dataprovider.IConnectionFactory;
-import com.percero.agents.sync.exceptions.SyncDataException;
-import com.pulse.mo.*;
+import com.pulse.mo.Agent;
+import com.pulse.mo.Schedule;
 
 @Component
 public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataAccessObject<Schedule> {
@@ -104,17 +106,19 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		
+		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
+			return SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" > sysdate -30 and \"SCHEDULE\".\"END_DATE\" > sysdate -30 and ROWNUM < 15 order by \"SCHEDULE\".\"START_DATE\" desc";
+		}
 		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
+		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
+			return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" > sysdate -30 and \"SCHEDULE\".\"END_DATE\" > sysdate -30 and ROWNUM < 15 order by\"SCHEDULE\".\"START_DATE\" desc";
+		}
 		return "SELECT * FROM (SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
-
-//		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) AND \"SCHEDULE\"." + joinColumnName + "=?";
 	}
 
 	@Override
