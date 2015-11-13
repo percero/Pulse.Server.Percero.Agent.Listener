@@ -191,10 +191,8 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
-
-				if (timecard.getTimecardEntries().size() <=0 ){
+				accessManager.addWatcherField(timecardPair, "currentStatus", fieldsToWatch);
+				if (TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 					resultCount++;
 				}
 			}
@@ -233,16 +231,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
-
-					if (TimecardStatus.APPROVED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
-						resultCount++;
-					}
+				if (TimecardStatus.APPROVED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -280,16 +273,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
-
-					if (TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
-						resultCount++;
-					}
+				if (TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -327,16 +315,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
-
-					if (TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
-						resultCount++;
-					}
+				if (TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -374,19 +357,14 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
-
-					if (!TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
-							!TimecardStatus.NO_SHIFT.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
-							!TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
-							!TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
-						resultCount++;
-					}
+				if (!TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.NO_SHIFT.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
