@@ -11,4 +11,4 @@ tableNames:
  - UPDATE_TABLE
 weight: 1
 storedProcedureName: UPDATE_TABLE_LOCK_BATCH
-storedProcedureDefinition: create or replace PROCEDURE UPDATE_TABLE_LOCK_BATCH (NEW_LOCK_ID IN NUMBER DEFAULT 123456, LOCK_DATE IN VARCHAR2, NUM_TO_LOCK IN NUMBER DEFAULT 1, LOCK_COUNT OUT NUMBER) AS BEGIN update UPDATE_TABLE u set u.lockID=new_lock_id, u.lockDate=current_timestamp where (lockid is null or lockdate < to_date(lock_date,'YYYY-MM-dd HH:mi:ss')) and ROWNUM <= NUM_TO_LOCK; LOCK_COUNT:=sql%rowcount; commit; END UPDATE_TABLE_LOCK_BATCH;
+storedProcedureDefinition: create or replace PROCEDURE UPDATE_TABLE_LOCK_BATCH (NEW_LOCK_ID IN NUMBER DEFAULT 123456, NEW_LOCK_DATE IN VARCHAR2, NUM_TO_LOCK IN NUMBER DEFAULT 1, LOCK_COUNT OUT NUMBER) AS BEGIN update UPDATE_TABLE u set u.lockID=new_lock_id, u.lockDate=sysdate where (lockid is null or lockdate < to_date(new_lock_date,'YYYY-MM-dd HH24:mi:ss')) and ROWNUM <= NUM_TO_LOCK; LOCK_COUNT:=sql%rowcount; commit; END UPDATE_TABLE_LOCK_BATCH;
