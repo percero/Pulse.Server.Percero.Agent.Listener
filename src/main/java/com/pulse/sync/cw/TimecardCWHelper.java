@@ -86,12 +86,12 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 log.error("Unable to calculate " + SHIFT, e);
             }
         }
-        else if (fieldName.equalsIgnoreCase("currentStatus")) {
+        else if (fieldName.equalsIgnoreCase(CURRENTSTATUS)) {
             try {
                 result = calc_currentStatus(pair, CURRENTSTATUS);
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
-                log.error("Unable to calculate currentStatus", e);
+                log.error("Unable to calculate " + CURRENTSTATUS, e);
             }
         }
 		else if (fieldName.equalsIgnoreCase(STARTDATE)) {
@@ -178,12 +178,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // Setup fieldsToWatch.
             Collection<String> fieldsToWatch = new HashSet<String>();
 
-            // We want to re-trigger this change watcher when Timecard.shift changes.
-            accessManager.addWatcherField(pair, "shift", fieldsToWatch);
-            Boolean shift = host.getShift();
-            
             /**
-            UNKNOWN --> NOT STARTED --> IN PROGRESS --> COMPLETED
+            UNKNOWN --> NOT STARTED --> IN PROGRESS --> COMPLETED --> APPROVED
             
             IN PROGRESS - would be based on the ON_TIME field and the OFF_TIME field for the
             CURRENT DAY, and the actual time it is based on the timezone for that agent.
@@ -195,41 +191,56 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             the OFF_TIME field equals 13:30 on 11/5 and teh current time is 14:12 CST (and that is the agents
             local time), then that agents shift is COMPLETED
              */
-            
-            if (shift) {
-            	// The Timecard DOES have a shift.
-            	// We want to re-trigger this change watcher when Timecard.date changes.
-            	accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
-            	// We want to re-trigger this change watcher when Timecard.endDate changes.
-            	accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-				// Timecard.StartDate and Timecard.EndDate appear to also carry
-				// the timezone. We can compare
-				// to the current time using milliseconds since 0 (ie. compare
-				// UTC time) using the Joda DateTime object.
-            	// http://www.joda.org/joda-time/
-            	DateTime timecardStartDateTime = new DateTime(host.getStartDate());
-            	DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-            	
-            	DateTime currentTime = new DateTime(System.currentTimeMillis());
-            	
-            	if (currentTime.isBefore(timecardStartDateTime)) {
-            		// Local time is BEFORE the time card start date, so status is NOT_STARTED
-            		result = TimecardStatus.NOT_STARTED.getValue();
-            	}
-            	else if (currentTime.isBefore(timecardEndDateTime)) {
-            		// Local time is AFTER the time card start date and BEFORE the timecard end dtae, so status is IN_PROGRESS
-            		result = TimecardStatus.IN_PROGRESS.getValue();
-            	}
-            	else {
-            		// Local time is AFTER the timecard end dtae, so status is COMPLETED
-            		result = TimecardStatus.COMPLETED.getValue();
-            	}
-            }
-            else {
-            	// The Timecard does NOT have a shift.
-            	result = TimecardStatus.NO_SHIFT.getValue();
-            }
+            accessManager.addWatcherField(pair, "approved", fieldsToWatch);
+            String approved = host.getApproved();
+			if ("t".equalsIgnoreCase(approved)
+					|| "true".equalsIgnoreCase(approved)
+					|| "y".equalsIgnoreCase(approved)
+					|| "yes".equalsIgnoreCase(approved)) {
+				// Timecard has been APPROVED
+        		result = TimecardStatus.APPROVED.getValue();
+			}
+			else {
+	            // We want to re-trigger this change watcher when Timecard.shift changes.
+	            accessManager.addWatcherField(pair, "shift", fieldsToWatch);
+	            Boolean shift = host.getShift();
+	            
+	            if (!shift) {
+	            	// The Timecard does NOT have a shift.
+	            	result = TimecardStatus.NO_SHIFT.getValue();
+	            }
+	            else {
+	            	// The Timecard DOES have a shift.
+	            	// We want to re-trigger this change watcher when Timecard.date changes.
+	            	accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
+	            	// We want to re-trigger this change watcher when Timecard.endDate changes.
+	            	accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
+	
+					// Timecard.StartDate and Timecard.EndDate appear to also carry
+					// the timezone. We can compare
+					// to the current time using milliseconds since 0 (ie. compare
+					// UTC time) using the Joda DateTime object.
+	            	// http://www.joda.org/joda-time/
+	            	DateTime timecardStartDateTime = new DateTime(host.getStartDate());
+	            	DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+	            	
+	            	DateTime currentTime = new DateTime(System.currentTimeMillis());
+	            	
+	            	if (currentTime.isBefore(timecardStartDateTime)) {
+	            		// Local time is BEFORE the time card start date, so status is NOT_STARTED
+	            		result = TimecardStatus.NOT_STARTED.getValue();
+	            	}
+	            	else if (currentTime.isBefore(timecardEndDateTime)) {
+	            		// Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
+	            		result = TimecardStatus.IN_PROGRESS.getValue();
+	            	}
+	            	else {
+	            		// Local time is AFTER the timecard end dtae, so status is COMPLETED
+	            		result = TimecardStatus.COMPLETED.getValue();
+	            	}
+	            }
+			}
 
             
 

@@ -423,7 +423,7 @@ if (useScorecardID)
 	}
 	
 
-	public CoachingNotification fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
+	public List<CoachingNotification> fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
 		if (!StringUtils.hasText(teamLeaderId) || !StringUtils.hasText(scorecardId) || weekDate == null || weekDate.getTime() <= 0) {
 			log.warn("Invalid parameters fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
 			return null;
@@ -441,7 +441,7 @@ if (useScorecardID)
 			results = executeSelectWithParams(selectQueryString, paramValues, true);
 			
 			if (results != null && !results.isEmpty()) {
-				return results.get(0);
+				return results;
 			}
 		} catch (SyncDataException e) {
 			log.error("Error fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());

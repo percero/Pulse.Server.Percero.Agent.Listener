@@ -20,6 +20,7 @@ import com.pulse.mo.Agent;
 import com.pulse.mo.ShiftStatusNotification;
 import com.pulse.mo.TeamLeader;
 import com.pulse.mo.Timecard;
+import com.pulse.sync.enums.TimecardStatus;
 
 @Component
 public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHelper {
@@ -137,9 +138,9 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 							Timecard timecard = syncAgentService.systemGetByObject(itrTimecards.next());
 
 							if (timecard != null) {
-								accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecard), "startDate", fieldsToWatch);
-								if (timecard.getStartDate() != null && timecard.getStartDate().getTime() > 0) {
-									DateTime timecardStartDateTime = new DateTime(timecard.getStartDate().getTime());
+								accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecard), "sourceStartDate", fieldsToWatch);
+								if (timecard.getSourceStartDate() != null && timecard.getSourceStartDate().getTime() > 0) {
+									DateTime timecardStartDateTime = new DateTime(timecard.getSourceStartDate().getTime());
 									if (DateTimeComparator.getDateOnlyInstance().compare(timecardStartDateTime, shiftStatusNotificationEndDate) == 0) {
 										timecards.add(timecard);
 									}
@@ -190,10 +191,8 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
-
-				if (timecard.getTimecardEntries().size() <=0 ){
+				accessManager.addWatcherField(timecardPair, "currentStatus", fieldsToWatch);
+				if (TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
 					resultCount++;
 				}
 			}
@@ -232,16 +231,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
-
-					if ("Approved".equalsIgnoreCase(timecard.getTimecardState())) {
-						resultCount++;
-					}
+				if (TimecardStatus.APPROVED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -279,16 +273,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
-
-					if ("Completed".equalsIgnoreCase(timecard.getTimecardState())) {
-						resultCount++;
-					}
+				if (TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -326,16 +315,11 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
-
-					if ("In Progress".equalsIgnoreCase(timecard.getTimecardState())) {
-						resultCount++;
-					}
+				if (TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
@@ -373,18 +357,14 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 				Timecard timecard = itrTimecards.next();
 				ClassIDPair timecardPair = BaseDataObject.toClassIdPair(timecard);
 
-				// Re-trigger this ChangeWatcher if Timecard.timecardEntries changes.
-				accessManager.addWatcherField(timecardPair, "timecardEntries", fieldsToWatch);
+				// Re-trigger this ChangeWatcher if Timecard.currentStatus changes.
+				accessManager.addWatcherField(timecardPair, TimecardCWHelper.CURRENTSTATUS, fieldsToWatch);
 
-				if (timecard.getTimecardEntries().size() > 0 ){
-					// Re-trigger this ChangeWatcher if Timecard.timecardState changes.
-					accessManager.addWatcherField(timecardPair, "timecardState", fieldsToWatch);
-
-					if (!"Approved".equalsIgnoreCase(timecard.getTimecardState()) &&
-							!"Completed".equalsIgnoreCase(timecard.getTimecardState())
-							&& !"In Progress".equalsIgnoreCase(timecard.getTimecardState())) {
-						resultCount++;
-					}
+				if (!TimecardStatus.NOT_STARTED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.NO_SHIFT.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.COMPLETED.getValue().equalsIgnoreCase(timecard.getCurrentStatus()) &&
+						!TimecardStatus.IN_PROGRESS.getValue().equalsIgnoreCase(timecard.getCurrentStatus())) {
+					resultCount++;
 				}
 			}
 
