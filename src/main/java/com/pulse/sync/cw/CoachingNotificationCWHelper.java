@@ -19,6 +19,7 @@ import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.AgentScorecard;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.CoachingSession;
+import com.pulse.mo.Scorecard;
 import com.pulse.mo.TeamLeader;
 
 @Component
@@ -169,7 +170,10 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 			accessManager.addWatcherField(pair, "teamLeader", fieldsToWatch);
 			TeamLeader teamLeader = syncAgentService.systemGetByObject(host.getTeamLeader());
 
-			if (weekDate != null && weekDate.getTime() > 0 && teamLeader != null) {
+			accessManager.addWatcherField(pair, "scorecard", fieldsToWatch);
+			Scorecard scorecard = syncAgentService.systemGetByObject(host.getScorecard());
+			
+			if (weekDate != null && weekDate.getTime() > 0 && teamLeader != null && scorecard != null) {
 				DateTime coachingNotificationWeekDate = new DateTime(host.getWeekDate().getTime());
 				
 				// Use TeamLeader.AgentScorecards Derived Collection
@@ -183,8 +187,17 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 					AgentScorecard agentScorecard = itrAgentScorecards.next();
 					
 					if (agentScorecard != null) {
+						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "scorecard", fieldsToWatch);
+						Scorecard nextScorecard = agentScorecard.getScorecard();
+						
 						accessManager.addWatcherField(BaseDataObject.toClassIdPair(agentScorecard), "weekDate", fieldsToWatch);
-						if (agentScorecard.getWeekDate() != null && agentScorecard.getWeekDate().getTime() > 0) {
+						
+						// We match on WeekDate AND Scorecard
+						if (nextScorecard != null
+								&& scorecard.getID().equalsIgnoreCase(
+										nextScorecard.getID())
+								&& agentScorecard.getWeekDate() != null
+								&& agentScorecard.getWeekDate().getTime() > 0) {
 							DateTime scorecardDateTime = new DateTime(agentScorecard.getWeekDate().getTime());
 							
 							if (DateTimeComparator.getDateOnlyInstance().compare(scorecardDateTime, coachingNotificationWeekDate) == 0) {
