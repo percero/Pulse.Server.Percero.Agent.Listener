@@ -159,7 +159,7 @@ public class ClientSiteDAO extends SqlDataAccessObject<ClientSite> implements ID
 		if (!shellOnly) 
 		{
 			String clientID = rs.getString("CLIENT_ID");
-if (StringUtils.hasText(clientID)) {
+if (StringUtils.hasText(clientID) && !"null".equalsIgnoreCase(clientID) ){
 Client client = new Client();
 client.setID(clientID);
 nextResult.setClient(client);
@@ -167,7 +167,7 @@ nextResult.setClient(client);
 
 
 String siteID = rs.getString("SITE_ID");
-if (StringUtils.hasText(siteID)) {
+if (StringUtils.hasText(siteID) && !"null".equalsIgnoreCase(siteID) ){
 Site site = new Site();
 site.setID(siteID);
 nextResult.setSite(site);

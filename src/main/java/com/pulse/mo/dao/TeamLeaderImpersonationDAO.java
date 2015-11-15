@@ -166,7 +166,7 @@ public class TeamLeaderImpersonationDAO extends SqlDataAccessObject<TeamLeaderIm
 
 
 String pulseuserID = rs.getString("PULSE_USER_ID");
-if (StringUtils.hasText(pulseuserID)) {
+if (StringUtils.hasText(pulseuserID) && !"null".equalsIgnoreCase(pulseuserID) ){
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
@@ -174,7 +174,7 @@ nextResult.setPulseUser(pulseuser);
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);

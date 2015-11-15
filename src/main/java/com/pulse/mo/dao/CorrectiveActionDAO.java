@@ -234,7 +234,7 @@ nextResult.setSupervisorConfig(rs.getString("SUPERVISOR_CONFIG"));
 
 
 String supervisorID = rs.getString("SUPERVISOR_ID");
-if (StringUtils.hasText(supervisorID)) {
+if (StringUtils.hasText(supervisorID) && !"null".equalsIgnoreCase(supervisorID) ){
 Supervisor supervisor = new Supervisor();
 supervisor.setID(supervisorID);
 nextResult.setSupervisor(supervisor);
@@ -242,7 +242,7 @@ nextResult.setSupervisor(supervisor);
 
 
 String supervisormanageremployeeID = rs.getString("SUPERVISOR_MANAGER_EMPLOYEE_ID");
-if (StringUtils.hasText(supervisormanageremployeeID)) {
+if (StringUtils.hasText(supervisormanageremployeeID) && !"null".equalsIgnoreCase(supervisormanageremployeeID) ){
 Employee supervisormanageremployee = new Employee();
 supervisormanageremployee.setID(supervisormanageremployeeID);
 nextResult.setSupervisorManagerEmployee(supervisormanageremployee);
@@ -250,7 +250,7 @@ nextResult.setSupervisorManagerEmployee(supervisormanageremployee);
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -258,7 +258,7 @@ nextResult.setAgent(agent);
 
 
 String hremployeeID = rs.getString("HR_EMPLOYEE_ID");
-if (StringUtils.hasText(hremployeeID)) {
+if (StringUtils.hasText(hremployeeID) && !"null".equalsIgnoreCase(hremployeeID) ){
 Employee hremployee = new Employee();
 hremployee.setID(hremployeeID);
 nextResult.setHREmployee(hremployee);
@@ -266,7 +266,7 @@ nextResult.setHREmployee(hremployee);
 
 
 String manageremployeeID = rs.getString("MANAGER_EMPLOYEE_ID");
-if (StringUtils.hasText(manageremployeeID)) {
+if (StringUtils.hasText(manageremployeeID) && !"null".equalsIgnoreCase(manageremployeeID) ){
 Employee manageremployee = new Employee();
 manageremployee.setID(manageremployeeID);
 nextResult.setManagerEmployee(manageremployee);
@@ -274,7 +274,7 @@ nextResult.setManagerEmployee(manageremployee);
 
 
 String correctiveactionstateID = rs.getString("CORRECTIVE_ACTION_STATE_ID");
-if (StringUtils.hasText(correctiveactionstateID)) {
+if (StringUtils.hasText(correctiveactionstateID) && !"null".equalsIgnoreCase(correctiveactionstateID) ){
 CorrectiveActionState correctiveactionstate = new CorrectiveActionState();
 correctiveactionstate.setID(correctiveactionstateID);
 nextResult.setCorrectiveActionState(correctiveactionstate);
@@ -282,7 +282,7 @@ nextResult.setCorrectiveActionState(correctiveactionstate);
 
 
 String correctiveactiontypeID = rs.getString("CORRECTIVE_ACTION_TYPE_ID");
-if (StringUtils.hasText(correctiveactiontypeID)) {
+if (StringUtils.hasText(correctiveactiontypeID) && !"null".equalsIgnoreCase(correctiveactiontypeID) ){
 CorrectiveActionType correctiveactiontype = new CorrectiveActionType();
 correctiveactiontype.setID(correctiveactiontypeID);
 nextResult.setCorrectiveActionType(correctiveactiontype);

@@ -196,7 +196,7 @@ nextResult.setStatus(rs.getString("STATUS"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -204,7 +204,7 @@ nextResult.setTeamLeader(teamleader);
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -212,7 +212,7 @@ nextResult.setAgent(agent);
 
 
 String developmentplanID = rs.getString("DEVELOPMENT_PLAN_ID");
-if (StringUtils.hasText(developmentplanID)) {
+if (StringUtils.hasText(developmentplanID) && !"null".equalsIgnoreCase(developmentplanID) ){
 DevelopmentPlan developmentplan = new DevelopmentPlan();
 developmentplan.setID(developmentplanID);
 nextResult.setDevelopmentPlan(developmentplan);

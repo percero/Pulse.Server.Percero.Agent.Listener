@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Timestamp
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date timestamp;
-
-public Date getTimestamp() 
-{
-	return this.timestamp;
-}
-
-public void setTimestamp(Date timestamp)
-{
-	this.timestamp = timestamp;
-}/*
 LogMessage
 Notes:
 */
@@ -118,6 +101,23 @@ public String getLogMessage()
 public void setLogMessage(String logMessage)
 {
 	this.logMessage = logMessage;
+}/*
+Timestamp
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date timestamp;
+
+public Date getTimestamp() 
+{
+	return this.timestamp;
+}
+
+public void setTimestamp(Date timestamp)
+{
+	this.timestamp = timestamp;
 }/*
 TraceType
 Notes:
@@ -182,13 +182,6 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Timestamp property
-		objectJson += ",\"timestamp\":";
-		if (getTimestamp() == null)
-			objectJson += "null";
-		else {
-			objectJson += getTimestamp().getTime();
-		}
 		//Retrieve value of the Log Message property
 		objectJson += ",\"logMessage\":";
 		
@@ -209,6 +202,13 @@ public void setPulseUser(PulseUser value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Timestamp property
+		objectJson += ",\"timestamp\":";
+		if (getTimestamp() == null)
+			objectJson += "null";
+		else {
+			objectJson += getTimestamp().getTime();
 		}
 		//Retrieve value of the Trace Type property
 		objectJson += ",\"traceType\":";
@@ -272,10 +272,10 @@ objectJson += ",\"pulseUser\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Timestamp property
-		setTimestamp(JsonUtils.getJsonDate(jsonObject, "timestamp"));
 		//From value of the Log Message property
 		setLogMessage(JsonUtils.getJsonString(jsonObject, "logMessage"));
+		//From value of the Timestamp property
+		setTimestamp(JsonUtils.getJsonDate(jsonObject, "timestamp"));
 		//From value of the Trace Type property
 		setTraceType(JsonUtils.getJsonString(jsonObject, "traceType"));
 

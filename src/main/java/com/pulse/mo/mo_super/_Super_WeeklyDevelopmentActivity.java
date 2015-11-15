@@ -99,7 +99,7 @@ public void setID(String value) {
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="DEVELOPMENT_ACTIVITY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_DevelopmentActivityOfWeeklyDevelopmentActivity")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
 private DevelopmentActivity developmentActivity;
 public DevelopmentActivity getDevelopmentActivity() {
 	return this.developmentActivity;
@@ -107,6 +107,19 @@ public DevelopmentActivity getDevelopmentActivity() {
 
 public void setDevelopmentActivity(DevelopmentActivity value) {
 	this.developmentActivity = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_WEEKLY_RESULT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardWeeklyResultOfWeeklyDevelopmentActivity")
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
+private ScorecardWeeklyResult scorecardWeeklyResult;
+public ScorecardWeeklyResult getScorecardWeeklyResult() {
+	return this.scorecardWeeklyResult;
+}
+
+public void setScorecardWeeklyResult(ScorecardWeeklyResult value) {
+	this.scorecardWeeklyResult = value;
 }
 
 	
@@ -133,6 +146,18 @@ objectJson += ",\"developmentActivity\":";
 			}
 		}
 		objectJson += "";
+//Retrieve value of the Scorecard Weekly Result of Weekly Development Activity relationship
+objectJson += ",\"scorecardWeeklyResult\":";
+		if (getScorecardWeeklyResult() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardWeeklyResult()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -151,6 +176,7 @@ objectJson += ",\"developmentActivity\":";
 		
 		// Source Relationships
 		this.developmentActivity = (DevelopmentActivity) JsonUtils.getJsonPerceroObject(jsonObject, "developmentActivity");
+		this.scorecardWeeklyResult = (ScorecardWeeklyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardWeeklyResult");
 
 
 		// Target Relationships

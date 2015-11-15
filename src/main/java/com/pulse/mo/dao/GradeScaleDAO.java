@@ -209,7 +209,7 @@ nextResult.setEndExpression(rs.getString("END_EXPRESSION"));
 
 
 String goalID = rs.getString("GOAL_ID");
-if (StringUtils.hasText(goalID)) {
+if (StringUtils.hasText(goalID) && !"null".equalsIgnoreCase(goalID) ){
 Goal goal = new Goal();
 goal.setID(goalID);
 nextResult.setGoal(goal);
@@ -228,28 +228,28 @@ nextResult.setGoal(goal);
 		
 		pstmt.setString(1, perceroObject.getID());
 
-pstmt.setString(3, perceroObject.getStartExp());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,9, perceroObject.getCustom());
-JdbcHelper.setInt(pstmt,10, perceroObject.getEndValue());
-JdbcHelper.setInt(pstmt,11, perceroObject.getGrade());
-JdbcHelper.setInt(pstmt,12, perceroObject.getStartValue());
-pstmt.setString(13, perceroObject.getANDOR());
-pstmt.setString(14, perceroObject.getColor());
-pstmt.setString(15, perceroObject.getCreatedBy());
-pstmt.setString(16, perceroObject.getEndExpression());
+pstmt.setString(2, perceroObject.getStartExp());
+pstmt.setString(3, perceroObject.getUpdatedBy());
+pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+JdbcHelper.setInt(pstmt,8, perceroObject.getCustom());
+JdbcHelper.setInt(pstmt,9, perceroObject.getEndValue());
+JdbcHelper.setInt(pstmt,10, perceroObject.getGrade());
+JdbcHelper.setInt(pstmt,10, perceroObject.getStartValue());
+pstmt.setString(12, perceroObject.getANDOR());
+pstmt.setString(13, perceroObject.getColor());
+pstmt.setString(14, perceroObject.getCreatedBy());
+pstmt.setString(15, perceroObject.getEndExpression());
 
 if (perceroObject.getGoal() == null)
 {
-pstmt.setString(17, null);
+pstmt.setString(16, null);
 }
 else
 {
-		pstmt.setString(17, perceroObject.getGoal().getID());
+		pstmt.setString(16, perceroObject.getGoal().getID());
 }
 
 

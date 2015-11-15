@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
-}/*
 RewardActive
 Notes:
 */
@@ -118,6 +101,23 @@ public String getRewardActive()
 public void setRewardActive(String rewardActive)
 {
 	this.rewardActive = rewardActive;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }
 
 	//////////////////////////////////////////////////////
@@ -178,16 +178,16 @@ public void setScorecard(Scorecard value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Reward Active property
+		objectJson += ",\"rewardActive\":";
 		
-		if (getName() == null)
+		if (getRewardActive() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getRewardActive());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -199,16 +199,16 @@ public void setScorecard(Scorecard value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Reward Active property
-		objectJson += ",\"rewardActive\":";
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getRewardActive() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getRewardActive());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -278,10 +278,10 @@ objectJson += ",\"behaviors\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Reward Active property
 		setRewardActive(JsonUtils.getJsonString(jsonObject, "rewardActive"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
 
 		
 		// Source Relationships

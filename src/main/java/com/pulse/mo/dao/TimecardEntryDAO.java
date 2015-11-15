@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +155,8 @@ return "SELECT \"TIMECARD_ENTRY\".\"WORKED_ID\" as \"ID\" " + selectFromStatemen
 	protected TimecardEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-TimecardEntry nextResult = null;
+
+TimecardEntry nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -210,7 +212,7 @@ nextResult.setActionName(rs.getString("ACTION_NAME"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -218,7 +220,7 @@ nextResult.setAgent(agent);
 
 
 String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
-if (StringUtils.hasText(timecardactivityID)) {
+if (StringUtils.hasText(timecardactivityID) && !"null".equalsIgnoreCase(timecardactivityID) ){
 TimecardActivity timecardactivity = new TimecardActivity();
 timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);
@@ -226,7 +228,7 @@ nextResult.setTimecardActivity(timecardactivity);
 
 
 String timecardID = rs.getString("TIMECARD_ID");
-if (StringUtils.hasText(timecardID)) {
+if (StringUtils.hasText(timecardID) && !"null".equalsIgnoreCase(timecardID) ){
 Timecard timecard = new Timecard();
 timecard.setID(timecardID);
 nextResult.setTimecard(timecard);
@@ -555,7 +557,8 @@ propertyCounter++;
 	}
 
 	
-public TimecardEntry createObject(TimecardEntry perceroObject, String userId)
+
+public TimecardEntry createObject(TimecardEntry perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -618,8 +621,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

@@ -85,22 +85,22 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-EndDate
+PointsReceived
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date endDate;
+private Double pointsReceived;
 
-public Date getEndDate() 
+public Double getPointsReceived() 
 {
-	return this.endDate;
+	return this.pointsReceived;
 }
 
-public void setEndDate(Date endDate)
+public void setPointsReceived(Double pointsReceived)
 {
-	this.endDate = endDate;
+	this.pointsReceived = pointsReceived;
 }/*
 LockLevel
 Notes:
@@ -136,22 +136,22 @@ public void setQuartile(Integer quartile)
 {
 	this.quartile = quartile;
 }/*
-WeekDate
+StartDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date weekDate;
+private Date startDate;
 
-public Date getWeekDate() 
+public Date getStartDate() 
 {
-	return this.weekDate;
+	return this.startDate;
 }
 
-public void setWeekDate(Date weekDate)
+public void setStartDate(Date startDate)
 {
-	this.weekDate = weekDate;
+	this.startDate = startDate;
 }/*
 Score
 Notes:
@@ -170,22 +170,22 @@ public void setScore(Double score)
 {
 	this.score = score;
 }/*
-PointsReceived
+PointsPossible
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double pointsReceived;
+private Double pointsPossible;
 
-public Double getPointsReceived() 
+public Double getPointsPossible() 
 {
-	return this.pointsReceived;
+	return this.pointsPossible;
 }
 
-public void setPointsReceived(Double pointsReceived)
+public void setPointsPossible(Double pointsPossible)
 {
-	this.pointsReceived = pointsReceived;
+	this.pointsPossible = pointsPossible;
 }/*
 Grade
 Notes:
@@ -204,39 +204,39 @@ public void setGrade(Integer grade)
 {
 	this.grade = grade;
 }/*
-StartDate
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date startDate;
+private Date weekDate;
 
-public Date getStartDate() 
+public Date getWeekDate() 
 {
-	return this.startDate;
+	return this.weekDate;
 }
 
-public void setStartDate(Date startDate)
+public void setWeekDate(Date weekDate)
 {
-	this.startDate = startDate;
+	this.weekDate = weekDate;
 }/*
-PointsPossible
+EndDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double pointsPossible;
+private Date endDate;
 
-public Double getPointsPossible() 
+public Date getEndDate() 
 {
-	return this.pointsPossible;
+	return this.endDate;
 }
 
-public void setPointsPossible(Double pointsPossible)
+public void setEndDate(Date endDate)
 {
-	this.pointsPossible = pointsPossible;
+	this.endDate = endDate;
 }
 
 	//////////////////////////////////////////////////////
@@ -245,14 +245,14 @@ public void setPointsPossible(Double pointsPossible)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocCoachingSession> adhocCoachingSessions;
-public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-	return this.adhocCoachingSessions;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
+private List<QualityEvaluation> qualityEvaluations;
+public List<QualityEvaluation> getQualityEvaluations() {
+	return this.qualityEvaluations;
 }
 
-public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-	this.adhocCoachingSessions = value;
+public void setQualityEvaluations(List<QualityEvaluation> value) {
+	this.qualityEvaluations = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -279,19 +279,6 @@ public List<ScorecardWeeklyResult> getScorecardWeeklyResults() {
 
 public void setScorecardWeeklyResults(List<ScorecardWeeklyResult> value) {
 	this.scorecardWeeklyResults = value;
-}
-
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=QualityEvaluation.class, mappedBy="agentScorecard", cascade=javax.persistence.CascadeType.REMOVE)
-private List<QualityEvaluation> qualityEvaluations;
-public List<QualityEvaluation> getQualityEvaluations() {
-	return this.qualityEvaluations;
-}
-
-public void setQualityEvaluations(List<QualityEvaluation> value) {
-	this.qualityEvaluations = value;
 }
 
 
@@ -350,12 +337,12 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
 			objectJson += "null";
 		else {
-			objectJson += getEndDate().getTime();
+			objectJson += getPointsReceived();
 		}
 		//Retrieve value of the Lock Level property
 		objectJson += ",\"lockLevel\":";
@@ -399,12 +386,12 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getWeekDate().getTime();
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the Score property
 		objectJson += ",\"score\":";
@@ -413,12 +400,12 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 		else {
 			objectJson += getScore();
 		}
-		//Retrieve value of the Points Received property
-		objectJson += ",\"pointsReceived\":";
-		if (getPointsReceived() == null)
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
 			objectJson += "null";
 		else {
-			objectJson += getPointsReceived();
+			objectJson += getPointsPossible();
 		}
 		//Retrieve value of the Grade property
 		objectJson += ",\"grade\":";
@@ -441,19 +428,19 @@ public void setScorecardWeeklyScore(ScorecardWeeklyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getStartDate().getTime();
+			objectJson += getWeekDate().getTime();
 		}
-		//Retrieve value of the Points Possible property
-		objectJson += ",\"pointsPossible\":";
-		if (getPointsPossible() == null)
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			objectJson += getPointsPossible();
+			objectJson += getEndDate().getTime();
 		}
 
 				
@@ -497,17 +484,17 @@ objectJson += ",\"scorecardWeeklyScore\":";
 
 		
 		// Target Relationships
-//Retrieve value of the Agent Scorecard of Adhoc Coaching Session relationship
-objectJson += ",\"adhocCoachingSessions\":[";
+//Retrieve value of the Agent Scorecard of Quality Evaluation relationship
+objectJson += ",\"qualityEvaluations\":[";
 		
-		if (getAdhocCoachingSessions() != null) {
-			int adhocCoachingSessionsCounter = 0;
-			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-				if (adhocCoachingSessionsCounter > 0)
+		if (getQualityEvaluations() != null) {
+			int qualityEvaluationsCounter = 0;
+			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
+				if (qualityEvaluationsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-					adhocCoachingSessionsCounter++;
+					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
+					qualityEvaluationsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -548,23 +535,6 @@ objectJson += ",\"scorecardWeeklyResults\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent Scorecard of Quality Evaluation relationship
-objectJson += ",\"qualityEvaluations\":[";
-		
-		if (getQualityEvaluations() != null) {
-			int qualityEvaluationsCounter = 0;
-			for(QualityEvaluation nextQualityEvaluations : getQualityEvaluations()) {
-				if (qualityEvaluationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextQualityEvaluations).toEmbeddedJson();
-					qualityEvaluationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -576,24 +546,24 @@ objectJson += ",\"qualityEvaluations\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Points Received property
+		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 		//From value of the Lock Level property
 		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
 		//From value of the Quartile property
 		setQuartile(JsonUtils.getJsonInteger(jsonObject, "quartile"));
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
-		//From value of the Score property
-		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
-		//From value of the Points Received property
-		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Score property
+		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
 		//From value of the Points Possible property
 		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
 
 		
 		// Source Relationships
@@ -603,10 +573,9 @@ objectJson += ",\"qualityEvaluations\":[";
 
 
 		// Target Relationships
-		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
+		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 		this.coachingSessions = (List<CoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessions");
 		this.scorecardWeeklyResults = (List<ScorecardWeeklyResult>) JsonUtils.getJsonListPerceroObject(jsonObject, "scorecardWeeklyResults");
-		this.qualityEvaluations = (List<QualityEvaluation>) JsonUtils.getJsonListPerceroObject(jsonObject, "qualityEvaluations");
 
 
 	}
@@ -616,10 +585,9 @@ objectJson += ",\"qualityEvaluations\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agentscorecard"));
+		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(CoachingSession.class, "agentscorecard"));
 		listSetters.add(MappedClass.getFieldSetters(ScorecardWeeklyResult.class, "agentscorecard"));
-		listSetters.add(MappedClass.getFieldSetters(QualityEvaluation.class, "agentscorecard"));
 
 		
 		return listSetters;

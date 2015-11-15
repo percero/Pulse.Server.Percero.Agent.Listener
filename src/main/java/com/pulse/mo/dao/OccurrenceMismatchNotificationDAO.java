@@ -178,7 +178,7 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -186,7 +186,7 @@ nextResult.setAgent(agent);
 
 
 String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
-if (StringUtils.hasText(lobconfigurationID)) {
+if (StringUtils.hasText(lobconfigurationID) && !"null".equalsIgnoreCase(lobconfigurationID) ){
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
@@ -194,7 +194,7 @@ nextResult.setLOBConfiguration(lobconfiguration);
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -202,7 +202,7 @@ nextResult.setTeamLeader(teamleader);
 
 
 String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
-if (StringUtils.hasText(timecardactivityID)) {
+if (StringUtils.hasText(timecardactivityID) && !"null".equalsIgnoreCase(timecardactivityID) ){
 TimecardActivity timecardactivity = new TimecardActivity();
 timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);

@@ -177,7 +177,7 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -185,7 +185,7 @@ nextResult.setTeamLeader(teamleader);
 
 
 String timecardactivityID = rs.getString("TIMECARD_ACTIVITY_ID");
-if (StringUtils.hasText(timecardactivityID)) {
+if (StringUtils.hasText(timecardactivityID) && !"null".equalsIgnoreCase(timecardactivityID) ){
 TimecardActivity timecardactivity = new TimecardActivity();
 timecardactivity.setID(timecardactivityID);
 nextResult.setTimecardActivity(timecardactivity);

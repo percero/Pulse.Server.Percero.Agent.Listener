@@ -102,23 +102,6 @@ public void setEmployeeId(String employeeId)
 {
 	this.employeeId = employeeId;
 }/*
-Grade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer grade;
-
-public Integer getGrade() 
-{
-	return this.grade;
-}
-
-public void setGrade(Integer grade)
-{
-	this.grade = grade;
-}/*
 IntervalType
 Notes:
 */
@@ -135,74 +118,6 @@ public String getIntervalType()
 public void setIntervalType(String intervalType)
 {
 	this.intervalType = intervalType;
-}/*
-PointsPossible
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double pointsPossible;
-
-public Double getPointsPossible() 
-{
-	return this.pointsPossible;
-}
-
-public void setPointsPossible(Double pointsPossible)
-{
-	this.pointsPossible = pointsPossible;
-}/*
-PointsReceived
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double pointsReceived;
-
-public Double getPointsReceived() 
-{
-	return this.pointsReceived;
-}
-
-public void setPointsReceived(Double pointsReceived)
-{
-	this.pointsReceived = pointsReceived;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
-}/*
-Score
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double score;
-
-public Double getScore() 
-{
-	return this.score;
-}
-
-public void setScore(Double score)
-{
-	this.score = score;
 }/*
 CreatedOn
 Notes:
@@ -254,6 +169,91 @@ public Date getUpdatedOn()
 public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
+}/*
+Score
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double score;
+
+public Double getScore() 
+{
+	return this.score;
+}
+
+public void setScore(Double score)
+{
+	this.score = score;
+}/*
+PointsPossible
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsPossible;
+
+public Double getPointsPossible() 
+{
+	return this.pointsPossible;
+}
+
+public void setPointsPossible(Double pointsPossible)
+{
+	this.pointsPossible = pointsPossible;
+}/*
+Grade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer grade;
+
+public Integer getGrade() 
+{
+	return this.grade;
+}
+
+public void setGrade(Integer grade)
+{
+	this.grade = grade;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
+}/*
+PointsReceived
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsReceived;
+
+public Double getPointsReceived() 
+{
+	return this.pointsReceived;
+}
+
+public void setPointsReceived(Double pointsReceived)
+{
+	this.pointsReceived = pointsReceived;
 }
 
 	//////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREVIOUS_SCORECARD_MONTHLY_SCORE_ID")
+@JoinColumn(name="PREV_SCARD_MONTHLY_SCORE_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardMonthlyScoreOfNextScorecardMonthlyScore")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardMonthlyScore previousScorecardMonthlyScore;
@@ -362,27 +362,6 @@ public void setPreviousScorecardMonthlyScore(ScorecardMonthlyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Grade property
-		objectJson += ",\"grade\":";
-		
-		if (getGrade() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getGrade());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Interval Type property
 		objectJson += ",\"intervalType\":";
 		
@@ -404,34 +383,6 @@ public void setPreviousScorecardMonthlyScore(ScorecardMonthlyScore value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Points Possible property
-		objectJson += ",\"pointsPossible\":";
-		if (getPointsPossible() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsPossible();
-		}
-		//Retrieve value of the Points Received property
-		objectJson += ",\"pointsReceived\":";
-		if (getPointsReceived() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsReceived();
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the Score property
-		objectJson += ",\"score\":";
-		if (getScore() == null)
-			objectJson += "null";
-		else {
-			objectJson += getScore();
-		}
 		//Retrieve value of the Created On property
 		objectJson += ",\"createdOn\":";
 		if (getCreatedOn() == null)
@@ -452,6 +403,55 @@ public void setPreviousScorecardMonthlyScore(ScorecardMonthlyScore value)
 			objectJson += "null";
 		else {
 			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Score property
+		objectJson += ",\"score\":";
+		if (getScore() == null)
+			objectJson += "null";
+		else {
+			objectJson += getScore();
+		}
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsPossible();
+		}
+		//Retrieve value of the Grade property
+		objectJson += ",\"grade\":";
+		
+		if (getGrade() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getGrade());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsReceived();
 		}
 
 				
@@ -532,24 +532,24 @@ objectJson += ",\"previousScorecardMonthlyScore\":";
 		// Properties
 		//From value of the Employee Id property
 		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
 		//From value of the Interval Type property
 		setIntervalType(JsonUtils.getJsonString(jsonObject, "intervalType"));
-		//From value of the Points Possible property
-		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
-		//From value of the Points Received property
-		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
-		//From value of the Score property
-		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Score property
+		setScore(JsonUtils.getJsonDouble(jsonObject, "score"));
+		//From value of the Points Possible property
+		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Points Received property
+		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 
 		
 		// Source Relationships

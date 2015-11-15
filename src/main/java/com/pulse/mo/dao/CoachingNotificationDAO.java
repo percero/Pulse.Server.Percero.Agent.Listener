@@ -174,7 +174,7 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -189,7 +189,7 @@ if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID)) {
 
 
 
-			
+
     	}
 		
 		
@@ -275,7 +275,7 @@ else
 
 
 
-		
+
 	}
 	
 	
