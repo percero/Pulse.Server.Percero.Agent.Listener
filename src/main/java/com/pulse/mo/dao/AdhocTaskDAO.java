@@ -55,7 +55,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
-	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
+	private String extendedWhereClause = " "; //" WHERE ROWNUM <= 4 ";
 
 
 	

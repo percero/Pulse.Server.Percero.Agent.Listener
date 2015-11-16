@@ -111,23 +111,23 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocCoachingSession;
-}
+//		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
+//{
+//return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + joinAgentIDAdhocCoachingSession;
+//}
 
-		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=? " + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
-{
-return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocCoachingSession;
-}
+//		if (joinColumnName.equalsIgnoreCase("\"AGENT_ID\""))
+//{
+//return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + joinAgentIDAdhocCoachingSession;
+//}
 
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"ADHOC_COACHING_SESSION\"." + joinColumnName + "=? " + orderByTableName;
 	}
 
 	@Override
