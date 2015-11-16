@@ -85,6 +85,57 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+StateName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String stateName;
+
+public String getStateName() 
+{
+	return this.stateName;
+}
+
+public void setStateName(String stateName)
+{
+	this.stateName = stateName;
+}/*
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
+}/*
+StartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date startDate;
+
+public Date getStartDate() 
+{
+	return this.startDate;
+}
+
+public void setStartDate(Date startDate)
+{
+	this.startDate = startDate;
+}/*
 SourceEndTime
 Notes:
 */
@@ -119,23 +170,6 @@ public void setSourceStartTime(Date sourceStartTime)
 {
 	this.sourceStartTime = sourceStartTime;
 }/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
-}/*
 Shift
 Notes:
 */
@@ -152,40 +186,6 @@ public Integer getShift()
 public void setShift(Integer shift)
 {
 	this.shift = shift;
-}/*
-StateName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String stateName;
-
-public String getStateName() 
-{
-	return this.stateName;
-}
-
-public void setStateName(String stateName)
-{
-	this.stateName = stateName;
-}/*
-StartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date startDate;
-
-public Date getStartDate() 
-{
-	return this.startDate;
-}
-
-public void setStartDate(Date startDate)
-{
-	this.startDate = startDate;
 }/*
 TotalTime
 Notes:
@@ -250,48 +250,6 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Source End Time property
-		objectJson += ",\"sourceEndTime\":";
-		if (getSourceEndTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getSourceEndTime().getTime();
-		}
-		//Retrieve value of the Source Start Time property
-		objectJson += ",\"sourceStartTime\":";
-		if (getSourceStartTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getSourceStartTime().getTime();
-		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndDate().getTime();
-		}
-		//Retrieve value of the Shift property
-		objectJson += ",\"shift\":";
-		
-		if (getShift() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getShift());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the State Name property
 		objectJson += ",\"stateName\":";
 		
@@ -313,12 +271,54 @@ public void setAgent(Agent value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getEndDate().getTime();
+		}
 		//Retrieve value of the Start Date property
 		objectJson += ",\"startDate\":";
 		if (getStartDate() == null)
 			objectJson += "null";
 		else {
 			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the Source End Time property
+		objectJson += ",\"sourceEndTime\":";
+		if (getSourceEndTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSourceEndTime().getTime();
+		}
+		//Retrieve value of the Source Start Time property
+		objectJson += ",\"sourceStartTime\":";
+		if (getSourceStartTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSourceStartTime().getTime();
+		}
+		//Retrieve value of the Shift property
+		objectJson += ",\"shift\":";
+		
+		if (getShift() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getShift());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 		//Retrieve value of the Total Time property
 		objectJson += ",\"totalTime\":";
@@ -373,18 +373,18 @@ objectJson += ",\"scheduleEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the State Name property
+		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Start Date property
+		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Source End Time property
 		setSourceEndTime(JsonUtils.getJsonDate(jsonObject, "sourceEndTime"));
 		//From value of the Source Start Time property
 		setSourceStartTime(JsonUtils.getJsonDate(jsonObject, "sourceStartTime"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
 		//From value of the Shift property
 		setShift(JsonUtils.getJsonInteger(jsonObject, "shift"));
-		//From value of the State Name property
-		setStateName(JsonUtils.getJsonString(jsonObject, "stateName"));
-		//From value of the Start Date property
-		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
 		//From value of the Total Time property
 		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
 

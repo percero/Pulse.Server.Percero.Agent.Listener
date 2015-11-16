@@ -102,90 +102,22 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-UpdatedOn
+Description
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date updatedOn;
+private String description;
 
-public Date getUpdatedOn() 
+public String getDescription() 
 {
-	return this.updatedOn;
+	return this.description;
 }
 
-public void setUpdatedOn(Date updatedOn)
+public void setDescription(String description)
 {
-	this.updatedOn = updatedOn;
-}/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
-}/*
-TempStoreId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String tempStoreId;
-
-public String getTempStoreId() 
-{
-	return this.tempStoreId;
-}
-
-public void setTempStoreId(String tempStoreId)
-{
-	this.tempStoreId = tempStoreId;
-}/*
-Version
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String version;
-
-public String getVersion() 
-{
-	return this.version;
-}
-
-public void setVersion(String version)
-{
-	this.version = version;
+	this.description = description;
 }/*
 EmployeeId
 Notes:
@@ -204,50 +136,107 @@ public void setEmployeeId(String employeeId)
 {
 	this.employeeId = employeeId;
 }/*
-Type
-Notes:Unknown = 7201,
-               XLS = 7202,
-               DOC = 7203,
-               PDF = 7204,
-               CSV = 7205,
-               GIF = 7206,
-               JPEG = 7207,
-               BMP = 7208,
-               WAV = 7209,
-               PNG = 7210,
-               PPT = 7211,
-               TXT = 7231
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String type;
-
-public String getType() 
-{
-	return this.type;
-}
-
-public void setType(String type)
-{
-	this.type = type;
-}/*
-Description
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String description;
+private String updatedBy;
 
-public String getDescription() 
+public String getUpdatedBy() 
 {
-	return this.description;
+	return this.updatedBy;
 }
 
-public void setDescription(String description)
+public void setUpdatedBy(String updatedBy)
 {
-	this.description = description;
+	this.updatedBy = updatedBy;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
+}/*
+Version
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String version;
+
+public String getVersion() 
+{
+	return this.version;
+}
+
+public void setVersion(String version)
+{
+	this.version = version;
+}/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer type;
+
+public Integer getType() 
+{
+	return this.type;
+}
+
+public void setType(Integer type)
+{
+	this.type = type;
+}/*
+TempStoreId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String tempStoreId;
+
+public String getTempStoreId() 
+{
+	return this.tempStoreId;
+}
+
+public void setTempStoreId(String tempStoreId)
+{
+	this.tempStoreId = tempStoreId;
 }/*
 Name
 Notes:
@@ -306,86 +295,16 @@ public void setCoachingSession(CoachingSession value) {
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
+		//Retrieve value of the Description property
+		objectJson += ",\"description\":";
 		
-		if (getCreatedBy() == null)
+		if (getDescription() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Temp Store Id property
-		objectJson += ",\"tempStoreId\":";
-		
-		if (getTempStoreId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getTempStoreId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Version property
-		objectJson += ",\"version\":";
-		
-		if (getVersion() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getVersion());
+				objectJson += objectMapper.writeValueAsString(getDescription());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -418,6 +337,76 @@ public void setCoachingSession(CoachingSession value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Version property
+		objectJson += ",\"version\":";
+		
+		if (getVersion() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getVersion());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Type property
 		objectJson += ",\"type\":";
 		
@@ -439,16 +428,16 @@ public void setCoachingSession(CoachingSession value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Description property
-		objectJson += ",\"description\":";
+		//Retrieve value of the Temp Store Id property
+		objectJson += ",\"tempStoreId\":";
 		
-		if (getDescription() == null)
+		if (getTempStoreId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDescription());
+				objectJson += objectMapper.writeValueAsString(getTempStoreId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -512,22 +501,22 @@ objectJson += ",\"coachingSession\":";
 		// Properties
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Temp Store Id property
-		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
-		//From value of the Version property
-		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Version property
+		setVersion(JsonUtils.getJsonString(jsonObject, "version"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
+		//From value of the Temp Store Id property
+		setTempStoreId(JsonUtils.getJsonString(jsonObject, "tempStoreId"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 

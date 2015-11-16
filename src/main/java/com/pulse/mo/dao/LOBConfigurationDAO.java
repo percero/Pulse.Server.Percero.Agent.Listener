@@ -163,7 +163,7 @@ public class LOBConfigurationDAO extends SqlDataAccessObject<LOBConfiguration> i
     	if (!shellOnly) 
 		{
 			String lobID = rs.getString("LOB_ID");
-if (StringUtils.hasText(lobID)) {
+if (StringUtils.hasText(lobID) && !"null".equalsIgnoreCase(lobID) ){
 LOB lob = new LOB();
 lob.setID(lobID);
 nextResult.setLOB(lob);

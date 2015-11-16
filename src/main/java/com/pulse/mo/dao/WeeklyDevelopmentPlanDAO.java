@@ -169,7 +169,7 @@ WeeklyDevelopmentPlan nextResult = null;
 
 
 String developmentplanID = rs.getString("DEVELOPMENT_PLAN_ID");
-if (StringUtils.hasText(developmentplanID)) {
+if (StringUtils.hasText(developmentplanID) && !"null".equalsIgnoreCase(developmentplanID) ){
 DevelopmentPlan developmentplan = new DevelopmentPlan();
 developmentplan.setID(developmentplanID);
 nextResult.setDevelopmentPlan(developmentplan);
@@ -177,7 +177,7 @@ nextResult.setDevelopmentPlan(developmentplan);
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -185,7 +185,7 @@ nextResult.setScorecard(scorecard);
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -193,7 +193,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 String scorecardweeklyresultID = rs.getString("SCORECARD_WEEKLY_RESULT_ID");
-if (StringUtils.hasText(scorecardweeklyresultID)) {
+if (StringUtils.hasText(scorecardweeklyresultID) && !"null".equalsIgnoreCase(scorecardweeklyresultID) ){
 ScorecardWeeklyResult scorecardweeklyresult = new ScorecardWeeklyResult();
 scorecardweeklyresult.setID(scorecardweeklyresultID);
 nextResult.setScorecardWeeklyResult(scorecardweeklyresult);

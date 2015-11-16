@@ -166,7 +166,7 @@ public class UserRoleDAO extends SqlDataAccessObject<UserRole> implements IDataA
 
 
 String pulseuserID = rs.getString("PULSE_USER_ID");
-if (StringUtils.hasText(pulseuserID)) {
+if (StringUtils.hasText(pulseuserID) && !"null".equalsIgnoreCase(pulseuserID) ){
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);

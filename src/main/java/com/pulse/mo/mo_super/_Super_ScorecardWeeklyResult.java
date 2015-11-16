@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+IsCoachable
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isCoachable;
+
+public Boolean getIsCoachable() 
+{
+	return this.isCoachable;
+}
+
+public void setIsCoachable(Boolean isCoachable)
+{
+	this.isCoachable = isCoachable;
+}/*
 StartDate
 Notes:
 */
@@ -102,6 +119,142 @@ public void setStartDate(Date startDate)
 {
 	this.startDate = startDate;
 }/*
+DurationTo
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationTo;
+
+public Integer getDurationTo() 
+{
+	return this.durationTo;
+}
+
+public void setDurationTo(Integer durationTo)
+{
+	this.durationTo = durationTo;
+}/*
+GoalType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer goalType;
+
+public Integer getGoalType() 
+{
+	return this.goalType;
+}
+
+public void setGoalType(Integer goalType)
+{
+	this.goalType = goalType;
+}/*
+Excluded
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer excluded;
+
+public Integer getExcluded() 
+{
+	return this.excluded;
+}
+
+public void setExcluded(Integer excluded)
+{
+	this.excluded = excluded;
+}/*
+PointsPossible
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double pointsPossible;
+
+public Double getPointsPossible() 
+{
+	return this.pointsPossible;
+}
+
+public void setPointsPossible(Double pointsPossible)
+{
+	this.pointsPossible = pointsPossible;
+}/*
+Result
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double result;
+
+public Double getResult() 
+{
+	return this.result;
+}
+
+public void setResult(Double result)
+{
+	this.result = result;
+}/*
+IsRequired
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean isRequired;
+
+public Boolean getIsRequired() 
+{
+	return this.isRequired;
+}
+
+public void setIsRequired(Boolean isRequired)
+{
+	this.isRequired = isRequired;
+}/*
+PercentageAttainment
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double percentageAttainment;
+
+public Double getPercentageAttainment() 
+{
+	return this.percentageAttainment;
+}
+
+public void setPercentageAttainment(Double percentageAttainment)
+{
+	this.percentageAttainment = percentageAttainment;
+}/*
+DurationFrom
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer durationFrom;
+
+public Integer getDurationFrom() 
+{
+	return this.durationFrom;
+}
+
+public void setDurationFrom(Integer durationFrom)
+{
+	this.durationFrom = durationFrom;
+}/*
 UpdatedOn
 Notes:
 */
@@ -118,6 +271,108 @@ public String getUpdatedOn()
 public void setUpdatedOn(String updatedOn)
 {
 	this.updatedOn = updatedOn;
+}/*
+RollupType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer rollupType;
+
+public Integer getRollupType() 
+{
+	return this.rollupType;
+}
+
+public void setRollupType(Integer rollupType)
+{
+	this.rollupType = rollupType;
+}/*
+EmployeeId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String employeeId;
+
+public String getEmployeeId() 
+{
+	return this.employeeId;
+}
+
+public void setEmployeeId(String employeeId)
+{
+	this.employeeId = employeeId;
+}/*
+Grade
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer grade;
+
+public Integer getGrade() 
+{
+	return this.grade;
+}
+
+public void setGrade(Integer grade)
+{
+	this.grade = grade;
+}/*
+Tenure
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer tenure;
+
+public Integer getTenure() 
+{
+	return this.tenure;
+}
+
+public void setTenure(Integer tenure)
+{
+	this.tenure = tenure;
+}/*
+EndDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date endDate;
+
+public Date getEndDate() 
+{
+	return this.endDate;
+}
+
+public void setEndDate(Date endDate)
+{
+	this.endDate = endDate;
+}/*
+WeekDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date weekDate;
+
+public Date getWeekDate() 
+{
+	return this.weekDate;
+}
+
+public void setWeekDate(Date weekDate)
+{
+	this.weekDate = weekDate;
 }/*
 PointsReceived
 Notes:
@@ -152,261 +407,6 @@ public Date getCreatedOn()
 public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
-}/*
-PointsPossible
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double pointsPossible;
-
-public Double getPointsPossible() 
-{
-	return this.pointsPossible;
-}
-
-public void setPointsPossible(Double pointsPossible)
-{
-	this.pointsPossible = pointsPossible;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeId;
-
-public String getEmployeeId() 
-{
-	return this.employeeId;
-}
-
-public void setEmployeeId(String employeeId)
-{
-	this.employeeId = employeeId;
-}/*
-IsRequired
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean isRequired;
-
-public Boolean getIsRequired() 
-{
-	return this.isRequired;
-}
-
-public void setIsRequired(Boolean isRequired)
-{
-	this.isRequired = isRequired;
-}/*
-WeekDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date weekDate;
-
-public Date getWeekDate() 
-{
-	return this.weekDate;
-}
-
-public void setWeekDate(Date weekDate)
-{
-	this.weekDate = weekDate;
-}/*
-Excluded
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer excluded;
-
-public Integer getExcluded() 
-{
-	return this.excluded;
-}
-
-public void setExcluded(Integer excluded)
-{
-	this.excluded = excluded;
-}/*
-Result
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double result;
-
-public Double getResult() 
-{
-	return this.result;
-}
-
-public void setResult(Double result)
-{
-	this.result = result;
-}/*
-GoalType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer goalType;
-
-public Integer getGoalType() 
-{
-	return this.goalType;
-}
-
-public void setGoalType(Integer goalType)
-{
-	this.goalType = goalType;
-}/*
-IsCoachable
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean isCoachable;
-
-public Boolean getIsCoachable() 
-{
-	return this.isCoachable;
-}
-
-public void setIsCoachable(Boolean isCoachable)
-{
-	this.isCoachable = isCoachable;
-}/*
-DurationTo
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer durationTo;
-
-public Integer getDurationTo() 
-{
-	return this.durationTo;
-}
-
-public void setDurationTo(Integer durationTo)
-{
-	this.durationTo = durationTo;
-}/*
-PercentageAttainment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double percentageAttainment;
-
-public Double getPercentageAttainment() 
-{
-	return this.percentageAttainment;
-}
-
-public void setPercentageAttainment(Double percentageAttainment)
-{
-	this.percentageAttainment = percentageAttainment;
-}/*
-EndDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date endDate;
-
-public Date getEndDate() 
-{
-	return this.endDate;
-}
-
-public void setEndDate(Date endDate)
-{
-	this.endDate = endDate;
-}/*
-Tenure
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer tenure;
-
-public Integer getTenure() 
-{
-	return this.tenure;
-}
-
-public void setTenure(Integer tenure)
-{
-	this.tenure = tenure;
-}/*
-Grade
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer grade;
-
-public Integer getGrade() 
-{
-	return this.grade;
-}
-
-public void setGrade(Integer grade)
-{
-	this.grade = grade;
-}/*
-DurationFrom
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer durationFrom;
-
-public Integer getDurationFrom() 
-{
-	return this.durationFrom;
-}
-
-public void setDurationFrom(Integer durationFrom)
-{
-	this.durationFrom = durationFrom;
-}/*
-RollupType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer rollupType;
-
-public Integer getRollupType() 
-{
-	return this.rollupType;
-}
-
-public void setRollupType(Integer rollupType)
-{
-	this.rollupType = rollupType;
 }
 
 	//////////////////////////////////////////////////////
@@ -423,6 +423,19 @@ public List<BehaviorResponse> getBehaviorResponses() {
 
 public void setBehaviorResponses(List<BehaviorResponse> value) {
 	this.behaviorResponses = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=WeeklyDevelopmentActivity.class, mappedBy="scorecardWeeklyResult", cascade=javax.persistence.CascadeType.REMOVE)
+private List<WeeklyDevelopmentActivity> weeklyDevelopmentActivities;
+public List<WeeklyDevelopmentActivity> getWeeklyDevelopmentActivities() {
+	return this.weeklyDevelopmentActivities;
+}
+
+public void setWeeklyDevelopmentActivities(List<WeeklyDevelopmentActivity> value) {
+	this.weeklyDevelopmentActivities = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -524,7 +537,7 @@ public void setScorecardMonthlyResult(ScorecardMonthlyResult value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="PREVIOUS_SCORECARD_WEEKLY_RESULT_ID")
+@JoinColumn(name="PREV_SCARD_WEEKLY_RESULT_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_PreviousScorecardWeeklyResultOfNextScorecardWeeklyResult")
 @OneToOne(fetch=FetchType.LAZY, optional=false)
 private ScorecardWeeklyResult previousScorecardWeeklyResult;
@@ -546,145 +559,19 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Points Received property
-		objectJson += ",\"pointsReceived\":";
-		if (getPointsReceived() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsReceived();
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Points Possible property
-		objectJson += ",\"pointsPossible\":";
-		if (getPointsPossible() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsPossible();
-		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
-		
-		if (getEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Is Required property
-		objectJson += ",\"isRequired\":";
-		if (getIsRequired() == null)
-			objectJson += "null";
-		else {
-			objectJson += getIsRequired();
-		}
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWeekDate().getTime();
-		}
-		//Retrieve value of the Excluded property
-		objectJson += ",\"excluded\":";
-		
-		if (getExcluded() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getExcluded());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Result property
-		objectJson += ",\"result\":";
-		if (getResult() == null)
-			objectJson += "null";
-		else {
-			objectJson += getResult();
-		}
-		//Retrieve value of the Goal Type property
-		objectJson += ",\"goalType\":";
-		
-		if (getGoalType() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getGoalType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Is Coachable property
 		objectJson += ",\"isCoachable\":";
 		if (getIsCoachable() == null)
 			objectJson += "null";
 		else {
 			objectJson += getIsCoachable();
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
 		}
 		//Retrieve value of the Duration To property
 		objectJson += ",\"durationTo\":";
@@ -707,6 +594,69 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Goal Type property
+		objectJson += ",\"goalType\":";
+		
+		if (getGoalType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getGoalType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Excluded property
+		objectJson += ",\"excluded\":";
+		
+		if (getExcluded() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getExcluded());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsPossible();
+		}
+		//Retrieve value of the Result property
+		objectJson += ",\"result\":";
+		if (getResult() == null)
+			objectJson += "null";
+		else {
+			objectJson += getResult();
+		}
+		//Retrieve value of the Is Required property
+		objectJson += ",\"isRequired\":";
+		if (getIsRequired() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRequired();
+		}
 		//Retrieve value of the Percentage Attainment property
 		objectJson += ",\"percentageAttainment\":";
 		if (getPercentageAttainment() == null)
@@ -714,23 +664,79 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 		else {
 			objectJson += getPercentageAttainment();
 		}
-		//Retrieve value of the End Date property
-		objectJson += ",\"endDate\":";
-		if (getEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getEndDate().getTime();
-		}
-		//Retrieve value of the Tenure property
-		objectJson += ",\"tenure\":";
+		//Retrieve value of the Duration From property
+		objectJson += ",\"durationFrom\":";
 		
-		if (getTenure() == null)
+		if (getDurationFrom() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getTenure());
+				objectJson += objectMapper.writeValueAsString(getDurationFrom());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedOn());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Rollup Type property
+		objectJson += ",\"rollupType\":";
+		
+		if (getRollupType() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getRollupType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -763,16 +769,16 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Duration From property
-		objectJson += ",\"durationFrom\":";
+		//Retrieve value of the Tenure property
+		objectJson += ",\"tenure\":";
 		
-		if (getDurationFrom() == null)
+		if (getTenure() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDurationFrom());
+				objectJson += objectMapper.writeValueAsString(getTenure());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -784,26 +790,33 @@ public void setPreviousScorecardWeeklyResult(ScorecardWeeklyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Rollup Type property
-		objectJson += ",\"rollupType\":";
-		
-		if (getRollupType() == null)
+		//Retrieve value of the End Date property
+		objectJson += ",\"endDate\":";
+		if (getEndDate() == null)
 			objectJson += "null";
 		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getRollupType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
+			objectJson += getEndDate().getTime();
+		}
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
+		}
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsReceived();
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
 		}
 
 				
@@ -912,6 +925,23 @@ objectJson += ",\"behaviorResponses\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Scorecard Weekly Result of Weekly Development Activity relationship
+objectJson += ",\"weeklyDevelopmentActivities\":[";
+		
+		if (getWeeklyDevelopmentActivities() != null) {
+			int weeklyDevelopmentActivitiesCounter = 0;
+			for(WeeklyDevelopmentActivity nextWeeklyDevelopmentActivities : getWeeklyDevelopmentActivities()) {
+				if (weeklyDevelopmentActivitiesCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextWeeklyDevelopmentActivities).toEmbeddedJson();
+					weeklyDevelopmentActivitiesCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Scorecard Weekly Result of Weekly Development Plan relationship
 objectJson += ",\"weeklyDevelopmentPlans\":[";
 		
@@ -940,44 +970,44 @@ objectJson += ",\"weeklyDevelopmentPlans\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Is Coachable property
+		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Duration To property
+		setDurationTo(JsonUtils.getJsonInteger(jsonObject, "durationTo"));
+		//From value of the Goal Type property
+		setGoalType(JsonUtils.getJsonInteger(jsonObject, "goalType"));
+		//From value of the Excluded property
+		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
+		//From value of the Points Possible property
+		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
+		//From value of the Result property
+		setResult(JsonUtils.getJsonDouble(jsonObject, "result"));
+		//From value of the Is Required property
+		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
+		//From value of the Percentage Attainment property
+		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
+		//From value of the Duration From property
+		setDurationFrom(JsonUtils.getJsonInteger(jsonObject, "durationFrom"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonString(jsonObject, "updatedOn"));
+		//From value of the Rollup Type property
+		setRollupType(JsonUtils.getJsonInteger(jsonObject, "rollupType"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Tenure property
+		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
+		//From value of the End Date property
+		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
 		//From value of the Points Received property
 		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Points Possible property
-		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the Is Required property
-		setIsRequired(JsonUtils.getJsonBoolean(jsonObject, "isRequired"));
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
-		//From value of the Excluded property
-		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
-		//From value of the Result property
-		setResult(JsonUtils.getJsonDouble(jsonObject, "result"));
-		//From value of the Goal Type property
-		setGoalType(JsonUtils.getJsonInteger(jsonObject, "goalType"));
-		//From value of the Is Coachable property
-		setIsCoachable(JsonUtils.getJsonBoolean(jsonObject, "isCoachable"));
-		//From value of the Duration To property
-		setDurationTo(JsonUtils.getJsonInteger(jsonObject, "durationTo"));
-		//From value of the Percentage Attainment property
-		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
-		//From value of the End Date property
-		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
-		//From value of the Tenure property
-		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
-		//From value of the Duration From property
-		setDurationFrom(JsonUtils.getJsonInteger(jsonObject, "durationFrom"));
-		//From value of the Rollup Type property
-		setRollupType(JsonUtils.getJsonInteger(jsonObject, "rollupType"));
 
 		
 		// Source Relationships
@@ -992,6 +1022,7 @@ objectJson += ",\"weeklyDevelopmentPlans\":[";
 
 		// Target Relationships
 		this.behaviorResponses = (List<BehaviorResponse>) JsonUtils.getJsonListPerceroObject(jsonObject, "behaviorResponses");
+		this.weeklyDevelopmentActivities = (List<WeeklyDevelopmentActivity>) JsonUtils.getJsonListPerceroObject(jsonObject, "weeklyDevelopmentActivities");
 		this.weeklyDevelopmentPlans = (List<WeeklyDevelopmentPlan>) JsonUtils.getJsonListPerceroObject(jsonObject, "weeklyDevelopmentPlans");
 
 
@@ -1003,6 +1034,7 @@ objectJson += ",\"weeklyDevelopmentPlans\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(BehaviorResponse.class, "scorecardweeklyresult"));
+		listSetters.add(MappedClass.getFieldSetters(WeeklyDevelopmentActivity.class, "scorecardweeklyresult"));
 		listSetters.add(MappedClass.getFieldSetters(WeeklyDevelopmentPlan.class, "scorecardweeklyresult"));
 
 		

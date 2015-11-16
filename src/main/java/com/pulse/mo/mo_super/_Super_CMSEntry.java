@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-CMSAuxMode
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String cMSAuxMode;
-
-public String getCMSAuxMode() 
-{
-	return this.cMSAuxMode;
-}
-
-public void setCMSAuxMode(String cMSAuxMode)
-{
-	this.cMSAuxMode = cMSAuxMode;
-}/*
 EStartProjectName
 Notes:
 */
@@ -136,6 +119,23 @@ public void setFromTime(Date fromTime)
 {
 	this.fromTime = fromTime;
 }/*
+Duration
+Notes:Number of minutes
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double duration;
+
+public Double getDuration() 
+{
+	return this.duration;
+}
+
+public void setDuration(Double duration)
+{
+	this.duration = duration;
+}/*
 ToTime
 Notes:
 */
@@ -153,22 +153,22 @@ public void setToTime(Date toTime)
 {
 	this.toTime = toTime;
 }/*
-Duration
-Notes:Number of minutes
+CMSAuxMode
+Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double duration;
+private String cMSAuxMode;
 
-public Double getDuration() 
+public String getCMSAuxMode() 
 {
-	return this.duration;
+	return this.cMSAuxMode;
 }
 
-public void setDuration(Double duration)
+public void setCMSAuxMode(String cMSAuxMode)
 {
-	this.duration = duration;
+	this.cMSAuxMode = cMSAuxMode;
 }
 
 	//////////////////////////////////////////////////////
@@ -216,27 +216,6 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the CMS Aux Mode property
-		objectJson += ",\"cMSAuxMode\":";
-		
-		if (getCMSAuxMode() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCMSAuxMode());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the EStart Project Name property
 		objectJson += ",\"eStartProjectName\":";
 		
@@ -265,6 +244,13 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getFromTime().getTime();
 		}
+		//Retrieve value of the Duration property
+		objectJson += ",\"duration\":";
+		if (getDuration() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDuration();
+		}
 		//Retrieve value of the To Time property
 		objectJson += ",\"toTime\":";
 		if (getToTime() == null)
@@ -272,12 +258,26 @@ public void setAgent(Agent value) {
 		else {
 			objectJson += getToTime().getTime();
 		}
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		if (getDuration() == null)
+		//Retrieve value of the CMS Aux Mode property
+		objectJson += ",\"cMSAuxMode\":";
+		
+		if (getCMSAuxMode() == null)
 			objectJson += "null";
 		else {
-			objectJson += getDuration();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCMSAuxMode());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
 		}
 
 				
@@ -325,16 +325,16 @@ objectJson += ",\"cMSEntryLOBs\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the CMS Aux Mode property
-		setCMSAuxMode(JsonUtils.getJsonString(jsonObject, "cMSAuxMode"));
 		//From value of the EStart Project Name property
 		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
 		//From value of the From Time property
 		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
 		//From value of the Duration property
 		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+		//From value of the To Time property
+		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+		//From value of the CMS Aux Mode property
+		setCMSAuxMode(JsonUtils.getJsonString(jsonObject, "cMSAuxMode"));
 
 		
 		// Source Relationships

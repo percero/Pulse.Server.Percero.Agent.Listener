@@ -181,7 +181,7 @@ nextResult.setResponse(rs.getInt("RESPONSE"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -189,7 +189,7 @@ nextResult.setAgent(agent);
 
 
 String behaviorID = rs.getString("BEHAVIOR_ID");
-if (StringUtils.hasText(behaviorID)) {
+if (StringUtils.hasText(behaviorID) && !"null".equalsIgnoreCase(behaviorID) ){
 Behavior behavior = new Behavior();
 behavior.setID(behaviorID);
 nextResult.setBehavior(behavior);
@@ -197,7 +197,7 @@ nextResult.setBehavior(behavior);
 
 
 String coachingsessionID = rs.getString("COACHING_SESSION_ID");
-if (StringUtils.hasText(coachingsessionID)) {
+if (StringUtils.hasText(coachingsessionID) && !"null".equalsIgnoreCase(coachingsessionID) ){
 CoachingSession coachingsession = new CoachingSession();
 coachingsession.setID(coachingsessionID);
 nextResult.setCoachingSession(coachingsession);
@@ -205,7 +205,7 @@ nextResult.setCoachingSession(coachingsession);
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -213,7 +213,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 String scorecardweeklyresultID = rs.getString("SCARD_WEEKLY_RESULT_ID");
-if (StringUtils.hasText(scorecardweeklyresultID)) {
+if (StringUtils.hasText(scorecardweeklyresultID) && !"null".equalsIgnoreCase(scorecardweeklyresultID) ){
 ScorecardWeeklyResult scorecardweeklyresult = new ScorecardWeeklyResult();
 scorecardweeklyresult.setID(scorecardweeklyresultID);
 nextResult.setScorecardWeeklyResult(scorecardweeklyresult);

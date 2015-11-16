@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class GoalDAO extends SqlDataAccessObject<Goal> implements IDataAccessObj
 	protected Goal extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-Goal nextResult = null;
+
+Goal nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -193,7 +195,7 @@ nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -506,7 +508,8 @@ propertyCounter++;
 	}
 	
 	
-public Goal createObject(Goal perceroObject, String userId)
+
+public Goal createObject(Goal perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -569,9 +572,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

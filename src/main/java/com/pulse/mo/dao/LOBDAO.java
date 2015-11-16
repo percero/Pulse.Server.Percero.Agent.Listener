@@ -40,7 +40,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"PULSE_CONFIGURATION_ID\", '' as \"CLIENT_SITE_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
+	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"CLIENT_SITE_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\", '' as \"PULSE_CONFIGURATION_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\"";
 	private String whereClause = " WHERE \"LOB\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB\".\"ID\"= SQLLIST.column_value";
@@ -162,7 +162,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 
 
 String clientID = rs.getString("CLIENT_ID");
-if (StringUtils.hasText(clientID)) {
+if (StringUtils.hasText(clientID) && !"null".equalsIgnoreCase(clientID) ){
 Client client = new Client();
 client.setID(clientID);
 nextResult.setClient(client);
@@ -170,7 +170,7 @@ nextResult.setClient(client);
 
 
 String clientsiteID = rs.getString("CLIENT_SITE_ID");
-if (StringUtils.hasText(clientsiteID)) {
+if (StringUtils.hasText(clientsiteID) && !"null".equalsIgnoreCase(clientsiteID) ){
 ClientSite clientsite = new ClientSite();
 clientsite.setID(clientsiteID);
 nextResult.setClientSite(clientsite);
@@ -178,7 +178,7 @@ nextResult.setClientSite(clientsite);
 
 
 String pulseconfigurationID = rs.getString("PULSE_CONFIGURATION_ID");
-if (StringUtils.hasText(pulseconfigurationID)) {
+if (StringUtils.hasText(pulseconfigurationID) && !"null".equalsIgnoreCase(pulseconfigurationID) ){
 PulseConfiguration pulseconfiguration = new PulseConfiguration();
 pulseconfiguration.setID(pulseconfigurationID);
 nextResult.setPulseConfiguration(pulseconfiguration);

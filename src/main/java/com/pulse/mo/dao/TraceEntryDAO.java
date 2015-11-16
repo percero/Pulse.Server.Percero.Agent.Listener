@@ -172,7 +172,7 @@ nextResult.setLogMessage(rs.getString("LOG_MESSAGE"));
 
 
 String pulseuserID = rs.getString("PULSE_USER_ID");
-if (StringUtils.hasText(pulseuserID)) {
+if (StringUtils.hasText(pulseuserID) && !"null".equalsIgnoreCase(pulseuserID) ){
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
@@ -180,7 +180,7 @@ nextResult.setPulseUser(pulseuser);
 
 
 String tracelogID = rs.getString("TRACE_LOG_ID");
-if (StringUtils.hasText(tracelogID)) {
+if (StringUtils.hasText(tracelogID) && !"null".equalsIgnoreCase(tracelogID) ){
 TraceLog tracelog = new TraceLog();
 tracelog.setID(tracelogID);
 nextResult.setTraceLog(tracelog);

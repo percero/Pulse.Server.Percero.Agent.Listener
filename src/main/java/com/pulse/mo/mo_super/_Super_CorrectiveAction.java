@@ -85,56 +85,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Details
+EmployeeComment
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String details;
+private String employeeComment;
 
-public String getDetails() 
+public String getEmployeeComment() 
 {
-	return this.details;
+	return this.employeeComment;
 }
 
-public void setDetails(String details)
+public void setEmployeeComment(String employeeComment)
 {
-	this.details = details;
+	this.employeeComment = employeeComment;
 }/*
-NextSteps
+ManagerApprovalDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String nextSteps;
+private Date managerApprovalDate;
 
-public String getNextSteps() 
+public Date getManagerApprovalDate() 
 {
-	return this.nextSteps;
+	return this.managerApprovalDate;
 }
 
-public void setNextSteps(String nextSteps)
+public void setManagerApprovalDate(Date managerApprovalDate)
 {
-	this.nextSteps = nextSteps;
-}/*
-ReasonType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String reasonType;
-
-public String getReasonType() 
-{
-	return this.reasonType;
-}
-
-public void setReasonType(String reasonType)
-{
-	this.reasonType = reasonType;
+	this.managerApprovalDate = managerApprovalDate;
 }/*
 DisciplineType
 Notes:
@@ -153,22 +136,141 @@ public void setDisciplineType(Integer disciplineType)
 {
 	this.disciplineType = disciplineType;
 }/*
-HRApprovalDate
+AttachmentId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date hRApprovalDate;
+private Integer attachmentId;
 
-public Date getHRApprovalDate() 
+public Integer getAttachmentId() 
 {
-	return this.hRApprovalDate;
+	return this.attachmentId;
 }
 
-public void setHRApprovalDate(Date hRApprovalDate)
+public void setAttachmentId(Integer attachmentId)
 {
-	this.hRApprovalDate = hRApprovalDate;
+	this.attachmentId = attachmentId;
+}/*
+ClientId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer clientId;
+
+public Integer getClientId() 
+{
+	return this.clientId;
+}
+
+public void setClientId(Integer clientId)
+{
+	this.clientId = clientId;
+}/*
+ReasonType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String reasonType;
+
+public String getReasonType() 
+{
+	return this.reasonType;
+}
+
+public void setReasonType(String reasonType)
+{
+	this.reasonType = reasonType;
+}/*
+Reason
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String reason;
+
+public String getReason() 
+{
+	return this.reason;
+}
+
+public void setReason(String reason)
+{
+	this.reason = reason;
+}/*
+DetailsConfig
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String detailsConfig;
+
+public String getDetailsConfig() 
+{
+	return this.detailsConfig;
+}
+
+public void setDetailsConfig(String detailsConfig)
+{
+	this.detailsConfig = detailsConfig;
+}/*
+SupervisorConfig
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String supervisorConfig;
+
+public String getSupervisorConfig() 
+{
+	return this.supervisorConfig;
+}
+
+public void setSupervisorConfig(String supervisorConfig)
+{
+	this.supervisorConfig = supervisorConfig;
+}/*
+CreatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date createdOn;
+
+public Date getCreatedOn() 
+{
+	return this.createdOn;
+}
+
+public void setCreatedOn(Date createdOn)
+{
+	this.createdOn = createdOn;
+}/*
+CompletionDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date completionDate;
+
+public Date getCompletionDate() 
+{
+	return this.completionDate;
+}
+
+public void setCompletionDate(Date completionDate)
+{
+	this.completionDate = completionDate;
 }/*
 AttachmentName
 Notes:
@@ -187,22 +289,107 @@ public void setAttachmentName(String attachmentName)
 {
 	this.attachmentName = attachmentName;
 }/*
-SupervisorConfig
+SupervisorACKDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String supervisorConfig;
+private Date supervisorACKDate;
 
-public String getSupervisorConfig() 
+public Date getSupervisorACKDate() 
 {
-	return this.supervisorConfig;
+	return this.supervisorACKDate;
 }
 
-public void setSupervisorConfig(String supervisorConfig)
+public void setSupervisorACKDate(Date supervisorACKDate)
 {
-	this.supervisorConfig = supervisorConfig;
+	this.supervisorACKDate = supervisorACKDate;
+}/*
+Program
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String program;
+
+public String getProgram() 
+{
+	return this.program;
+}
+
+public void setProgram(String program)
+{
+	this.program = program;
+}/*
+SupervisorComment
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String supervisorComment;
+
+public String getSupervisorComment() 
+{
+	return this.supervisorComment;
+}
+
+public void setSupervisorComment(String supervisorComment)
+{
+	this.supervisorComment = supervisorComment;
+}/*
+SessionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer sessionId;
+
+public Integer getSessionId() 
+{
+	return this.sessionId;
+}
+
+public void setSessionId(Integer sessionId)
+{
+	this.sessionId = sessionId;
+}/*
+NextSteps
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String nextSteps;
+
+public String getNextSteps() 
+{
+	return this.nextSteps;
+}
+
+public void setNextSteps(String nextSteps)
+{
+	this.nextSteps = nextSteps;
+}/*
+MetricRef
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String metricRef;
+
+public String getMetricRef() 
+{
+	return this.metricRef;
+}
+
+public void setMetricRef(String metricRef)
+{
+	this.metricRef = metricRef;
 }/*
 EmployeeAck
 Notes:
@@ -238,73 +425,39 @@ public void setExpireDate(Date expireDate)
 {
 	this.expireDate = expireDate;
 }/*
-MetricRef
+HRApprovalDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String metricRef;
+private Date hRApprovalDate;
 
-public String getMetricRef() 
+public Date getHRApprovalDate() 
 {
-	return this.metricRef;
+	return this.hRApprovalDate;
 }
 
-public void setMetricRef(String metricRef)
+public void setHRApprovalDate(Date hRApprovalDate)
 {
-	this.metricRef = metricRef;
+	this.hRApprovalDate = hRApprovalDate;
 }/*
-CompletionDate
+Details
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date completionDate;
+private String details;
 
-public Date getCompletionDate() 
+public String getDetails() 
 {
-	return this.completionDate;
+	return this.details;
 }
 
-public void setCompletionDate(Date completionDate)
+public void setDetails(String details)
 {
-	this.completionDate = completionDate;
-}/*
-ClientId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer clientId;
-
-public Integer getClientId() 
-{
-	return this.clientId;
-}
-
-public void setClientId(Integer clientId)
-{
-	this.clientId = clientId;
-}/*
-SessionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer sessionId;
-
-public Integer getSessionId() 
-{
-	return this.sessionId;
-}
-
-public void setSessionId(Integer sessionId)
-{
-	this.sessionId = sessionId;
+	this.details = details;
 }/*
 FormId
 Notes:
@@ -322,159 +475,6 @@ public Integer getFormId()
 public void setFormId(Integer formId)
 {
 	this.formId = formId;
-}/*
-SupervisorACKDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date supervisorACKDate;
-
-public Date getSupervisorACKDate() 
-{
-	return this.supervisorACKDate;
-}
-
-public void setSupervisorACKDate(Date supervisorACKDate)
-{
-	this.supervisorACKDate = supervisorACKDate;
-}/*
-EmployeeComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeComment;
-
-public String getEmployeeComment() 
-{
-	return this.employeeComment;
-}
-
-public void setEmployeeComment(String employeeComment)
-{
-	this.employeeComment = employeeComment;
-}/*
-CreatedOn
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date createdOn;
-
-public Date getCreatedOn() 
-{
-	return this.createdOn;
-}
-
-public void setCreatedOn(Date createdOn)
-{
-	this.createdOn = createdOn;
-}/*
-SupervisorComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String supervisorComment;
-
-public String getSupervisorComment() 
-{
-	return this.supervisorComment;
-}
-
-public void setSupervisorComment(String supervisorComment)
-{
-	this.supervisorComment = supervisorComment;
-}/*
-AttachmentId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer attachmentId;
-
-public Integer getAttachmentId() 
-{
-	return this.attachmentId;
-}
-
-public void setAttachmentId(Integer attachmentId)
-{
-	this.attachmentId = attachmentId;
-}/*
-DetailsConfig
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String detailsConfig;
-
-public String getDetailsConfig() 
-{
-	return this.detailsConfig;
-}
-
-public void setDetailsConfig(String detailsConfig)
-{
-	this.detailsConfig = detailsConfig;
-}/*
-Reason
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String reason;
-
-public String getReason() 
-{
-	return this.reason;
-}
-
-public void setReason(String reason)
-{
-	this.reason = reason;
-}/*
-ManagerApprovalDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date managerApprovalDate;
-
-public Date getManagerApprovalDate() 
-{
-	return this.managerApprovalDate;
-}
-
-public void setManagerApprovalDate(Date managerApprovalDate)
-{
-	this.managerApprovalDate = managerApprovalDate;
-}/*
-Program
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String program;
-
-public String getProgram() 
-{
-	return this.program;
-}
-
-public void setProgram(String program)
-{
-	this.program = program;
 }
 
 	//////////////////////////////////////////////////////
@@ -600,16 +600,16 @@ public void setSupervisor(Supervisor value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Details property
-		objectJson += ",\"details\":";
+		//Retrieve value of the Employee Comment property
+		objectJson += ",\"employeeComment\":";
 		
-		if (getDetails() == null)
+		if (getEmployeeComment() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDetails());
+				objectJson += objectMapper.writeValueAsString(getEmployeeComment());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -621,16 +621,65 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Next Steps property
-		objectJson += ",\"nextSteps\":";
+		//Retrieve value of the Manager Approval Date property
+		objectJson += ",\"managerApprovalDate\":";
+		if (getManagerApprovalDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getManagerApprovalDate().getTime();
+		}
+		//Retrieve value of the Discipline Type property
+		objectJson += ",\"disciplineType\":";
 		
-		if (getNextSteps() == null)
+		if (getDisciplineType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getNextSteps());
+				objectJson += objectMapper.writeValueAsString(getDisciplineType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Attachment Id property
+		objectJson += ",\"attachmentId\":";
+		
+		if (getAttachmentId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAttachmentId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Client Id property
+		objectJson += ",\"clientId\":";
+		
+		if (getClientId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getClientId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -663,16 +712,16 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Discipline Type property
-		objectJson += ",\"disciplineType\":";
+		//Retrieve value of the Reason property
+		objectJson += ",\"reason\":";
 		
-		if (getDisciplineType() == null)
+		if (getReason() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getDisciplineType());
+				objectJson += objectMapper.writeValueAsString(getReason());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -684,12 +733,61 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the HR Approval Date property
-		objectJson += ",\"hRApprovalDate\":";
-		if (getHRApprovalDate() == null)
+		//Retrieve value of the Details Config property
+		objectJson += ",\"detailsConfig\":";
+		
+		if (getDetailsConfig() == null)
 			objectJson += "null";
 		else {
-			objectJson += getHRApprovalDate().getTime();
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getDetailsConfig());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Supervisor Config property
+		objectJson += ",\"supervisorConfig\":";
+		
+		if (getSupervisorConfig() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSupervisorConfig());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Completion Date property
+		objectJson += ",\"completionDate\":";
+		if (getCompletionDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCompletionDate().getTime();
 		}
 		//Retrieve value of the Attachment Name property
 		objectJson += ",\"attachmentName\":";
@@ -712,16 +810,107 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Supervisor Config property
-		objectJson += ",\"supervisorConfig\":";
+		//Retrieve value of the Supervisor ACK Date property
+		objectJson += ",\"supervisorACKDate\":";
+		if (getSupervisorACKDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSupervisorACKDate().getTime();
+		}
+		//Retrieve value of the Program property
+		objectJson += ",\"program\":";
 		
-		if (getSupervisorConfig() == null)
+		if (getProgram() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorConfig());
+				objectJson += objectMapper.writeValueAsString(getProgram());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Supervisor Comment property
+		objectJson += ",\"supervisorComment\":";
+		
+		if (getSupervisorComment() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSupervisorComment());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Session Id property
+		objectJson += ",\"sessionId\":";
+		
+		if (getSessionId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSessionId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Next Steps property
+		objectJson += ",\"nextSteps\":";
+		
+		if (getNextSteps() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getNextSteps());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Metric Ref property
+		objectJson += ",\"metricRef\":";
+		
+		if (getMetricRef() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getMetricRef());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -761,65 +950,23 @@ public void setSupervisor(Supervisor value) {
 		else {
 			objectJson += getExpireDate().getTime();
 		}
-		//Retrieve value of the Metric Ref property
-		objectJson += ",\"metricRef\":";
+		//Retrieve value of the HR Approval Date property
+		objectJson += ",\"hRApprovalDate\":";
+		if (getHRApprovalDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getHRApprovalDate().getTime();
+		}
+		//Retrieve value of the Details property
+		objectJson += ",\"details\":";
 		
-		if (getMetricRef() == null)
+		if (getDetails() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMetricRef());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Completion Date property
-		objectJson += ",\"completionDate\":";
-		if (getCompletionDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCompletionDate().getTime();
-		}
-		//Retrieve value of the Client Id property
-		objectJson += ",\"clientId\":";
-		
-		if (getClientId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getClientId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Session Id property
-		objectJson += ",\"sessionId\":";
-		
-		if (getSessionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSessionId());
+				objectJson += objectMapper.writeValueAsString(getDetails());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -841,153 +988,6 @@ public void setSupervisor(Supervisor value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getFormId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Supervisor ACK Date property
-		objectJson += ",\"supervisorACKDate\":";
-		if (getSupervisorACKDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getSupervisorACKDate().getTime();
-		}
-		//Retrieve value of the Employee Comment property
-		objectJson += ",\"employeeComment\":";
-		
-		if (getEmployeeComment() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Supervisor Comment property
-		objectJson += ",\"supervisorComment\":";
-		
-		if (getSupervisorComment() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Attachment Id property
-		objectJson += ",\"attachmentId\":";
-		
-		if (getAttachmentId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAttachmentId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Details Config property
-		objectJson += ",\"detailsConfig\":";
-		
-		if (getDetailsConfig() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDetailsConfig());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Reason property
-		objectJson += ",\"reason\":";
-		
-		if (getReason() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getReason());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Manager Approval Date property
-		objectJson += ",\"managerApprovalDate\":";
-		if (getManagerApprovalDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getManagerApprovalDate().getTime();
-		}
-		//Retrieve value of the Program property
-		objectJson += ",\"program\":";
-		
-		if (getProgram() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getProgram());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -1117,52 +1117,52 @@ objectJson += ",\"correctiveActionAttachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Details property
-		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
-		//From value of the Next Steps property
-		setNextSteps(JsonUtils.getJsonString(jsonObject, "nextSteps"));
-		//From value of the Reason Type property
-		setReasonType(JsonUtils.getJsonString(jsonObject, "reasonType"));
+		//From value of the Employee Comment property
+		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
+		//From value of the Manager Approval Date property
+		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
 		//From value of the Discipline Type property
 		setDisciplineType(JsonUtils.getJsonInteger(jsonObject, "disciplineType"));
-		//From value of the HR Approval Date property
-		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
-		//From value of the Attachment Name property
-		setAttachmentName(JsonUtils.getJsonString(jsonObject, "attachmentName"));
+		//From value of the Attachment Id property
+		setAttachmentId(JsonUtils.getJsonInteger(jsonObject, "attachmentId"));
+		//From value of the Client Id property
+		setClientId(JsonUtils.getJsonInteger(jsonObject, "clientId"));
+		//From value of the Reason Type property
+		setReasonType(JsonUtils.getJsonString(jsonObject, "reasonType"));
+		//From value of the Reason property
+		setReason(JsonUtils.getJsonString(jsonObject, "reason"));
+		//From value of the Details Config property
+		setDetailsConfig(JsonUtils.getJsonString(jsonObject, "detailsConfig"));
 		//From value of the Supervisor Config property
 		setSupervisorConfig(JsonUtils.getJsonString(jsonObject, "supervisorConfig"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Completion Date property
+		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
+		//From value of the Attachment Name property
+		setAttachmentName(JsonUtils.getJsonString(jsonObject, "attachmentName"));
+		//From value of the Supervisor ACK Date property
+		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
+		//From value of the Program property
+		setProgram(JsonUtils.getJsonString(jsonObject, "program"));
+		//From value of the Supervisor Comment property
+		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
+		//From value of the Session Id property
+		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
+		//From value of the Next Steps property
+		setNextSteps(JsonUtils.getJsonString(jsonObject, "nextSteps"));
+		//From value of the Metric Ref property
+		setMetricRef(JsonUtils.getJsonString(jsonObject, "metricRef"));
 		//From value of the Employee Ack property
 		setEmployeeAck(JsonUtils.getJsonString(jsonObject, "employeeAck"));
 		//From value of the Expire Date property
 		setExpireDate(JsonUtils.getJsonDate(jsonObject, "expireDate"));
-		//From value of the Metric Ref property
-		setMetricRef(JsonUtils.getJsonString(jsonObject, "metricRef"));
-		//From value of the Completion Date property
-		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
-		//From value of the Client Id property
-		setClientId(JsonUtils.getJsonInteger(jsonObject, "clientId"));
-		//From value of the Session Id property
-		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
+		//From value of the HR Approval Date property
+		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
+		//From value of the Details property
+		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
 		//From value of the Form Id property
 		setFormId(JsonUtils.getJsonInteger(jsonObject, "formId"));
-		//From value of the Supervisor ACK Date property
-		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
-		//From value of the Employee Comment property
-		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Supervisor Comment property
-		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
-		//From value of the Attachment Id property
-		setAttachmentId(JsonUtils.getJsonInteger(jsonObject, "attachmentId"));
-		//From value of the Details Config property
-		setDetailsConfig(JsonUtils.getJsonString(jsonObject, "detailsConfig"));
-		//From value of the Reason property
-		setReason(JsonUtils.getJsonString(jsonObject, "reason"));
-		//From value of the Manager Approval Date property
-		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
-		//From value of the Program property
-		setProgram(JsonUtils.getJsonString(jsonObject, "program"));
 
 		
 		// Source Relationships

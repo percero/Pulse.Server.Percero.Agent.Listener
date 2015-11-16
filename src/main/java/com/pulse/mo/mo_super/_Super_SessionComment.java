@@ -50,7 +50,7 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_Comment extends BaseDataObject implements Serializable
+public class _Super_SessionComment extends BaseDataObject implements Serializable
 {
 	//////////////////////////////////////////////////////
 	// VERSION
@@ -62,7 +62,7 @@ public class _Super_Comment extends BaseDataObject implements Serializable
 
 	
 	/*
-	Keys of Comment
+	Keys of SessionComment
 	*/
 	//////////////////////////////////////////////////////
 // ID
@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+SessionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer sessionId;
+
+public Integer getSessionId() 
+{
+	return this.sessionId;
+}
+
+public void setSessionId(Integer sessionId)
+{
+	this.sessionId = sessionId;
+}/*
 UpdatedOn
 Notes:
 */
@@ -101,40 +118,6 @@ public Date getUpdatedOn()
 public void setUpdatedOn(Date updatedOn)
 {
 	this.updatedOn = updatedOn;
-}/*
-CreatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String createdBy;
-
-public String getCreatedBy() 
-{
-	return this.createdBy;
-}
-
-public void setCreatedBy(String createdBy)
-{
-	this.createdBy = createdBy;
-}/*
-UpdatedBy
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String updatedBy;
-
-public String getUpdatedBy() 
-{
-	return this.updatedBy;
-}
-
-public void setUpdatedBy(String updatedBy)
-{
-	this.updatedBy = updatedBy;
 }/*
 Description
 Notes:
@@ -153,23 +136,6 @@ public void setDescription(String description)
 {
 	this.description = description;
 }/*
-SessionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer sessionId;
-
-public Integer getSessionId() 
-{
-	return this.sessionId;
-}
-
-public void setSessionId(Integer sessionId)
-{
-	this.sessionId = sessionId;
-}/*
 DatarefId
 Notes:
 */
@@ -186,6 +152,40 @@ public Integer getDatarefId()
 public void setDatarefId(Integer datarefId)
 {
 	this.datarefId = datarefId;
+}/*
+Type
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer type;
+
+public Integer getType() 
+{
+	return this.type;
+}
+
+public void setType(Integer type)
+{
+	this.type = type;
+}/*
+CreatedBy
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String createdBy;
+
+public String getCreatedBy() 
+{
+	return this.createdBy;
+}
+
+public void setCreatedBy(String createdBy)
+{
+	this.createdBy = createdBy;
 }/*
 CreatedOn
 Notes:
@@ -204,22 +204,22 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-Type
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer type;
+private String updatedBy;
 
-public Integer getType() 
+public String getUpdatedBy() 
 {
-	return this.type;
+	return this.updatedBy;
 }
 
-public void setType(Integer type)
+public void setUpdatedBy(String updatedBy)
 {
-	this.type = type;
+	this.updatedBy = updatedBy;
 }
 
 	//////////////////////////////////////////////////////
@@ -241,54 +241,33 @@ public void setType(Integer type)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Session Id property
+		objectJson += ",\"sessionId\":";
+		
+		if (getSessionId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getSessionId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
 		if (getUpdatedOn() == null)
 			objectJson += "null";
 		else {
 			objectJson += getUpdatedOn().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
-		
-		if (getUpdatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
@@ -300,27 +279,6 @@ public void setType(Integer type)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getDescription());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Session Id property
-		objectJson += ",\"sessionId\":";
-		
-		if (getSessionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSessionId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -353,13 +311,6 @@ public void setType(Integer type)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
 		//Retrieve value of the Type property
 		objectJson += ",\"type\":";
 		
@@ -370,6 +321,55 @@ public void setType(Integer type)
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
+		
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
+		
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -398,22 +398,22 @@ public void setType(Integer type)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
-		//From value of the Created By property
-		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Session Id property
 		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Dataref Id property
 		setDatarefId(JsonUtils.getJsonInteger(jsonObject, "datarefId"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Type property
 		setType(JsonUtils.getJsonInteger(jsonObject, "type"));
+		//From value of the Created By property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
 
 		
 		// Source Relationships

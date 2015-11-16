@@ -178,7 +178,7 @@ nextResult.setReminderInterval(rs.getInt("REMINDER_INTERVAL"));
 
 
 String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
-if (StringUtils.hasText(lobconfigurationID)) {
+if (StringUtils.hasText(lobconfigurationID) && !"null".equalsIgnoreCase(lobconfigurationID) ){
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
@@ -186,7 +186,7 @@ nextResult.setLOBConfiguration(lobconfiguration);
 
 
 String notificationfrequencyID = rs.getString("NOTIFICATION_FREQUENCY_ID");
-if (StringUtils.hasText(notificationfrequencyID)) {
+if (StringUtils.hasText(notificationfrequencyID) && !"null".equalsIgnoreCase(notificationfrequencyID) ){
 NotificationFrequency notificationfrequency = new NotificationFrequency();
 notificationfrequency.setID(notificationfrequencyID);
 nextResult.setNotificationFrequency(notificationfrequency);

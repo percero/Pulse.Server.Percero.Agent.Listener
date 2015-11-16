@@ -193,7 +193,7 @@ nextResult.setVersion(rs.getString("VERSION"));
 
 
 String adhoccoachingsessionID = rs.getString("ADHOC_COACHING_SESSION_ID");
-if (StringUtils.hasText(adhoccoachingsessionID)) {
+if (StringUtils.hasText(adhoccoachingsessionID) && !"null".equalsIgnoreCase(adhoccoachingsessionID) ){
 AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
 adhoccoachingsession.setID(adhoccoachingsessionID);
 nextResult.setAdhocCoachingSession(adhoccoachingsession);

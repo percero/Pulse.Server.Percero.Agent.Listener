@@ -190,7 +190,7 @@ nextResult.setVersion(rs.getString("VERSION"));
 
 
 String correctiveactionID = rs.getString("CORRECTIVE_ACTION_ID");
-if (StringUtils.hasText(correctiveactionID)) {
+if (StringUtils.hasText(correctiveactionID) && !"null".equalsIgnoreCase(correctiveactionID) ){
 CorrectiveAction correctiveaction = new CorrectiveAction();
 correctiveaction.setID(correctiveactionID);
 nextResult.setCorrectiveAction(correctiveaction);
