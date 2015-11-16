@@ -205,7 +205,7 @@ nextResult.setResponsibleCoach(rs.getString("RESPONSIBLE_COACH"));
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -213,7 +213,7 @@ nextResult.setScorecard(scorecard);
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -221,7 +221,7 @@ nextResult.setAgent(agent);
 
 
 String agentscorecardID = rs.getString("AGENT_SCORECARD_ID");
-if (StringUtils.hasText(agentscorecardID)) {
+if (StringUtils.hasText(agentscorecardID) && !"null".equalsIgnoreCase(agentscorecardID) ){
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(agentscorecardID);
 nextResult.setAgentScorecard(agentscorecard);
@@ -229,7 +229,7 @@ nextResult.setAgentScorecard(agentscorecard);
 
 
 String employeeID = rs.getString("EMPLOYEE_ID");
-if (StringUtils.hasText(employeeID)) {
+if (StringUtils.hasText(employeeID) && !"null".equalsIgnoreCase(employeeID) ){
 Employee employee = new Employee();
 employee.setID(employeeID);
 nextResult.setEmployee(employee);

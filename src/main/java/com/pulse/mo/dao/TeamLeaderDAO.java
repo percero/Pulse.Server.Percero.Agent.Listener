@@ -181,7 +181,7 @@ nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
 
 String supervisorID = rs.getString("SUPERVISOR_ID");
-if (StringUtils.hasText(supervisorID)) {
+if (StringUtils.hasText(supervisorID) && !"null".equalsIgnoreCase(supervisorID) ){
 Supervisor supervisor = new Supervisor();
 supervisor.setID(supervisorID);
 nextResult.setSupervisor(supervisor);

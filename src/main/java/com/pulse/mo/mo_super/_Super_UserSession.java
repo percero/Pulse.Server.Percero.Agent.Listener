@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-ConnectedState
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String connectedState;
-
-public String getConnectedState() 
-{
-	return this.connectedState;
-}
-
-public void setConnectedState(String connectedState)
-{
-	this.connectedState = connectedState;
-}/*
 IPAddress
 Notes:???
 */
@@ -118,6 +101,23 @@ public String getIPAddress()
 public void setIPAddress(String iPAddress)
 {
 	this.iPAddress = iPAddress;
+}/*
+ConnectedState
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String connectedState;
+
+public String getConnectedState() 
+{
+	return this.connectedState;
+}
+
+public void setConnectedState(String connectedState)
+{
+	this.connectedState = connectedState;
 }/*
 Date
 Notes:
@@ -182,16 +182,16 @@ public void setPulseUser(PulseUser value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Connected State property
-		objectJson += ",\"connectedState\":";
+		//Retrieve value of the IP Address property
+		objectJson += ",\"iPAddress\":";
 		
-		if (getConnectedState() == null)
+		if (getIPAddress() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getConnectedState());
+				objectJson += objectMapper.writeValueAsString(getIPAddress());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -203,16 +203,16 @@ public void setPulseUser(PulseUser value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the IP Address property
-		objectJson += ",\"iPAddress\":";
+		//Retrieve value of the Connected State property
+		objectJson += ",\"connectedState\":";
 		
-		if (getIPAddress() == null)
+		if (getConnectedState() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getIPAddress());
+				objectJson += objectMapper.writeValueAsString(getConnectedState());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -272,10 +272,10 @@ objectJson += ",\"pulseUser\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Connected State property
-		setConnectedState(JsonUtils.getJsonString(jsonObject, "connectedState"));
 		//From value of the IP Address property
 		setIPAddress(JsonUtils.getJsonString(jsonObject, "iPAddress"));
+		//From value of the Connected State property
+		setConnectedState(JsonUtils.getJsonString(jsonObject, "connectedState"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
 

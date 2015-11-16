@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -145,7 +146,8 @@ public class AgentTimeZoneDAO extends SqlDataAccessObject<AgentTimeZone> impleme
 	protected AgentTimeZone extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-AgentTimeZone nextResult = null;
+
+AgentTimeZone nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -162,7 +164,7 @@ public class AgentTimeZoneDAO extends SqlDataAccessObject<AgentTimeZone> impleme
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -236,7 +238,8 @@ propertyCounter++;
 	}
 
 	
-public AgentTimeZone createObject(AgentTimeZone perceroObject, String userId)
+
+public AgentTimeZone createObject(AgentTimeZone perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -299,8 +302,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

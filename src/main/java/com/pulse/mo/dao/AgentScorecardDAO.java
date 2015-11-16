@@ -57,7 +57,7 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	private String whereInClause = " Join Table(sys.dbmsdebugvc2coll(?)) SQLLIST On AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLLIST.columnvalue,0,9) And AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 1) + 1,INSTR(SQLLIST.columnvalue,'-', 1, 2)-INSTR(SQLLIST.columnvalue,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 2) + 1,10)";
 	private String orderByTableName = " ORDER BY AGENT_SCORECARD.WEEK_DATE DESC";
 	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
-	
+
 	
 
 	
@@ -197,7 +197,7 @@ nextResult.setLockLevel(rs.getString("LOCK_LEVEL"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -205,7 +205,7 @@ nextResult.setAgent(agent);
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(agentID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -213,7 +213,7 @@ nextResult.setScorecard(scorecard);
 
 
 String scorecardweeklyscoreID = rs.getString("SCORECARD_WEEKLY_SCORE_ID");
-if (StringUtils.hasText(scorecardweeklyscoreID) && !"null".equalsIgnoreCase(agentID)) {
+if (StringUtils.hasText(scorecardweeklyscoreID) && !"null".equalsIgnoreCase(scorecardweeklyscoreID) ){
 ScorecardWeeklyScore scorecardweeklyscore = new ScorecardWeeklyScore();
 scorecardweeklyscore.setID(scorecardweeklyscoreID);
 nextResult.setScorecardWeeklyScore(scorecardweeklyscore);

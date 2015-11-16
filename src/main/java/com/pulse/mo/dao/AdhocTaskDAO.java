@@ -55,7 +55,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
-	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
+	private String extendedWhereClause = " "; //" WHERE ROWNUM <= 4 ";
 
 
 	
@@ -215,7 +215,7 @@ nextResult.setType(rs.getInt("TYPE"));
 
 
 String adhoctaskstateID = rs.getString("ADHOC_TASK_STATE_ID");
-if (StringUtils.hasText(adhoctaskstateID)) {
+if (StringUtils.hasText(adhoctaskstateID) && !"null".equalsIgnoreCase(adhoctaskstateID) ){
 AdhocTaskState adhoctaskstate = new AdhocTaskState();
 adhoctaskstate.setID(adhoctaskstateID);
 nextResult.setAdhocTaskState(adhoctaskstate);
@@ -223,7 +223,7 @@ nextResult.setAdhocTaskState(adhoctaskstate);
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -231,7 +231,7 @@ nextResult.setAgent(agent);
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);

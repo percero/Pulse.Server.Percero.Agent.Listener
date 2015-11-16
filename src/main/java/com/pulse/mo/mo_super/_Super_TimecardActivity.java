@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-NonBillable
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Boolean nonBillable;
-
-public Boolean getNonBillable() 
-{
-	return this.nonBillable;
-}
-
-public void setNonBillable(Boolean nonBillable)
-{
-	this.nonBillable = nonBillable;
-}/*
 Name
 Notes:
 */
@@ -118,6 +101,23 @@ public String getName()
 public void setName(String name)
 {
 	this.name = name;
+}/*
+NonBillable
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Boolean nonBillable;
+
+public Boolean getNonBillable() 
+{
+	return this.nonBillable;
+}
+
+public void setNonBillable(Boolean nonBillable)
+{
+	this.nonBillable = nonBillable;
 }/*
 Description
 Notes:
@@ -173,13 +173,6 @@ public void setCode(String code)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Non Billable property
-		objectJson += ",\"nonBillable\":";
-		if (getNonBillable() == null)
-			objectJson += "null";
-		else {
-			objectJson += getNonBillable();
-		}
 		//Retrieve value of the Name property
 		objectJson += ",\"name\":";
 		
@@ -200,6 +193,13 @@ public void setCode(String code)
 				objectJson += "null";
 				e.printStackTrace();
 			}
+		}
+		//Retrieve value of the Non Billable property
+		objectJson += ",\"nonBillable\":";
+		if (getNonBillable() == null)
+			objectJson += "null";
+		else {
+			objectJson += getNonBillable();
 		}
 		//Retrieve value of the Description property
 		objectJson += ",\"description\":";
@@ -260,10 +260,10 @@ public void setCode(String code)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Non Billable property
-		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Non Billable property
+		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Code property

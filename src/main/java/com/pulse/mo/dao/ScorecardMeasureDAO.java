@@ -169,7 +169,7 @@ nextResult.setRewardActive(rs.getString("REWARD_ACTIVE"));
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -177,7 +177,7 @@ nextResult.setScorecard(scorecard);
 
 
 String measureID = rs.getString("MEASURE_ID");
-if (StringUtils.hasText(measureID)) {
+if (StringUtils.hasText(measureID) && !"null".equalsIgnoreCase(measureID) ){
 Measure measure = new Measure();
 measure.setID(measureID);
 nextResult.setMeasure(measure);

@@ -85,39 +85,39 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-Response
+WeekDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer response;
+private Date weekDate;
 
-public Integer getResponse() 
+public Date getWeekDate() 
 {
-	return this.response;
+	return this.weekDate;
 }
 
-public void setResponse(Integer response)
+public void setWeekDate(Date weekDate)
 {
-	this.response = response;
+	this.weekDate = weekDate;
 }/*
-UpdatedBy
+CreatedOn
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String updatedBy;
+private Date createdOn;
 
-public String getUpdatedBy() 
+public Date getCreatedOn() 
 {
-	return this.updatedBy;
+	return this.createdOn;
 }
 
-public void setUpdatedBy(String updatedBy)
+public void setCreatedOn(Date createdOn)
 {
-	this.updatedBy = updatedBy;
+	this.createdOn = createdOn;
 }/*
 UpdatedOn
 Notes:
@@ -153,39 +153,39 @@ public void setCreatedBy(String createdBy)
 {
 	this.createdBy = createdBy;
 }/*
-CreatedOn
+UpdatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date createdOn;
+private String updatedBy;
 
-public Date getCreatedOn() 
+public String getUpdatedBy() 
 {
-	return this.createdOn;
+	return this.updatedBy;
 }
 
-public void setCreatedOn(Date createdOn)
+public void setUpdatedBy(String updatedBy)
 {
-	this.createdOn = createdOn;
+	this.updatedBy = updatedBy;
 }/*
-WeekDate
+Response
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date weekDate;
+private Integer response;
 
-public Date getWeekDate() 
+public Integer getResponse() 
 {
-	return this.weekDate;
+	return this.response;
 }
 
-public void setWeekDate(Date weekDate)
+public void setResponse(Integer response)
 {
-	this.weekDate = weekDate;
+	this.response = response;
 }
 
 	//////////////////////////////////////////////////////
@@ -225,16 +225,16 @@ public void setBehavior(Behavior value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="COACHING_SESSION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfBehaviorResponse")
+@JoinColumn(name="SCORECARD_MEASURE_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private CoachingSession coachingSession;
-public CoachingSession getCoachingSession() {
-	return this.coachingSession;
+private ScorecardMeasure scorecardMeasure;
+public ScorecardMeasure getScorecardMeasure() {
+	return this.scorecardMeasure;
 }
 
-public void setCoachingSession(CoachingSession value) {
-	this.coachingSession = value;
+public void setScorecardMeasure(ScorecardMeasure value) {
+	this.scorecardMeasure = value;
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
@@ -251,16 +251,16 @@ public void setScorecardWeeklyResult(ScorecardWeeklyResult value) {
 }@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SCORECARD_MEASURE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_ScorecardMeasureOfBehaviorResponse")
+@JoinColumn(name="COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfBehaviorResponse")
 @ManyToOne(fetch=FetchType.LAZY, optional=false)
-private ScorecardMeasure scorecardMeasure;
-public ScorecardMeasure getScorecardMeasure() {
-	return this.scorecardMeasure;
+private CoachingSession coachingSession;
+public CoachingSession getCoachingSession() {
+	return this.coachingSession;
 }
 
-public void setScorecardMeasure(ScorecardMeasure value) {
-	this.scorecardMeasure = value;
+public void setCoachingSession(CoachingSession value) {
+	this.coachingSession = value;
 }
 
 	
@@ -272,16 +272,37 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Response property
-		objectJson += ",\"response\":";
+		//Retrieve value of the Week Date property
+		objectJson += ",\"weekDate\":";
+		if (getWeekDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getWeekDate().getTime();
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
 		
-		if (getResponse() == null)
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getResponse());
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -314,23 +335,16 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
+		//Retrieve value of the Response property
+		objectJson += ",\"response\":";
 		
-		if (getCreatedBy() == null)
+		if (getResponse() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+				objectJson += objectMapper.writeValueAsString(getResponse());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -341,20 +355,6 @@ public void setScorecardMeasure(ScorecardMeasure value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Week Date property
-		objectJson += ",\"weekDate\":";
-		if (getWeekDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getWeekDate().getTime();
 		}
 
 				
@@ -383,13 +383,13 @@ objectJson += ",\"behavior\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Coaching Session of Behavior Response relationship
-objectJson += ",\"coachingSession\":";
-		if (getCoachingSession() == null)
+//Retrieve value of the Scorecard Measure of Behavior Response relationship
+objectJson += ",\"scorecardMeasure\":";
+		if (getScorecardMeasure() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getCoachingSession()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -407,13 +407,13 @@ objectJson += ",\"scorecardWeeklyResult\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Scorecard Measure of Behavior Response relationship
-objectJson += ",\"scorecardMeasure\":";
-		if (getScorecardMeasure() == null)
+//Retrieve value of the Coaching Session of Behavior Response relationship
+objectJson += ",\"coachingSession\":";
+		if (getCoachingSession() == null)
 			objectJson += "null";
 		else {
 			try {
-				objectJson += ((BaseDataObject) getScorecardMeasure()).toEmbeddedJson();
+				objectJson += ((BaseDataObject) getCoachingSession()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -433,26 +433,26 @@ objectJson += ",\"scorecardMeasure\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Response property
-		setResponse(JsonUtils.getJsonInteger(jsonObject, "response"));
-		//From value of the Updated By property
-		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Week Date property
+		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
-		//From value of the Week Date property
-		setWeekDate(JsonUtils.getJsonDate(jsonObject, "weekDate"));
+		//From value of the Updated By property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Response property
+		setResponse(JsonUtils.getJsonInteger(jsonObject, "response"));
 
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.behavior = (Behavior) JsonUtils.getJsonPerceroObject(jsonObject, "behavior");
-		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
-		this.scorecardWeeklyResult = (ScorecardWeeklyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardWeeklyResult");
 		this.scorecardMeasure = (ScorecardMeasure) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardMeasure");
+		this.scorecardWeeklyResult = (ScorecardWeeklyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardWeeklyResult");
+		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
 
 
 		// Target Relationships

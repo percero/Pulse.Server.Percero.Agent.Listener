@@ -27,15 +27,15 @@ import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
 
 @Component
-public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAccessObject<Comment> {
+public class SessionCommentDAO extends SqlDataAccessObject<SessionComment> implements IDataAccessObject<SessionComment> {
 
-	static final Logger log = Logger.getLogger(CommentDAO.class);
+	static final Logger log = Logger.getLogger(SessionCommentDAO.class);
 
 	
-	public CommentDAO() {
+	public SessionCommentDAO() {
 		super();
 		
-		DAORegistry.getInstance().registerDataAccessObject(Comment.class.getCanonicalName(), this);
+		DAORegistry.getInstance().registerDataAccessObject(SessionComment.class.getCanonicalName(), this);
 	}
 
 	
@@ -44,19 +44,19 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
-	public static final String SHELL_ONLY_SELECT = "\"COMMENT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"COMMENT\".\"DESCRIPTION\",\"COMMENT\".\"CREATED_ON\",\"COMMENT\".\"UPDATED_ON\",\"COMMENT\".\"DATAREF_ID\",\"COMMENT\".\"SESSION_ID\",\"COMMENT\".\"TYPE\",\"COMMENT\".\"CREATED_BY\",\"COMMENT\".\"UPDATED_BY\"";
-	private String selectFromStatementTableName = " FROM \"COMMENT\" \"COMMENT\"";
-	private String whereClause = "  WHERE \"COMMENT\".\"ID\"=?";
-	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"COMMENT\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"COMMENT\".\"ID\"";
+	public static final String SHELL_ONLY_SELECT = "\"SESSION_COMMENT\".\"ID\"";
+	public static final String SQL_VIEW = ",\"SESSION_COMMENT\".\"DESCRIPTION\",\"SESSION_COMMENT\".\"CREATED_ON\",\"SESSION_COMMENT\".\"UPDATED_ON\",\"SESSION_COMMENT\".\"DATAREF_ID\",\"SESSION_COMMENT\".\"SESSION_ID\",\"SESSION_COMMENT\".\"TYPE\",\"SESSION_COMMENT\".\"CREATED_BY\",\"SESSION_COMMENT\".\"UPDATED_BY\"";
+	private String selectFromStatementTableName = " FROM \"SESSION_COMMENT\" \"SESSION_COMMENT\"";
+	private String whereClause = "  WHERE \"SESSION_COMMENT\".\"ID\"=?";
+	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SESSION_COMMENT\".\"ID\"= SQLLIST.column_value";
+	private String orderByTableName = "  ORDER BY \"SESSION_COMMENT\".\"ID\"";
 	
 	
 
 	
 	@Override
 	protected String getConnectionFactoryName() {
-		return CommentDAO.CONNECTION_FACTORY_NAME;
+		return SessionCommentDAO.CONNECTION_FACTORY_NAME;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected String getSelectStarSQL() {
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
 	
 	@Override
@@ -81,12 +81,12 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	
 	@Override
 	protected String getSelectAllStarSQL() {
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
 	
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	@Override
 	protected String getSelectInStarSQL() 
 	{
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
 	
 	@Override
@@ -110,14 +110,14 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"SESSION_COMMENT\"." + joinColumnName + "=?";
 	}
 	
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"COMMENT\"." + joinColumnName + "=?";
+		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"SESSION_COMMENT\"." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -127,33 +127,33 @@ public class CommentDAO extends SqlDataAccessObject<Comment> implements IDataAcc
 
 	@Override
 	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+		return "SELECT \"SESSION_COMMENT\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COMMENT (\"ID\",\"DESCRIPTION\",\"CREATED_ON\",\"UPDATED_ON\",\"DATAREF_ID\",\"SESSION_ID\",\"TYPE\",\"CREATED_BY\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_SESSION_COMMENT (\"ID\",\"DESCRIPTION\",\"CREATED_ON\",\"UPDATED_ON\",\"DATAREF_ID\",\"SESSION_ID\",\"TYPE\",\"CREATED_BY\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COMMENT SET \"DESCRIPTION\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_SESSION_COMMENT SET \"DESCRIPTION\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
 	protected String getDeleteFromSQL() {
-		return "DELETE FROM TBL_COMMENT WHERE \"ID\"=?";
+		return "DELETE FROM TBL_SESSION_COMMENT WHERE \"ID\"=?";
 	}
 	
 	@Override
-	protected Comment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
+	protected SessionComment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-Comment nextResult = null;
+SessionComment nextResult = null;
     	
 		    	
     	if (nextResult == null) {
-    		nextResult = new Comment();
+    		nextResult = new SessionComment();
     	}
 
 		
@@ -194,7 +194,7 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
     	return nextResult;
 	}
 	
-	protected void setBaseStatmentInsertParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setBaseStatmentInsertParams(SessionComment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getDescription());
@@ -210,14 +210,14 @@ pstmt.setString(9, perceroObject.getUpdatedBy());
 	}
 	
 	@Override
-	protected void setPreparedStatmentInsertParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentInsertParams(SessionComment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		setBaseStatmentInsertParams(perceroObject,pstmt);
 		
 	}
 	
 	@Override
-	protected void setCallableStatmentInsertParams(Comment perceroObject, CallableStatement pstmt) throws SQLException {
+	protected void setCallableStatmentInsertParams(SessionComment perceroObject, CallableStatement pstmt) throws SQLException {
 		
 		setBaseStatmentInsertParams(perceroObject,pstmt);
 			
@@ -226,7 +226,7 @@ pstmt.setString(9, perceroObject.getUpdatedBy());
 	}
 	
 	@Override
-	protected void setPreparedStatmentUpdateParams(Comment perceroObject, PreparedStatement pstmt) throws SQLException {
+	protected void setPreparedStatmentUpdateParams(SessionComment perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getDescription());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
@@ -243,7 +243,7 @@ pstmt.setString(9, perceroObject.getID());
 	
 	
 	@Override
-	protected void setCallableStatmentUpdateParams(Comment perceroObject, CallableStatement pstmt) throws SQLException 
+	protected void setCallableStatmentUpdateParams(SessionComment perceroObject, CallableStatement pstmt) throws SQLException 
 	{
 		
 		//must be in same order as insert
@@ -254,7 +254,7 @@ pstmt.setString(9, perceroObject.getID());
 	
 
 	@Override
-	public List<Comment> findByExample(Comment theQueryObject,
+	public List<SessionComment> findByExample(SessionComment theQueryObject,
 			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
 		{
 			
@@ -405,19 +405,19 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_COMMENT(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_COMMENT(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_COMMENT(?)}";
+		return "{call Delete_SESSION_COMMENT(?)}";
 	}
 	
 	
-public Comment createObject(Comment perceroObject, String userId)
+public SessionComment createObject(SessionComment perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -428,7 +428,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select COMMENT_SEQ.NEXTVAL from dual";
+	String query = "Select SESSION_COMMENT_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;

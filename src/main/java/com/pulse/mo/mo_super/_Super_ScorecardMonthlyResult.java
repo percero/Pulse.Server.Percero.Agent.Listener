@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -86,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+PercentageAttainment
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double percentageAttainment;
+
+public Double getPercentageAttainment() 
+{
+	return this.percentageAttainment;
+}
+
+public void setPercentageAttainment(Double percentageAttainment)
+{
+	this.percentageAttainment = percentageAttainment;
+}/*
 Excluded
 Notes:
 */
@@ -103,57 +119,6 @@ public void setExcluded(Integer excluded)
 {
 	this.excluded = excluded;
 }/*
-MetricResult
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double metricResult;
-
-public Double getMetricResult() 
-{
-	return this.metricResult;
-}
-
-public void setMetricResult(Double metricResult)
-{
-	this.metricResult = metricResult;
-}/*
-EmployeeId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeId;
-
-public String getEmployeeId() 
-{
-	return this.employeeId;
-}
-
-public void setEmployeeId(String employeeId)
-{
-	this.employeeId = employeeId;
-}/*
-MetricType
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String metricType;
-
-public String getMetricType() 
-{
-	return this.metricType;
-}
-
-public void setMetricType(String metricType)
-{
-	this.metricType = metricType;
-}/*
 EndDate
 Notes:
 */
@@ -170,6 +135,57 @@ public Date getEndDate()
 public void setEndDate(Date endDate)
 {
 	this.endDate = endDate;
+}/*
+MetricUnit
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String metricUnit;
+
+public String getMetricUnit() 
+{
+	return this.metricUnit;
+}
+
+public void setMetricUnit(String metricUnit)
+{
+	this.metricUnit = metricUnit;
+}/*
+RollupType
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer rollupType;
+
+public Integer getRollupType() 
+{
+	return this.rollupType;
+}
+
+public void setRollupType(Integer rollupType)
+{
+	this.rollupType = rollupType;
+}/*
+MetricResult
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double metricResult;
+
+public Double getMetricResult() 
+{
+	return this.metricResult;
+}
+
+public void setMetricResult(Double metricResult)
+{
+	this.metricResult = metricResult;
 }/*
 PointsReceived
 Notes:
@@ -205,73 +221,39 @@ public void setIntervalType(String intervalType)
 {
 	this.intervalType = intervalType;
 }/*
-RollupType
+EmployeeId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer rollupType;
+private String employeeId;
 
-public Integer getRollupType() 
+public String getEmployeeId() 
 {
-	return this.rollupType;
+	return this.employeeId;
 }
 
-public void setRollupType(Integer rollupType)
+public void setEmployeeId(String employeeId)
 {
-	this.rollupType = rollupType;
+	this.employeeId = employeeId;
 }/*
-PercentageAttainment
+StartDate
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double percentageAttainment;
+private Date startDate;
 
-public Double getPercentageAttainment() 
+public Date getStartDate() 
 {
-	return this.percentageAttainment;
+	return this.startDate;
 }
 
-public void setPercentageAttainment(Double percentageAttainment)
+public void setStartDate(Date startDate)
 {
-	this.percentageAttainment = percentageAttainment;
-}/*
-MetricUnit
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String metricUnit;
-
-public String getMetricUnit() 
-{
-	return this.metricUnit;
-}
-
-public void setMetricUnit(String metricUnit)
-{
-	this.metricUnit = metricUnit;
-}/*
-Tenure
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer tenure;
-
-public Integer getTenure() 
-{
-	return this.tenure;
-}
-
-public void setTenure(Integer tenure)
-{
-	this.tenure = tenure;
+	this.startDate = startDate;
 }/*
 Grade
 Notes:
@@ -290,6 +272,23 @@ public void setGrade(Integer grade)
 {
 	this.grade = grade;
 }/*
+Tenure
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Integer tenure;
+
+public Integer getTenure() 
+{
+	return this.tenure;
+}
+
+public void setTenure(Integer tenure)
+{
+	this.tenure = tenure;
+}/*
 PointsPossible
 Notes:
 */
@@ -307,22 +306,22 @@ public void setPointsPossible(Double pointsPossible)
 {
 	this.pointsPossible = pointsPossible;
 }/*
-StartDate
+MetricType
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date startDate;
+private String metricType;
 
-public Date getStartDate() 
+public String getMetricType() 
 {
-	return this.startDate;
+	return this.metricType;
 }
 
-public void setStartDate(Date startDate)
+public void setMetricType(String metricType)
 {
-	this.startDate = startDate;
+	this.metricType = metricType;
 }
 
 	//////////////////////////////////////////////////////
@@ -333,8 +332,7 @@ public void setStartDate(Date startDate)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -347,8 +345,7 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_ID")
@@ -361,8 +358,7 @@ public Scorecard getScorecard() {
 
 public void setScorecard(Scorecard value) {
 	this.scorecard = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="GOAL_ID")
@@ -375,8 +371,7 @@ public Goal getGoal() {
 
 public void setGoal(Goal value) {
 	this.goal = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SCORECARD_MEASURE_ID")
@@ -389,8 +384,7 @@ public ScorecardMeasure getScorecardMeasure() {
 
 public void setScorecardMeasure(ScorecardMeasure value) {
 	this.scorecardMeasure = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PREV_SCARD_MONTHLY_RESULT_ID")
@@ -415,6 +409,13 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Percentage Attainment property
+		objectJson += ",\"percentageAttainment\":";
+		if (getPercentageAttainment() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPercentageAttainment();
+		}
 		//Retrieve value of the Excluded property
 		objectJson += ",\"excluded\":";
 		
@@ -436,55 +437,6 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Metric Result property
-		objectJson += ",\"metricResult\":";
-		if (getMetricResult() == null)
-			objectJson += "null";
-		else {
-			objectJson += getMetricResult();
-		}
-		//Retrieve value of the Employee Id property
-		objectJson += ",\"employeeId\":";
-		
-		if (getEmployeeId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Metric Type property
-		objectJson += ",\"metricType\":";
-		
-		if (getMetricType() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getMetricType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the End Date property
 		objectJson += ",\"endDate\":";
 		if (getEndDate() == null)
@@ -492,23 +444,16 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 		else {
 			objectJson += getEndDate().getTime();
 		}
-		//Retrieve value of the Points Received property
-		objectJson += ",\"pointsReceived\":";
-		if (getPointsReceived() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsReceived();
-		}
-		//Retrieve value of the Interval Type property
-		objectJson += ",\"intervalType\":";
+		//Retrieve value of the Metric Unit property
+		objectJson += ",\"metricUnit\":";
 		
-		if (getIntervalType() == null)
+		if (getMetricUnit() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getIntervalType());
+				objectJson += objectMapper.writeValueAsString(getMetricUnit());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -541,23 +486,79 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Percentage Attainment property
-		objectJson += ",\"percentageAttainment\":";
-		if (getPercentageAttainment() == null)
+		//Retrieve value of the Metric Result property
+		objectJson += ",\"metricResult\":";
+		if (getMetricResult() == null)
 			objectJson += "null";
 		else {
-			objectJson += getPercentageAttainment();
+			objectJson += getMetricResult();
 		}
-		//Retrieve value of the Metric Unit property
-		objectJson += ",\"metricUnit\":";
+		//Retrieve value of the Points Received property
+		objectJson += ",\"pointsReceived\":";
+		if (getPointsReceived() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsReceived();
+		}
+		//Retrieve value of the Interval Type property
+		objectJson += ",\"intervalType\":";
 		
-		if (getMetricUnit() == null)
+		if (getIntervalType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getMetricUnit());
+				objectJson += objectMapper.writeValueAsString(getIntervalType());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Employee Id property
+		objectJson += ",\"employeeId\":";
+		
+		if (getEmployeeId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getEmployeeId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Start Date property
+		objectJson += ",\"startDate\":";
+		if (getStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getStartDate().getTime();
+		}
+		//Retrieve value of the Grade property
+		objectJson += ",\"grade\":";
+		
+		if (getGrade() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getGrade());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -590,16 +591,23 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Grade property
-		objectJson += ",\"grade\":";
+		//Retrieve value of the Points Possible property
+		objectJson += ",\"pointsPossible\":";
+		if (getPointsPossible() == null)
+			objectJson += "null";
+		else {
+			objectJson += getPointsPossible();
+		}
+		//Retrieve value of the Metric Type property
+		objectJson += ",\"metricType\":";
 		
-		if (getGrade() == null)
+		if (getMetricType() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGrade());
+				objectJson += objectMapper.writeValueAsString(getMetricType());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -610,20 +618,6 @@ public void setPreviousScorecardMonthlyResult(ScorecardMonthlyResult value)
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Points Possible property
-		objectJson += ",\"pointsPossible\":";
-		if (getPointsPossible() == null)
-			objectJson += "null";
-		else {
-			objectJson += getPointsPossible();
-		}
-		//Retrieve value of the Start Date property
-		objectJson += ",\"startDate\":";
-		if (getStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getStartDate().getTime();
 		}
 
 				
@@ -702,34 +696,34 @@ objectJson += ",\"previousScorecardMonthlyResult\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Percentage Attainment property
+		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
 		//From value of the Excluded property
 		setExcluded(JsonUtils.getJsonInteger(jsonObject, "excluded"));
-		//From value of the Metric Result property
-		setMetricResult(JsonUtils.getJsonDouble(jsonObject, "metricResult"));
-		//From value of the Employee Id property
-		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
-		//From value of the Metric Type property
-		setMetricType(JsonUtils.getJsonString(jsonObject, "metricType"));
 		//From value of the End Date property
 		setEndDate(JsonUtils.getJsonDate(jsonObject, "endDate"));
+		//From value of the Metric Unit property
+		setMetricUnit(JsonUtils.getJsonString(jsonObject, "metricUnit"));
+		//From value of the Rollup Type property
+		setRollupType(JsonUtils.getJsonInteger(jsonObject, "rollupType"));
+		//From value of the Metric Result property
+		setMetricResult(JsonUtils.getJsonDouble(jsonObject, "metricResult"));
 		//From value of the Points Received property
 		setPointsReceived(JsonUtils.getJsonDouble(jsonObject, "pointsReceived"));
 		//From value of the Interval Type property
 		setIntervalType(JsonUtils.getJsonString(jsonObject, "intervalType"));
-		//From value of the Rollup Type property
-		setRollupType(JsonUtils.getJsonInteger(jsonObject, "rollupType"));
-		//From value of the Percentage Attainment property
-		setPercentageAttainment(JsonUtils.getJsonDouble(jsonObject, "percentageAttainment"));
-		//From value of the Metric Unit property
-		setMetricUnit(JsonUtils.getJsonString(jsonObject, "metricUnit"));
-		//From value of the Tenure property
-		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
-		//From value of the Grade property
-		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
-		//From value of the Points Possible property
-		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
+		//From value of the Employee Id property
+		setEmployeeId(JsonUtils.getJsonString(jsonObject, "employeeId"));
 		//From value of the Start Date property
 		setStartDate(JsonUtils.getJsonDate(jsonObject, "startDate"));
+		//From value of the Grade property
+		setGrade(JsonUtils.getJsonInteger(jsonObject, "grade"));
+		//From value of the Tenure property
+		setTenure(JsonUtils.getJsonInteger(jsonObject, "tenure"));
+		//From value of the Points Possible property
+		setPointsPossible(JsonUtils.getJsonDouble(jsonObject, "pointsPossible"));
+		//From value of the Metric Type property
+		setMetricType(JsonUtils.getJsonString(jsonObject, "metricType"));
 
 		
 		// Source Relationships
@@ -755,4 +749,4 @@ objectJson += ",\"previousScorecardMonthlyResult\":";
 		return listSetters;
 	}
 }
-
+

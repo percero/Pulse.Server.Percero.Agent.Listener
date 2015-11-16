@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +155,8 @@ return "SELECT \"SCHEDULE_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableN
 	protected ScheduleEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-ScheduleEntry nextResult = null;
+
+ScheduleEntry nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -195,7 +197,7 @@ nextResult.setCostPOSIndex(rs.getInt("COST_POS_INDEX"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -203,7 +205,7 @@ nextResult.setAgent(agent);
 
 
 String scheduleID = rs.getString("SCHEDULE_ID");
-if (StringUtils.hasText(scheduleID)) {
+if (StringUtils.hasText(scheduleID) && !"null".equalsIgnoreCase(scheduleID) ){
 Schedule schedule = new Schedule();
 schedule.setID(scheduleID);
 nextResult.setSchedule(schedule);
@@ -430,7 +432,8 @@ propertyCounter++;
 	}
 
 	
-public ScheduleEntry createObject(ScheduleEntry perceroObject, String userId)
+
+public ScheduleEntry createObject(ScheduleEntry perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -493,8 +496,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

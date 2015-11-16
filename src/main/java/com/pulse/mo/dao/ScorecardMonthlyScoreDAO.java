@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class ScorecardMonthlyScoreDAO extends SqlDataAccessObject<ScorecardMonth
 	protected ScorecardMonthlyScore extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ScorecardMonthlyScore nextResult = null;
+
+ScorecardMonthlyScore nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -193,7 +195,7 @@ nextResult.setGrade(rs.getInt("GRADE"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -201,7 +203,7 @@ nextResult.setAgent(agent);
 
 
 String previousscorecardmonthlyscoreID = rs.getString("PREV_SCARD_MONTHLY_SCORE_ID");
-if (StringUtils.hasText(previousscorecardmonthlyscoreID)) {
+if (StringUtils.hasText(previousscorecardmonthlyscoreID) && !"null".equalsIgnoreCase(previousscorecardmonthlyscoreID) ){
 ScorecardMonthlyScore previousscorecardmonthlyscore = new ScorecardMonthlyScore();
 previousscorecardmonthlyscore.setID(previousscorecardmonthlyscoreID);
 nextResult.setPreviousScorecardMonthlyScore(previousscorecardmonthlyscore);
@@ -209,7 +211,7 @@ nextResult.setPreviousScorecardMonthlyScore(previousscorecardmonthlyscore);
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -217,7 +219,7 @@ nextResult.setScorecard(scorecard);
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -225,7 +227,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 String goalID = rs.getString("GOAL_ID");
-if (StringUtils.hasText(goalID)) {
+if (StringUtils.hasText(goalID) && !"null".equalsIgnoreCase(goalID) ){
 Goal goal = new Goal();
 goal.setID(goalID);
 nextResult.setGoal(goal);
@@ -686,7 +688,8 @@ propertyCounter++;
 	}
 	
 	
-public ScorecardMonthlyScore createObject(ScorecardMonthlyScore perceroObject, String userId)
+
+public ScorecardMonthlyScore createObject(ScorecardMonthlyScore perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -749,9 +752,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

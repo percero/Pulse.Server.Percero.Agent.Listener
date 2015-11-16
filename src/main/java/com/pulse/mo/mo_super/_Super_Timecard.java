@@ -85,74 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-TimecardState
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String timecardState;
-
-public String getTimecardState() 
-{
-	return this.timecardState;
-}
-
-public void setTimecardState(String timecardState)
-{
-	this.timecardState = timecardState;
-}/*
-AssumedOff
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String assumedOff;
-
-public String getAssumedOff() 
-{
-	return this.assumedOff;
-}
-
-public void setAssumedOff(String assumedOff)
-{
-	this.assumedOff = assumedOff;
-}/*
-TotalTime
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Double totalTime;
-
-public Double getTotalTime() 
-{
-	return this.totalTime;
-}
-
-public void setTotalTime(Double totalTime)
-{
-	this.totalTime = totalTime;
-}/*
-IsHoliday
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String isHoliday;
-
-public String getIsHoliday() 
-{
-	return this.isHoliday;
-}
-
-public void setIsHoliday(String isHoliday)
-{
-	this.isHoliday = isHoliday;
-}/*
 Approved
 Notes:
 */
@@ -187,39 +119,22 @@ public void setLockLevel(String lockLevel)
 {
 	this.lockLevel = lockLevel;
 }/*
-LocalTimeCode
+TimecardState
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String localTimeCode;
+private String timecardState;
 
-public String getLocalTimeCode() 
+public String getTimecardState() 
 {
-	return this.localTimeCode;
+	return this.timecardState;
 }
 
-public void setLocalTimeCode(String localTimeCode)
+public void setTimecardState(String timecardState)
 {
-	this.localTimeCode = localTimeCode;
-}/*
-SourceStartDate
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Date sourceStartDate;
-
-public Date getSourceStartDate() 
-{
-	return this.sourceStartDate;
-}
-
-public void setSourceStartDate(Date sourceStartDate)
-{
-	this.sourceStartDate = sourceStartDate;
+	this.timecardState = timecardState;
 }/*
 Date
 Notes:
@@ -238,6 +153,23 @@ public void setDate(Date date)
 {
 	this.date = date;
 }/*
+SourceStartDate
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date sourceStartDate;
+
+public Date getSourceStartDate() 
+{
+	return this.sourceStartDate;
+}
+
+public void setSourceStartDate(Date sourceStartDate)
+{
+	this.sourceStartDate = sourceStartDate;
+}/*
 SourceEndDate
 Notes:
 */
@@ -254,6 +186,74 @@ public Date getSourceEndDate()
 public void setSourceEndDate(Date sourceEndDate)
 {
 	this.sourceEndDate = sourceEndDate;
+}/*
+TotalTime
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Double totalTime;
+
+public Double getTotalTime() 
+{
+	return this.totalTime;
+}
+
+public void setTotalTime(Double totalTime)
+{
+	this.totalTime = totalTime;
+}/*
+AssumedOff
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String assumedOff;
+
+public String getAssumedOff() 
+{
+	return this.assumedOff;
+}
+
+public void setAssumedOff(String assumedOff)
+{
+	this.assumedOff = assumedOff;
+}/*
+IsHoliday
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String isHoliday;
+
+public String getIsHoliday() 
+{
+	return this.isHoliday;
+}
+
+public void setIsHoliday(String isHoliday)
+{
+	this.isHoliday = isHoliday;
+}/*
+LocalTimeCode
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String localTimeCode;
+
+public String getLocalTimeCode() 
+{
+	return this.localTimeCode;
+}
+
+public void setLocalTimeCode(String localTimeCode)
+{
+	this.localTimeCode = localTimeCode;
 }
 
 	//////////////////////////////////////////////////////
@@ -301,76 +301,6 @@ public void setAgent(Agent value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Timecard State property
-		objectJson += ",\"timecardState\":";
-		
-		if (getTimecardState() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getTimecardState());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Assumed Off property
-		objectJson += ",\"assumedOff\":";
-		
-		if (getAssumedOff() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getAssumedOff());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Total Time property
-		objectJson += ",\"totalTime\":";
-		if (getTotalTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getTotalTime();
-		}
-		//Retrieve value of the Is Holiday property
-		objectJson += ",\"isHoliday\":";
-		
-		if (getIsHoliday() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getIsHoliday());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Approved property
 		objectJson += ",\"approved\":";
 		
@@ -413,6 +343,97 @@ public void setAgent(Agent value) {
 				e.printStackTrace();
 			}
 		}
+		//Retrieve value of the Timecard State property
+		objectJson += ",\"timecardState\":";
+		
+		if (getTimecardState() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTimecardState());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
+		}
+		//Retrieve value of the Source Start Date property
+		objectJson += ",\"sourceStartDate\":";
+		if (getSourceStartDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSourceStartDate().getTime();
+		}
+		//Retrieve value of the Source End Date property
+		objectJson += ",\"sourceEndDate\":";
+		if (getSourceEndDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getSourceEndDate().getTime();
+		}
+		//Retrieve value of the Total Time property
+		objectJson += ",\"totalTime\":";
+		if (getTotalTime() == null)
+			objectJson += "null";
+		else {
+			objectJson += getTotalTime();
+		}
+		//Retrieve value of the Assumed Off property
+		objectJson += ",\"assumedOff\":";
+		
+		if (getAssumedOff() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getAssumedOff());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Is Holiday property
+		objectJson += ",\"isHoliday\":";
+		
+		if (getIsHoliday() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getIsHoliday());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Local Time Code property
 		objectJson += ",\"localTimeCode\":";
 		
@@ -433,27 +454,6 @@ public void setAgent(Agent value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Source Start Date property
-		objectJson += ",\"sourceStartDate\":";
-		if (getSourceStartDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getSourceStartDate().getTime();
-		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
-		}
-		//Retrieve value of the Source End Date property
-		objectJson += ",\"sourceEndDate\":";
-		if (getSourceEndDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getSourceEndDate().getTime();
 		}
 
 				
@@ -501,26 +501,26 @@ objectJson += ",\"timecardEntries\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Timecard State property
-		setTimecardState(JsonUtils.getJsonString(jsonObject, "timecardState"));
-		//From value of the Assumed Off property
-		setAssumedOff(JsonUtils.getJsonString(jsonObject, "assumedOff"));
-		//From value of the Total Time property
-		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
-		//From value of the Is Holiday property
-		setIsHoliday(JsonUtils.getJsonString(jsonObject, "isHoliday"));
 		//From value of the Approved property
 		setApproved(JsonUtils.getJsonString(jsonObject, "approved"));
 		//From value of the Lock Level property
 		setLockLevel(JsonUtils.getJsonString(jsonObject, "lockLevel"));
-		//From value of the Local Time Code property
-		setLocalTimeCode(JsonUtils.getJsonString(jsonObject, "localTimeCode"));
-		//From value of the Source Start Date property
-		setSourceStartDate(JsonUtils.getJsonDate(jsonObject, "sourceStartDate"));
+		//From value of the Timecard State property
+		setTimecardState(JsonUtils.getJsonString(jsonObject, "timecardState"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
+		//From value of the Source Start Date property
+		setSourceStartDate(JsonUtils.getJsonDate(jsonObject, "sourceStartDate"));
 		//From value of the Source End Date property
 		setSourceEndDate(JsonUtils.getJsonDate(jsonObject, "sourceEndDate"));
+		//From value of the Total Time property
+		setTotalTime(JsonUtils.getJsonDouble(jsonObject, "totalTime"));
+		//From value of the Assumed Off property
+		setAssumedOff(JsonUtils.getJsonString(jsonObject, "assumedOff"));
+		//From value of the Is Holiday property
+		setIsHoliday(JsonUtils.getJsonString(jsonObject, "isHoliday"));
+		//From value of the Local Time Code property
+		setLocalTimeCode(JsonUtils.getJsonString(jsonObject, "localTimeCode"));
 
 		
 		// Source Relationships

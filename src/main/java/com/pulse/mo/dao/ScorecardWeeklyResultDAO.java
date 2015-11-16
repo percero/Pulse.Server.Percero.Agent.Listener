@@ -231,7 +231,7 @@ nextResult.setTenure(rs.getInt("TENURE"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -239,7 +239,7 @@ nextResult.setAgent(agent);
 
 
 String agentscorecardID = rs.getString("AGENT_SCORECARD_ID");
-if (StringUtils.hasText(agentscorecardID)) {
+if (StringUtils.hasText(agentscorecardID) && !"null".equalsIgnoreCase(agentscorecardID) ){
 AgentScorecard agentscorecard = new AgentScorecard();
 agentscorecard.setID(agentscorecardID);
 nextResult.setAgentScorecard(agentscorecard);
@@ -247,7 +247,7 @@ nextResult.setAgentScorecard(agentscorecard);
 
 
 String goalID = rs.getString("GOAL_ID");
-if (StringUtils.hasText(goalID)) {
+if (StringUtils.hasText(goalID) && !"null".equalsIgnoreCase(goalID) ){
 Goal goal = new Goal();
 goal.setID(goalID);
 nextResult.setGoal(goal);
@@ -255,7 +255,7 @@ nextResult.setGoal(goal);
 
 
 String previousscorecardweeklyresultID = rs.getString("PREV_SCARD_WEEKLY_RESULT_ID");
-if (StringUtils.hasText(previousscorecardweeklyresultID)) {
+if (StringUtils.hasText(previousscorecardweeklyresultID) && !"null".equalsIgnoreCase(previousscorecardweeklyresultID) ){
 ScorecardWeeklyResult previousscorecardweeklyresult = new ScorecardWeeklyResult();
 previousscorecardweeklyresult.setID(previousscorecardweeklyresultID);
 nextResult.setPreviousScorecardWeeklyResult(previousscorecardweeklyresult);
@@ -263,7 +263,7 @@ nextResult.setPreviousScorecardWeeklyResult(previousscorecardweeklyresult);
 
 
 String scorecardID = rs.getString("SCORECARD_ID");
-if (StringUtils.hasText(scorecardID)) {
+if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID) ){
 Scorecard scorecard = new Scorecard();
 scorecard.setID(scorecardID);
 nextResult.setScorecard(scorecard);
@@ -271,7 +271,7 @@ nextResult.setScorecard(scorecard);
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -279,7 +279,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 String scorecardmonthlyresultID = rs.getString("SCORECARD_MONTHLY_RESULT_ID");
-if (StringUtils.hasText(scorecardmonthlyresultID)) {
+if (StringUtils.hasText(scorecardmonthlyresultID) && !"null".equalsIgnoreCase(scorecardmonthlyresultID) ){
 ScorecardMonthlyResult scorecardmonthlyresult = new ScorecardMonthlyResult();
 scorecardmonthlyresult.setID(scorecardmonthlyresultID);
 nextResult.setScorecardMonthlyResult(scorecardmonthlyresult);

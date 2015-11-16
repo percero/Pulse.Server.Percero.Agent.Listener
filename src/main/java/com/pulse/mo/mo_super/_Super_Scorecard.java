@@ -85,57 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-GroupId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String groupId;
-
-public String getGroupId() 
-{
-	return this.groupId;
-}
-
-public void setGroupId(String groupId)
-{
-	this.groupId = groupId;
-}/*
-ECoachingLOBId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String eCoachingLOBId;
-
-public String getECoachingLOBId() 
-{
-	return this.eCoachingLOBId;
-}
-
-public void setECoachingLOBId(String eCoachingLOBId)
-{
-	this.eCoachingLOBId = eCoachingLOBId;
-}/*
-Description
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String description;
-
-public String getDescription() 
-{
-	return this.description;
-}
-
-public void setDescription(String description)
-{
-	this.description = description;
-}/*
 UpdatedBy
 Notes:
 */
@@ -153,56 +102,22 @@ public void setUpdatedBy(String updatedBy)
 {
 	this.updatedBy = updatedBy;
 }/*
-UpdatedOn
+CreatedBy
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date updatedOn;
+private String createdBy;
 
-public Date getUpdatedOn() 
+public String getCreatedBy() 
 {
-	return this.updatedOn;
+	return this.createdBy;
 }
 
-public void setUpdatedOn(Date updatedOn)
+public void setCreatedBy(String createdBy)
 {
-	this.updatedOn = updatedOn;
-}/*
-RegionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String regionId;
-
-public String getRegionId() 
-{
-	return this.regionId;
-}
-
-public void setRegionId(String regionId)
-{
-	this.regionId = regionId;
-}/*
-Name
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String name;
-
-public String getName() 
-{
-	return this.name;
-}
-
-public void setName(String name)
-{
-	this.name = name;
+	this.createdBy = createdBy;
 }/*
 CreatedOn
 Notes:
@@ -221,22 +136,107 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
-CreatedBy
+Name
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String createdBy;
+private String name;
 
-public String getCreatedBy() 
+public String getName() 
 {
-	return this.createdBy;
+	return this.name;
 }
 
-public void setCreatedBy(String createdBy)
+public void setName(String name)
 {
-	this.createdBy = createdBy;
+	this.name = name;
+}/*
+Description
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String description;
+
+public String getDescription() 
+{
+	return this.description;
+}
+
+public void setDescription(String description)
+{
+	this.description = description;
+}/*
+UpdatedOn
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private Date updatedOn;
+
+public Date getUpdatedOn() 
+{
+	return this.updatedOn;
+}
+
+public void setUpdatedOn(Date updatedOn)
+{
+	this.updatedOn = updatedOn;
+}/*
+GroupId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String groupId;
+
+public String getGroupId() 
+{
+	return this.groupId;
+}
+
+public void setGroupId(String groupId)
+{
+	this.groupId = groupId;
+}/*
+RegionId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String regionId;
+
+public String getRegionId() 
+{
+	return this.regionId;
+}
+
+public void setRegionId(String regionId)
+{
+	this.regionId = regionId;
+}/*
+ECoachingLOBId
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String eCoachingLOBId;
+
+public String getECoachingLOBId() 
+{
+	return this.eCoachingLOBId;
+}
+
+public void setECoachingLOBId(String eCoachingLOBId)
+{
+	this.eCoachingLOBId = eCoachingLOBId;
 }
 
 	//////////////////////////////////////////////////////
@@ -271,16 +271,16 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Group Id property
-		objectJson += ",\"groupId\":";
+		//Retrieve value of the Updated By property
+		objectJson += ",\"updatedBy\":";
 		
-		if (getGroupId() == null)
+		if (getUpdatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getGroupId());
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -292,16 +292,44 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the ECoaching LOB Id property
-		objectJson += ",\"eCoachingLOBId\":";
+		//Retrieve value of the Created By property
+		objectJson += ",\"createdBy\":";
 		
-		if (getECoachingLOBId() == null)
+		if (getCreatedBy() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getECoachingLOBId());
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Created On property
+		objectJson += ",\"createdOn\":";
+		if (getCreatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getCreatedOn().getTime();
+		}
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
+		
+		if (getName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -334,16 +362,23 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Updated By property
-		objectJson += ",\"updatedBy\":";
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
+		//Retrieve value of the Group Id property
+		objectJson += ",\"groupId\":";
 		
-		if (getUpdatedBy() == null)
+		if (getGroupId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
+				objectJson += objectMapper.writeValueAsString(getGroupId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -354,13 +389,6 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Updated On property
-		objectJson += ",\"updatedOn\":";
-		if (getUpdatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getUpdatedOn().getTime();
 		}
 		//Retrieve value of the Region Id property
 		objectJson += ",\"regionId\":";
@@ -383,44 +411,16 @@ public void setScorecardMeasures(List<ScorecardMeasure> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the ECoaching LOB Id property
+		objectJson += ",\"eCoachingLOBId\":";
 		
-		if (getName() == null)
+		if (getECoachingLOBId() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Created On property
-		objectJson += ",\"createdOn\":";
-		if (getCreatedOn() == null)
-			objectJson += "null";
-		else {
-			objectJson += getCreatedOn().getTime();
-		}
-		//Retrieve value of the Created By property
-		objectJson += ",\"createdBy\":";
-		
-		if (getCreatedBy() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+				objectJson += objectMapper.writeValueAsString(getECoachingLOBId());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -466,24 +466,24 @@ objectJson += ",\"scorecardMeasures\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Group Id property
-		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
-		//From value of the ECoaching LOB Id property
-		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
-		//From value of the Description property
-		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Updated By property
 		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
-		//From value of the Updated On property
-		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
-		//From value of the Region Id property
-		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
-		//From value of the Name property
-		setName(JsonUtils.getJsonString(jsonObject, "name"));
-		//From value of the Created On property
-		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Created By property
 		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
+		//From value of the Created On property
+		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Name property
+		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Description property
+		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Group Id property
+		setGroupId(JsonUtils.getJsonString(jsonObject, "groupId"));
+		//From value of the Region Id property
+		setRegionId(JsonUtils.getJsonString(jsonObject, "regionId"));
+		//From value of the ECoaching LOB Id property
+		setECoachingLOBId(JsonUtils.getJsonString(jsonObject, "eCoachingLOBId"));
 
 		
 		// Source Relationships
