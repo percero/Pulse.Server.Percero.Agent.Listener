@@ -150,15 +150,15 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_TASK (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"TASK_DETAIL\",\"DUE_DATE\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"PLAN_ID\",\"TYPE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
-	
+
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DESC\"=?,\"DUE_DATE\"=?,\"WK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"STATUS\"=?,\"ASSIGNED_TO\"=?  WHERE \"TASK_ID\"=?";
 	}
 	
 	@Override
@@ -245,52 +245,34 @@ nextResult.setTeamLeader(teamleader);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getTaskDetail());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,10, perceroObject.getPlanId());
-JdbcHelper.setInt(pstmt,11, perceroObject.getType());
 
-if (perceroObject.getAdhocTaskState() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAdhocTaskState().getID());
-}
+		pstmt.setString(1, perceroObject.getTaskDetail());  //TASK_DESC
+
+		if (perceroObject.getAgent() == null) // ASSIGNED_TO
+		{
+			pstmt.setString(2, null);
+		}
+		else
+		{
+			pstmt.setString(2, perceroObject.getAgent().getID());
+		}
+
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));  //DUE_DATE
+		pstmt.setString(4, perceroObject.getAdhocTaskState().getID());   //STATUS
+
+		pstmt.setString(5, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(5, perceroObject.getUpdatedBy());  //UPDATED_BY
 
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getAgent().getID());
-}
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn())); //CREATED_ON
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn())); //UPDATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
 
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getTeamLeader().getID());
-}
-
-
-		
+		pstmt.setInt(10, perceroObject.getPlanId()); //PLAN_ID
+		pstmt.setString(11, perceroObject.getID()); //TASK_ID
+		pstmt.setInt(12, 2); //TYPE  - Adhoc task
 	}
 	
 	@Override
@@ -630,7 +612,7 @@ public AdhocTask createObject(AdhocTask perceroObject, String userId)
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select ADHOC_TASK_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
