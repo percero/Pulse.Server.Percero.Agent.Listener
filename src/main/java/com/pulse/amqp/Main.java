@@ -43,7 +43,7 @@ public class Main{
 
 		logger.info("Using config: "+config);
 		ApplicationContext context =
-				new ClassPathXmlApplicationContext(new String[] {config});
+				new ClassPathXmlApplicationContext(new String[] {config,"spring/*.xml"});
 		logger.debug(context.toString());
 		
 		logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
