@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -129,15 +130,15 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"DEVELOPMENT_ACTIVITY\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_DEVELOPMENT_ACTIVITY (\"ID\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"DUE_DATE\",\"UPDATED_ON\",\"NAME\",\"PLAN_ID\",\"STATUS\",\"TEAM_LEADER_ID\",\"AGENT_ID\",\"DEVELOPMENT_PLAN_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"PLAN_ID\",  \"TASK_DESC\",  \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\",\"CREATED_ON\",\"UPDATED_ON\", \"WK_DATE\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
-	
+
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_DEVELOPMENT_ACTIVITY SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=?,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"EFC_TASK\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=?,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -149,7 +150,8 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 	protected DevelopmentActivity extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-DevelopmentActivity nextResult = null;
+
+DevelopmentActivity nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -226,53 +228,39 @@ nextResult.setDevelopmentPlan(developmentplan);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getType());
-pstmt.setString(4, perceroObject.getUpdatedBy());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(10, perceroObject.getName());
-pstmt.setString(11, perceroObject.getPlanId());
-pstmt.setString(12, perceroObject.getStatus());
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getDevelopmentPlan() == null) //PLAN_ID
+		{
+			pstmt.setString(1, null);
+		}
+		else
+		{
+			pstmt.setString(1, perceroObject.getDevelopmentPlan().getID());
+		}
 
+		pstmt.setString(2, perceroObject.getName()); //TASK_DESC
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getAgent() == null)  //ASSIGNED_TO
+		{
+			pstmt.setString(3, null);
+		}
+		else
+		{
+			pstmt.setString(3, perceroObject.getAgent().getID());
+		}
 
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate())); //DUE_DATE
+		pstmt.setString(5, perceroObject.getStatus()); //STATUS
+		pstmt.setString(6, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(7, perceroObject.getUpdatedBy()); //UPDATED_BY
 
-if (perceroObject.getDevelopmentPlan() == null)
-{
-pstmt.setString(15, null);
-}
-else
-{
-		pstmt.setString(15, perceroObject.getDevelopmentPlan().getID());
-}
-
-
-		
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn())); //CREATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn())); //UPDATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
+		pstmt.setString(11, perceroObject.getID()); //TASK_ID
+		pstmt.setInt(12, 1); //TYPE  - Development Activity
 	}
 	
 	@Override
@@ -618,7 +606,8 @@ propertyCounter++;
 	}
 	
 	
-public DevelopmentActivity createObject(DevelopmentActivity perceroObject, String userId)
+
+public DevelopmentActivity createObject(DevelopmentActivity perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -629,7 +618,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select DEVELOPMENT_ACTIVITY_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -681,9 +670,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

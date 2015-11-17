@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -138,10 +139,10 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_COACHING_SESSION (\"ID\",\"IS_REQUIRED\",\"CREATED_BY\",\"TYPE\",\"UPDATED_BY\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"AGENT_ID\",\"AGENT_SCORECARD_ID\",\"COACHING_SESSION_STATE_ID\",\"SCORECARD_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -158,7 +159,8 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	protected CoachingSession extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-CoachingSession nextResult = null;
+
+CoachingSession nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -237,61 +239,36 @@ nextResult.setScorecard(scorecard);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-JdbcHelper.setBoolean(pstmt,2, perceroObject.getIsRequired());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getType());
-pstmt.setString(5, perceroObject.getUpdatedBy());
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,10, perceroObject.getEmployeeId());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
+		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
+		if (perceroObject.getAgentScorecard() == null)  // follow up  session  SCORECARD_ID
+		{
+			pstmt.setString(4, null);
+		}
+		else
+		{
+			pstmt.setString(4, perceroObject.getAgentScorecard().getID());
+		}
 
+		pstmt.setInt(5, 2); //Followup Coaching session - TYPE
 
-if (perceroObject.getAgentScorecard() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgentScorecard().getID());
-}
+		pstmt.setString(6, perceroObject.getCoachingSessionState().getID());  //STATUS
+
+		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(8, perceroObject.getUpdatedBy());    //UPDATED_BY
+
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));  //CREATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));  //UPDATED_ON
+		pstmt.setInt(11, 0); //IS_REQUIRED
+		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH     TODO Fix this
+
+		pstmt.setInt(13, 0);  //CATEGORY_ID  - For follow up it is 0.
 
 
-if (perceroObject.getCoachingSessionState() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getCoachingSessionState().getID());
-}
-
-
-if (perceroObject.getScorecard() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getScorecard().getID());
-}
-
-
-		
 	}
 	
 	@Override
@@ -628,7 +605,8 @@ propertyCounter++;
 	}
 	
 	
-public CoachingSession createObject(CoachingSession perceroObject, String userId)
+
+public CoachingSession createObject(CoachingSession perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -639,7 +617,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select COACHING_SESSION_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_SESSION_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -691,9 +669,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

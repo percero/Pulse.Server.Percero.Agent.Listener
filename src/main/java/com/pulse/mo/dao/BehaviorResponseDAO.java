@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -129,10 +130,10 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_BEHAVIOR_RESPONSE (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\",\"SCARD_WEEKLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_BEHAVIOR_RESPONSE VALUES (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -149,7 +150,8 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	protected BehaviorResponse extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-BehaviorResponse nextResult = null;
+
+BehaviorResponse nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -227,68 +229,58 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,7, perceroObject.getResponse());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID()); //RESPONSE_ID
+		pstmt.setString(2, perceroObject.getUpdatedBy()); //UPDATED_BY
+		pstmt.setString(3, perceroObject.getCreatedBy()); //CREATED_BY
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WEEK_DATE
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn())); //CREATED_ON
+		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn())); //UPDATED_ON
+		JdbcHelper.setInt(pstmt,7, perceroObject.getResponse()); //RESPONSE
 
-
-if (perceroObject.getBehavior() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getBehavior().getID());
-}
+		if (perceroObject.getAgent() == null) //AGENT_ID
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getAgent().getID());
+		}
 
 
-if (perceroObject.getCoachingSession() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getCoachingSession().getID());
-}
+		if (perceroObject.getBehavior() == null) //BEHAVIOR_ID
+		{
+			pstmt.setString(9, null);
+		}
+		else
+		{
+			pstmt.setString(9, perceroObject.getBehavior().getID());
+		}
 
 
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
-}
+		if (perceroObject.getCoachingSession() == null) //COACHING_SESSION_ID
+		{
+			pstmt.setString(10, null);
+		}
+		else
+		{
+			pstmt.setString(10, perceroObject.getCoachingSession().getID());
+		}
 
 
-if (perceroObject.getScorecardWeeklyResult() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getScorecardWeeklyResult().getID());
-}
+		if (perceroObject.getScorecardMeasure() == null) //SCORECARD_MEASURE_ID
+		{
+			pstmt.setString(11, null);
+		}
+		else
+		{
+			pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
+		}
 
 
-		
+
 	}
 	
 	@Override
@@ -598,7 +590,8 @@ propertyCounter++;
 	}
 	
 	
-public BehaviorResponse createObject(BehaviorResponse perceroObject, String userId)
+
+public BehaviorResponse createObject(BehaviorResponse perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -661,9 +654,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

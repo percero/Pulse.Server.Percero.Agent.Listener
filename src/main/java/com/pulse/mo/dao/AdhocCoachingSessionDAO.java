@@ -139,10 +139,10 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_COACHING_SESSION (\"ID\",\"CREATED_BY\",\"RESPONSIBLE_COACH\",\"SESSION_TYPE\",\"STATUS\",\"UPDATED_BY\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\",\"SESSION_COMMENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
@@ -240,54 +240,32 @@ nextResult.setSessionComment(sessioncomment);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getResponsibleCoach());
-pstmt.setString(4, perceroObject.getSessionType());
-pstmt.setString(5, perceroObject.getStatus());
-pstmt.setString(6, perceroObject.getUpdatedBY());
-JdbcHelper.setBoolean(pstmt,7, perceroObject.getIsRequired());
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setDate(11, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,12, perceroObject.getEmployeeId());
-JdbcHelper.setInt(pstmt,13, perceroObject.getScorecardId());
+		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
+		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
+		pstmt.setInt(4, 0); // not a follow up  session  SCORECARD_ID
+		pstmt.setInt(5, 3); //Adhoc Coaching session - TYPE
+		pstmt.setString(6, perceroObject.getStatus());  //STATUS
 
-if (perceroObject.getAdhocCoachingCategory() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getAdhocCoachingCategory().getID());
-}
+		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(8, perceroObject.getUpdatedBY());	//UPDATED_BY
 
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date()));  //CREATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date()));  //UPDATED_ON
+		pstmt.setInt(11, 0); //IS_REQUIRED
+		pstmt.setString(12, perceroObject.getResponsibleCoach()); //RESPONSIBLE_COACH
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(15, null);
-}
-else
-{
-		pstmt.setString(15, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getAdhocCoachingCategory() == null)
+		{
+			pstmt.setString(13, null);  //CATEGORY_ID
+		}
+		else
+		{
+			pstmt.setString(13, perceroObject.getAdhocCoachingCategory().getID());  //CATEGORY_ID
+		}
 
-
-if (perceroObject.getSessionComment() == null)
-{
-pstmt.setString(16, null);
-}
-else
-{
-		pstmt.setString(16, perceroObject.getSessionComment().getID());
-}
-
-
-		
 	}
 	
 	@Override
@@ -663,7 +641,7 @@ public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, Str
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select ADHOC_COACHING_SESSION_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_SESSION_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
