@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -301,7 +302,8 @@ public void setAgentTimeZone(AgentTimeZone value)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
@@ -588,9 +590,19 @@ objectJson += ",\"adhocCoachingSessions\":[";
 			}
 		}
 		objectJson += "]";
-//Retrieve value of the Agent of Agent Time Zone relationship
 
-
+		//Retrieve value of the AgentTimeZone of Agent relationship
+		objectJson += ",\"agentTimeZone\":";
+		if (getTeamLeader() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgentTimeZone()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 		
 		return objectJson;
 	}
@@ -650,4 +662,4 @@ objectJson += ",\"adhocCoachingSessions\":[";
 		return listSetters;
 	}
 }
-
+
