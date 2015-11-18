@@ -21,8 +21,11 @@ public class PulseHttpAuthProviderFactory {
     private static Logger logger = Logger.getLogger(PulseHttpAuthProviderFactory.class);
 
     @Autowired @Value("$pf{pulseHttpAuth.hostPortAndContext}")
-    String hostPortAndContext = null;
+    String authPortAndContext = null;
 
+    @Autowired @Value("$pf{pulseHttpData.hostPortAndContext}")
+    String dataPortAndContext = null;
+    
     @Autowired @Value("$pf{pulseHttpAuth.trustAllCerts:false}")
     Boolean trustAllCerts = false;
 
@@ -43,9 +46,9 @@ public class PulseHttpAuthProviderFactory {
 
     @PostConstruct
     public void init(){
-        if(hostPortAndContext != null){
-            logger.info("Using PulseHttpAuthProvider with endpoint: "+hostPortAndContext + (insecureMode ? " (dev mode)" : ""));
-            PulseHttpAuthProvider provider = new PulseHttpAuthProvider(hostPortAndContext, objectMapper,
+        if(authPortAndContext != null){
+            logger.info("Using PulseHttpAuthProvider with endpoint: "+authPortAndContext + (insecureMode ? " (dev mode)" : ""));
+            PulseHttpAuthProvider provider = new PulseHttpAuthProvider(authPortAndContext, dataPortAndContext, objectMapper,
                     trustAllCerts, syncAgentService, authService2, insecureMode);
             authProviderRegistry.addProvider(provider);
         }

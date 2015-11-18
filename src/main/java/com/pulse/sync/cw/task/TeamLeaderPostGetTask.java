@@ -94,7 +94,6 @@ public class TeamLeaderPostGetTask implements Runnable {
 		while ( itrWeekDates.hasNext() ) {
 			Date nextWeekDate = itrWeekDates.next();
 			if (earliestWeekDate == null || nextWeekDate.getTime() < earliestWeekDate.getMillis()) {
-				DateTime weekDateTime = null;
 				earliestWeekDate = new DateTime(nextWeekDate.getTime(), dateTimeZone);
 			}
 			

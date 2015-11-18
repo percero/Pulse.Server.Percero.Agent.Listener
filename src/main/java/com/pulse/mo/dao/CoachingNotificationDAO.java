@@ -433,7 +433,7 @@ if (useScorecardID)
 		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"COACHING_NOTIFICATION\".\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\" =?  AND  \"COACHING_NOTIFICATION\".\"SCORECARD_ID\" =? ";
 		Object[] paramValues = new Object[3];
         
-		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);;
+		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);
 		paramValues[1] = teamLeaderId;
 		paramValues[2] = scorecardId;
 		List<CoachingNotification> results;
