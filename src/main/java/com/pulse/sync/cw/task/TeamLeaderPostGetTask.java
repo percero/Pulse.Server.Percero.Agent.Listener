@@ -8,11 +8,15 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.springframework.util.StringUtils;
 
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.ClassIDPair;
+import com.pulse.mo.AgentTimeZone;
 import com.pulse.mo.CoachingNotification;
 import com.pulse.mo.Notification;
 import com.pulse.mo.Scorecard;
@@ -71,15 +75,27 @@ public class TeamLeaderPostGetTask implements Runnable {
 
 		// Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
 		List<Scorecard> teamLeaderScorecards = host.getScorecards();
+		AgentTimeZone timeZone = host.getTimeZone();
 		
-		Date earliestWeekDate = null;
+		DateTime earliestWeekDate = null;
+
+		DateTimeZone dateTimeZone = null;
+		
+		if (timeZone != null && StringUtils.hasText(timeZone.getTimeZone())) {
+			dateTimeZone = DateTimeZone.forID(timeZone.getTimeZone());
+		}
+		if (dateTimeZone == null) {
+			dateTimeZone = DateTimeZone.getDefault();
+		}
+		
 
 		// For each week date, make sure we have a corresponding CoachingNotification.
 		Iterator<Date> itrWeekDates = mostRecentWeekDates.iterator();
 		while ( itrWeekDates.hasNext() ) {
 			Date nextWeekDate = itrWeekDates.next();
-			if (earliestWeekDate == null || nextWeekDate.getTime() < earliestWeekDate.getTime()) {
-				earliestWeekDate = nextWeekDate;
+			if (earliestWeekDate == null || nextWeekDate.getTime() < earliestWeekDate.getMillis()) {
+				DateTime weekDateTime = null;
+				earliestWeekDate = new DateTime(nextWeekDate.getTime(), dateTimeZone);
 			}
 			
 			// Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
@@ -96,19 +112,19 @@ public class TeamLeaderPostGetTask implements Runnable {
 					continue;
 				}
 				
-				validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(host, nextTeamLeaderScorecard, nextWeekDate);
+				validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(host, nextTeamLeaderScorecard, nextWeekDate, timeZone);
 			}
 		}
 		
 		// Now remove old CoachingNotifications
 		if (earliestWeekDate != null) {
-			DateTime earliestWeekDateTime = new DateTime(earliestWeekDate.getTime());
 			Iterator<Notification> itr = host.getNotifications().iterator();
 			while (itr.hasNext()) {
 				Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
 				if (nextNotify instanceof CoachingNotification) {
 					CoachingNotification coachingNotify = (CoachingNotification) nextNotify;
-					int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(new DateTime(coachingNotify.getWeekDate()), earliestWeekDateTime);
+					DateTime nextWeekDateTime = new DateTime(coachingNotify.getWeekDate(), dateTimeZone);
+					int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, earliestWeekDate);
 					if (dateCompareResult < 0) {
 						try {
 							syncAgentService.systemDeleteObject(coachingNotify, null, true);
@@ -121,16 +137,33 @@ public class TeamLeaderPostGetTask implements Runnable {
 		}
 	}
 
-	public CoachingNotification validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(TeamLeader teamLeader, Scorecard scorecard, Date weekDate) {
+	public CoachingNotification validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(
+			TeamLeader teamLeader, Scorecard scorecard, Date weekDate,
+			AgentTimeZone timeZone) {
 		
 		if (teamLeader == null || scorecard == null || weekDate == null || weekDate.getTime() <= 0) {
 			log.warn("Invalid data in validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate, ignoring request.");
 			return null;
 		}
 		
+		DateTimeZone dateTimeZone = null;
+		DateTime weekDateTime = null;
+		
+		if (timeZone != null && StringUtils.hasText(timeZone.getTimeZone())) {
+			dateTimeZone = DateTimeZone.forID(timeZone.getTimeZone());
+			if (dateTimeZone != null) {
+				weekDateTime = new DateTime(weekDate.getTime(), dateTimeZone);
+			}
+		}
+		
+		if (weekDateTime == null) {
+			weekDateTime = new DateTime(weekDate.getTime());
+			dateTimeZone = weekDateTime.getZone();
+		}
+		
 		CoachingNotification result = null;
 		
-		List<CoachingNotification> existing = coachingNotificationDAO.fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(teamLeader.getID(), scorecard.getID(), weekDate);
+		List<CoachingNotification> existing = coachingNotificationDAO.fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(teamLeader.getID(), scorecard.getID(), weekDateTime.toLocalDate().toDate());
 		if (existing == null || existing.isEmpty()) {
 			try {
 				// No matching CoachingNotification, so let's create one.
@@ -181,20 +214,36 @@ public class TeamLeaderPostGetTask implements Runnable {
 			throws SyncException {
 		TeamLeader host = (TeamLeader) syncAgentService
 				.systemGetById(classIdPair);
+		AgentTimeZone timeZone = host.getTimeZone();
 
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]");
-		DateTime currentDateTime = new DateTime(new Date());
-		DateTime shiftDateTime = new DateTime(new Date());
-		int daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
+
+		// Use the TeamLeader's TimeZone (if they have one), otherwise default to local time zone.
+		DateTimeZone dateTimeZone = null;
+		LocalDate currentDateTime = null;
+		DateTime shiftDateTime = null;
+		if (timeZone != null && StringUtils.hasText(timeZone.getTimeZone())) {
+			dateTimeZone = DateTimeZone.forID(timeZone.getTimeZone());
+			if (dateTimeZone != null) {
+				shiftDateTime = new DateTime(new Date(), dateTimeZone);
+				currentDateTime = new DateTime(new Date(), dateTimeZone).toLocalDate();
+			}
+		}
+		
+		if (shiftDateTime == null) {
+			shiftDateTime = new DateTime(new Date());
+			currentDateTime = new DateTime(new Date()).toLocalDate();
+		}
+		int daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime.toLocalDate()).getDays());
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
 				+ daysBetween);
-
+		
 		// If the Timecard.date < 3 days old
 		while (daysBetween < 3) {
 			validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(host, shiftDateTime.toDate());
 
 			shiftDateTime = shiftDateTime.minusDays(1);
-			daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime).getDays());
+			daysBetween = Math.abs(Days.daysBetween(currentDateTime, shiftDateTime.toLocalDate()).getDays());
 
 		}
 
@@ -223,7 +272,8 @@ public class TeamLeaderPostGetTask implements Runnable {
 			Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
 			if (nextNotify instanceof ShiftStatusNotification) {
 				ShiftStatusNotification shiftStatusNotify = (ShiftStatusNotification) nextNotify;
-				int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(new DateTime(shiftStatusNotify.getShiftEndDate()), shiftDateTime);
+				DateTime nextShiftDateTime = new DateTime(shiftStatusNotify.getShiftEndDate(), dateTimeZone);
+				int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextShiftDateTime, shiftDateTime);
 				if (dateCompareResult < 0) {
 					try {
 						syncAgentService.systemDeleteObject(shiftStatusNotify, null, true);
