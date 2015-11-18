@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
 
 import com.percero.agents.sync.exceptions.SyncException;
@@ -70,13 +71,16 @@ public class TeamLeaderPostGetTask implements Runnable {
 
 		// Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
 		List<Scorecard> teamLeaderScorecards = host.getScorecards();
+		
+		Date earliestWeekDate = null;
 
 		// For each week date, make sure we have a corresponding CoachingNotification.
 		Iterator<Date> itrWeekDates = mostRecentWeekDates.iterator();
 		while ( itrWeekDates.hasNext() ) {
 			Date nextWeekDate = itrWeekDates.next();
-//			DateTime nextWeekDateTime = new DateTime(nextWeekDate);
-//			CoachingNotification existingCoachingNotification = null;
+			if (earliestWeekDate == null || nextWeekDate.getTime() < earliestWeekDate.getTime()) {
+				earliestWeekDate = nextWeekDate;
+			}
 			
 			// Since we also need to match on Scorecard, we need to retrieve and loop through ALL Scorecards for this TeamLeader.
 			Iterator<Scorecard> itrTeamLeaderScorecards = teamLeaderScorecards.iterator();
@@ -93,6 +97,26 @@ public class TeamLeaderPostGetTask implements Runnable {
 				}
 				
 				validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(host, nextTeamLeaderScorecard, nextWeekDate);
+			}
+		}
+		
+		// Now remove old CoachingNotifications
+		if (earliestWeekDate != null) {
+			DateTime earliestWeekDateTime = new DateTime(earliestWeekDate.getTime());
+			Iterator<Notification> itr = host.getNotifications().iterator();
+			while (itr.hasNext()) {
+				Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
+				if (nextNotify instanceof CoachingNotification) {
+					CoachingNotification coachingNotify = (CoachingNotification) nextNotify;
+					int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(new DateTime(coachingNotify.getWeekDate()), earliestWeekDateTime);
+					if (dateCompareResult < 0) {
+						try {
+							syncAgentService.systemDeleteObject(coachingNotify, null, true);
+						} catch (Exception e) {
+							log.error("Unable to delete CoachingNotification " + coachingNotify.getID(), e);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -166,7 +190,7 @@ public class TeamLeaderPostGetTask implements Runnable {
 				+ daysBetween);
 
 		// If the Timecard.date < 3 days old
-		while ( daysBetween < 3) {
+		while (daysBetween < 3) {
 			validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(host, shiftDateTime.toDate());
 
 			shiftDateTime = shiftDateTime.minusDays(1);
@@ -189,6 +213,24 @@ public class TeamLeaderPostGetTask implements Runnable {
 				log.debug("InProgressStateCount: " + nextShiftStatusNotification.getInProgressStateCount());
 				log.debug("UnknownStateCount: " + nextShiftStatusNotification.getNotYetStartedStateCount());
 				log.debug("NotYetStartedStateCount: " + nextShiftStatusNotification.getUnknownStateCount());
+			}
+		}
+		
+		// Now remove old ShiftStatusNotifications
+		shiftDateTime = shiftDateTime.plusDays(1);
+		Iterator<Notification> itr = host.getNotifications().iterator();
+		while (itr.hasNext()) {
+			Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
+			if (nextNotify instanceof ShiftStatusNotification) {
+				ShiftStatusNotification shiftStatusNotify = (ShiftStatusNotification) nextNotify;
+				int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(new DateTime(shiftStatusNotify.getShiftEndDate()), shiftDateTime);
+				if (dateCompareResult < 0) {
+					try {
+						syncAgentService.systemDeleteObject(shiftStatusNotify, null, true);
+					} catch (Exception e) {
+						log.error("Unable to delete ShiftStatusNotification " + shiftStatusNotify.getID(), e);
+					}
+				}
 			}
 		}
 	}
