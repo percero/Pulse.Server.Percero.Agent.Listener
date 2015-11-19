@@ -16,6 +16,7 @@ import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.Agent;
 import com.pulse.mo.AgentScorecard;
+import com.pulse.mo.AgentTimeZone;
 import com.pulse.mo.Scorecard;
 import com.pulse.mo.TeamLeader;
 
@@ -30,6 +31,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 	}
 
 	public static final String SCORECARDS = "scorecards";
+	public static final String TIMEZONE = "timeZone";
 	public static final String AGENT_SCORECARDS = "agentScorecards";
 
 	@Override
@@ -54,6 +56,14 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 				postCalculate(fieldName, pair, params, result, oldValue);
 			} catch(Exception e) {
 				log.error("Unable to calculate " + AGENT_SCORECARDS, e);
+			}
+		}
+		else if (TIMEZONE.equalsIgnoreCase(fieldName)) {
+			try {
+				result = calc_timeZone(pair, TIMEZONE);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate " + TIMEZONE, e);
 			}
 		}
 		else {
@@ -175,6 +185,49 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 		}
 		
 		return results;
+	}
+
+	private ClassIDPair calc_timeZone(ClassIDPair pair, String derivedValueName) {
+		ClassIDPair result = null;
+
+		try {
+			TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				return result;
+			}
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when TeamLeader.Agents changes.
+			accessManager.addWatcherField(pair, "agents", fieldsToWatch);
+			Iterator<Agent> itrAgents = host.getAgents().iterator();
+			while (itrAgents.hasNext()) {
+				Agent agent = syncAgentService.systemGetByObject(itrAgents.next());
+				if (agent != null) {
+					// We want to re-trigger this change watcher when Agent.AgentScorecards changes.
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
+					AgentTimeZone agentTimeZone = agent.getAgentTimeZone();
+					
+					if (agentTimeZone != null) {
+						result = BaseDataObject.toClassIdPair(agentTimeZone);
+						break;
+					}
+				}
+			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return result;
 	}
 
 }

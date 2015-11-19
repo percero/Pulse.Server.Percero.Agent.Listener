@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
+import org.springframework.util.StringUtils;
+
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.cw.IChangeWatcherHelperFactory;
@@ -71,6 +73,23 @@ public class TeamLeader extends _Super_TeamLeader
 		}
 		
 		return results;
+	}
+	
+	public AgentTimeZone getTimeZone() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+		
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+		
+		ClassIDPair result = (ClassIDPair) cwh.get(TeamLeaderCWHelper.TIMEZONE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+		if (result != null && StringUtils.hasText(result.getID())) {
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+			MappedClass mappedClass = mcm.getMappedClassByClassName(result.getClassName());
+			IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+			return (AgentTimeZone) dataProvider.findById(result, null);
+		}
+		
+		return null;
 	}
 	
 }

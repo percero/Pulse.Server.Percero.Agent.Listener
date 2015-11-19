@@ -1,6 +1,7 @@
 package com.pulse.auth.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -29,13 +30,11 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
-import com.percero.agents.auth.helpers.UserAnchorHelper;
 import com.percero.agents.auth.services.AuthService2;
 import com.percero.agents.auth.services.IAuthProvider;
 import com.percero.agents.auth.vo.AuthCode;
 import com.percero.agents.auth.vo.AuthProviderResponse;
 import com.percero.agents.auth.vo.BasicAuthCredential;
-import com.percero.agents.auth.vo.IUserAnchor;
 import com.percero.agents.auth.vo.ServiceIdentifier;
 import com.percero.agents.auth.vo.ServiceUser;
 import com.percero.agents.auth.vo.UserAccount;
@@ -89,7 +88,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         
         logger.debug("Autheticating user " + cred.getUsername());
 
-        String endpoint = hostPortAndContext +"/Authenticate";
+        String endpoint = authPortAndContext +"/Authenticate";
         Map<String, String> params = new HashMap<String, String>();
         params.put("userDomainAndLogin", URLEncoder.encode(cred.getUsername()));
         params.put("userPassword", URLEncoder.encode(cred.getPassword()));
@@ -99,7 +98,7 @@ public class PulseHttpAuthProvider implements IAuthProvider {
     	 * Result will be something like
     	 * <boolean xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</boolean>
     	 */
-    	if(body.contains("true") || true){
+    	if(body.contains("true")){
     		logger.debug("Authentication successful for user " + cred.getUsername() + (this.insecureMode ? " (dev mode)" : ""));
             PulseUserInfo pulseUserInfo = null;
 
@@ -108,14 +107,18 @@ public class PulseHttpAuthProvider implements IAuthProvider {
                 pulseUserInfo = new PulseUserInfo();
                 pulseUserInfo.setEmployeeId(employeeId);
                 pulseUserInfo.setUserLogin(cred.getUsername());
-
             }
             else {
-                endpoint = hostPortAndContext + "/retrieve_user";
-                params = new HashMap<String, String>();
-                params.put("userName", cred.getUsername());
-
-                body = makeRequest(endpoint, params);
+                try {
+                	endpoint = setupDataEndpoint(cred.getUsername());
+    			} catch (UnsupportedEncodingException e) {
+    				logger.error("Error encoding URL params for Pulse Data HTTP Endpoint for user: " + cred.getUsername(), e);
+    				logger.debug("AUTH FAILURE: " + response.authCode.getMessage());
+    	            response.authCode = PulseAuthCode.RETRIEVE_USER_FAILED;
+    	            return response;
+    			}
+                
+                body = makeRequest(endpoint, null);
                 logger.info(body);
 
                 try {
@@ -195,6 +198,47 @@ public class PulseHttpAuthProvider implements IAuthProvider {
 
     	return response;
     }
+    
+    private String setupDataEndpoint(String username) throws UnsupportedEncodingException {
+        Map<String, String> userNameAndSubDomain = parseEmailForUserNameAndSubDomain(username);
+        String endpoint = dataPortAndContext;
+        String endpointParams = "";
+        if (userNameAndSubDomain.containsKey("subDomain")) {
+        	endpointParams += userNameAndSubDomain.get("subDomain") + "\\";
+        }
+        endpointParams += userNameAndSubDomain.get("userName");
+        // Need to URL encode because of the `\` character.
+        endpoint += URLEncoder.encode(endpointParams, "UTF-8");
+        return endpoint;
+	}
+
+	private Map<String, String> parseEmailForUserNameAndSubDomain(String email) {
+    	Map<String, String> result = new HashMap<String, String>();
+    	String userName = null;
+    	String subDomain = null;
+    	if (StringUtils.hasText(email)) {
+	    	int index = email.indexOf('@');
+	    	if (index >= 0) {
+	    		userName = email.substring(0, index);
+	    		String domain = email.substring(index+1);
+	    		index = domain.indexOf('.');
+	    		int lastIndex = domain.lastIndexOf('.');
+	    		
+	    		if (index >= 0 && lastIndex > index) {
+	    			subDomain = domain.substring(0, index);
+	    		}
+	    	}
+    	}
+    	
+    	if (userName != null) {
+    		result.put("userName", userName);
+    	}
+    	if (subDomain != null) {
+    		result.put("subDomain", subDomain);
+    	}
+    	
+    	return result;
+    }
 
 	/**
 	 * @param teamLeader
@@ -273,11 +317,13 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         String body = "";
         try {
             HttpClient client = getHttpClient();
-            String query = "?";
-            for(String key : params.keySet()){
-                query += key+"="+params.get(key)+"&";
+            if (params != null) {
+            	String query = "?";
+	            for(String key : params.keySet()){
+	                query += key+"="+params.get(key)+"&";
+	            }
+	            url += query;
             }
-            url += query;
 
             HttpGet request = new HttpGet(url);
             HttpResponse response = client.execute(request);
@@ -340,7 +386,8 @@ public class PulseHttpAuthProvider implements IAuthProvider {
         return httpClient;
     }
 
-    private String hostPortAndContext;
+    private String authPortAndContext;
+    private String dataPortAndContext;
     private ObjectMapper objectMapper;
 
     /**
@@ -352,9 +399,12 @@ public class PulseHttpAuthProvider implements IAuthProvider {
      * @param hostPortAndContext - e.g. https://some_host:5400/auth
      * @param objectMapper
      */
-    public PulseHttpAuthProvider(String hostPortAndContext, ObjectMapper objectMapper, boolean trustAllCerts,
-                                 ISyncAgentService syncAgentService, AuthService2 authService2, boolean insecureMode){
-        this.hostPortAndContext = hostPortAndContext;
+	public PulseHttpAuthProvider(String authPortAndContext,
+			String dataPortAndContext, ObjectMapper objectMapper,
+			boolean trustAllCerts, ISyncAgentService syncAgentService,
+			AuthService2 authService2, boolean insecureMode) {
+        this.authPortAndContext = authPortAndContext;
+        this.dataPortAndContext = dataPortAndContext;
         this.objectMapper = objectMapper;
         this.trustAllCerts = trustAllCerts;
         this.syncAgentService  = syncAgentService;
