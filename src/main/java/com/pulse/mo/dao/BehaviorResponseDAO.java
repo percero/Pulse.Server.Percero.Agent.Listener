@@ -236,8 +236,8 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 		pstmt.setString(2, perceroObject.getUpdatedBy()); //UPDATED_BY
 		pstmt.setString(3, perceroObject.getCreatedBy()); //CREATED_BY
 		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WEEK_DATE
-		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn())); //CREATED_ON
-		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn())); //UPDATED_ON
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
+		pstmt.setDate(6, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
 		JdbcHelper.setInt(pstmt,7, perceroObject.getResponse()); //RESPONSE
 
 		if (perceroObject.getAgent() == null) //AGENT_ID
@@ -602,7 +602,7 @@ public BehaviorResponse createObject(BehaviorResponse perceroObject, String user
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
