@@ -80,7 +80,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return results;
 			}
 
@@ -134,7 +134,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return results;
 			}
 			
@@ -193,7 +193,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return result;
 			}
 

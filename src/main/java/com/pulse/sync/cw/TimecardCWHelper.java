@@ -123,7 +123,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         try {
         	Timecard host = (Timecard) syncAgentService.systemGetById(pair);
             if (host == null) {
-                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
                 return result;
             }
 
@@ -170,7 +170,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         try {
             Timecard host = (Timecard) syncAgentService.systemGetById(pair);
             if (host == null) {
-                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
                 return result;
             }
 
@@ -262,7 +262,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         try {
             Timecard host = (Timecard) syncAgentService.systemGetById(pair);
             if (host == null) {
-                log.warn("Unable to calculate shiftStatusNotification: Invalid objectId");
+                log.warn("Unable to calculate shiftStatusNotification: Invalid objectId " + pair.getClassName() + "::" + pair.getID());
                 return result;
             }
 
@@ -363,7 +363,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     	try {
     		Timecard host = (Timecard) syncAgentService.systemGetById(pair);
     		if (host == null) {
-    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
     			return result;
     		}
     		
@@ -406,7 +406,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     	try {
     		Timecard host = (Timecard) syncAgentService.systemGetById(pair);
     		if (host == null) {
-    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+    			log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
     			return result;
     		}
     		
@@ -448,7 +448,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return result;
 			}
 
@@ -502,7 +502,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			Timecard host = (Timecard) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return result;
 			}
 
