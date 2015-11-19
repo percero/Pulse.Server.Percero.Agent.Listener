@@ -9,6 +9,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
@@ -261,8 +262,8 @@ nextResult.setScorecard(scorecard);
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBy());    //UPDATED_BY
 
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));  //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));  //UPDATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date()));  //CREATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date()));  //UPDATED_ON
 		pstmt.setInt(11, 0); //IS_REQUIRED
 		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH     TODO Fix this
 
