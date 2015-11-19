@@ -296,8 +296,8 @@ pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setString(3, perceroObject.getType());
 pstmt.setString(4, perceroObject.getUpdatedBy());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(new java.util.Date()));
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date()));
 pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 JdbcHelper.setInt(pstmt,9, perceroObject.getEmployeeId());
 

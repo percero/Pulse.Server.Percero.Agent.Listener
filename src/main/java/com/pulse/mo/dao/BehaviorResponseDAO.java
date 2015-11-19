@@ -602,7 +602,7 @@ public BehaviorResponse createObject(BehaviorResponse perceroObject, String user
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
