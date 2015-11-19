@@ -247,7 +247,7 @@ nextResult.setSessionComment(sessioncomment);
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
 		pstmt.setInt(4, 0); // not a follow up  session  SCORECARD_ID
 		pstmt.setInt(5, 3); //Adhoc Coaching session - TYPE
-		pstmt.setString(6, perceroObject.getStatus());  //STATUS
+		pstmt.setString(6, "3");  //STATUS  - 3 Pending Agent
 
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBY());	//UPDATED_BY

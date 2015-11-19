@@ -261,7 +261,7 @@ nextResult.setTeamLeader(teamleader);
 		}
 
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));  //DUE_DATE
-		pstmt.setString(4, perceroObject.getAdhocTaskState().getID());   //STATUS
+		pstmt.setString(4, "4");   //STATUS - Overdue or pending - DB it is 4
 
 		pstmt.setString(5, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(5, perceroObject.getUpdatedBy());  //UPDATED_BY
@@ -271,7 +271,7 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
 		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
 
-		pstmt.setInt(10, perceroObject.getPlanId()); //PLAN_ID
+		pstmt.setNull(10, java.sql.Types.INTEGER); // PLAN_ID
 		pstmt.setString(11, perceroObject.getID()); //TASK_ID
 		pstmt.setInt(12, 2); //TYPE  - Adhoc task
 	}
