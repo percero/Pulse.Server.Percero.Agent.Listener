@@ -43,9 +43,9 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	//TODO:For use refactoring, so we set it once
 	public static final String SQL_VIEW = "SELECT  \"SCHEDULE\".\"ID\" as \"ID\", \"SCHEDULE\".\"START_TIME\" as \"SOURCE_START_TIME\", \"SCHEDULE\".\"END_DATE\" as \"END_DATE\", \"SCHEDULE\".\"SHIFT\" as \"SHIFT\", \"SCHEDULE\".\"END_TIME\" as \"SOURCE_END_TIME\", \"SCHEDULE\".\"START_DATE\" as \"START_DATE\", \"SCHEDULE\".\"PAYROLL\" as \"AGENT_ID\" FROM \"SCHEDULE_VW\" \"SCHEDULE\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"SCHEDULE_VW\" \"SCHEDULE\"";
-	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=? AND  \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) ";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) ";
-	private String orderByTableName = " ORDER BY \"SCHEDULE\".\"ID\"";
+	private String whereClause = " WHERE \"SCHEDULE\".\"ID\"=? AND  \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) ";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SCHEDULE\".\"ID\"= SQLLIST.column_value WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) ";
+	private String orderByTableName = " ORDER BY \"SCHEDULE\".\"START_DATE\" DESC";
 
 	
 
@@ -67,27 +67,27 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) " + orderByTableName;
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName  + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) " + orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName  + " WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) " + orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) " + orderByTableName;
+		return SQL_VIEW  + " WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) " + orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14) " + orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW + " WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) " + orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" > (sysdate - 14)";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1) ";
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
-			return SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" > sysdate -30 and \"SCHEDULE\".\"END_DATE\" > sysdate -30 and ROWNUM < 15 order by \"SCHEDULE\".\"START_DATE\" desc";
+			return SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) and ROWNUM < 15 order by \"SCHEDULE\".\"START_DATE\" desc";
 		}
 		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
@@ -114,7 +114,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
-			return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" > sysdate -30 and \"SCHEDULE\".\"END_DATE\" > sysdate -30 and ROWNUM < 15 order by\"SCHEDULE\".\"START_DATE\" desc";
+			return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) and ROWNUM < 15 order by\"SCHEDULE\".\"START_DATE\" desc";
 		}
 		return "SELECT * FROM (SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
