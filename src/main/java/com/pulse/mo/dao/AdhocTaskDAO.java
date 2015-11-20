@@ -264,7 +264,7 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(4, "4");   //STATUS - Overdue or pending - DB it is 4
 
 		pstmt.setString(5, perceroObject.getCreatedBy());  //CREATED_BY
-		pstmt.setString(5, perceroObject.getUpdatedBy());  //UPDATED_BY
+		pstmt.setString(6, perceroObject.getUpdatedBy());  //UPDATED_BY
 
 
 		pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
@@ -613,7 +613,7 @@ public AdhocTask createObject(AdhocTask perceroObject, String userId)
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
+		String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -630,7 +630,15 @@ public AdhocTask createObject(AdhocTask perceroObject, String userId)
 		perceroObject.setID(insertedId);
 		sql = getInsertIntoSQL();
 		pstmt = conn.prepareStatement(sql);
-
+		log.info("------------------------------------------------ADHOCTASK--------------------------");
+		log.info(perceroObject.getID());
+		log.info(perceroObject.getAgent().getID());
+		log.info(perceroObject.getCreatedBy());
+		log.info(perceroObject.getUpdatedBy());
+		log.info(perceroObject.getDueDate());
+		log.info(perceroObject.getWeekDate());
+		log.info(perceroObject.getTaskDetail());
+		log.info("------------------------------------------------ADHOCTASK--------------------------");
 
 		setPreparedStatmentInsertParams(perceroObject, pstmt);
 		result = pstmt.executeUpdate();

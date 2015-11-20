@@ -148,7 +148,7 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_COACHING_SESSION SET \"IS_REQUIRED\"=?,\"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_SESSION SET \"IS_REQUIRED\"=?,\"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -290,13 +290,13 @@ nextResult.setScorecard(scorecard);
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(CoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		JdbcHelper.setBoolean(pstmt,1, perceroObject.getIsRequired());
 pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setString(3, perceroObject.getType());
 pstmt.setString(4, perceroObject.getUpdatedBy());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(new java.util.Date()));
+pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date()));
 pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 JdbcHelper.setInt(pstmt,9, perceroObject.getEmployeeId());
