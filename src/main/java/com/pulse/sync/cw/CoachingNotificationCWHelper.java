@@ -154,7 +154,7 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 		try {
 			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return results;
 			}
 
@@ -233,7 +233,7 @@ public class CoachingNotificationCWHelper extends DerivedValueChangeWatcherHelpe
 		try {
 			CoachingNotification host = (CoachingNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + countName + ": Invalid objectId");
+				log.warn("Unable to calculate " + countName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return totalCount;
 			}
 

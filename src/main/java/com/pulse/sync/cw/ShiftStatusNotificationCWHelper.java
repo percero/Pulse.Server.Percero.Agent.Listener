@@ -108,7 +108,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return results;
 			}
 
@@ -176,7 +176,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return resultCount;
 			}
 
@@ -216,7 +216,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return resultCount;
 			}
 
@@ -258,7 +258,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return resultCount;
 			}
 
@@ -300,7 +300,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return resultCount;
 			}
 
@@ -342,7 +342,7 @@ public class ShiftStatusNotificationCWHelper extends DerivedValueChangeWatcherHe
 		try {
 			ShiftStatusNotification host = (ShiftStatusNotification) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId");
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return resultCount;
 			}
 

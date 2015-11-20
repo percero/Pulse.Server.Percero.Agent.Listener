@@ -9,6 +9,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
@@ -256,8 +257,8 @@ nextResult.setDevelopmentPlan(developmentplan);
 		pstmt.setString(6, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(7, perceroObject.getUpdatedBy()); //UPDATED_BY
 
-		pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn())); //CREATED_ON
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn())); //UPDATED_ON
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
 		pstmt.setDate(10, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
 		pstmt.setString(11, perceroObject.getID()); //TASK_ID
 		pstmt.setInt(12, 1); //TYPE  - Development Activity
