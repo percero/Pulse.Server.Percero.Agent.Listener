@@ -138,7 +138,7 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
