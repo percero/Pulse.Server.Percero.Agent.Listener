@@ -3,6 +3,7 @@ package com.pulse.sync.cw;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,8 @@ import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.Agent;
 import com.pulse.mo.CMSEntry;
 import com.pulse.mo.DurationToleranceNotification;
+import com.pulse.mo.LOB;
+import com.pulse.mo.LOBConfiguration;
 import com.pulse.mo.TeamLeader;
 
 // This should get picked up by Spring and be auto-wired.
@@ -116,6 +119,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 					if (cmsEntry != null) {
 						
 						// 1. Check for DURATION Tolerance
+						
+						/**
+						 * Examples on how to retrieve an object by Example AND by ID
+						LOBConfiguration lobConfig = (LOBConfiguration) syncAgentService.systemGetById(LOBConfiguration.class.getCanonicalName(), "LOB_CONFIG_ID_GOES_HERE");
+						
+						LOB exampleLob = new LOB();
+						exampleLob.setName("LOB NAME");
+						List<IPerceroObject> exampleLobResults = syncAgentService.systemFindByExample(exampleLob, null);
+						if (exampleLobResults != null && exampleLobResults.size() > 0) {
+							LOB foundLob = (LOB) exampleLobResults.get(0);
+							
+							LOBConfiguration exampleLobConfiguration = new LOBConfiguration();
+							exampleLobConfiguration.setLOB(foundLob);
+							List<IPerceroObject> exampleLobConfigurationResults = syncAgentService.systemFindByExample(exampleLobConfiguration, null);
+							if (exampleLobConfigurationResults != null && exampleLobConfigurationResults.size() > 0) {
+								LOBConfiguration foundLobConfiguration = (LOBConfiguration) exampleLobConfigurationResults.get(0);
+						}
+						
+						LOBConfiguration lobConfig = (LOBConfiguration) syncAgentService.systemGetById(LOBConfiguration.class.getCanonicalName(), "LOB_CONFIG_ID_GOES_HERE");
+						 */
+						
 						Double DURATION_MAX = new Double(15.0 * 60.0);	// TODO: Should be set to 15 minutes.
 						Double duration = cmsEntry.getDuration();
 						// If the duration is > DURATION_MAX, then create the notification.
