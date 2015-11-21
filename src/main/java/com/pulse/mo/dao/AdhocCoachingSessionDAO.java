@@ -252,8 +252,12 @@ nextResult.setSessionComment(sessioncomment);
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBY());	//UPDATED_BY
 
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date()));  //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date()));  //UPDATED_ON
+		java.util.Date date = new java.util.Date();
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+
+		pstmt.setTimestamp(9, timestamp);  //CREATED_ON
+		pstmt.setTimestamp(10, timestamp);  //UPDATED_ON
+
 		pstmt.setInt(11, 0); //IS_REQUIRED
 		pstmt.setString(12, perceroObject.getResponsibleCoach()); //RESPONSIBLE_COACH
 
@@ -627,7 +631,7 @@ propertyCounter++;
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_ADHOC_COACHING_SESSION(?)}";
 	}
-	
+
 	
 
 public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, String userId)
@@ -668,6 +672,10 @@ public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, Str
 		throw new SyncDataException(e);
 	} finally {
 		try {
+			if (stmt!=null) {
+				stmt.close();
+			}
+
 			if (pstmt != null) {
 				pstmt.close();
 			}
