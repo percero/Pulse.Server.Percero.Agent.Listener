@@ -497,15 +497,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_DURATION_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_DURATION_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_DURATION_TOLERANCE_NOTIF(?)}";
+		return "{call DELETE_DURATION_TOLERANCE_NOTI(?)}";
 	}
 	
 	

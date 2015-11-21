@@ -237,8 +237,8 @@ public class TeamLeaderPostGetTask implements Runnable {
 		log.debug("[PostGetCWHelper] [Timecard] [ShiftStatusNotification]  daysBetween"
 				+ daysBetween);
 		
-		// If the Timecard.date < 3 days old
-		while (daysBetween < 3) {
+		// If the Timecard.date < 4 days old
+		while (daysBetween < 4) {
 			validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(host, shiftDateTime.toDate());
 
 			shiftDateTime = shiftDateTime.minusDays(1);
