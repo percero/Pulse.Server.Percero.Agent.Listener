@@ -133,12 +133,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_BEHAVIOR_RESPONSE VALUES (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_BEHAVIOR_RESPONSE (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"EMPLOYEE_ID\",\"BEHAVIOR_ID\",\"SESSION_ID\",\"SCM_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"EMPLOYEE_ID\"=?,\"BEHAVIOR_ID\"=?,\"SESSION_ID\"=?,\"SCM_ID\"=? WHERE \"RESPONSE_ID\"=?";
 	}
 	
 	@Override
@@ -301,7 +301,7 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getUpdatedBy());
 pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));

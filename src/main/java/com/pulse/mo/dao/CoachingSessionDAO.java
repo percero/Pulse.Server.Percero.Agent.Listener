@@ -148,7 +148,7 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_SESSION SET \"IS_REQUIRED\"=?,\"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"AGENT_ID\"=?,\"AGENT_SCORECARD_ID\"=?,\"COACHING_SESSION_STATE_ID\"=?,\"SCORECARD_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_SESSION SET \"IS_REQUIRED\"=?, \"CREATED_BY\"=?, \"TYPE\"=?, \"UPDATED_BY\"=?, \"CLOSED_ON\"=?, \"CREATED_ON\"=?, \"UPDATED_ON\"=?, \"WK_DATE\"=?, \"EMPLOYEE_ID\"=?, \"STATUS\"=?, \"SCORECARD_ID\"=? WHERE \"SESSION_ID\"=?";
 	}
 	
 	@Override
@@ -301,46 +301,27 @@ pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date()));
 pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 JdbcHelper.setInt(pstmt,9, perceroObject.getEmployeeId());
 
-if (perceroObject.getAgent() == null)
+
+if (perceroObject.getCoachingSessionState() == null)
 {
 pstmt.setString(10, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getAgentScorecard() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getAgentScorecard().getID());
-}
-
-
-if (perceroObject.getCoachingSessionState() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getCoachingSessionState().getID());
+		pstmt.setString(10, perceroObject.getCoachingSessionState().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(13, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getScorecard().getID());
+		pstmt.setString(11, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(14, perceroObject.getID());
+pstmt.setString(12, perceroObject.getID());
 
 		
 	}

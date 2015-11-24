@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -132,12 +133,12 @@ public class SessionCommentDAO extends SqlDataAccessObject<SessionComment> imple
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_SESSION_COMMENT (\"ID\",\"DESCRIPTION\",\"CREATED_ON\",\"UPDATED_ON\",\"DATAREF_ID\",\"SESSION_ID\",\"TYPE\",\"CREATED_BY\",\"UPDATED_BY\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION_COMMENT  (\"COMMENT_ID\",\"SESSION_ID\", \"TYPE\", \"DATAREF_ID\", \"COMMENT_DESC\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\") VALUES (?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_SESSION_COMMENT SET \"DESCRIPTION\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_SESSION_COMMENT SET \"COMMENT_DESC\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"COMMENT_ID\"=?";
 	}
 	
 	@Override
@@ -149,7 +150,8 @@ public class SessionCommentDAO extends SqlDataAccessObject<SessionComment> imple
 	protected SessionComment extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-SessionComment nextResult = null;
+
+SessionComment nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -195,16 +197,21 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 	}
 	
 	protected void setBaseStatmentInsertParams(SessionComment perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getDescription());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,5, perceroObject.getDatarefId());
-JdbcHelper.setInt(pstmt,6, perceroObject.getSessionId());
-JdbcHelper.setInt(pstmt,7, perceroObject.getType());
-pstmt.setString(8, perceroObject.getCreatedBy());
-pstmt.setString(9, perceroObject.getUpdatedBy());
+
+		pstmt.setString(1, perceroObject.getID());  //COMMENT_ID
+		pstmt.setInt(2, perceroObject.getSessionId());  //SESSION_ID
+		pstmt.setInt(3, perceroObject.getType());  //Type
+		pstmt.setInt(4, perceroObject.getDatarefId()); // DATAREF_ID
+		pstmt.setString(5, perceroObject.getDescription()); //Adhoc Coaching session - TYPE
+
+		pstmt.setString(6, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(7, perceroObject.getUpdatedBy());	//UPDATED_BY
+
+		java.util.Date date = new java.util.Date();
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+
+		pstmt.setTimestamp(8, timestamp);  //CREATED_ON
+		pstmt.setTimestamp(9, timestamp);  //UPDATED_ON
 
 		
 	}
@@ -417,7 +424,8 @@ propertyCounter++;
 	}
 	
 	
-public SessionComment createObject(SessionComment perceroObject, String userId)
+
+public SessionComment createObject(SessionComment perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -428,7 +436,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select SESSION_COMMENT_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_SESSION_COMMENT_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -455,6 +463,9 @@ propertyCounter++;
 		throw new SyncDataException(e);
 	} finally {
 		try {
+			if (stmt!=null) {
+				stmt.close();
+			}
 			if (pstmt != null) {
 				pstmt.close();
 			}
@@ -480,9 +491,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+
