@@ -106,20 +106,7 @@ public void setName(String name)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSession.class, mappedBy="adhocCoachingCategory", cascade=javax.persistence.CascadeType.REMOVE)
-private List<AdhocCoachingSession> adhocCoachingSessions;
-public List<AdhocCoachingSession> getAdhocCoachingSessions() {
-	return this.adhocCoachingSessions;
-}
-
-public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
-	this.adhocCoachingSessions = value;
-}
-
-
+	
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
@@ -162,23 +149,6 @@ public void setAdhocCoachingSessions(List<AdhocCoachingSession> value) {
 
 		
 		// Target Relationships
-//Retrieve value of the Adhoc Coaching Category of Adhoc Coaching Session relationship
-objectJson += ",\"adhocCoachingSessions\":[";
-		
-		if (getAdhocCoachingSessions() != null) {
-			int adhocCoachingSessionsCounter = 0;
-			for(AdhocCoachingSession nextAdhocCoachingSessions : getAdhocCoachingSessions()) {
-				if (adhocCoachingSessionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextAdhocCoachingSessions).toEmbeddedJson();
-					adhocCoachingSessionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
 
 		
 		return objectJson;
@@ -198,7 +168,6 @@ objectJson += ",\"adhocCoachingSessions\":[";
 
 
 		// Target Relationships
-		this.adhocCoachingSessions = (List<AdhocCoachingSession>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessions");
 
 
 	}
@@ -208,7 +177,6 @@ objectJson += ",\"adhocCoachingSessions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "adhoccoachingcategory"));
 
 		
 		return listSetters;

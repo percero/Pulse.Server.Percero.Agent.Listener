@@ -255,6 +255,19 @@ public void setCoachingSessionAttachments(List<CoachingSessionAttachment> value)
 	this.coachingSessionAttachments = value;
 }
 
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=SessionComment.class, mappedBy="coachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<SessionComment> sessionComments;
+public List<SessionComment> getSessionComments() {
+	return this.sessionComments;
+}
+
+public void setSessionComments(List<SessionComment> value) {
+	this.sessionComments = value;
+}
+
 
 
 	//////////////////////////////////////////////////////
@@ -513,6 +526,23 @@ objectJson += ",\"coachingSessionAttachments\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Coaching Session of Session Comment relationship
+objectJson += ",\"sessionComments\":[";
+		
+		if (getSessionComments() != null) {
+			int sessionCommentsCounter = 0;
+			for(SessionComment nextSessionComments : getSessionComments()) {
+				if (sessionCommentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextSessionComments).toEmbeddedJson();
+					sessionCommentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -553,6 +583,7 @@ objectJson += ",\"coachingSessionAttachments\":[";
 
 		// Target Relationships
 		this.coachingSessionAttachments = (List<CoachingSessionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "coachingSessionAttachments");
+		this.sessionComments = (List<SessionComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "sessionComments");
 
 
 	}
@@ -563,6 +594,7 @@ objectJson += ",\"coachingSessionAttachments\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(CoachingSessionAttachment.class, "coachingsession"));
+		listSetters.add(MappedClass.getFieldSetters(SessionComment.class, "coachingsession"));
 
 		
 		return listSetters;

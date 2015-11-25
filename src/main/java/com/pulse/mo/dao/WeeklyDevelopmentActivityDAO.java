@@ -45,7 +45,7 @@ public class WeeklyDevelopmentActivityDAO extends SqlDataAccessObject<WeeklyDeve
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"ID\"";
-	public static final String SQL_VIEW = ",\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_ACTIVITY_ID\",\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"SCORECARD_WEEKLY_RESULT_ID\"";
+	public static final String SQL_VIEW = ",\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"PLAN_NAME\",\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"DEVELOPMENT_ACTIVITY_ID\",\"WEEKLY_DEVELOPMENT_ACTIVITY\".\"SCORECARD_WEEKLY_RESULT_ID\"";
 	private String selectFromStatementTableName = " FROM \"WEEKLY_DEVELOPMENT_ACTIVITY\" \"WEEKLY_DEVELOPMENT_ACTIVITY\"";
 	private String whereClause = "  WHERE \"WEEKLY_DEVELOPMENT_ACTIVITY\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WEEKLY_DEVELOPMENT_ACTIVITY\".\"ID\"= SQLLIST.column_value";
@@ -132,12 +132,12 @@ public class WeeklyDevelopmentActivityDAO extends SqlDataAccessObject<WeeklyDeve
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_WEEKLY_DEVELOPMENT_ACTIVITY (\"ID\",\"DEVELOPMENT_ACTIVITY_ID\",\"SCORECARD_WEEKLY_RESULT_ID\") VALUES (?,?,?)";
+		return "INSERT INTO TBL_WEEKLY_DEVELOPMENT_ACTIVITY (\"ID\",\"PLAN_NAME\",\"DEVELOPMENT_ACTIVITY_ID\",\"SCORECARD_WEEKLY_RESULT_ID\") VALUES (?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_WEEKLY_DEVELOPMENT_ACTIVITY SET \"DEVELOPMENT_ACTIVITY_ID\"=?,\"SCORECARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_WEEKLY_DEVELOPMENT_ACTIVITY SET \"PLAN_NAME\"=?,\"DEVELOPMENT_ACTIVITY_ID\"=?,\"SCORECARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -162,7 +162,10 @@ public class WeeklyDevelopmentActivityDAO extends SqlDataAccessObject<WeeklyDeve
     	
     	if (!shellOnly) 
 		{
-			String developmentactivityID = rs.getString("DEVELOPMENT_ACTIVITY_ID");
+			nextResult.setPlanName(rs.getString("PLAN_NAME"));
+
+
+String developmentactivityID = rs.getString("DEVELOPMENT_ACTIVITY_ID");
 if (StringUtils.hasText(developmentactivityID) && !"null".equalsIgnoreCase(developmentactivityID) ){
 DevelopmentActivity developmentactivity = new DevelopmentActivity();
 developmentactivity.setID(developmentactivityID);
@@ -189,24 +192,25 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 	protected void setBaseStatmentInsertParams(WeeklyDevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
+pstmt.setString(2, perceroObject.getPlanName());
 
 if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(2, null);
-}
-else
-{
-		pstmt.setString(2, perceroObject.getDevelopmentActivity().getID());
-}
-
-
-if (perceroObject.getScorecardWeeklyResult() == null)
 {
 pstmt.setString(3, null);
 }
 else
 {
-		pstmt.setString(3, perceroObject.getScorecardWeeklyResult().getID());
+		pstmt.setString(3, perceroObject.getDevelopmentActivity().getID());
+}
+
+
+if (perceroObject.getScorecardWeeklyResult() == null)
+{
+pstmt.setString(4, null);
+}
+else
+{
+		pstmt.setString(4, perceroObject.getScorecardWeeklyResult().getID());
 }
 
 
@@ -232,27 +236,28 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(WeeklyDevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
 		
-		
+		pstmt.setString(1, perceroObject.getPlanName());
+
 if (perceroObject.getDevelopmentActivity() == null)
-{
-pstmt.setString(1, null);
-}
-else
-{
-		pstmt.setString(1, perceroObject.getDevelopmentActivity().getID());
-}
-
-
-if (perceroObject.getScorecardWeeklyResult() == null)
 {
 pstmt.setString(2, null);
 }
 else
 {
-		pstmt.setString(2, perceroObject.getScorecardWeeklyResult().getID());
+		pstmt.setString(2, perceroObject.getDevelopmentActivity().getID());
 }
 
-pstmt.setString(3, perceroObject.getID());
+
+if (perceroObject.getScorecardWeeklyResult() == null)
+{
+pstmt.setString(3, null);
+}
+else
+{
+		pstmt.setString(3, perceroObject.getScorecardWeeklyResult().getID());
+}
+
+pstmt.setString(4, perceroObject.getID());
 
 		
 	}
@@ -281,11 +286,28 @@ pstmt.setString(3, perceroObject.getID());
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
 		
-		boolean useDevelopmentActivityID = theQueryObject.getDevelopmentActivity() != null && (excludeProperties == null || !excludeProperties.contains("developmentActivity"));
+		boolean usePlanName = StringUtils.hasText(theQueryObject.getPlanName()) && (excludeProperties == null || !excludeProperties.contains("planName"));
+
+if (usePlanName)
+{
+sql += " WHERE ";
+sql += " \"PLAN_NAME\" =? ";
+paramValues.add(theQueryObject.getPlanName());
+propertyCounter++;
+}
+
+boolean useDevelopmentActivityID = theQueryObject.getDevelopmentActivity() != null && (excludeProperties == null || !excludeProperties.contains("developmentActivity"));
 
 if (useDevelopmentActivityID)
 {
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
 sql += " WHERE ";
+}
 sql += " \"DEVELOPMENT_ACTIVITY_ID\" =? ";
 paramValues.add(theQueryObject.getDevelopmentActivity().getID());
 propertyCounter++;
@@ -319,11 +341,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_WEEKLY_DEVELOPMENT_ACTIVITY(?,?,?)}";
+		return "{call UPDATE_WEEKLY_DEVELOPMENT_ACTIVITY(?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_WEEKLY_DEVELOPMENT_ACTIVITY(?,?,?)}";
+		return "{call CREATE_WEEKLY_DEVELOPMENT_ACTIVITY(?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
