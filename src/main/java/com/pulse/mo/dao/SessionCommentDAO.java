@@ -46,7 +46,7 @@ public class SessionCommentDAO extends SqlDataAccessObject<SessionComment> imple
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"SESSION_COMMENT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"SESSION_COMMENT\".\"DESCRIPTION\",\"SESSION_COMMENT\".\"CREATED_ON\",\"SESSION_COMMENT\".\"UPDATED_ON\",\"SESSION_COMMENT\".\"DATAREF_ID\",\"SESSION_COMMENT\".\"SESSION_ID\",\"SESSION_COMMENT\".\"TYPE\",\"SESSION_COMMENT\".\"CREATED_BY\",\"SESSION_COMMENT\".\"UPDATED_BY\"";
+	public static final String SQL_VIEW = ",\"SESSION_COMMENT\".\"DESCRIPTION\",\"SESSION_COMMENT\".\"CREATED_BY\",\"SESSION_COMMENT\".\"UPDATED_BY\",\"SESSION_COMMENT\".\"CREATED_ON\",\"SESSION_COMMENT\".\"UPDATED_ON\",\"SESSION_COMMENT\".\"DATAREF_ID\",\"SESSION_COMMENT\".\"TYPE\",\"SESSION_COMMENT\".\"ADHOC_COACHING_SESSION_ID\",\"SESSION_COMMENT\".\"COACHING_SESSION_ID\",\"SESSION_COMMENT\".\"CORRECTIVE_ACTION_ID\"";
 	private String selectFromStatementTableName = " FROM \"SESSION_COMMENT\" \"SESSION_COMMENT\"";
 	private String whereClause = "  WHERE \"SESSION_COMMENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"SESSION_COMMENT\".\"ID\"= SQLLIST.column_value";
@@ -167,6 +167,12 @@ SessionComment nextResult = null;
 			nextResult.setDescription(rs.getString("DESCRIPTION"));
 
 
+nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+
+
+nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+
+
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
@@ -176,16 +182,31 @@ nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDA
 nextResult.setDatarefId(rs.getInt("DATAREF_ID"));
 
 
-nextResult.setSessionId(rs.getInt("SESSION_ID"));
-
-
 nextResult.setType(rs.getInt("TYPE"));
 
 
-nextResult.setCreatedBy(rs.getString("CREATED_BY"));
+String adhoccoachingsessionID = rs.getString("ADHOC_COACHING_SESSION_ID");
+if (StringUtils.hasText(adhoccoachingsessionID) && !"null".equalsIgnoreCase(adhoccoachingsessionID) ){
+AdhocCoachingSession adhoccoachingsession = new AdhocCoachingSession();
+adhoccoachingsession.setID(adhoccoachingsessionID);
+nextResult.setAdhocCoachingSession(adhoccoachingsession);
+}
 
 
-nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+String coachingsessionID = rs.getString("COACHING_SESSION_ID");
+if (StringUtils.hasText(coachingsessionID) && !"null".equalsIgnoreCase(coachingsessionID) ){
+CoachingSession coachingsession = new CoachingSession();
+coachingsession.setID(coachingsessionID);
+nextResult.setCoachingSession(coachingsession);
+}
+
+
+String correctiveactionID = rs.getString("CORRECTIVE_ACTION_ID");
+if (StringUtils.hasText(correctiveactionID) && !"null".equalsIgnoreCase(correctiveactionID) ){
+CorrectiveAction correctiveaction = new CorrectiveAction();
+correctiveaction.setID(correctiveactionID);
+nextResult.setCorrectiveAction(correctiveaction);
+}
 
 
 
@@ -199,7 +220,17 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 	protected void setBaseStatmentInsertParams(SessionComment perceroObject, PreparedStatement pstmt) throws SQLException {
 
 		pstmt.setString(1, perceroObject.getID());  //COMMENT_ID
-		pstmt.setInt(2, perceroObject.getSessionId());  //SESSION_ID
+		if (perceroObject.getAdhocCoachingSession() != null)
+		{
+			pstmt.setString(2, perceroObject.getAdhocCoachingSession().getID());  //SESSION_ID
+		} else if (perceroObject.getCoachingSession() != null)
+		{
+			pstmt.setString(2, perceroObject.getCoachingSession().getID());  //SESSION_ID
+		} else if (perceroObject.getCorrectiveAction() != null)
+		{
+			pstmt.setString(2, perceroObject.getCorrectiveAction().getID());  //SESSION_ID
+		}
+
 		pstmt.setInt(3, perceroObject.getType());  //Type
 		pstmt.setInt(4, perceroObject.getDatarefId()); // DATAREF_ID
 		pstmt.setString(5, perceroObject.getDescription()); //Adhoc Coaching session - TYPE
@@ -239,7 +270,16 @@ nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
 JdbcHelper.setInt(pstmt,4, perceroObject.getDatarefId());
-JdbcHelper.setInt(pstmt,5, perceroObject.getSessionId());
+		if (perceroObject.getAdhocCoachingSession() != null)
+		{
+			pstmt.setString(5, perceroObject.getAdhocCoachingSession().getID());  //SESSION_ID
+		} else if (perceroObject.getCoachingSession() != null)
+		{
+			pstmt.setString(5, perceroObject.getCoachingSession().getID());  //SESSION_ID
+		} else if (perceroObject.getCorrectiveAction() != null)
+		{
+			pstmt.setString(5, perceroObject.getCorrectiveAction().getID());  //SESSION_ID
+		}
 JdbcHelper.setInt(pstmt,6, perceroObject.getType());
 pstmt.setString(7, perceroObject.getCreatedBy());
 pstmt.setString(8, perceroObject.getUpdatedBy());
@@ -279,6 +319,40 @@ if (useDescription)
 sql += " WHERE ";
 sql += " \"DESCRIPTION\" =? ";
 paramValues.add(theQueryObject.getDescription());
+propertyCounter++;
+}
+
+boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+if (useCreatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CREATED_BY\" =? ";
+paramValues.add(theQueryObject.getCreatedBy());
+propertyCounter++;
+}
+
+boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+if (useUpdatedBy)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"UPDATED_BY\" =? ";
+paramValues.add(theQueryObject.getUpdatedBy());
 propertyCounter++;
 }
 
@@ -333,23 +407,6 @@ paramValues.add(theQueryObject.getDatarefId());
 propertyCounter++;
 }
 
-boolean useSessionId = theQueryObject.getSessionId() != null && (excludeProperties == null || !excludeProperties.contains("sessionId"));
-
-if (useSessionId)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SESSION_ID\" =? ";
-paramValues.add(theQueryObject.getSessionId());
-propertyCounter++;
-}
-
 boolean useType = theQueryObject.getType() != null && (excludeProperties == null || !excludeProperties.contains("type"));
 
 if (useType)
@@ -367,9 +424,9 @@ paramValues.add(theQueryObject.getType());
 propertyCounter++;
 }
 
-boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+boolean useAdhocCoachingSessionID = theQueryObject.getAdhocCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("adhocCoachingSession"));
 
-if (useCreatedBy)
+if (useAdhocCoachingSessionID)
 {
 if (propertyCounter > 0)
 {
@@ -379,14 +436,14 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"CREATED_BY\" =? ";
-paramValues.add(theQueryObject.getCreatedBy());
+sql += " \"ADHOC_COACHING_SESSION_ID\" =? ";
+paramValues.add(theQueryObject.getAdhocCoachingSession().getID());
 propertyCounter++;
 }
 
-boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+boolean useCoachingSessionID = theQueryObject.getCoachingSession() != null && (excludeProperties == null || !excludeProperties.contains("coachingSession"));
 
-if (useUpdatedBy)
+if (useCoachingSessionID)
 {
 if (propertyCounter > 0)
 {
@@ -396,8 +453,25 @@ else
 {
 sql += " WHERE ";
 }
-sql += " \"UPDATED_BY\" =? ";
-paramValues.add(theQueryObject.getUpdatedBy());
+sql += " \"COACHING_SESSION_ID\" =? ";
+paramValues.add(theQueryObject.getCoachingSession().getID());
+propertyCounter++;
+}
+
+boolean useCorrectiveActionID = theQueryObject.getCorrectiveAction() != null && (excludeProperties == null || !excludeProperties.contains("correctiveAction"));
+
+if (useCorrectiveActionID)
+{
+if (propertyCounter > 0)
+{
+sql += " AND ";
+}
+else
+{
+sql += " WHERE ";
+}
+sql += " \"CORRECTIVE_ACTION_ID\" =? ";
+paramValues.add(theQueryObject.getCorrectiveAction().getID());
 propertyCounter++;
 }
 
@@ -412,11 +486,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_SESSION_COMMENT(?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
@@ -436,7 +510,7 @@ public SessionComment createObject(SessionComment perceroObject, String userId)
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select EFC_SESSION_COMMENT_SEQ.NEXTVAL from dual";
+	String query = "Select SESSION_COMMENT_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -463,9 +537,6 @@ public SessionComment createObject(SessionComment perceroObject, String userId)
 		throw new SyncDataException(e);
 	} finally {
 		try {
-			if (stmt!=null) {
-				stmt.close();
-			}
 			if (pstmt != null) {
 				pstmt.close();
 			}

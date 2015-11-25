@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-EmployeeComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String employeeComment;
-
-public String getEmployeeComment() 
-{
-	return this.employeeComment;
-}
-
-public void setEmployeeComment(String employeeComment)
-{
-	this.employeeComment = employeeComment;
-}/*
 ManagerApprovalDate
 Notes:
 */
@@ -323,37 +306,20 @@ public void setProgram(String program)
 {
 	this.program = program;
 }/*
-SupervisorComment
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String supervisorComment;
-
-public String getSupervisorComment() 
-{
-	return this.supervisorComment;
-}
-
-public void setSupervisorComment(String supervisorComment)
-{
-	this.supervisorComment = supervisorComment;
-}/*
 SessionId
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer sessionId;
+private String sessionId;
 
-public Integer getSessionId() 
+public String getSessionId() 
 {
 	return this.sessionId;
 }
 
-public void setSessionId(Integer sessionId)
+public void setSessionId(String sessionId)
 {
 	this.sessionId = sessionId;
 }/*
@@ -442,23 +408,6 @@ public void setHRApprovalDate(Date hRApprovalDate)
 {
 	this.hRApprovalDate = hRApprovalDate;
 }/*
-Details
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String details;
-
-public String getDetails() 
-{
-	return this.details;
-}
-
-public void setDetails(String details)
-{
-	this.details = details;
-}/*
 FormId
 Notes:
 */
@@ -491,6 +440,19 @@ public List<CorrectiveActionAttachment> getCorrectiveActionAttachments() {
 
 public void setCorrectiveActionAttachments(List<CorrectiveActionAttachment> value) {
 	this.correctiveActionAttachments = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=SessionComment.class, mappedBy="correctiveAction", cascade=javax.persistence.CascadeType.REMOVE)
+private List<SessionComment> sessionComments;
+public List<SessionComment> getSessionComments() {
+	return this.sessionComments;
+}
+
+public void setSessionComments(List<SessionComment> value) {
+	this.sessionComments = value;
 }
 
 
@@ -600,27 +562,6 @@ public void setSupervisor(Supervisor value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Employee Comment property
-		objectJson += ",\"employeeComment\":";
-		
-		if (getEmployeeComment() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEmployeeComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Manager Approval Date property
 		objectJson += ",\"managerApprovalDate\":";
 		if (getManagerApprovalDate() == null)
@@ -838,27 +779,6 @@ public void setSupervisor(Supervisor value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Supervisor Comment property
-		objectJson += ",\"supervisorComment\":";
-		
-		if (getSupervisorComment() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSupervisorComment());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Session Id property
 		objectJson += ",\"sessionId\":";
 		
@@ -956,27 +876,6 @@ public void setSupervisor(Supervisor value) {
 			objectJson += "null";
 		else {
 			objectJson += getHRApprovalDate().getTime();
-		}
-		//Retrieve value of the Details property
-		objectJson += ",\"details\":";
-		
-		if (getDetails() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDetails());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
 		}
 		//Retrieve value of the Form Id property
 		objectJson += ",\"formId\":";
@@ -1106,6 +1005,23 @@ objectJson += ",\"correctiveActionAttachments\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the Corrective Action of Session Comment relationship
+objectJson += ",\"sessionComments\":[";
+		
+		if (getSessionComments() != null) {
+			int sessionCommentsCounter = 0;
+			for(SessionComment nextSessionComments : getSessionComments()) {
+				if (sessionCommentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextSessionComments).toEmbeddedJson();
+					sessionCommentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -1117,8 +1033,6 @@ objectJson += ",\"correctiveActionAttachments\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Employee Comment property
-		setEmployeeComment(JsonUtils.getJsonString(jsonObject, "employeeComment"));
 		//From value of the Manager Approval Date property
 		setManagerApprovalDate(JsonUtils.getJsonDate(jsonObject, "managerApprovalDate"));
 		//From value of the Discipline Type property
@@ -1145,10 +1059,8 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setSupervisorACKDate(JsonUtils.getJsonDate(jsonObject, "supervisorACKDate"));
 		//From value of the Program property
 		setProgram(JsonUtils.getJsonString(jsonObject, "program"));
-		//From value of the Supervisor Comment property
-		setSupervisorComment(JsonUtils.getJsonString(jsonObject, "supervisorComment"));
 		//From value of the Session Id property
-		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
+		setSessionId(JsonUtils.getJsonString(jsonObject, "sessionId"));
 		//From value of the Next Steps property
 		setNextSteps(JsonUtils.getJsonString(jsonObject, "nextSteps"));
 		//From value of the Metric Ref property
@@ -1159,8 +1071,6 @@ objectJson += ",\"correctiveActionAttachments\":[";
 		setExpireDate(JsonUtils.getJsonDate(jsonObject, "expireDate"));
 		//From value of the HR Approval Date property
 		setHRApprovalDate(JsonUtils.getJsonDate(jsonObject, "hRApprovalDate"));
-		//From value of the Details property
-		setDetails(JsonUtils.getJsonString(jsonObject, "details"));
 		//From value of the Form Id property
 		setFormId(JsonUtils.getJsonInteger(jsonObject, "formId"));
 
@@ -1177,6 +1087,7 @@ objectJson += ",\"correctiveActionAttachments\":[";
 
 		// Target Relationships
 		this.correctiveActionAttachments = (List<CorrectiveActionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActionAttachments");
+		this.sessionComments = (List<SessionComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "sessionComments");
 
 
 	}
@@ -1187,6 +1098,7 @@ objectJson += ",\"correctiveActionAttachments\":[";
 
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveActionAttachment.class, "correctiveaction"));
+		listSetters.add(MappedClass.getFieldSetters(SessionComment.class, "correctiveaction"));
 
 		
 		return listSetters;

@@ -296,6 +296,19 @@ public void setResponsibleCoach(String responsibleCoach)
 	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=SessionComment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
+private List<SessionComment> sessionComments;
+public List<SessionComment> getSessionComments() {
+	return this.sessionComments;
+}
+
+public void setSessionComments(List<SessionComment> value) {
+	this.sessionComments = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=AdhocCoachingSessionAttachment.class, mappedBy="adhocCoachingSession", cascade=javax.persistence.CascadeType.REMOVE)
 private List<AdhocCoachingSessionAttachment> adhocCoachingSessionAttachments;
 public List<AdhocCoachingSessionAttachment> getAdhocCoachingSessionAttachments() {
@@ -337,19 +350,6 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="SESSION_COMMENT_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_SessionCommentOfAdhocCoachingSession")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private SessionComment sessionComment;
-public SessionComment getSessionComment() {
-	return this.sessionComment;
-}
-
-public void setSessionComment(SessionComment value) {
-	this.sessionComment = value;
 }
 
 	
@@ -570,21 +570,26 @@ objectJson += ",\"agent\":";
 			}
 		}
 		objectJson += "";
-//Retrieve value of the Session Comment of Adhoc Coaching Session relationship
-objectJson += ",\"sessionComment\":";
-		if (getSessionComment() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getSessionComment()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
 
 		
 		// Target Relationships
+//Retrieve value of the Adhoc Coaching Session of Session Comment relationship
+objectJson += ",\"sessionComments\":[";
+		
+		if (getSessionComments() != null) {
+			int sessionCommentsCounter = 0;
+			for(SessionComment nextSessionComments : getSessionComments()) {
+				if (sessionCommentsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextSessionComments).toEmbeddedJson();
+					sessionCommentsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the Adhoc Coaching Session of Adhoc Coaching Session Attachment relationship
 objectJson += ",\"adhocCoachingSessionAttachments\":[";
 		
@@ -642,10 +647,10 @@ objectJson += ",\"adhocCoachingSessionAttachments\":[";
 		// Source Relationships
 		this.adhocCoachingCategory = (AdhocCoachingCategory) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingCategory");
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
-		this.sessionComment = (SessionComment) JsonUtils.getJsonPerceroObject(jsonObject, "sessionComment");
 
 
 		// Target Relationships
+		this.sessionComments = (List<SessionComment>) JsonUtils.getJsonListPerceroObject(jsonObject, "sessionComments");
 		this.adhocCoachingSessionAttachments = (List<AdhocCoachingSessionAttachment>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingSessionAttachments");
 
 
@@ -656,6 +661,7 @@ objectJson += ",\"adhocCoachingSessionAttachments\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
+		listSetters.add(MappedClass.getFieldSetters(SessionComment.class, "adhoccoachingsession"));
 		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSessionAttachment.class, "adhoccoachingsession"));
 
 		

@@ -84,7 +84,24 @@ public void setID(String value) {
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	
+	/*
+PlanName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String planName;
+
+public String getPlanName() 
+{
+	return this.planName;
+}
+
+public void setPlanName(String planName)
+{
+	this.planName = planName;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -131,6 +148,27 @@ public void setScorecardWeeklyResult(ScorecardWeeklyResult value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Plan Name property
+		objectJson += ",\"planName\":";
+		
+		if (getPlanName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPlanName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
@@ -172,6 +210,8 @@ objectJson += ",\"scorecardWeeklyResult\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Plan Name property
+		setPlanName(JsonUtils.getJsonString(jsonObject, "planName"));
 
 		
 		// Source Relationships

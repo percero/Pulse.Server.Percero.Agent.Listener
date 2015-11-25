@@ -46,7 +46,7 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"ADHOC_COACHING_SESSION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"ADHOC_COACHING_SESSION\".\"CREATED_BY\",\"ADHOC_COACHING_SESSION\".\"RESPONSIBLE_COACH\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"UPDATED_BY\",\"ADHOC_COACHING_SESSION\".\"IS_REQUIRED\",\"ADHOC_COACHING_SESSION\".\"CLOSED_ON\",\"ADHOC_COACHING_SESSION\".\"CREATED_ON\",\"ADHOC_COACHING_SESSION\".\"UPDATED_ON\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"EMPLOYEE_ID\",\"ADHOC_COACHING_SESSION\".\"SCORECARD_ID\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\",\"ADHOC_COACHING_SESSION\".\"SESSION_COMMENT_ID\"";
+	public static final String SQL_VIEW = ",\"ADHOC_COACHING_SESSION\".\"CREATED_BY\",\"ADHOC_COACHING_SESSION\".\"RESPONSIBLE_COACH\",\"ADHOC_COACHING_SESSION\".\"SESSION_TYPE\",\"ADHOC_COACHING_SESSION\".\"STATUS\",\"ADHOC_COACHING_SESSION\".\"UPDATED_BY\",\"ADHOC_COACHING_SESSION\".\"IS_REQUIRED\",\"ADHOC_COACHING_SESSION\".\"CLOSED_ON\",\"ADHOC_COACHING_SESSION\".\"CREATED_ON\",\"ADHOC_COACHING_SESSION\".\"UPDATED_ON\",\"ADHOC_COACHING_SESSION\".\"WEEK_DATE\",\"ADHOC_COACHING_SESSION\".\"EMPLOYEE_ID\",\"ADHOC_COACHING_SESSION\".\"SCORECARD_ID\",\"ADHOC_COACHING_SESSION\".\"ADHOC_COACHING_CATEGORY_ID\",\"ADHOC_COACHING_SESSION\".\"AGENT_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_SESSION\" \"ADHOC_COACHING_SESSION\"";
 	private String whereClause = "  WHERE \"ADHOC_COACHING_SESSION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_SESSION\".\"ID\"= SQLLIST.column_value";
@@ -139,15 +139,15 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-
+	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO TBL_ADHOC_COACHING_SESSION (\"ID\",\"CREATED_BY\",\"RESPONSIBLE_COACH\",\"SESSION_TYPE\",\"STATUS\",\"UPDATED_BY\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"SESSION_COMMENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -225,22 +225,16 @@ nextResult.setAgent(agent);
 }
 
 
-String sessioncommentID = rs.getString("SESSION_COMMENT_ID");
-if (StringUtils.hasText(sessioncommentID) && !"null".equalsIgnoreCase(sessioncommentID) ){
-SessionComment sessioncomment = new SessionComment();
-sessioncomment.setID(sessioncommentID);
-nextResult.setSessionComment(sessioncomment);
-}
 
 
 
-			
+
     	}
 		
 		
     	return nextResult;
 	}
-
+	
 	protected void setBaseStatmentInsertParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
 		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
 		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
@@ -324,14 +318,7 @@ else
 }
 
 
-if (perceroObject.getSessionComment() == null)
-{
-pstmt.setString(15, null);
-}
-else
-{
-		pstmt.setString(15, perceroObject.getSessionComment().getID());
-}
+
 
 pstmt.setString(16, perceroObject.getID());
 
@@ -593,23 +580,6 @@ paramValues.add(theQueryObject.getAgent().getID());
 propertyCounter++;
 }
 
-boolean useSessionCommentID = theQueryObject.getSessionComment() != null && (excludeProperties == null || !excludeProperties.contains("sessionComment"));
-
-if (useSessionCommentID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"SESSION_COMMENT_ID\" =? ";
-paramValues.add(theQueryObject.getSessionComment().getID());
-propertyCounter++;
-}
-
 
 
 		if (propertyCounter == 0) {
@@ -621,17 +591,17 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_ADHOC_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_ADHOC_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_ADHOC_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_ADHOC_COACHING_SESSION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_ADHOC_COACHING_SESSION(?)}";
 	}
-
+	
 	
 
 public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, String userId)

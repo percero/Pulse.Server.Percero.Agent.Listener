@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-SessionId
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private Integer sessionId;
-
-public Integer getSessionId() 
-{
-	return this.sessionId;
-}
-
-public void setSessionId(Integer sessionId)
-{
-	this.sessionId = sessionId;
-}/*
 UpdatedOn
 Notes:
 */
@@ -230,7 +213,46 @@ public void setUpdatedBy(String updatedBy)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="ADHOC_COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_AdhocCoachingSessionOfSessionComment")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private AdhocCoachingSession adhocCoachingSession;
+public AdhocCoachingSession getAdhocCoachingSession() {
+	return this.adhocCoachingSession;
+}
+
+public void setAdhocCoachingSession(AdhocCoachingSession value) {
+	this.adhocCoachingSession = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="COACHING_SESSION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CoachingSessionOfSessionComment")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private CoachingSession coachingSession;
+public CoachingSession getCoachingSession() {
+	return this.coachingSession;
+}
+
+public void setCoachingSession(CoachingSession value) {
+	this.coachingSession = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="CORRECTIVE_ACTION_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_CorrectiveActionOfSessionComment")
+@ManyToOne(fetch=FetchType.LAZY, optional=false)
+private CorrectiveAction correctiveAction;
+public CorrectiveAction getCorrectiveAction() {
+	return this.correctiveAction;
+}
+
+public void setCorrectiveAction(CorrectiveAction value) {
+	this.correctiveAction = value;
+}
 
 	
 	//////////////////////////////////////////////////////
@@ -241,27 +263,6 @@ public void setUpdatedBy(String updatedBy)
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Session Id property
-		objectJson += ",\"sessionId\":";
-		
-		if (getSessionId() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getSessionId());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Updated On property
 		objectJson += ",\"updatedOn\":";
 		if (getUpdatedOn() == null)
@@ -384,6 +385,42 @@ public void setUpdatedBy(String updatedBy)
 
 				
 		// Source Relationships
+//Retrieve value of the Adhoc Coaching Session of Session Comment relationship
+objectJson += ",\"adhocCoachingSession\":";
+		if (getAdhocCoachingSession() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAdhocCoachingSession()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Coaching Session of Session Comment relationship
+objectJson += ",\"coachingSession\":";
+		if (getCoachingSession() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getCoachingSession()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Corrective Action of Session Comment relationship
+objectJson += ",\"correctiveAction\":";
+		if (getCorrectiveAction() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getCorrectiveAction()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 
 		
 		// Target Relationships
@@ -398,8 +435,6 @@ public void setUpdatedBy(String updatedBy)
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Session Id property
-		setSessionId(JsonUtils.getJsonInteger(jsonObject, "sessionId"));
 		//From value of the Updated On property
 		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
 		//From value of the Description property
@@ -417,6 +452,9 @@ public void setUpdatedBy(String updatedBy)
 
 		
 		// Source Relationships
+		this.adhocCoachingSession = (AdhocCoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "adhocCoachingSession");
+		this.coachingSession = (CoachingSession) JsonUtils.getJsonPerceroObject(jsonObject, "coachingSession");
+		this.correctiveAction = (CorrectiveAction) JsonUtils.getJsonPerceroObject(jsonObject, "correctiveAction");
 
 
 		// Target Relationships
