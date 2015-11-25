@@ -138,7 +138,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFCMGRSTG.EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=?, \"DISCIPLINE_TYPE\"=? WHERE \"PC_ID\"=?";
+		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? WHERE \"PC_ID\"=?";
 	}
 	
 	@Override
@@ -451,16 +451,7 @@ else
 			pstmt.setString(14, perceroObject.getCorrectiveActionState().getID());
 		}
 
-		if (perceroObject.getCorrectiveActionType() == null)
-		{
-			pstmt.setString(15, null);
-		}
-		else
-		{
-			pstmt.setString(15, perceroObject.getCorrectiveActionType().getID());
-		}
-
-		pstmt.setString(16, perceroObject.getID());
+		pstmt.setString(15, perceroObject.getID());
 
 
 	}
@@ -976,7 +967,7 @@ public CorrectiveAction createObject(CorrectiveAction perceroObject, String user
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select EFCMGRSTG.EFC_PC_EMP_FORM_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_PC_EMP_FORM_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
