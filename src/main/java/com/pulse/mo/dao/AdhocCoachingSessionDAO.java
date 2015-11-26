@@ -139,15 +139,15 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_COACHING_SESSION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_COACHING_SESSION (\"ID\",\"CREATED_BY\",\"RESPONSIBLE_COACH\",\"SESSION_TYPE\",\"STATUS\",\"UPDATED_BY\",\"IS_REQUIRED\",\"CLOSED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"WEEK_DATE\",\"EMPLOYEE_ID\",\"SCORECARD_ID\",\"ADHOC_COACHING_CATEGORY_ID\",\"AGENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
-	
+
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"SESSION_COMMENT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -236,6 +236,7 @@ nextResult.setAgent(agent);
 	}
 	
 	protected void setBaseStatmentInsertParams(AdhocCoachingSession perceroObject, PreparedStatement pstmt) throws SQLException {
+		
 		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
 		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
