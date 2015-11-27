@@ -148,12 +148,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         //In condition fails, generate notification
                         //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
 
+//                        cmsEntry.getCMSAuxMode()
 
+                     
                         Double DURATION_MIN = new Double(5.0 * 60.0);    // TODO: Should be set to 5 minutes.
                         Double DURATION_MAX = new Double(15.0 * 60.0);    // TODO: Should be set to 15 minutes.
                         Double duration = cmsEntry.getDuration();
                         // If the duration is > DURATION_MAX, then create the notification.
-                        if (duration.compareTo(DURATION_MAX) > 0) {
+                        if (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0) {
                             if (agent == null) {
                                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
                             }
@@ -162,17 +164,17 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             }
 
                             if (agent != null && teamLeader != null) {
-                                WorkModeOccurrenceNotification workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
-                                workModeOccurrenceNotification.setID(UUID.randomUUID().toString());
-                                workModeOccurrenceNotification.setAgent(agent);
-                                workModeOccurrenceNotification.setCreatedOn(new Date());
-                                workModeOccurrenceNotification.setTeamLeader(teamLeader);
-                                workModeOccurrenceNotification.setName(WorkModeOccurrenceNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                                workModeOccurrenceNotification.setType(WorkModeOccurrenceNotification.class.getName());
+                                WorkDurationNotification workDurationNotification = new WorkDurationNotification();
+                                workDurationNotification.setID(UUID.randomUUID().toString());
+                                workDurationNotification.setAgent(agent);
+                                workDurationNotification.setCreatedOn(new Date());
+                                workDurationNotification.setTeamLeader(teamLeader);
+                                workDurationNotification.setName(WorkDurationNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
+                                workDurationNotification.setType(WorkDurationNotification.class.getName());
 //								workModeOccurrenceNotification.setMessage();
 //								workModeOccurrenceNotification.setLOBConfiguration();
 //								workModeOccurrenceNotification.setLOBConfigurationEntry();
-                                syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
+                                syncAgentService.systemCreateObject(workDurationNotification, null);
                             }
                         }
 
@@ -246,10 +248,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
                         //In condition fails, generate notification
 
-                        String validActivityCodeArray[] = new String[]{"30-001", "31-003", "35-003"};
+                        String validActivityCodeArray[] =
+                                new String[]{"01-001", "11-001", "17-003", "26-001", "30-001", "35-004", "35-003", "31-003", "42-001",
+                                        "01-001", "11-001", "16-001", "16-002", "16-005", "26-001", "30-001", "31-003", "35-003", "42-001", "86-004", "86-006", "99-001"};
+
+
                         List<String> validActivityCodeList = Arrays.asList(validActivityCodeArray);
 
-                        if (validActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+                        if (!validActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
 
                             if (agent == null) {
                                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
@@ -279,8 +285,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
                         //In condition fails, generate notification
 
-                        String nonBillableActivityCodeArray[] = new String[]{"01-001", "11-001", "17-003", "26-001", "30-001", "35-004", "35-003", "31-003", "42-001",
-                                "01-001", "11-001", "16-001", "16-002", "16-005", "26-001", "30-001", "31-003", "35-003", "42-001", "86-004", "86-006", "99-001"};
+                        String nonBillableActivityCodeArray[] = new String[]{"30-001", "31-003", "35-003"};
 
                         List<String> nonBillableActivityCodeList = Arrays.asList(nonBillableActivityCodeArray);
 
