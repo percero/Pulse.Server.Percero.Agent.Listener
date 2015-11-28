@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -137,7 +138,8 @@ public void setLOBConfigurations(List<LOBConfiguration> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_ID")
@@ -150,7 +152,8 @@ public Client getClient() {
 
 public void setClient(Client value) {
 	this.client = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_SITE_ID")
@@ -163,7 +166,8 @@ public ClientSite getClientSite() {
 
 public void setClientSite(ClientSite value) {
 	this.clientSite = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_CONFIGURATION_ID")
@@ -306,7 +310,7 @@ objectJson += ",\"lOBConfigurations\":[";
 
 
 		// Target Relationships
-		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+//		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
 		this.lOBConfigurations = (List<LOBConfiguration>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurations");
 
 
@@ -317,11 +321,11 @@ objectJson += ",\"lOBConfigurations\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
+//		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
 		listSetters.add(MappedClass.getFieldSetters(LOBConfiguration.class, "lob"));
 
 		
 		return listSetters;
 	}
 }
-
+

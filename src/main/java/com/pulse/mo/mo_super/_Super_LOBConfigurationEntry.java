@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -50,367 +51,389 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_LOBConfigurationEntry extends BaseDataObject implements Serializable
-{
-	//////////////////////////////////////////////////////
-	// VERSION
-	//////////////////////////////////////////////////////
-	@Override
-	public String classVersion() {
-		return "1.0.0";
-	}
+public class _Super_LOBConfigurationEntry extends BaseDataObject implements Serializable {
+    //////////////////////////////////////////////////////
+    // VERSION
+    //////////////////////////////////////////////////////
+    @Override
+    public String classVersion() {
+        return "1.0.0";
+    }
 
-	
-	/*
-	Keys of LOBConfigurationEntry
-	*/
-	//////////////////////////////////////////////////////
+
+    /*
+    Keys of LOBConfigurationEntry
+    */
+    //////////////////////////////////////////////////////
 // ID
 //////////////////////////////////////////////////////
-@Id
-@com.percero.agents.sync.metadata.annotations.Externalize
-@Column(unique=true,name="ID")
-private String ID;
-@JsonProperty(value="ID")
-public String getID() {
-	return this.ID;
-}
+    @Id
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @Column(unique = true, name = "ID")
+    private String ID;
 
-@JsonProperty(value="ID")
-public void setID(String value) {
-	this.ID = value;
-}
-	
-	//////////////////////////////////////////////////////
-	// Properties
-	//////////////////////////////////////////////////////
-	/*
-DurationToleranceInterval
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonProperty(value = "ID")
+    public String getID() {
+        return this.ID;
+    }
 
-private Integer durationToleranceInterval;
+    @JsonProperty(value = "ID")
+    public void setID(String value) {
+        this.ID = value;
+    }
 
-public Integer getDurationToleranceInterval() 
-{
-	return this.durationToleranceInterval;
-}
+    //////////////////////////////////////////////////////
+    // Properties
+    //////////////////////////////////////////////////////
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private String cMSAuxCode;
 
-public void setDurationToleranceInterval(Integer durationToleranceInterval)
-{
-	this.durationToleranceInterval = durationToleranceInterval;
-}/*
-ReminderInterval
-Notes:The number of minutes before notification are resent after being dismissed
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    public String getCMSAuxCode() {
+        return cMSAuxCode;
+    }
 
-private Integer reminderInterval;
+    public void setCMSAuxCode(String cMSAuxCode) {
+        this.cMSAuxCode = cMSAuxCode;
+    }
 
-public Integer getReminderInterval() 
-{
-	return this.reminderInterval;
-}
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private String eStartActivityCode;
 
-public void setReminderInterval(Integer reminderInterval)
-{
-	this.reminderInterval = reminderInterval;
-}/*
-DurationToleranceEnabled
-Notes:When there is no tolerance "None" this will be false
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    public String getEStartActivityCode() {
+        return eStartActivityCode;
+    }
 
-private Boolean durationToleranceEnabled;
+    public void setEStartActivityCode(String eStartActivityCode) {
+        this.eStartActivityCode = eStartActivityCode;
+    }
 
-public Boolean getDurationToleranceEnabled() 
-{
-	return this.durationToleranceEnabled;
-}
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private String type;
 
-public void setDurationToleranceEnabled(Boolean durationToleranceEnabled)
-{
-	this.durationToleranceEnabled = durationToleranceEnabled;
-}/*
-OccurrenceToleranceInterval
-Notes:The number of times a event can happen before a notification is sent
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    public String getType() {
+        return type;
+    }
 
-private Integer occurrenceToleranceInterval;
+    public void setType(String type) {
+        this.type = type;
+    }
 
-public Integer getOccurrenceToleranceInterval() 
-{
-	return this.occurrenceToleranceInterval;
-}
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private Integer min;
 
-public void setOccurrenceToleranceInterval(Integer occurrenceToleranceInterval)
-{
-	this.occurrenceToleranceInterval = occurrenceToleranceInterval;
-}/*
-DurationTolerance
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    public Integer getMin() {
+        return min;
+    }
 
-private Integer durationTolerance;
+    public void setMin(Integer min) {
+        this.min = min;
+    }
 
-public Integer getDurationTolerance() 
-{
-	return this.durationTolerance;
-}
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private Integer max;
 
-public void setDurationTolerance(Integer durationTolerance)
-{
-	this.durationTolerance = durationTolerance;
-}
+    public Integer getMax() {
+        return max;
+    }
 
-	//////////////////////////////////////////////////////
-	// Target Relationships
-	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdExceededNotification.class, mappedBy="lOBConfigurationEntry", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ThresholdExceededNotification> thresholdExceededNotifications;
-public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
-	return this.thresholdExceededNotifications;
-}
+    public void setMax(Integer max) {
+        this.max = max;
+    }
 
-public void setThresholdExceededNotifications(List<ThresholdExceededNotification> value) {
-	this.thresholdExceededNotifications = value;
-}
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    private Integer occurrence;
+
+    public Integer getOccurrence() {
+        return occurrence;
+    }
+
+    public void setOccurrence(Integer occurrence) {
+        this.occurrence = occurrence;
+    }
+
+    //////////////////////////////////////////////////////
+    // Target Relationships
+    //////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(contentUsing = BDOSerializer.class)
+    @JsonDeserialize(contentUsing = BDODeserializer.class)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ThresholdExceededNotification.class, mappedBy = "lOBConfigurationEntry", cascade = javax.persistence.CascadeType.REMOVE)
+    private List<ThresholdExceededNotification> thresholdExceededNotifications;
+
+    public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
+        return this.thresholdExceededNotifications;
+    }
+
+    public void setThresholdExceededNotifications(List<ThresholdExceededNotification> value) {
+        this.thresholdExceededNotifications = value;
+    }
 
 
+    //////////////////////////////////////////////////////
+    // Source Relationships
+    //////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOB_CONFIGURATION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private LOBConfiguration lOBConfiguration;
-public LOBConfiguration getLOBConfiguration() {
-	return this.lOBConfiguration;
-}
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(using = BDOSerializer.class)
+    @JsonDeserialize(using = BDODeserializer.class)
+    @JoinColumn(name = "LOB_CONFIGURATION_ID")
+    @org.hibernate.annotations.ForeignKey(name = "FK_LOBConfigurationOfLOBConfigurationEntry")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private LOBConfiguration lOBConfiguration;
 
-public void setLOBConfiguration(LOBConfiguration value) {
-	this.lOBConfiguration = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="NOTIFICATION_FREQUENCY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_NotificationFrequencyOfLOBConfigurationEntry")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private NotificationFrequency notificationFrequency;
-public NotificationFrequency getNotificationFrequency() {
-	return this.notificationFrequency;
-}
+    public LOBConfiguration getLOBConfiguration() {
+        return this.lOBConfiguration;
+    }
 
-public void setNotificationFrequency(NotificationFrequency value) 
-{
-	this.notificationFrequency = value;
-}
+    public void setLOBConfiguration(LOBConfiguration value) {
+        this.lOBConfiguration = value;
+    }
 
-	
-	//////////////////////////////////////////////////////
-	// JSON
-	//////////////////////////////////////////////////////
-	@Override
-	public String retrieveJson(ObjectMapper objectMapper) {
-		String objectJson = super.retrieveJson(objectMapper);
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(using = BDOSerializer.class)
+    @JsonDeserialize(using = BDODeserializer.class)
+    @JoinColumn(name = "NOTIFICATION_FREQUENCY_ID")
+    @org.hibernate.annotations.ForeignKey(name = "FK_NotificationFrequencyOfLOBConfigurationEntry")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private NotificationFrequency notificationFrequency;
 
-		// Properties		
-		//Retrieve value of the Duration Tolerance Interval property
-		objectJson += ",\"durationToleranceInterval\":";
-		
-		if (getDurationToleranceInterval() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDurationToleranceInterval());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Reminder Interval property
-		objectJson += ",\"reminderInterval\":";
-		
-		if (getReminderInterval() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getReminderInterval());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Duration Tolerance Enabled property
-		objectJson += ",\"durationToleranceEnabled\":";
-		if (getDurationToleranceEnabled() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDurationToleranceEnabled();
-		}
-		//Retrieve value of the Occurrence Tolerance Interval property
-		objectJson += ",\"occurrenceToleranceInterval\":";
-		
-		if (getOccurrenceToleranceInterval() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getOccurrenceToleranceInterval());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Duration Tolerance property
-		objectJson += ",\"durationTolerance\":";
-		
-		if (getDurationTolerance() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getDurationTolerance());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+    public NotificationFrequency getNotificationFrequency() {
+        return this.notificationFrequency;
+    }
 
-				
-		// Source Relationships
+    public void setNotificationFrequency(NotificationFrequency value) {
+        this.notificationFrequency = value;
+    }
+
+
+    //////////////////////////////////////////////////////
+    // JSON
+    //////////////////////////////////////////////////////
+    @Override
+    public String retrieveJson(ObjectMapper objectMapper) {
+        String objectJson = super.retrieveJson(objectMapper);
+
+        // Properties
+        objectJson += ",\"cMSAuxCode\":";
+        
+        if (getCMSAuxCode() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null) {
+                objectMapper = new ObjectMapper();
+            }
+            try {
+                objectJson += objectMapper.writeValueAsString(getCMSAuxCode());
+                } catch (JsonGenerationException e) {
+                objectJson += "null";e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {objectJson += "null";
+                e.printStackTrace();
+            }
+
+        }
+
+
+        objectJson += ",\"eStartActivityCode\":";
+        if (getEStartActivityCode() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null){
+                objectMapper = new ObjectMapper();
+            }
+            try {
+                objectJson += objectMapper.writeValueAsString(getEStartActivityCode());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+            }
+
+        objectJson += ",\"type\":";
+
+        if (getType() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null){
+                objectMapper = new ObjectMapper();
+            }
+            try {
+                objectJson += objectMapper.writeValueAsString(getType());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+
+        objectJson += ",\"min\":";
+        if (getMin() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null)
+            objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getMin());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+            }
+
+        objectJson += ",\"max\":";
+        if (getMin() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null){
+                objectMapper = new ObjectMapper();
+            }
+            try {
+                objectJson += objectMapper.writeValueAsString(getMax());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+            }
+
+
+        objectJson += ",\"occurrence\":";
+        if (getOccurrence() == null) {
+            objectJson += "null";
+        } else {
+            if (objectMapper == null)
+            objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getOccurrence());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+            }
+
+
+        // Source Relationships
 //Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
-objectJson += ",\"lOBConfiguration\":";
-		if (getLOBConfiguration() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+        objectJson += ",\"lOBConfiguration\":";
+        if (getLOBConfiguration() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
+            } catch (Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
 //Retrieve value of the Notification Frequency of LOB Configuration Entry relationship
-objectJson += ",\"notificationFrequency\":";
-		if (getNotificationFrequency() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getNotificationFrequency()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+        objectJson += ",\"notificationFrequency\":";
+        if (getNotificationFrequency() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getNotificationFrequency()).toEmbeddedJson();
+            } catch (Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
 
-		
-		// Target Relationships
+
+        // Target Relationships
 //Retrieve value of the LOB Configuration Entry of Threshold Exceeded Notification relationship
-objectJson += ",\"thresholdExceededNotifications\":[";
-		
-		if (getThresholdExceededNotifications() != null) {
-			int thresholdExceededNotificationsCounter = 0;
-			for(ThresholdExceededNotification nextThresholdExceededNotifications : getThresholdExceededNotifications()) {
-				if (thresholdExceededNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextThresholdExceededNotifications).toEmbeddedJson();
-					thresholdExceededNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
+        objectJson += ",\"thresholdExceededNotifications\":[";
 
-		
-		return objectJson;
-	}
+        if (getThresholdExceededNotifications() != null) {
+            int thresholdExceededNotificationsCounter = 0;
+            for (ThresholdExceededNotification nextThresholdExceededNotifications : getThresholdExceededNotifications()) {
+                if (thresholdExceededNotificationsCounter > 0)
+                    objectJson += ",";
+                try {
+                    objectJson += ((BaseDataObject) nextThresholdExceededNotifications).toEmbeddedJson();
+                    thresholdExceededNotificationsCounter++;
+                } catch (Exception e) {
+                    // Do nothing.
+                }
+            }
+        }
+        objectJson += "]";
 
 
-	@Override
-	protected void fromJson(JsonObject jsonObject) {
-	    super.fromJson(jsonObject);
-
-		// Properties
-		//From value of the Duration Tolerance Interval property
-		setDurationToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "durationToleranceInterval"));
-		//From value of the Reminder Interval property
-		setReminderInterval(JsonUtils.getJsonInteger(jsonObject, "reminderInterval"));
-		//From value of the Duration Tolerance Enabled property
-		setDurationToleranceEnabled(JsonUtils.getJsonBoolean(jsonObject, "durationToleranceEnabled"));
-		//From value of the Occurrence Tolerance Interval property
-		setOccurrenceToleranceInterval(JsonUtils.getJsonInteger(jsonObject, "occurrenceToleranceInterval"));
-		//From value of the Duration Tolerance property
-		setDurationTolerance(JsonUtils.getJsonInteger(jsonObject, "durationTolerance"));
-
-		
-		// Source Relationships
-		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
-		this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
+        return objectJson;
+    }
 
 
-		// Target Relationships
-		this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
+    @Override
+    protected void fromJson(JsonObject jsonObject) {
+        super.fromJson(jsonObject);
+
+        // Properties
+        //From value of the Duration Tolerance Interval property
+
+        //From value of the Reminder Interval property
+
+        setCMSAuxCode(JsonUtils.getJsonString(jsonObject, "cMSAuxCode"));
+        setEStartActivityCode(JsonUtils.getJsonString(jsonObject, "eStartActivityCode"));
+        setType(JsonUtils.getJsonString(jsonObject, "type"));
+        setMin(JsonUtils.getJsonInteger(jsonObject, "min"));
+        setMax(JsonUtils.getJsonInteger(jsonObject, "max"));
+        setOccurrence(JsonUtils.getJsonInteger(jsonObject, "occurrence"));
+
+        // Source Relationships
+        this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
+        this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
 
 
-	}
-	
-	@Override
-	protected List<MappedClassMethodPair> getListSetters() {
-		List<MappedClassMethodPair> listSetters = super.getListSetters();
+        // Target Relationships
+        this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
 
-		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ThresholdExceededNotification.class, "lobconfigurationentry"));
 
-		
-		return listSetters;
-	}
+    }
+
+    @Override
+    protected List<MappedClassMethodPair> getListSetters() {
+        List<MappedClassMethodPair> listSetters = super.getListSetters();
+
+        // Target Relationships
+        listSetters.add(MappedClass.getFieldSetters(ThresholdExceededNotification.class, "lobconfigurationentry"));
+
+
+        return listSetters;
+    }
 }
-
+
