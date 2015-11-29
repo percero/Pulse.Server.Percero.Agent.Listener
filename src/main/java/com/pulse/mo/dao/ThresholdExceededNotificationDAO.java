@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class ThresholdExceededNotificationDAO extends SqlDataAccessProcObject<Th
 	protected ThresholdExceededNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-ThresholdExceededNotification nextResult = null;
+
+ThresholdExceededNotification nextResult = null;
     	
 		String type = rs.getString("TYPE");
 		
@@ -227,54 +229,20 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 	}
 	
 	protected void setBaseStatmentInsertParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(4, perceroObject.getMessage());
-pstmt.setString(5, perceroObject.getName());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getLOBConfigurationEntry() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
-}
-
-
-		
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 	}
 	
 	@Override
@@ -295,54 +263,20 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(ThresholdExceededNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getLOBConfigurationEntry() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
-}
-
-pstmt.setString(9, perceroObject.getID());
-
-		
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 	}
 	
 	
@@ -509,19 +443,19 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_THRSH_EXCEEDED_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_THRSH_EXCEEDED_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_THRSH_EXCEEDED_NOTIF(?)}";
+		return "{call Delete_THRSH_EXCEEDED_NOTI(?)}";
 	}
 	
 	
 	
 	
 }
-
+
