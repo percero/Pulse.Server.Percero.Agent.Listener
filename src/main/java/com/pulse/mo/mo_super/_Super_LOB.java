@@ -107,17 +107,30 @@ public void setName(String name)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+//	@com.percero.agents.sync.metadata.annotations.Externalize
+//@JsonSerialize(contentUsing=BDOSerializer.class)
+//@JsonDeserialize(contentUsing=BDODeserializer.class)
+//@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
+//private List<CMSEntryLOB> cMSEntryLOBs;
+//public List<CMSEntryLOB> getCMSEntryLOBs() {
+//	return this.cMSEntryLOBs;
+//}
+//
+//public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
+//	this.cMSEntryLOBs = value;
+//}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CMSEntryLOB> cMSEntryLOBs;
-public List<CMSEntryLOB> getCMSEntryLOBs() {
-	return this.cMSEntryLOBs;
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentLOB.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AgentLOB> agentLOBs;
+public List<AgentLOB> getAgentLOBs() {
+	return this.agentLOBs;
 }
 
-public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
-	this.cMSEntryLOBs = value;
+public void setAgentLOBs(List<AgentLOB> value) {
+	this.agentLOBs = value;
 }
 
 @com.percero.agents.sync.metadata.annotations.Externalize
@@ -255,16 +268,33 @@ objectJson += ",\"pulseConfiguration\":";
 		
 		// Target Relationships
 //Retrieve value of the LOB of CMS Entry LOB relationship
-objectJson += ",\"cMSEntryLOBs\":[";
+//objectJson += ",\"cMSEntryLOBs\":[";
+//
+//		if (getCMSEntryLOBs() != null) {
+//			int cMSEntryLOBsCounter = 0;
+//			for(CMSEntryLOB nextCMSEntryLOBs : getCMSEntryLOBs()) {
+//				if (cMSEntryLOBsCounter > 0)
+//					objectJson += ",";
+//				try {
+//					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
+//					cMSEntryLOBsCounter++;
+//				} catch(Exception e) {
+//					// Do nothing.
+//				}
+//			}
+//		}
+//		objectJson += "]";
+//Retrieve value of the LOB of Agent LOB relationship
+objectJson += ",\"agentLOBs\":[";
 		
-		if (getCMSEntryLOBs() != null) {
-			int cMSEntryLOBsCounter = 0;
-			for(CMSEntryLOB nextCMSEntryLOBs : getCMSEntryLOBs()) {
-				if (cMSEntryLOBsCounter > 0)
+		if (getAgentLOBs() != null) {
+			int agentLOBsCounter = 0;
+			for(AgentLOB nextAgentLOBs : getAgentLOBs()) {
+				if (agentLOBsCounter > 0)
 					objectJson += ",";
 				try {
-					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
-					cMSEntryLOBsCounter++;
+					objectJson += ((BaseDataObject) nextAgentLOBs).toEmbeddedJson();
+					agentLOBsCounter++;
 				} catch(Exception e) {
 					// Do nothing.
 				}
@@ -311,6 +341,7 @@ objectJson += ",\"lOBConfigurations\":[";
 
 		// Target Relationships
 //		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+		this.agentLOBs = (List<AgentLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentLOBs");
 		this.lOBConfigurations = (List<LOBConfiguration>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurations");
 
 
@@ -322,6 +353,7 @@ objectJson += ",\"lOBConfigurations\":[";
 
 		// Target Relationships
 //		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
+		listSetters.add(MappedClass.getFieldSetters(AgentLOB.class, "lob"));
 		listSetters.add(MappedClass.getFieldSetters(LOBConfiguration.class, "lob"));
 
 		

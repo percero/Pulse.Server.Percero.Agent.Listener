@@ -47,9 +47,6 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"LOB\".\"ID\"";
 
-
-
-
 	@Override
 	protected String getConnectionFactoryName() {
 		return LOBDAO.CONNECTION_FACTORY_NAME;
@@ -96,22 +93,22 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	}
 
 	@Override
-	protected String getSelectInShellOnlySQL()
+	protected String getSelectInShellOnlySQL() 
 	{
 		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName +  whereInClause;
 	}
 
 	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName)
+	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-
+		
 		return SQL_VIEW + "  \"LOB\"." + joinColumnName + "=?";
 	}
 
 	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName)
+	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-
+		
 
 		return "SELECT \"LOB\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"LOB\"." + joinColumnName + "=?";
 	}
@@ -137,7 +134,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	}
 
 	@Override
-	protected String getDeleteFromSQL()
+	protected String getDeleteFromSQL() 
 	{
 		return "";//"DELETE FROM LOB WHERE ID=?";
 	}
@@ -145,11 +142,11 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	@Override
 	protected LOB extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
-
+		
 
 LOB nextResult = null;
-
-
+    	
+		    	
     	if (nextResult == null) {
     		nextResult = new LOB();
     	}
@@ -158,7 +155,7 @@ LOB nextResult = null;
 		// ID
 		nextResult.setID(rs.getString("ID"));
 
-		if (!shellOnly)
+		if (!shellOnly) 
 		{
 			nextResult.setName(rs.getString("NAME"));
 
@@ -210,7 +207,7 @@ nextResult.setPulseConfiguration(pulseconfiguration);
 
 	@Override
 	public List<LOB> findByExample(LOB theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
 	{
 
 
@@ -284,10 +281,10 @@ propertyCounter++;
 
 
 
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
 	}
 
-
+	
 
 public LOB createObject(LOB perceroObject, String userId)
 		throws SyncException {

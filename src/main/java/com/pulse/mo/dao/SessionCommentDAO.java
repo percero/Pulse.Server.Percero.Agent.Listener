@@ -510,7 +510,7 @@ public SessionComment createObject(SessionComment perceroObject, String userId)
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select SESSION_COMMENT_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_SESSION_COMMENT_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;

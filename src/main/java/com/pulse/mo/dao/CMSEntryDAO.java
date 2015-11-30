@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.dao;
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,10 +40,10 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"AUXNAME\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
+	public static final String SQL_VIEW = "SELECT  \"CMS_ENTRY\".\"ID\" as \"ID\", \"CMS_ENTRY\".\"START_TIME\" as \"FROM_TIME\", '' as \"ESTART_PROJECT_NAME\", \"CMS_ENTRY\".\"EVENT_DURATION\" as \"DURATION\", \"CMS_ENTRY\".\"AUXREASON\" as \"CMS_AUX_MODE\", \"CMS_ENTRY\".\"END_TIME\" as \"TO_TIME\", \"CMS_ENTRY\".\"EMPLOYEE_ID\" as \"AGENT_ID\" FROM \"MOB_CMS_DATA_VW\" \"CMS_ENTRY\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_CMS_DATA_VW\" \"CMS_ENTRY\"";
-	private String whereClause = " WHERE \"CMS_ENTRY\".\"ID\"=? AND \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) ";
-	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CMS_ENTRY\".\"ID\"= SQLLIST.column_value WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) ";
+	private String whereClause = " WHERE \"CMS_ENTRY\".\"ID\"=?";
+	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CMS_ENTRY\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = " ORDER BY \"CMS_ENTRY\".\"ID\"";
 
 	
@@ -67,27 +66,27 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 
 	@Override
 	protected String getSelectAllShellOnlySQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) " + orderByTableName;
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName +  orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName  + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) " + orderByTableName  + " LIMIT ? OFFSET ?";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getSelectAllStarSQL() {
-		return SQL_VIEW  + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) " + orderByTableName;
+		return SQL_VIEW  +  orderByTableName;
 	}
 
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return SQL_VIEW + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) " + orderByTableName +" LIMIT ? OFFSET ?";
+		return SQL_VIEW +  orderByTableName +" LIMIT ? OFFSET ?";
 	}
 
 	@Override
 	protected String getCountAllSQL() {
-		return "SELECT COUNT(ID) " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\".\"START_TIME\">(sysdate-14) ";
+		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
 
 	@Override
@@ -104,15 +103,16 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		return SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? and \"CMS_ENTRY\".\"START_TIME\" >= sysdate-15 ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC";
-//		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
+		
+		return SQL_VIEW + "  \"CMS_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? and \"CMS_ENTRY\".\"START_TIME\" >= sysdate-15 ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC";
-//		return "SELECT * FROM (SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
+		
+
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=?";
 	}
 
 	@Override
@@ -145,8 +145,7 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	protected CMSEntry extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-
-CMSEntry nextResult = null;
+CMSEntry nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -317,8 +316,7 @@ propertyCounter++;
 	}
 
 	
-
-public CMSEntry createObject(CMSEntry perceroObject, String userId)
+public CMSEntry createObject(CMSEntry perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -381,9 +379,8 @@ public CMSEntry createObject(CMSEntry perceroObject, String userId)
 		return null;
 	}
 }
-
-
+
 
 
 }
-
+
