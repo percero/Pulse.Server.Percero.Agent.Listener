@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +41,7 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	public static final String CONNECTION_FACTORY_NAME = "cms";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"CLIENT_SITE_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\", '' as \"PULSE_CONFIGURATION_ID\" FROM \"MOB_LOB_SITE_VW\" \"LOB\" ";
+	public static final String SQL_VIEW = "SELECT  \"LOB\".\"ID\" as \"ID\", \"LOB\".\"NAME\" as \"NAME\", '' as \"CLIENT_SITE_ID\", \"LOB\".\"CLIENT_ID\" as \"CLIENT_ID\", '' as \"PULSE_CONFIGURATION_ID\" FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\" ";
 	private String selectFromStatementTableName = " FROM \"PULSE\".\"MOB_LOB_SITE_VW\" \"LOB\"";
 	private String whereClause = " WHERE \"LOB\".\"ID\"=?";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB\".\"ID\"= SQLLIST.column_value";
@@ -145,7 +146,8 @@ public class LOBDAO extends SqlDataAccessObject<LOB> implements IDataAccessObjec
 	protected LOB extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 		
-LOB nextResult = null;
+
+LOB nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -286,7 +288,8 @@ propertyCounter++;
 	}
 
 	
-public LOB createObject(LOB perceroObject, String userId)
+
+public LOB createObject(LOB perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -349,8 +352,9 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 
 }
-
+

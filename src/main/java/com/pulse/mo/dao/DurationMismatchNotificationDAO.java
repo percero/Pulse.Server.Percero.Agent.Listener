@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 	protected DurationMismatchNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-DurationMismatchNotification nextResult = null;
+
+DurationMismatchNotification nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -224,57 +226,20 @@ nextResult.setTimecardActivity(timecardactivity);
 	}
 	
 	protected void setBaseStatmentInsertParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-JdbcHelper.setDouble(pstmt,5, perceroObject.getDuration());
-pstmt.setString(6, perceroObject.getAuxCodeEntryName());
-pstmt.setString(7, perceroObject.getMessage());
-pstmt.setString(8, perceroObject.getName());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getTimecardActivity() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getTimecardActivity().getID());
-}
-
-
-		
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 	}
 	
 	@Override
@@ -295,57 +260,20 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(DurationMismatchNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getEndTime()));
-JdbcHelper.setDouble(pstmt,4, perceroObject.getDuration());
-pstmt.setString(5, perceroObject.getAuxCodeEntryName());
-pstmt.setString(6, perceroObject.getMessage());
-pstmt.setString(7, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getTimecardActivity() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getTimecardActivity().getID());
-}
-
-pstmt.setString(12, perceroObject.getID());
-
-		
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 	}
 	
 	
@@ -563,19 +491,19 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_DURATION_MISMATCH_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_DURATION_MISMATCH_NOTIF(?,?,?,?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_DURATION_MISMATCH_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_DURATION_MISMATCH_NOTIF(?)}";
+		return "{call Delete_DURATION_MISMATCH_NOTI(?)}";
 	}
 	
 	
 	
 	
 }
-
+

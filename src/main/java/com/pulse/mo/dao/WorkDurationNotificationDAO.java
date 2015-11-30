@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -149,7 +150,8 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 	protected WorkDurationNotification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-WorkDurationNotification nextResult = null;
+
+WorkDurationNotification nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -217,52 +219,19 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 	protected void setBaseStatmentInsertParams(WorkDurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(4, perceroObject.getMessage());
-pstmt.setString(5, perceroObject.getName());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 
-
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getLOBConfigurationEntry() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
-}
-
-
-		
 	}
 	
 	@Override
@@ -283,54 +252,21 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(WorkDurationNotification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getMessage());
-pstmt.setString(4, perceroObject.getName());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID());
+		pstmt.setString(2, perceroObject.getType());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setString(4, perceroObject.getName());
 
+		if (perceroObject.getTeamLeader() == null)
+		{
+			pstmt.setString(5, null);
+		}
+		else
+		{
+			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
 
-if (perceroObject.getLOBConfiguration() == null)
-{
-pstmt.setString(6, null);
-}
-else
-{
-		pstmt.setString(6, perceroObject.getLOBConfiguration().getID());
-}
-
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getTeamLeader().getID());
-}
-
-
-if (perceroObject.getLOBConfigurationEntry() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getLOBConfigurationEntry().getID());
-}
-
-pstmt.setString(9, perceroObject.getID());
-
-		
 	}
 	
 	
@@ -497,19 +433,19 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_WORK_DURATION_NOTIFICATION(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_WORK_DURATION_NOTIFICATION(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_WORK_DURATION_NOTIFICATION(?)}";
+		return "{call Delete_WORK_DURATION_NOTI(?)}";
 	}
 	
 	
 	
 	
 }
-
+
