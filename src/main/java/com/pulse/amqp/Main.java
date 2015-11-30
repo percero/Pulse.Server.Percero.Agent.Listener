@@ -2,8 +2,10 @@ package com.pulse.amqp;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.dao.LOBConfigurationDAO;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -114,7 +116,7 @@ public class Main {
 ////		teamLeader.setID("100458644");
 //
         TeamLeader teamLeader = new TeamLeader();
-        teamLeader.setID("100139921");
+        teamLeader.setID("100139921");//100139921
 //        teamLeader.setID("100544696");
         try {
             teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
@@ -153,22 +155,29 @@ public class Main {
             Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
             while (itrAgents.hasNext()) {
                 Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
-                AgentLOB findAgentLOB = new AgentLOB();
+//                AgentLOB agentLOB = new AgentLOB();
 
-                if (nextAgent != null ) {//&& nextAgent.getID().equals("100625110")
-                    findAgentLOB.setID(nextAgent.getID());
-                    findAgentLOB = (AgentLOB) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(findAgentLOB));
-                    nextAgent.getAgentLOBs().add(findAgentLOB);
+                if (nextAgent != null && nextAgent.getID().equals("100625110")) {//
+//                    findAgentLOB.setAgent(nextAgent);
+
+//                    List<IPerceroObject> exampleLobResults = syncAgentService.systemFindByExample(findAgentLOB, null);
+//                    if (exampleLobResults != null && exampleLobResults.size() > 0) {
+//                        findAgentLOB = (AgentLOB) exampleLobResults.get(0);
+//                        nextAgent.getAgentLOBs().add(findAgentLOB);
+//                    }
+
+
+
                     System.out.println("Agent ID :" + nextAgent.getID());
                     System.out.println("AgentLOB  :" + nextAgent.getAgentLOBs());
 //					nextAgent.getAgentLOBs()
                     if (nextAgent.getAgentLOBs() != null) {
-                        Iterator<AgentLOB> itrAgentLob = nextAgent.getAgentLOBs().iterator();
+                        Iterator<AgentLOB> itrAgentLOB = nextAgent.getAgentLOBs().iterator();
                         System.out.println("****************************************");
                         System.out.println("AgentLOB Size :" + nextAgent.getAgentLOBs().size());
                         System.out.println("****************************************");
-                        while (itrAgentLob.hasNext()) {
-                            AgentLOB agentLOB = syncAgentService.systemGetByObject(itrAgentLob.next());
+                        while (itrAgentLOB.hasNext()) {
+                            AgentLOB agentLOB = syncAgentService.systemGetByObject(itrAgentLOB.next());
                             if (agentLOB != null && agentLOB.getLOB() != null) {
                                 System.out.println("****************************************");
                                 System.out.println("AgentLOB ID :" + agentLOB.getID());

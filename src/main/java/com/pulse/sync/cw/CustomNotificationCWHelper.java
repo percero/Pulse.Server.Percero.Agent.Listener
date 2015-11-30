@@ -252,7 +252,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                                 LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
 
-                                                if (lobConfigurationEntry.getType() != null && lobConfigurationEntry.getEStartActivityCode() != null) {
+                                                if (lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
 
                                                     if (lobConfigurationEntry.getType().equals("VALID_ACTIVITY_CODE")) {
 
