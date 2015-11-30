@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -123,6 +122,19 @@ public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
 @com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(contentUsing=BDOSerializer.class)
 @JsonDeserialize(contentUsing=BDODeserializer.class)
+@OneToMany(fetch=FetchType.LAZY, targetEntity=AgentLOB.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
+private List<AgentLOB> agentLOBs;
+public List<AgentLOB> getAgentLOBs() {
+	return this.agentLOBs;
+}
+
+public void setAgentLOBs(List<AgentLOB> value) {
+	this.agentLOBs = value;
+}
+
+@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(contentUsing=BDOSerializer.class)
+@JsonDeserialize(contentUsing=BDODeserializer.class)
 @OneToMany(fetch=FetchType.LAZY, targetEntity=LOBConfiguration.class, mappedBy="lOB", cascade=javax.persistence.CascadeType.REMOVE)
 private List<LOBConfiguration> lOBConfigurations;
 public List<LOBConfiguration> getLOBConfigurations() {
@@ -138,8 +150,7 @@ public void setLOBConfigurations(List<LOBConfiguration> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
+	@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_ID")
@@ -152,8 +163,7 @@ public Client getClient() {
 
 public void setClient(Client value) {
 	this.client = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CLIENT_SITE_ID")
@@ -166,8 +176,7 @@ public ClientSite getClientSite() {
 
 public void setClientSite(ClientSite value) {
 	this.clientSite = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
+}@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PULSE_CONFIGURATION_ID")
@@ -271,6 +280,23 @@ objectJson += ",\"cMSEntryLOBs\":[";
 			}
 		}
 		objectJson += "]";
+//Retrieve value of the LOB of Agent LOB relationship
+objectJson += ",\"agentLOBs\":[";
+		
+		if (getAgentLOBs() != null) {
+			int agentLOBsCounter = 0;
+			for(AgentLOB nextAgentLOBs : getAgentLOBs()) {
+				if (agentLOBsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) nextAgentLOBs).toEmbeddedJson();
+					agentLOBsCounter++;
+				} catch(Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 //Retrieve value of the LOB of LOB Configuration relationship
 objectJson += ",\"lOBConfigurations\":[";
 		
@@ -310,7 +336,8 @@ objectJson += ",\"lOBConfigurations\":[";
 
 
 		// Target Relationships
-//		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+		this.agentLOBs = (List<AgentLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentLOBs");
 		this.lOBConfigurations = (List<LOBConfiguration>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurations");
 
 
@@ -321,11 +348,12 @@ objectJson += ",\"lOBConfigurations\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-//		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
+		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "lob"));
+		listSetters.add(MappedClass.getFieldSetters(AgentLOB.class, "lob"));
 		listSetters.add(MappedClass.getFieldSetters(LOBConfiguration.class, "lob"));
 
 		
 		return listSetters;
 	}
 }
-
+
