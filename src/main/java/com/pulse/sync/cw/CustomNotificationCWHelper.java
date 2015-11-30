@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import com.percero.agents.sync.vo.BaseDataObject;
 import com.pulse.mo.*;
 import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     // This is an optional sub category.
     private static final String SUB_CATEGORY = "";
 
-    private boolean watcherEnabled = false;
+    private boolean watcherEnabled = true;
     @Autowired
     protected ISyncAgentService syncAgentService;
 
@@ -139,15 +140,35 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         }
 
                         if (agent != null) {
-                            if (agent.getAgentLOBs().size() == 1) {
+                            AgentLOB findAgentLOB = new AgentLOB();
+
+                            findAgentLOB.setID(agent.getID());
+                            List<IPerceroObject> agentLobList = syncAgentService.systemFindByExample(findAgentLOB, null);
+
+
+//                            if (agent.getAgentLOBs().size() == 1) {
+                            if(agentLobList.size()==1){
                                 //Valid scenario for notification
-                                AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+//                                AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+                                AgentLOB agentLOB = syncAgentService.systemGetByObject((AgentLOB) agentLobList.get(0));
+
                                 if (agentLOB != null) {
                                     LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
                                     if (lob != null) {
-                                        List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+
+//                                        List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+
+                                        //TODO: Replace findByExample code with above commented line since this is work arround.
+                                        LOBConfiguration findLOBConfiguration = new LOBConfiguration();
+                                        findLOBConfiguration.setLOB(lob);
+                                        List<IPerceroObject> lobConfigurationList = syncAgentService.systemFindByExample(findLOBConfiguration, null);
+
                                         if (lobConfigurationList != null) {
-                                            LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+                                            //LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+
+                                            //TODO: Replace this with above commented list since this is work arround.
+                                            LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject((LOBConfiguration)lobConfigurationList.get(0));
+
                                             Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
                                             while (itrLobConfigurationEntry.hasNext()) {
                                                 LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
@@ -326,7 +347,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 workDurationNotification.setTeamLeader(teamLeader);
                 workDurationNotification.setName(WorkDurationNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType(WorkDurationNotification.class.getName());
-//								workModeOccurrenceNotification.setMessage();
+//								workModeOccurrenceNotification.setMessage(//Use https://v2.quip.com/VefrAIQ6s9uX for message lang);
 //								workModeOccurrenceNotification.setLOBConfiguration();
 //								workModeOccurrenceNotification.setLOBConfigurationEntry();
                 syncAgentService.systemCreateObject(workDurationNotification, null);
@@ -367,7 +388,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateNonBillableActivityCodeNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader, List<String> nonBillableActivityCodeList) throws Exception {
 
 
-        if (!nonBillableActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+        if (nonBillableActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());

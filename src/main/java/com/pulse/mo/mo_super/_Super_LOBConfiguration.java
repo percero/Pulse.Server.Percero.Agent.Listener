@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -120,7 +121,8 @@ public void setLOBConfigurationEntries(List<LOBConfigurationEntry> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_ID")
@@ -225,11 +227,11 @@ objectJson += ",\"lOBConfigurationEntries\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "lobconfiguration"));
-		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lobconfiguration"));
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "lobConfiguration"));
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lobConfiguration"));
 
 		
 		return listSetters;
 	}
 }
-
+

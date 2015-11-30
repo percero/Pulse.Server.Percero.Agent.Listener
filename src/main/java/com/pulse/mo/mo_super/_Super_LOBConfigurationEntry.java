@@ -423,6 +423,7 @@ public class _Super_LOBConfigurationEntry extends BaseDataObject implements Seri
         this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
 
 
+
     }
 
     @Override

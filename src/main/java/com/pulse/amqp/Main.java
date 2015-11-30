@@ -2,8 +2,10 @@ package com.pulse.amqp;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.dao.LOBConfigurationDAO;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -150,12 +152,25 @@ public class Main {
 //			}
 //
 //
+            LOBConfiguration findLobConfiguration = new LOBConfiguration();
+            findLobConfiguration.setID("1");
+
+
+            findLobConfiguration = (LOBConfiguration) syncAgentService.systemGetByObject(findLobConfiguration);
+
+            LOBConfigurationEntry findLobConfigurationEntry = new LOBConfigurationEntry();
+            findLobConfigurationEntry.setLOBConfiguration(findLobConfiguration);
+
+            findLobConfiguration = (LOBConfiguration) syncAgentService.systemGetByObject(findLobConfiguration);
+//            findLobConfigurationEntry = (LOBConfigurationEntry) syncAgentService.systemFindByExample(findLobConfigurationEntry);
+            List<IPerceroObject> exampleLobResults = syncAgentService.systemFindByExample(findLobConfigurationEntry, null);
+
             Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
             while (itrAgents.hasNext()) {
                 Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
                 AgentLOB findAgentLOB = new AgentLOB();
 
-                if (nextAgent != null ) {//&& nextAgent.getID().equals("100625110")
+                if (nextAgent != null && nextAgent.getID().equals("100625110") ) {
                     findAgentLOB.setID(nextAgent.getID());
                     findAgentLOB = (AgentLOB) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(findAgentLOB));
                     nextAgent.getAgentLOBs().add(findAgentLOB);
