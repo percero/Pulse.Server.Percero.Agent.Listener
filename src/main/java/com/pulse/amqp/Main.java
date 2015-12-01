@@ -53,6 +53,7 @@ public class Main {
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
         // Test Login
+        /*
 //		Map<String, Object> componentBeans = context.getBeansWithAnnotation(Component.class);
 //		PerceroAgentListener percero = PerceroAgentListener.getInstance();
 //		AuthenticationRequest authRequest = new AuthenticationRequest();
@@ -475,6 +476,6 @@ public class Main {
 //			e.printStackTrace();
 //		}
 
-
+*/
     }
 }

@@ -31,7 +31,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     //Timecard based Notifications Messages
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {1} : System has detected an invalid activity code {2} starting at {3} and ending at {4}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {1} : System has detected a non-billable activity code {2} starting at {3} and ending at {4}";
-    private static final String OCCURRENCE_TOLERANCE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {1} : System has detected an eStart activity code {2} starting at {3} and ending at {4} has occurred more times than the tolerance of {5}.";
+    private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {1} : System has detected an eStart activity code {2} starting at {3} and ending at {4} has occurred more times than the tolerance of {5}.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {1} System has detected an eStart activity code {2} starting at {3} and ending at {4} for the total duration of {5}  has exceeded the durration tolerance.";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -62,11 +63,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
      */
     public void registerChangeWatchers() {
         //Do not register watcher to avoid lots activity in local instance and avoid log.
-        if (!watcherEnabled) {
-            return;
-        }
+//        if (!watcherEnabled) {
+//            return;
+//        }
         // CMS Entry Notification
         Collection<String> cmsEntryFieldsToWatch = new HashSet<String>();
+
         Collection<String> timecardEntryFieldsToWatch = new HashSet<String>();
         // Listen for changes on ALL CMSEntry records.
         accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
@@ -256,7 +258,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                             Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
                                             TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                                            int consecutiveUseCountOfActivityCode = getConsecutiveActivityCodeFromTimecard(agent, timecardEntry, timecarActivity.getCode());
+                                            List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
+
+                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, timecardEntry, timecarActivity.getCode(), consecutiveActivityList);
 
                                             //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
                                             // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
@@ -279,18 +283,22 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                                         validActivityCodeList.add(lobConfigurationEntry.getType());
 
+                                                        if (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode())) {
+                                                            if (consecutiveActivityList.size() > lobConfigurationEntry.getOccurrence()) {
+                                                                //Generate the EStart Occurrence Tolerance notification
+                                                                generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                        lobConfiguration, lobConfigurationEntry, lobConfigurationEntry.getOccurrence());
+                                                            }
+
+                                                            if (consecutiveActivityDuration > lobConfigurationEntry.getMax()) {
+                                                                generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                        lobConfiguration, lobConfigurationEntry, lobConfigurationEntry.getMax());
+                                                            }
+                                                        }
                                                     } else if (lobConfigurationEntry.getType().equals("NONBILLABLE_ACTIVITY_CODE")) {
 
                                                         nonBillableActivityCodeList.add(lobConfigurationEntry.getType());
 
-                                                    }
-
-                                                    if (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode())) {
-                                                        if (consecutiveUseCountOfActivityCode > lobConfigurationEntry.getOccurrence()) {
-                                                            //Generate the EStart Occurrence Tolerance notification
-                                                            generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, lobConfigurationEntry.getOccurrence());
-                                                        }
                                                     }
                                                 }
                                             }
@@ -488,7 +496,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             occurrenceToleranceNotification.setName(OccurrenceToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + maxOccurrenceTolerance);
             occurrenceToleranceNotification.setType(OccurrenceToleranceNotification.class.getName());
 
-            occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+            occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                     timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), maxOccurrenceTolerance));
             occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
             occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
@@ -496,6 +504,35 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
 
     }
+
+    private void generateDurationToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
+                                                       LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
+                                                       int maxDurationTolerance) throws Exception {
+        if (agent == null) {
+            agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+        }
+        if (agent != null && teamLeader == null) {
+            teamLeader = agent.getTeamLeader();
+        }
+
+        if (agent != null && teamLeader != null) {
+            DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
+            durationToleranceNotification.setID(UUID.randomUUID().toString());
+            durationToleranceNotification.setAgent(agent);
+            durationToleranceNotification.setCreatedOn(new Date());
+            durationToleranceNotification.setTeamLeader(teamLeader);
+            durationToleranceNotification.setName(DurationToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + maxDurationTolerance);
+            durationToleranceNotification.setType(DurationToleranceNotification.class.getName());
+
+            durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                    timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), maxDurationTolerance));
+            durationToleranceNotification.setLOBConfiguration(lobConfiguration);
+            durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+            syncAgentService.systemCreateObject(durationToleranceNotification, null);
+        }
+
+    }
+
 
     //Utility methods specific to the notifications
     private List<CMSEntry> getCurrentShiftCMSEntries(Agent agent, CMSEntry watchedCMSEntry) {
@@ -517,9 +554,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return cmsEntriesOfTheShift;
     }
 
-    private Integer getConsecutiveActivityCodeFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode) {
+    private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
 
-        Integer consecutiveAcitivityCount = 0;
+//        Integer consecutiveAcitivityCount = 0;
+        Double activityTimeSpan = 0.0;
 
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
 
@@ -534,14 +572,16 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             //If code does not have consecutiveness then brk the look
             if (timecardActivity.getCode().equals(activityCode)) {
-                consecutiveAcitivityCount++;
+
+                activityTimeSpan += timecardEntry.getDuration();
+                timecardEntryListOfActivityCode.add(timecardEntry);
             } else {
                 processData = false;
             }
 
         }
 
-        return consecutiveAcitivityCount;
+        return activityTimeSpan;
     }
 
     private boolean compareDates(Date sourceDate, Date targetDate) {
