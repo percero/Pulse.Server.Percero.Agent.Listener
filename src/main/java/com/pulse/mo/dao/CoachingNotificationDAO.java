@@ -174,7 +174,7 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -189,7 +189,7 @@ if (StringUtils.hasText(scorecardID) && !"null".equalsIgnoreCase(scorecardID)) {
 
 
 
-			
+
     	}
 		
 		
@@ -275,7 +275,7 @@ else
 
 
 
-		
+
 	}
 	
 	
@@ -423,7 +423,7 @@ if (useScorecardID)
 	}
 	
 
-	public CoachingNotification fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
+	public List<CoachingNotification> fetchCoachingNotificationForTeamLeaderAndScorecardAndWeekDate(String teamLeaderId, String scorecardId, Date weekDate) {
 		if (!StringUtils.hasText(teamLeaderId) || !StringUtils.hasText(scorecardId) || weekDate == null || weekDate.getTime() <= 0) {
 			log.warn("Invalid parameters fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());
 			return null;
@@ -433,7 +433,7 @@ if (useScorecardID)
 		String selectQueryString = "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + " WHERE  TO_CHAR(\"COACHING_NOTIFICATION\".\"WEEK_DATE\",'rrrr/mm/dd') =?  AND  \"COACHING_NOTIFICATION\".\"TEAM_LEADER_ID\" =?  AND  \"COACHING_NOTIFICATION\".\"SCORECARD_ID\" =? ";
 		Object[] paramValues = new Object[3];
         
-		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);;
+		paramValues[0] = new SimpleDateFormat("yyyy/MM/dd").format(weekDate);
 		paramValues[1] = teamLeaderId;
 		paramValues[2] = scorecardId;
 		List<CoachingNotification> results;
@@ -441,7 +441,7 @@ if (useScorecardID)
 			results = executeSelectWithParams(selectQueryString, paramValues, true);
 			
 			if (results != null && !results.isEmpty()) {
-				return results.get(0);
+				return results;
 			}
 		} catch (SyncDataException e) {
 			log.error("Error fetching CoachingNotification for TeamLeader " + teamLeaderId + ", Scorecard " + scorecardId + ", weekDate " + weekDate.toString());

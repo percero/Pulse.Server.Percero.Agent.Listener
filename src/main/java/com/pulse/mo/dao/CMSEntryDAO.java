@@ -104,15 +104,15 @@ public class CMSEntryDAO extends SqlDataAccessObject<CMSEntry> implements IDataA
 	@Override
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
-		
-		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
+		return SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? and \"CMS_ENTRY\".\"START_TIME\" >= sysdate-15 ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC";
+//		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
-		
-		return "SELECT * FROM (SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
+		return "SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? and \"CMS_ENTRY\".\"START_TIME\" >= sysdate-15 ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC";
+//		return "SELECT * FROM (SELECT \"CMS_ENTRY\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"CMS_ENTRY\"." + joinColumnName + "=? ORDER BY \"CMS_ENTRY\".\"START_TIME\" DESC) WHERE ROWNUM < 15";
 	}
 
 	@Override
@@ -175,7 +175,7 @@ nextResult.setDuration(rs.getDouble("DURATION"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);

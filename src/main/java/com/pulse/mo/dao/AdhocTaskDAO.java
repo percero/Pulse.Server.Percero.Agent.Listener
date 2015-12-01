@@ -9,6 +9,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
@@ -55,7 +56,7 @@ public class AdhocTaskDAO extends SqlDataAccessObject<AdhocTask> implements IDat
 	private String joinAdhocTaskStateIDAdhocTask = "WHERE ADHOC_TASK.ADHOC_TASK_STATE_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinAgentIDAdhocTask = "WHERE ADHOC_TASK.AGENT_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
 private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? And WEEK_DATE > Add_months(sysdate,-12)";
-	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
+	private String extendedWhereClause = " "; //" WHERE ROWNUM <= 4 ";
 
 
 	
@@ -150,15 +151,15 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"ADHOC_TASK\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_ADHOC_TASK (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"TASK_DETAIL\",\"DUE_DATE\",\"WEEK_DATE\",\"COMPLETED_ON\",\"CREATED_ON\",\"UPDATED_ON\",\"PLAN_ID\",\"TYPE\",\"ADHOC_TASK_STATE_ID\",\"AGENT_ID\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
-	
+
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DETAIL\"=?,\"DUE_DATE\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"ADHOC_TASK_STATE_ID\"=?,\"AGENT_ID\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DESC\"=?,\"DUE_DATE\"=?,\"WK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"STATUS\"=?,\"ASSIGNED_TO\"=?  WHERE \"TASK_ID\"=?";
 	}
 	
 	@Override
@@ -215,7 +216,7 @@ nextResult.setType(rs.getInt("TYPE"));
 
 
 String adhoctaskstateID = rs.getString("ADHOC_TASK_STATE_ID");
-if (StringUtils.hasText(adhoctaskstateID)) {
+if (StringUtils.hasText(adhoctaskstateID) && !"null".equalsIgnoreCase(adhoctaskstateID) ){
 AdhocTaskState adhoctaskstate = new AdhocTaskState();
 adhoctaskstate.setID(adhoctaskstateID);
 nextResult.setAdhocTaskState(adhoctaskstate);
@@ -223,7 +224,7 @@ nextResult.setAdhocTaskState(adhoctaskstate);
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -231,7 +232,7 @@ nextResult.setAgent(agent);
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -245,52 +246,34 @@ nextResult.setTeamLeader(teamleader);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setString(4, perceroObject.getTaskDetail());
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,10, perceroObject.getPlanId());
-JdbcHelper.setInt(pstmt,11, perceroObject.getType());
 
-if (perceroObject.getAdhocTaskState() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAdhocTaskState().getID());
-}
+		pstmt.setString(1, perceroObject.getTaskDetail());  //TASK_DESC
+
+		if (perceroObject.getAgent() == null) // ASSIGNED_TO
+		{
+			pstmt.setString(2, null);
+		}
+		else
+		{
+			pstmt.setString(2, perceroObject.getAgent().getID());
+		}
+
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));  //DUE_DATE
+		pstmt.setString(4, "4");   //STATUS - Overdue or pending - DB it is 4
+
+		pstmt.setString(5, perceroObject.getCreatedBy());  //CREATED_BY
+		pstmt.setString(6, perceroObject.getUpdatedBy());  //UPDATED_BY
 
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getAgent().getID());
-}
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
 
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(14, null);
-}
-else
-{
-		pstmt.setString(14, perceroObject.getTeamLeader().getID());
-}
-
-
-		
+		pstmt.setNull(10, java.sql.Types.INTEGER); // PLAN_ID
+		pstmt.setString(11, perceroObject.getID()); //TASK_ID
+		pstmt.setInt(12, 2); //TYPE  - Adhoc task
 	}
 	
 	@Override
@@ -630,7 +613,7 @@ public AdhocTask createObject(AdhocTask perceroObject, String userId)
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select ADHOC_TASK_SEQ.NEXTVAL from dual";
+		String query = "Select EFC_TASK_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -647,7 +630,15 @@ public AdhocTask createObject(AdhocTask perceroObject, String userId)
 		perceroObject.setID(insertedId);
 		sql = getInsertIntoSQL();
 		pstmt = conn.prepareStatement(sql);
-
+		log.info("------------------------------------------------ADHOCTASK--------------------------");
+		log.info(perceroObject.getID());
+		log.info(perceroObject.getAgent().getID());
+		log.info(perceroObject.getCreatedBy());
+		log.info(perceroObject.getUpdatedBy());
+		log.info(perceroObject.getDueDate());
+		log.info(perceroObject.getWeekDate());
+		log.info(perceroObject.getTaskDetail());
+		log.info("------------------------------------------------ADHOCTASK--------------------------");
 
 		setPreparedStatmentInsertParams(perceroObject, pstmt);
 		result = pstmt.executeUpdate();

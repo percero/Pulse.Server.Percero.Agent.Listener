@@ -85,6 +85,23 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
+PhotoUri
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String photoUri;
+
+public String getPhotoUri() 
+{
+	return this.photoUri;
+}
+
+public void setPhotoUri(String photoUri)
+{
+	this.photoUri = photoUri;
+}/*
 EmailAddress
 Notes:
 */
@@ -101,6 +118,23 @@ public String getEmailAddress()
 public void setEmailAddress(String emailAddress)
 {
 	this.emailAddress = emailAddress;
+}/*
+FullName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String fullName;
+
+public String getFullName() 
+{
+	return this.fullName;
+}
+
+public void setFullName(String fullName)
+{
+	this.fullName = fullName;
 }/*
 FirstName
 Notes:
@@ -119,23 +153,6 @@ public void setFirstName(String firstName)
 {
 	this.firstName = firstName;
 }/*
-PhotoUri
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String photoUri;
-
-public String getPhotoUri() 
-{
-	return this.photoUri;
-}
-
-public void setPhotoUri(String photoUri)
-{
-	this.photoUri = photoUri;
-}/*
 LastName
 Notes:
 */
@@ -152,23 +169,6 @@ public String getLastName()
 public void setLastName(String lastName)
 {
 	this.lastName = lastName;
-}/*
-FullName
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String fullName;
-
-public String getFullName() 
-{
-	return this.fullName;
-}
-
-public void setFullName(String fullName)
-{
-	this.fullName = fullName;
 }
 
 	//////////////////////////////////////////////////////
@@ -203,6 +203,27 @@ public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Photo Uri property
+		objectJson += ",\"photoUri\":";
+		
+		if (getPhotoUri() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPhotoUri());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		//Retrieve value of the Email Address property
 		objectJson += ",\"emailAddress\":";
 		
@@ -213,6 +234,27 @@ public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getEmailAddress());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Full Name property
+		objectJson += ",\"fullName\":";
+		
+		if (getFullName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getFullName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -245,27 +287,6 @@ public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Photo Uri property
-		objectJson += ",\"photoUri\":";
-		
-		if (getPhotoUri() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getPhotoUri());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
 		//Retrieve value of the Last Name property
 		objectJson += ",\"lastName\":";
 		
@@ -276,27 +297,6 @@ public void setSupervisorCorrectiveActions(List<CorrectiveAction> value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getLastName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Full Name property
-		objectJson += ",\"fullName\":";
-		
-		if (getFullName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getFullName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -342,16 +342,16 @@ objectJson += ",\"supervisorCorrectiveActions\":[";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Email Address property
-		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
-		//From value of the First Name property
-		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
 		//From value of the Photo Uri property
 		setPhotoUri(JsonUtils.getJsonString(jsonObject, "photoUri"));
-		//From value of the Last Name property
-		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
+		//From value of the Email Address property
+		setEmailAddress(JsonUtils.getJsonString(jsonObject, "emailAddress"));
 		//From value of the Full Name property
 		setFullName(JsonUtils.getJsonString(jsonObject, "fullName"));
+		//From value of the First Name property
+		setFirstName(JsonUtils.getJsonString(jsonObject, "firstName"));
+		//From value of the Last Name property
+		setLastName(JsonUtils.getJsonString(jsonObject, "lastName"));
 
 		
 		// Source Relationships

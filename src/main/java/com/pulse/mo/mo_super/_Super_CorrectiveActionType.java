@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -123,19 +124,6 @@ public void setName(String name)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CorrectiveAction.class, mappedBy="correctiveActionType", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CorrectiveAction> correctiveActions;
-public List<CorrectiveAction> getCorrectiveActions() {
-	return this.correctiveActions;
-}
-
-public void setCorrectiveActions(List<CorrectiveAction> value) {
-	this.correctiveActions = value;
-}
-
 
 
 	//////////////////////////////////////////////////////
@@ -199,26 +187,6 @@ public void setCorrectiveActions(List<CorrectiveAction> value) {
 		// Source Relationships
 
 		
-		// Target Relationships
-//Retrieve value of the Corrective Action Type of Corrective Action relationship
-objectJson += ",\"correctiveActions\":[";
-		
-		if (getCorrectiveActions() != null) {
-			int correctiveActionsCounter = 0;
-			for(CorrectiveAction nextCorrectiveActions : getCorrectiveActions()) {
-				if (correctiveActionsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCorrectiveActions).toEmbeddedJson();
-					correctiveActionsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
-
-		
 		return objectJson;
 	}
 
@@ -238,7 +206,7 @@ objectJson += ",\"correctiveActions\":[";
 
 
 		// Target Relationships
-		this.correctiveActions = (List<CorrectiveAction>) JsonUtils.getJsonListPerceroObject(jsonObject, "correctiveActions");
+
 
 
 	}
@@ -248,10 +216,10 @@ objectJson += ",\"correctiveActions\":[";
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
 		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "correctiveactiontype"));
+
 
 		
 		return listSetters;
 	}
 }
-
+

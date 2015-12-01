@@ -353,24 +353,20 @@ public class Main{
 //		ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);
 //
 //		Agent agent = new Agent();
-//		agent.setID("100351668");
+//		agent.setID("100796870");
 //
 //		TeamLeader teamLeader = new TeamLeader();
-//		teamLeader.setID("100351667");
+//		teamLeader.setID("100147959");
 //
-//		AdhocTaskState adhockTaskState = new AdhocTaskState();
-//		adhockTaskState.setID("2");
 //
 //		AdhocTask adhocTask= new AdhocTask();
-//		adhocTask.setAdhocTaskState(adhockTaskState);
-//		adhocTask.setTaskDetail("new adhock task 123");
+//		adhocTask.setTaskDetail("new adhock task 123567");
 //		adhocTask.setTeamLeader(teamLeader);
 //		adhocTask.setWeekDate(new Date());
 //		adhocTask.setAgent(agent);
 //		adhocTask.setDueDate(new Date());
-//		adhocTask.setCreatedOn(new Date());
 //		adhocTask.setUpdatedBy(teamLeader.getID());
-//		adhocTask.setUpdatedOn(new Date());
+//		adhocTask.setCreatedBy(teamLeader.getID());
 //		try {
 //			System.out.println("==================================");
 //			syncAgentService.systemCreateObject(adhocTask, null);

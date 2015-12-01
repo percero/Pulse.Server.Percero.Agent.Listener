@@ -85,23 +85,6 @@ public void setID(String value) {
 	// Properties
 	//////////////////////////////////////////////////////
 	/*
-HasBeenRead
-Notes:
-*/
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
-
-private String hasBeenRead;
-
-public String getHasBeenRead() 
-{
-	return this.hasBeenRead;
-}
-
-public void setHasBeenRead(String hasBeenRead)
-{
-	this.hasBeenRead = hasBeenRead;
-}/*
 Date
 Notes:
 */
@@ -118,6 +101,23 @@ public Date getDate()
 public void setDate(Date date)
 {
 	this.date = date;
+}/*
+Name
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String name;
+
+public String getName() 
+{
+	return this.name;
+}
+
+public void setName(String name)
+{
+	this.name = name;
 }/*
 Type
 Notes:The class type for the generalization tree
@@ -136,22 +136,22 @@ public void setType(String type)
 {
 	this.type = type;
 }/*
-Name
+HasBeenRead
 Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String name;
+private String hasBeenRead;
 
-public String getName() 
+public String getHasBeenRead() 
 {
-	return this.name;
+	return this.hasBeenRead;
 }
 
-public void setName(String name)
+public void setHasBeenRead(String hasBeenRead)
 {
-	this.name = name;
+	this.hasBeenRead = hasBeenRead;
 }
 
 	//////////////////////////////////////////////////////
@@ -186,16 +186,23 @@ public void setTeamLeader(TeamLeader value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
-		//Retrieve value of the Has Been Read property
-		objectJson += ",\"hasBeenRead\":";
+		//Retrieve value of the Date property
+		objectJson += ",\"date\":";
+		if (getDate() == null)
+			objectJson += "null";
+		else {
+			objectJson += getDate().getTime();
+		}
+		//Retrieve value of the Name property
+		objectJson += ",\"name\":";
 		
-		if (getHasBeenRead() == null)
+		if (getName() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getHasBeenRead());
+				objectJson += objectMapper.writeValueAsString(getName());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -206,13 +213,6 @@ public void setTeamLeader(TeamLeader value) {
 				objectJson += "null";
 				e.printStackTrace();
 			}
-		}
-		//Retrieve value of the Date property
-		objectJson += ",\"date\":";
-		if (getDate() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDate().getTime();
 		}
 		//Retrieve value of the Type property
 		objectJson += ",\"type\":";
@@ -235,16 +235,16 @@ public void setTeamLeader(TeamLeader value) {
 				e.printStackTrace();
 			}
 		}
-		//Retrieve value of the Name property
-		objectJson += ",\"name\":";
+		//Retrieve value of the Has Been Read property
+		objectJson += ",\"hasBeenRead\":";
 		
-		if (getName() == null)
+		if (getHasBeenRead() == null)
 			objectJson += "null";
 		else {
 			if (objectMapper == null)
 				objectMapper = new ObjectMapper();
 			try {
-				objectJson += objectMapper.writeValueAsString(getName());
+				objectJson += objectMapper.writeValueAsString(getHasBeenRead());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -285,14 +285,14 @@ objectJson += ",\"teamLeader\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
-		//From value of the Has Been Read property
-		setHasBeenRead(JsonUtils.getJsonString(jsonObject, "hasBeenRead"));
 		//From value of the Date property
 		setDate(JsonUtils.getJsonDate(jsonObject, "date"));
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
+		//From value of the Type property
+		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		//From value of the Has Been Read property
+		setHasBeenRead(JsonUtils.getJsonString(jsonObject, "hasBeenRead"));
 
 		
 		// Source Relationships

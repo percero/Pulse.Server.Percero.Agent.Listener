@@ -84,7 +84,24 @@ public void setID(String value) {
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
-	
+	/*
+PlanName
+Notes:
+*/
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
+
+private String planName;
+
+public String getPlanName() 
+{
+	return this.planName;
+}
+
+public void setPlanName(String planName)
+{
+	this.planName = planName;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -99,7 +116,7 @@ public void setID(String value) {
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="DEVELOPMENT_ACTIVITY_ID")
 @org.hibernate.annotations.ForeignKey(name="FK_DevelopmentActivityOfWeeklyDevelopmentActivity")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
 private DevelopmentActivity developmentActivity;
 public DevelopmentActivity getDevelopmentActivity() {
 	return this.developmentActivity;
@@ -107,6 +124,19 @@ public DevelopmentActivity getDevelopmentActivity() {
 
 public void setDevelopmentActivity(DevelopmentActivity value) {
 	this.developmentActivity = value;
+}@com.percero.agents.sync.metadata.annotations.Externalize
+@JsonSerialize(using=BDOSerializer.class)
+@JsonDeserialize(using=BDODeserializer.class)
+@JoinColumn(name="SCORECARD_WEEKLY_RESULT_ID")
+@org.hibernate.annotations.ForeignKey(name="FK_ScorecardWeeklyResultOfWeeklyDevelopmentActivity")
+@ManyToOne(fetch=FetchType.LAZY, optional=true)
+private ScorecardWeeklyResult scorecardWeeklyResult;
+public ScorecardWeeklyResult getScorecardWeeklyResult() {
+	return this.scorecardWeeklyResult;
+}
+
+public void setScorecardWeeklyResult(ScorecardWeeklyResult value) {
+	this.scorecardWeeklyResult = value;
 }
 
 	
@@ -118,6 +148,27 @@ public void setDevelopmentActivity(DevelopmentActivity value) {
 		String objectJson = super.retrieveJson(objectMapper);
 
 		// Properties		
+		//Retrieve value of the Plan Name property
+		objectJson += ",\"planName\":";
+		
+		if (getPlanName() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getPlanName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 
 				
 		// Source Relationships
@@ -128,6 +179,18 @@ objectJson += ",\"developmentActivity\":";
 		else {
 			try {
 				objectJson += ((BaseDataObject) getDevelopmentActivity()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+//Retrieve value of the Scorecard Weekly Result of Weekly Development Activity relationship
+objectJson += ",\"scorecardWeeklyResult\":";
+		if (getScorecardWeeklyResult() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getScorecardWeeklyResult()).toEmbeddedJson();
 			} catch(Exception e) {
 				objectJson += "null";
 			}
@@ -147,10 +210,13 @@ objectJson += ",\"developmentActivity\":";
 	    super.fromJson(jsonObject);
 
 		// Properties
+		//From value of the Plan Name property
+		setPlanName(JsonUtils.getJsonString(jsonObject, "planName"));
 
 		
 		// Source Relationships
 		this.developmentActivity = (DevelopmentActivity) JsonUtils.getJsonPerceroObject(jsonObject, "developmentActivity");
+		this.scorecardWeeklyResult = (ScorecardWeeklyResult) JsonUtils.getJsonPerceroObject(jsonObject, "scorecardWeeklyResult");
 
 
 		// Target Relationships

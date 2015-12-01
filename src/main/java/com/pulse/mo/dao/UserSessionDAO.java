@@ -172,7 +172,7 @@ nextResult.setIPAddress(rs.getString("IP_ADDRESS"));
 
 
 String pulseuserID = rs.getString("PULSE_USER_ID");
-if (StringUtils.hasText(pulseuserID)) {
+if (StringUtils.hasText(pulseuserID) && !"null".equalsIgnoreCase(pulseuserID) ){
 PulseUser pulseuser = new PulseUser();
 pulseuser.setID(pulseuserID);
 nextResult.setPulseUser(pulseuser);
@@ -180,7 +180,7 @@ nextResult.setPulseUser(pulseuser);
 
 
 String currentteamleaderID = rs.getString("CURRENT_TEAM_LEADER_ID");
-if (StringUtils.hasText(currentteamleaderID)) {
+if (StringUtils.hasText(currentteamleaderID) && !"null".equalsIgnoreCase(currentteamleaderID) ){
 TeamLeader currentteamleader = new TeamLeader();
 currentteamleader.setID(currentteamleaderID);
 nextResult.setCurrentTeamLeader(currentteamleader);

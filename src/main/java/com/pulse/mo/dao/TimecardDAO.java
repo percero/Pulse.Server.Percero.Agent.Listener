@@ -43,7 +43,7 @@ public class TimecardDAO extends SqlDataAccessObject<Timecard> implements IDataA
 	public static final String CONNECTION_FACTORY_NAME = "estart";
 
 	//TODO:For use refactoring, so we set it once
-	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"OFF_TIME\" as \"SOURCE_END_DATE\", \"TIMECARD\".\"ON_TIME\" as \"SOURCE_START_DATE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", '' as \"APPROVED\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
+	public static final String SQL_VIEW = "SELECT  \"TIMECARD\".\"ID\" as \"ID\", \"TIMECARD\".\"PDATE\" as \"DATE\", \"TIMECARD\".\"OFF_TIME\" as \"SOURCE_END_DATE\", \"TIMECARD\".\"ON_TIME\" as \"SOURCE_START_DATE\", Case When \"TIMECARD\".\"APPROVED\" ='A' Then 'Approved' When \"TIMECARD\".\"APPROVED\" ='F' Then 'Completed' When \"TIMECARD\".\"APPROVED\" ='T' Then 'In Progress' When \"TIMECARD\".\"APPROVED\" ='-' Then 'Unknown' End as \"TIMECARD_STATE\", \"TIMECARD\".\"IS_HOLIDAY\" as \"IS_HOLIDAY\", \"TIMECARD\".\"APPROVED\" as \"APPROVED\", \"TIMECARD\".\"LOCK_LEVEL\" as \"LOCK_LEVEL\", \"TIMECARD\".\"SH_RULE\" as \"LOCAL_TIME_CODE\", \"TIMECARD\".\"ASSUMED_OFF\" as \"ASSUMED_OFF\", \"TIMECARD\".\"PAYROLL\" as \"AGENT_ID\" FROM \"AGENT_TIME_VW\" \"TIMECARD\" ";
 	private String selectFromStatementTableName = " FROM \"CONVERGYS\".\"AGENT_TIME_VW\" \"TIMECARD\"";
 	private String whereClause = " WHERE \"TIMECARD\".\"ID\"=? AND \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
 	private String whereInClause = " join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"TIMECARD\".\"ID\"= SQLLIST.column_value WHERE \"TIMECARD\".\"PDATE\" > (sysdate - 14) ";
@@ -192,7 +192,7 @@ nextResult.setTimecardState(rs.getString("TIMECARD_STATE"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -129,15 +130,15 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"BEHAVIOR_RESPONSE\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_BEHAVIOR_RESPONSE (\"ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WEEK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"AGENT_ID\",\"BEHAVIOR_ID\",\"COACHING_SESSION_ID\",\"SCORECARD_MEASURE_ID\",\"SCARD_WEEKLY_RESULT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_BEHAVIOR_RESPONSE (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"EMPLOYEE_ID\",\"BEHAVIOR_ID\",\"SESSION_ID\",\"SCM_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WEEK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"AGENT_ID\"=?,\"BEHAVIOR_ID\"=?,\"COACHING_SESSION_ID\"=?,\"SCORECARD_MEASURE_ID\"=?,\"SCARD_WEEKLY_RESULT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"EMPLOYEE_ID\"=?,\"BEHAVIOR_ID\"=?,\"SESSION_ID\"=?,\"SCM_ID\"=? WHERE \"RESPONSE_ID\"=?";
 	}
 	
 	@Override
@@ -149,7 +150,8 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 	protected BehaviorResponse extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-BehaviorResponse nextResult = null;
+
+BehaviorResponse nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -181,7 +183,7 @@ nextResult.setResponse(rs.getInt("RESPONSE"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -189,7 +191,7 @@ nextResult.setAgent(agent);
 
 
 String behaviorID = rs.getString("BEHAVIOR_ID");
-if (StringUtils.hasText(behaviorID)) {
+if (StringUtils.hasText(behaviorID) && !"null".equalsIgnoreCase(behaviorID) ){
 Behavior behavior = new Behavior();
 behavior.setID(behaviorID);
 nextResult.setBehavior(behavior);
@@ -197,7 +199,7 @@ nextResult.setBehavior(behavior);
 
 
 String coachingsessionID = rs.getString("COACHING_SESSION_ID");
-if (StringUtils.hasText(coachingsessionID)) {
+if (StringUtils.hasText(coachingsessionID) && !"null".equalsIgnoreCase(coachingsessionID) ){
 CoachingSession coachingsession = new CoachingSession();
 coachingsession.setID(coachingsessionID);
 nextResult.setCoachingSession(coachingsession);
@@ -205,7 +207,7 @@ nextResult.setCoachingSession(coachingsession);
 
 
 String scorecardmeasureID = rs.getString("SCORECARD_MEASURE_ID");
-if (StringUtils.hasText(scorecardmeasureID)) {
+if (StringUtils.hasText(scorecardmeasureID) && !"null".equalsIgnoreCase(scorecardmeasureID) ){
 ScorecardMeasure scorecardmeasure = new ScorecardMeasure();
 scorecardmeasure.setID(scorecardmeasureID);
 nextResult.setScorecardMeasure(scorecardmeasure);
@@ -213,7 +215,7 @@ nextResult.setScorecardMeasure(scorecardmeasure);
 
 
 String scorecardweeklyresultID = rs.getString("SCARD_WEEKLY_RESULT_ID");
-if (StringUtils.hasText(scorecardweeklyresultID)) {
+if (StringUtils.hasText(scorecardweeklyresultID) && !"null".equalsIgnoreCase(scorecardweeklyresultID) ){
 ScorecardWeeklyResult scorecardweeklyresult = new ScorecardWeeklyResult();
 scorecardweeklyresult.setID(scorecardweeklyresultID);
 nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
@@ -227,68 +229,58 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 		
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getUpdatedBy());
-pstmt.setString(3, perceroObject.getCreatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,7, perceroObject.getResponse());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getAgent().getID());
-}
+		pstmt.setString(1, perceroObject.getID()); //RESPONSE_ID
+		pstmt.setString(2, perceroObject.getUpdatedBy()); //UPDATED_BY
+		pstmt.setString(3, perceroObject.getCreatedBy()); //CREATED_BY
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WEEK_DATE
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
+		pstmt.setDate(6, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
+		JdbcHelper.setInt(pstmt,7, perceroObject.getResponse()); //RESPONSE
 
-
-if (perceroObject.getBehavior() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getBehavior().getID());
-}
+		if (perceroObject.getAgent() == null) //AGENT_ID
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getAgent().getID());
+		}
 
 
-if (perceroObject.getCoachingSession() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getCoachingSession().getID());
-}
+		if (perceroObject.getBehavior() == null) //BEHAVIOR_ID
+		{
+			pstmt.setString(9, null);
+		}
+		else
+		{
+			pstmt.setString(9, perceroObject.getBehavior().getID());
+		}
 
 
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
-}
+		if (perceroObject.getCoachingSession() == null) //COACHING_SESSION_ID
+		{
+			pstmt.setString(10, null);
+		}
+		else
+		{
+			pstmt.setString(10, perceroObject.getCoachingSession().getID());
+		}
 
 
-if (perceroObject.getScorecardWeeklyResult() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getScorecardWeeklyResult().getID());
-}
+		if (perceroObject.getScorecardMeasure() == null) //SCORECARD_MEASURE_ID
+		{
+			pstmt.setString(11, null);
+		}
+		else
+		{
+			pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
+		}
 
 
-		
+
 	}
 	
 	@Override
@@ -309,7 +301,7 @@ else
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getUpdatedBy());
 pstmt.setString(2, perceroObject.getCreatedBy());
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
@@ -598,7 +590,8 @@ propertyCounter++;
 	}
 	
 	
-public BehaviorResponse createObject(BehaviorResponse perceroObject, String userId)
+
+public BehaviorResponse createObject(BehaviorResponse perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -609,7 +602,7 @@ propertyCounter++;
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	Statement stmt = null;
-	String query = "Select BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
+	String query = "Select EFC_BEHAVIOR_RESPONSE_SEQ.NEXTVAL from dual";
 	String sql = null;
 	String insertedId = "0";
 	int result = 0;
@@ -661,9 +654,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

@@ -76,7 +76,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 		try {
 			AgentScorecard host = (AgentScorecard) syncAgentService.systemGetById(pair);
 			if (host == null) {
-				log.warn("Unable to calculate coachingNotification: Invalid objectId");
+				log.warn("Unable to calculate coachingNotification: Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 				return result;
 			}
 
@@ -174,7 +174,7 @@ public class AgentScorecardCWHelper extends DerivedValueChangeWatcherHelper {
 //		try {
 //			AgentScorecard host = (AgentScorecard) syncAgentService.systemGetById(pair);
 //			if (host == null) {
-//				log.warn("Unable to calculate scorecardMonthlyResults: Invalid objectId");
+//				log.warn("Unable to calculate scorecardMonthlyResults: Invalid objectId " + pair.getClassName() + "::" + pair.getID());
 //				return results;
 //			}
 //

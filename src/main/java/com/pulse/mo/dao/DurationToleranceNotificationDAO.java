@@ -175,7 +175,7 @@ nextResult.setName(rs.getString("NAME"));
 
 
 String agentID = rs.getString("AGENT_ID");
-if (StringUtils.hasText(agentID)) {
+if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID) ){
 Agent agent = new Agent();
 agent.setID(agentID);
 nextResult.setAgent(agent);
@@ -183,7 +183,7 @@ nextResult.setAgent(agent);
 
 
 String lobconfigurationID = rs.getString("LOB_CONFIGURATION_ID");
-if (StringUtils.hasText(lobconfigurationID)) {
+if (StringUtils.hasText(lobconfigurationID) && !"null".equalsIgnoreCase(lobconfigurationID) ){
 LOBConfiguration lobconfiguration = new LOBConfiguration();
 lobconfiguration.setID(lobconfigurationID);
 nextResult.setLOBConfiguration(lobconfiguration);
@@ -191,7 +191,7 @@ nextResult.setLOBConfiguration(lobconfiguration);
 
 
 String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID)) {
+if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
 TeamLeader teamleader = new TeamLeader();
 teamleader.setID(teamleaderID);
 nextResult.setTeamLeader(teamleader);
@@ -199,7 +199,7 @@ nextResult.setTeamLeader(teamleader);
 
 
 String lobconfigurationentryID = rs.getString("LOB_CONFIGURATION_ENTRY_ID");
-if (StringUtils.hasText(lobconfigurationentryID)) {
+if (StringUtils.hasText(lobconfigurationentryID) && !"null".equalsIgnoreCase(lobconfigurationentryID) ){
 LOBConfigurationEntry lobconfigurationentry = new LOBConfigurationEntry();
 lobconfigurationentry.setID(lobconfigurationentryID);
 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
@@ -497,15 +497,15 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_DURATION_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call UPDATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_DURATION_TOLERANCE_NOTIF(?,?,?,?,?,?,?,?,?)}";
+		return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_DURATION_TOLERANCE_NOTIF(?)}";
+		return "{call DELETE_DURATION_TOLERANCE_NOTI(?)}";
 	}
 	
 	

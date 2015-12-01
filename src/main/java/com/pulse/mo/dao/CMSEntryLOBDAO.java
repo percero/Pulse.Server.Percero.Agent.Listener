@@ -188,7 +188,7 @@ public class CMSEntryLOBDAO extends SqlDataAccessObject<CMSEntryLOB> implements
 
 
 String cmsentryID = rs.getString("CMS_ENTRY_ID");
-if (StringUtils.hasText(cmsentryID)) {
+if (StringUtils.hasText(cmsentryID) && !"null".equalsIgnoreCase(cmsentryID) ){
 CMSEntry cmsentry = new CMSEntry();
 cmsentry.setID(cmsentryID);
 nextResult.setCMSEntry(cmsentry);
@@ -196,7 +196,7 @@ nextResult.setCMSEntry(cmsentry);
 
 
 String lobID = rs.getString("LOB_ID");
-if (StringUtils.hasText(lobID)) {
+if (StringUtils.hasText(lobID) && !"null".equalsIgnoreCase(lobID) ){
 LOB lob = new LOB();
 lob.setID(lobID);
 nextResult.setLOB(lob);
