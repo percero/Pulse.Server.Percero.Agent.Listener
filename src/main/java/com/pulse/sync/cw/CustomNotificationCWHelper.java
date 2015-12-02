@@ -159,7 +159,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                     LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
                                     if (lob != null) {
                                         List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
-                                        if (lobConfigurationList != null) {
+                                        if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
                                             LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
                                             Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
                                             while (itrLobConfigurationEntry.hasNext()) {

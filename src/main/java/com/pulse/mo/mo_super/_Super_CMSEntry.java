@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -174,25 +175,26 @@ public void setCMSAuxMode(String cMSAuxMode)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="cMSEntry", cascade=javax.persistence.CascadeType.REMOVE)
-private List<CMSEntryLOB> cMSEntryLOBs;
-public List<CMSEntryLOB> getCMSEntryLOBs() {
-	return this.cMSEntryLOBs;
-}
-
-public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
-	this.cMSEntryLOBs = value;
-}
+//	@com.percero.agents.sync.metadata.annotations.Externalize
+//@JsonSerialize(contentUsing=BDOSerializer.class)
+//@JsonDeserialize(contentUsing=BDODeserializer.class)
+//@OneToMany(fetch=FetchType.LAZY, targetEntity=CMSEntryLOB.class, mappedBy="cMSEntry", cascade=javax.persistence.CascadeType.REMOVE)
+//private List<CMSEntryLOB> cMSEntryLOBs;
+//public List<CMSEntryLOB> getCMSEntryLOBs() {
+//	return this.cMSEntryLOBs;
+//}
+//
+//public void setCMSEntryLOBs(List<CMSEntryLOB> value) {
+//	this.cMSEntryLOBs = value;
+//}
 
 
 
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="EMPLOYEE_ID")
@@ -298,22 +300,22 @@ objectJson += ",\"agent\":";
 		
 		// Target Relationships
 //Retrieve value of the CMS Entry of CMS Entry LOB relationship
-objectJson += ",\"cMSEntryLOBs\":[";
-		
-		if (getCMSEntryLOBs() != null) {
-			int cMSEntryLOBsCounter = 0;
-			for(CMSEntryLOB nextCMSEntryLOBs : getCMSEntryLOBs()) {
-				if (cMSEntryLOBsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
-					cMSEntryLOBsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
+//objectJson += ",\"cMSEntryLOBs\":[";
+//
+//		if (getCMSEntryLOBs() != null) {
+//			int cMSEntryLOBsCounter = 0;
+//			for(CMSEntryLOB nextCMSEntryLOBs : getCMSEntryLOBs()) {
+//				if (cMSEntryLOBsCounter > 0)
+//					objectJson += ",";
+//				try {
+//					objectJson += ((BaseDataObject) nextCMSEntryLOBs).toEmbeddedJson();
+//					cMSEntryLOBsCounter++;
+//				} catch(Exception e) {
+//					// Do nothing.
+//				}
+//			}
+//		}
+//		objectJson += "]";
 
 		
 		return objectJson;
@@ -342,7 +344,7 @@ objectJson += ",\"cMSEntryLOBs\":[";
 
 
 		// Target Relationships
-		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+//		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
 
 
 	}
@@ -358,4 +360,4 @@ objectJson += ",\"cMSEntryLOBs\":[";
 		return listSetters;
 	}
 }
-
+
