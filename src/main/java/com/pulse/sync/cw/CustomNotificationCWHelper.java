@@ -164,14 +164,28 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                             Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
                                             while (itrLobConfigurationEntry.hasNext()) {
                                                 LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
-                                                if (lobConfigurationEntry.getCMSAuxCode() != null &&
-                                                        cmsEntry.getCMSAuxMode() != null &&
-                                                        lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode())) {
-                                                    //Logically there will be only one entry per AuxCode so this condition will be invoked only once
-                                                    //This implies that only one notiifcation of each type can be generated.
-                                                    generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-                                                    generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                                if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
+                                                    if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
+                                                            (lobConfigurationEntry.getCMSAuxCode() != null &&
+                                                                    cmsEntry.getCMSAuxMode() != null &&
+                                                                    lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
+                                                        //valid logic
+                                                        //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+                                                        //This implies that only one notiifcation of each type can be generated.
+                                                        generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                                        generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+
+                                                    }
+
                                                 }
+//                                                if (lobConfigurationEntry.getCMSAuxCode() != null &&
+//                                                        cmsEntry.getCMSAuxMode() != null &&
+//                                                        lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode())) {
+//                                                    //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+//                                                    //This implies that only one notiifcation of each type can be generated.
+//                                                    generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+//                                                    generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+//                                                }
                                             }
 
                                         }
@@ -283,17 +297,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                                         validActivityCodeList.add(lobConfigurationEntry.getType());
 
-                                                        if (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode())) {
-                                                            if (consecutiveActivityList.size() > lobConfigurationEntry.getOccurrence()) {
-                                                                //Generate the EStart Occurrence Tolerance notification
-                                                                generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                        lobConfiguration, lobConfigurationEntry, lobConfigurationEntry.getOccurrence());
-                                                            }
+                                                        if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
+                                                                (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
 
-                                                            if (consecutiveActivityDuration > lobConfigurationEntry.getMax()) {
-                                                                generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                        lobConfiguration, lobConfigurationEntry, lobConfigurationEntry.getMax());
-                                                            }
+                                                            generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
+
+                                                            generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
+
                                                         }
                                                     } else if (lobConfigurationEntry.getType().equals("NONBILLABLE_ACTIVITY_CODE")) {
 
@@ -350,7 +362,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Double duration = cmsEntry.getDuration();
         // If the duration is > DURATION_MAX, then create the notification.
-        if (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0) {
+        //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
+        //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
+        if (lobConfigurationEntry.getMax() != null && duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -380,13 +394,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateWorkModeOccurrenceNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                         LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
-        Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence();
+        Integer OCCURRENCE_MAX = Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
         List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(agent, cmsEntry);
 
-        Double duration = cmsEntry.getDuration();
         // If the duration is > DURATION_MAX, then create the notification.
-        if (cmsEntryList.size() > OCCURRENCE_MAX) {
+        //lobConfigurationEntry.getOccurrence() == nul - that means no threshold set hence no notification should be generated
+        if (lobConfigurationEntry.getOccurrence() != null && cmsEntryList.size() > OCCURRENCE_MAX) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -476,61 +490,71 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     private void generateOccurrenceToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
-                                                         LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
-                                                         int maxOccurrenceTolerance) throws Exception {
+                                                         LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
 
-        if (agent == null) {
-            agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+        int OCCURRENCE_MAX = Integer.parseInt(lobConfigurationEntry.getOccurrence());
+
+        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > Integer.parseInt(lobConfigurationEntry.getOccurrence())) {
+
+
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                OccurrenceToleranceNotification occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+                occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
+                occurrenceToleranceNotification.setAgent(agent);
+                occurrenceToleranceNotification.setCreatedOn(new Date());
+                occurrenceToleranceNotification.setTeamLeader(teamLeader);
+                occurrenceToleranceNotification.setName(OccurrenceToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
+                occurrenceToleranceNotification.setType(OccurrenceToleranceNotification.class.getName());
+
+                occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), OCCURRENCE_MAX));
+                occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
+                occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+            }
         }
-        if (agent != null && teamLeader == null) {
-            teamLeader = agent.getTeamLeader();
-        }
-
-        if (agent != null && teamLeader != null) {
-            OccurrenceToleranceNotification occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-            occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
-            occurrenceToleranceNotification.setAgent(agent);
-            occurrenceToleranceNotification.setCreatedOn(new Date());
-            occurrenceToleranceNotification.setTeamLeader(teamLeader);
-            occurrenceToleranceNotification.setName(OccurrenceToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + maxOccurrenceTolerance);
-            occurrenceToleranceNotification.setType(OccurrenceToleranceNotification.class.getName());
-
-            occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                    timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), maxOccurrenceTolerance));
-            occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
-            occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-            syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
-        }
-
     }
 
     private void generateDurationToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
-                                                       int maxDurationTolerance) throws Exception {
-        if (agent == null) {
-            agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
-        }
-        if (agent != null && teamLeader == null) {
-            teamLeader = agent.getTeamLeader();
-        }
+                                                       Double totalDuration) throws Exception {
 
-        if (agent != null && teamLeader != null) {
-            DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
-            durationToleranceNotification.setID(UUID.randomUUID().toString());
-            durationToleranceNotification.setAgent(agent);
-            durationToleranceNotification.setCreatedOn(new Date());
-            durationToleranceNotification.setTeamLeader(teamLeader);
-            durationToleranceNotification.setName(DurationToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + maxDurationTolerance);
-            durationToleranceNotification.setType(DurationToleranceNotification.class.getName());
+        Double DURATION_MIN = Double.parseDouble(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = Double.parseDouble(lobConfigurationEntry.getMin());
 
-            durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                    timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), maxDurationTolerance));
-            durationToleranceNotification.setLOBConfiguration(lobConfiguration);
-            durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-            syncAgentService.systemCreateObject(durationToleranceNotification, null);
+        //if max is null than no threshold required which is based on config data
+        if (lobConfigurationEntry.getMax() != null && totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0) {
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
+                durationToleranceNotification.setID(UUID.randomUUID().toString());
+                durationToleranceNotification.setAgent(agent);
+                durationToleranceNotification.setCreatedOn(new Date());
+                durationToleranceNotification.setTeamLeader(teamLeader);
+                durationToleranceNotification.setName(DurationToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationToleranceNotification.setType(DurationToleranceNotification.class.getName());
+
+                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
+                durationToleranceNotification.setLOBConfiguration(lobConfiguration);
+                durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                syncAgentService.systemCreateObject(durationToleranceNotification, null);
+            }
         }
-
     }
 
 

@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -91,14 +92,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer min;
+private String min;
 
-public Integer getMin() 
+public String getMin()
 {
 	return this.min;
 }
 
-public void setMin(Integer min)
+public void setMin(String min)
 {
 	this.min = min;
 }/*
@@ -108,14 +109,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer occurrence;
+private String occurrence;
 
-public Integer getOccurrence() 
+public String getOccurrence()
 {
 	return this.occurrence;
 }
 
-public void setOccurrence(Integer occurrence)
+public void setOccurrence(String occurrence)
 {
 	this.occurrence = occurrence;
 }/*
@@ -142,14 +143,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Integer max;
+private String max;
 
-public Integer getMax() 
+public String getMax()
 {
 	return this.max;
 }
 
-public void setMax(Integer max)
+public void setMax(String max)
 {
 	this.max = max;
 }/*
@@ -209,7 +210,8 @@ public void setThresholdExceededNotifications(List<ThresholdExceededNotification
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
@@ -222,7 +224,8 @@ public LOBConfiguration getLOBConfiguration() {
 
 public void setLOBConfiguration(LOBConfiguration value) {
 	this.lOBConfiguration = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="NOTIFICATION_FREQUENCY_ID")
@@ -432,13 +435,13 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 
 		// Properties
 		//From value of the Min property
-		setMin(JsonUtils.getJsonInteger(jsonObject, "min"));
+		setMin(JsonUtils.getJsonString(jsonObject, "min"));
 		//From value of the Occurrence property
-		setOccurrence(JsonUtils.getJsonInteger(jsonObject, "occurrence"));
+		setOccurrence(JsonUtils.getJsonString(jsonObject, "occurrence"));
 		//From value of the Type property
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
 		//From value of the Max property
-		setMax(JsonUtils.getJsonInteger(jsonObject, "max"));
+		setMax(JsonUtils.getJsonString(jsonObject, "max"));
 		//From value of the ESTART Activity Code property
 		setESTARTActivityCode(JsonUtils.getJsonString(jsonObject, "eSTARTActivityCode"));
 		//From value of the CMS Aux Code property
@@ -467,4 +470,4 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 		return listSetters;
 	}
 }
-
+
