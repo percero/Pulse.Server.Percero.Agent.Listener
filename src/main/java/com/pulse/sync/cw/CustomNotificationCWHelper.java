@@ -6,6 +6,7 @@ import java.util.*;
 import javax.annotation.PostConstruct;
 
 import com.pulse.mo.*;
+import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -352,8 +353,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-
-    //Notification generation methods
     private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                   LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
@@ -376,16 +375,16 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 WorkDurationNotification workDurationNotification = new WorkDurationNotification();
                 workDurationNotification.setID(UUID.randomUUID().toString());
-                workDurationNotification.setAgent(agent);
+                workDurationNotification.setAgent(agent); //xxxx
                 workDurationNotification.setCreatedOn(new Date());
                 workDurationNotification.setTeamLeader(teamLeader);
                 workDurationNotification.setName(WorkDurationNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType(WorkDurationNotification.class.getName());
 
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        cmsEntry.getFromTime(), cmsEntry.getToTime(), DURATION_MAX));
-                workDurationNotification.setLOBConfiguration(lobConfiguration);
-                workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                        cmsEntry.getFromTime(), cmsEntry.getToTime(), DURATION_MAX)); //xxx
+                workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
+                workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 syncAgentService.systemCreateObject(workDurationNotification, null);
             }
         }
