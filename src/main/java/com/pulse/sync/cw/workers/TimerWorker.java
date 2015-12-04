@@ -59,7 +59,8 @@ public class TimerWorker {
 		taskExecutor = value;
 	}
 
-	@Scheduled(fixedDelay=300000)	// Every 5 minutes
+	//TODO : this is commented intentionally to debugging
+//	@Scheduled(fixedDelay=300000)	// Every 5 minutes
 //	@Scheduled(fixedDelay=10000)	// Every 10 seconds
 	public void checkCurrentTime() {
 		System.out.println("Running TimerWorker");
