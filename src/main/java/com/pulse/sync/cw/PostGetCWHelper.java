@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		return syncAgentService;
 	}
 
-	@Autowired
+	@Autowired @Qualifier("executorWithCallerRunsPolicy")
 	TaskExecutor taskExecutor;
 	public void setTaskExecutor(TaskExecutor value) {
 		taskExecutor = value;
