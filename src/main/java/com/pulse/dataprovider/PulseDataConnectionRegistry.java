@@ -8,6 +8,7 @@ import com.percero.agents.sync.services.DAODataProvider;
 import com.percero.agents.sync.services.DataProviderManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +27,9 @@ public class PulseDataConnectionRegistry {
 
 	@Autowired
 	DAODataProvider daoDataProvider;
+
+	@Autowired(required=false) @Qualifier("daoConnectionFactoryConfigFile")
+	String configFile = "connectionFactories.yml";
 	
     private static Logger logger = Logger.getLogger(DAORegistry.class);
 
@@ -53,7 +57,7 @@ public class PulseDataConnectionRegistry {
 		connectionFactories = new HashMap<String, IConnectionFactory>();
 
         try {
-        	URL ymlUrl = UpdateTableRegistry.class.getClassLoader().getResource("connectionFactories.yml");
+        	URL ymlUrl = UpdateTableRegistry.class.getClassLoader().getResource(configFile);
         	if (ymlUrl == null) {
             	logger.warn("No configuration found for Connection Factories (connectionFactories.yml), skipping Connection Factories");
             	return;
