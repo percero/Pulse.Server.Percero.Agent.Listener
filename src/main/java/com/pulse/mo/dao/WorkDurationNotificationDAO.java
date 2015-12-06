@@ -216,10 +216,41 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
         pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
         pstmt.setString(4, perceroObject.getName());
 
-        if (perceroObject.getTeamLeader() == null) {
+        if (perceroObject.getTeamLeader() == null)
+        {
             pstmt.setString(5, null);
-        } else {
+        }
+        else
+        {
             pstmt.setString(5, perceroObject.getTeamLeader().getID());
+        }
+
+        if (perceroObject.getAgent() == null)
+        {
+            pstmt.setString(6, null);
+        }
+        else
+        {
+            pstmt.setString(6, perceroObject.getAgent().getID());
+        }
+        pstmt.setString(7, perceroObject.getMessage());
+
+        if (perceroObject.getLOBConfiguration() == null)
+        {
+            pstmt.setString(8, null);
+        }
+        else
+        {
+            pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+        }
+
+        if (perceroObject.getLOBConfigurationEntry() == null)
+        {
+            pstmt.setString(9, null);
+        }
+        else
+        {
+            pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
         }
 
     }
@@ -247,10 +278,41 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
         pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
         pstmt.setString(4, perceroObject.getName());
 
-        if (perceroObject.getTeamLeader() == null) {
+        if (perceroObject.getTeamLeader() == null)
+        {
             pstmt.setString(5, null);
-        } else {
+        }
+        else
+        {
             pstmt.setString(5, perceroObject.getTeamLeader().getID());
+        }
+
+        if (perceroObject.getAgent() == null)
+        {
+            pstmt.setString(6, null);
+        }
+        else
+        {
+            pstmt.setString(6, perceroObject.getAgent().getID());
+        }
+        pstmt.setString(7, perceroObject.getMessage());
+
+        if (perceroObject.getLOBConfiguration() == null)
+        {
+            pstmt.setString(8, null);
+        }
+        else
+        {
+            pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+        }
+
+        if (perceroObject.getLOBConfigurationEntry() == null)
+        {
+            pstmt.setString(9, null);
+        }
+        else
+        {
+            pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
         }
 
     }
@@ -385,12 +447,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?)}";
+        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?)}";
+        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

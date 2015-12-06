@@ -240,6 +240,38 @@ nextResult.setTimecardActivity(timecardactivity);
 		{
 			pstmt.setString(5, perceroObject.getTeamLeader().getID());
 		}
+
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(6, null);
+		}
+		else
+		{
+			pstmt.setString(6, perceroObject.getAgent().getID());
+		}
+
+		pstmt.setString(7, perceroObject.getMessage());
+
+		if (perceroObject.getLOBConfiguration() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+		}
+
+		pstmt.setString(9, perceroObject.getAuxCodeEntryName());
+
+		if (perceroObject.getTimecardActivity() == null)
+		{
+			pstmt.setString(10, null);
+		}
+		else
+		{
+			pstmt.setString(10, perceroObject.getTimecardActivity().getID());
+		}
+
 	}
 	
 	@Override
@@ -274,6 +306,38 @@ nextResult.setTimecardActivity(timecardactivity);
 		{
 			pstmt.setString(5, perceroObject.getTeamLeader().getID());
 		}
+
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(6, null);
+		}
+		else
+		{
+			pstmt.setString(6, perceroObject.getAgent().getID());
+		}
+
+		pstmt.setString(7, perceroObject.getMessage());
+
+		if (perceroObject.getLOBConfiguration() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+		}
+
+		pstmt.setString(9, perceroObject.getAuxCodeEntryName());
+
+		if (perceroObject.getTimecardActivity() == null)
+		{
+			pstmt.setString(10, null);
+		}
+		else
+		{
+			pstmt.setString(10, perceroObject.getTimecardActivity().getID());
+		}
+
 	}
 	
 	
@@ -491,11 +555,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_DURATION_MISMATCH_NOTI(?,?,?,?,?)}";
+		return "{call UPDATE_DURATION_MISMATCH_NOTI(?,?,?,,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_DURATION_MISMATCH_NOTI(?,?,?,?,?)}";
+		return "{call CREATE_DURATION_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {

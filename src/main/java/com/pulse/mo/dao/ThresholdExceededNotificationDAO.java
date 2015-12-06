@@ -243,6 +243,34 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 		{
 			pstmt.setString(5, perceroObject.getTeamLeader().getID());
 		}
+
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(6, null);
+		}
+		else
+		{
+			pstmt.setString(6, perceroObject.getAgent().getID());
+		}
+		pstmt.setString(7, perceroObject.getMessage());
+
+		if (perceroObject.getLOBConfiguration() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+		}
+
+		if (perceroObject.getLOBConfigurationEntry() == null)
+		{
+			pstmt.setString(9, null);
+		}
+		else
+		{
+			pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
+		}
 	}
 	
 	@Override
@@ -276,6 +304,34 @@ nextResult.setLOBConfigurationEntry(lobconfigurationentry);
 		else
 		{
 			pstmt.setString(5, perceroObject.getTeamLeader().getID());
+		}
+
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(6, null);
+		}
+		else
+		{
+			pstmt.setString(6, perceroObject.getAgent().getID());
+		}
+		pstmt.setString(7, perceroObject.getMessage());
+
+		if (perceroObject.getLOBConfiguration() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getLOBConfiguration().getID());
+		}
+
+		if (perceroObject.getLOBConfigurationEntry() == null)
+		{
+			pstmt.setString(9, null);
+		}
+		else
+		{
+			pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
 		}
 	}
 	
@@ -443,11 +499,11 @@ propertyCounter++;
 	
 	@Override
 	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?)}";
+		return "{call UPDATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?)}";
+		return "{call CREATE_THRSH_EXCEEDED_NOTI(?,?,?,?,?,?,?,?,?)}";
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
