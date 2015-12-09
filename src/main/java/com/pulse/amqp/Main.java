@@ -42,6 +42,7 @@ public class Main {
     public static void main(String[] args) {
 
         String config = "spring/percero-spring-config.xml"; // Default
+//        String config = "custom_spring/updateTable-estart-spring-config.xml"; // Default
         if (args.length > 0)
             config = args[0];
 
@@ -53,7 +54,7 @@ public class Main {
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
         // Test Login
-        /*
+/*
 //		Map<String, Object> componentBeans = context.getBeansWithAnnotation(Component.class);
 //		PerceroAgentListener percero = PerceroAgentListener.getInstance();
 //		AuthenticationRequest authRequest = new AuthenticationRequest();
@@ -117,7 +118,7 @@ public class Main {
 ////		teamLeader.setID("100458644");
 //
         TeamLeader teamLeader = new TeamLeader();
-        teamLeader.setID("100139921");//100139921
+        teamLeader.setID("301003000");//100139921
 //        teamLeader.setID("100544696");
         try {
             teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
@@ -152,13 +153,25 @@ public class Main {
 //				}
 //			}
 //
+
+
 //
-            Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
-            while (itrAgents.hasNext()) {
-                Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
+
+//            Iterator<Notification> notificationsItr = teamLeader.getNotifications().iterator();
+//
+//            while(notificationsItr.hasNext()){
+//                Notification notification = syncAgentService.systemGetByObject(notificationsItr.next());
+//
+//                System.out.println(notification);
+//            }
+
+
+//            Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
+//            while (itrAgents.hasNext()) {
+//                Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
 //                AgentLOB agentLOB = new AgentLOB();
 
-                if (nextAgent != null && nextAgent.getID().equals("100625110")) {//
+//                if (nextAgent != null && nextAgent.getID().equals("100477867")) {//
 //                    findAgentLOB.setAgent(nextAgent);
 
 //                    List<IPerceroObject> exampleLobResults = syncAgentService.systemFindByExample(findAgentLOB, null);
@@ -169,58 +182,59 @@ public class Main {
 
 
 
-                    System.out.println("Agent ID :" + nextAgent.getID());
-                    System.out.println("AgentLOB  :" + nextAgent.getAgentLOBs());
-//					nextAgent.getAgentLOBs()
-                    if (nextAgent.getAgentLOBs() != null) {
-                        Iterator<AgentLOB> itrAgentLOB = nextAgent.getAgentLOBs().iterator();
-                        System.out.println("****************************************");
-                        System.out.println("AgentLOB Size :" + nextAgent.getAgentLOBs().size());
-                        System.out.println("****************************************");
-                        while (itrAgentLOB.hasNext()) {
-                            AgentLOB agentLOB = syncAgentService.systemGetByObject(itrAgentLOB.next());
-                            if (agentLOB != null && agentLOB.getLOB() != null) {
-                                System.out.println("****************************************");
-                                System.out.println("AgentLOB ID :" + agentLOB.getID());
-                                System.out.println("AgentLOB LOB :" + agentLOB.getLOB());
-                                System.out.println("****************************************");
 
-                                LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
-                                if (lob != null) {
-                                    System.out.println("****************************************");
-                                    System.out.println("AgentLOB LOB ID :" + agentLOB.getLOB().getID());
-                                    System.out.println("****************************************");
-                                    if (lob.getLOBConfigurations() != null) {
-                                        System.out.println("****************************************");
-                                        System.out.println("AgentLOB LOB.LOBCOnfiguration size :" + lob.getLOBConfigurations().size());
-                                        System.out.println("****************************************");
-                                        Iterator<LOBConfiguration> itrLobConfiguration = lob.getLOBConfigurations().iterator();
-
-                                        while (itrLobConfiguration.hasNext()) {
-                                            LOBConfiguration lobConfiguration = (LOBConfiguration) syncAgentService.systemGetByObject(itrLobConfiguration.next());
-
-                                            if (lobConfiguration != null) {
-                                                System.out.println("****************************************");
-                                                System.out.println("AgentLOB lobConfiguration :" + lobConfiguration.getID());
-                                                System.out.println("****************************************");
-                                                Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
-                                                while (itrLobConfigurationEntry.hasNext()) {
-
-                                                    LOBConfigurationEntry lobConfigurationEntry = (LOBConfigurationEntry) syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
-                                                    if (lobConfigurationEntry != null) {
-                                                        System.out.println("****************************************");
-                                                        System.out.println("AgentLOB lobConfigurationentry_id :" + lobConfigurationEntry.getID());
-                                                        System.out.println("****************************************");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
+//                    System.out.println("Agent ID :" + nextAgent.getID());
+//                    System.out.println("AgentLOB  :" + nextAgent.getAgentLOBs());
+////					nextAgent.getAgentLOBs()
+//                    if (nextAgent.getAgentLOBs() != null) {
+//                        Iterator<AgentLOB> itrAgentLOB = nextAgent.getAgentLOBs().iterator();
+//                        System.out.println("****************************************");
+//                        System.out.println("AgentLOB Size :" + nextAgent.getAgentLOBs().size());
+//                        System.out.println("****************************************");
+//                        while (itrAgentLOB.hasNext()) {
+//                            AgentLOB agentLOB = syncAgentService.systemGetByObject(itrAgentLOB.next());
+//                            if (agentLOB != null && agentLOB.getLOB() != null) {
+//                                System.out.println("****************************************");
+//                                System.out.println("AgentLOB ID :" + agentLOB.getID());
+//                                System.out.println("AgentLOB LOB :" + agentLOB.getLOB());
+//                                System.out.println("****************************************");
+//
+//                                LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+//                                if (lob != null) {
+//                                    System.out.println("****************************************");
+//                                    System.out.println("AgentLOB LOB ID :" + agentLOB.getLOB().getID());
+//                                    System.out.println("****************************************");
+//                                    if (lob.getLOBConfigurations() != null) {
+//                                        System.out.println("****************************************");
+//                                        System.out.println("AgentLOB LOB.LOBCOnfiguration size :" + lob.getLOBConfigurations().size());
+//                                        System.out.println("****************************************");
+//                                        Iterator<LOBConfiguration> itrLobConfiguration = lob.getLOBConfigurations().iterator();
+//
+//                                        while (itrLobConfiguration.hasNext()) {
+//                                            LOBConfiguration lobConfiguration = (LOBConfiguration) syncAgentService.systemGetByObject(itrLobConfiguration.next());
+//
+//                                            if (lobConfiguration != null) {
+//                                                System.out.println("****************************************");
+//                                                System.out.println("AgentLOB lobConfiguration :" + lobConfiguration.getID());
+//                                                System.out.println("****************************************");
+//                                                Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+//                                                while (itrLobConfigurationEntry.hasNext()) {
+//
+//                                                    LOBConfigurationEntry lobConfigurationEntry = (LOBConfigurationEntry) syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+//                                                    if (lobConfigurationEntry != null) {
+//                                                        System.out.println("****************************************");
+//                                                        System.out.println("AgentLOB lobConfigurationentry_id :" + lobConfigurationEntry.getID());
+//                                                        System.out.println("****************************************");
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                    }
 
 //					Iterator<CMSEntry> itrCmsEntries = nextAgent.getCMSEntries().iterator();
 //					while (itrCmsEntries.hasNext()) {
@@ -346,8 +360,8 @@ public class Main {
 //						}
 //					}
 
-                }
-            }
+//                }
+//            }
 //			}
         } catch (Exception e) {
             e.printStackTrace();

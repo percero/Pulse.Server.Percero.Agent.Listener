@@ -6,7 +6,6 @@ import java.util.*;
 import javax.annotation.PostConstruct;
 
 import com.pulse.mo.*;
-import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,15 +24,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final Logger log = Logger.getLogger(CustomNotificationCWHelper.class);
 
     //CMSEntry based Notifications Messages
-    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {1} : System has detected a CMS aux code {2} starting at {3} and ending at {4} for the total duration of {5}  has exceeded the durration tolerance.";
-    private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {1} : System has detected a CMS aux code {2} starting at {3} and ending at {4} has occurred more times than the tolerance of {5}.";
+    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
 
 
     //Timecard based Notifications Messages
-    private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {1} : System has detected an invalid activity code {2} starting at {3} and ending at {4}";
-    private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {1} : System has detected a non-billable activity code {2} starting at {3} and ending at {4}";
-    private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {1} : System has detected an eStart activity code {2} starting at {3} and ending at {4} has occurred more times than the tolerance of {5}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {1} System has detected an eStart activity code {2} starting at {3} and ending at {4} for the total duration of {5}  has exceeded the durration tolerance.";
+    private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
+    private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
+    private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -356,8 +355,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                   LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
-        Double DURATION_MIN = Double.valueOf(lobConfigurationEntry.getMin());
-        Double DURATION_MAX = Double.valueOf(lobConfigurationEntry.getMax());
+        Double DURATION_MIN = lobConfigurationEntry.getMin()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
 
         Double duration = cmsEntry.getDuration();
         // If the duration is > DURATION_MAX, then create the notification.
@@ -378,11 +377,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 workDurationNotification.setAgent(agent); //xxxx
                 workDurationNotification.setCreatedOn(new Date());
                 workDurationNotification.setTeamLeader(teamLeader);
-                workDurationNotification.setName(WorkDurationNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setType(WorkDurationNotification.class.getName());
+                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setType("WorkDurationNotification");
 
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        cmsEntry.getFromTime(), cmsEntry.getToTime(), DURATION_MAX)); //xxx
+                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 syncAgentService.systemCreateObject(workDurationNotification, null);
@@ -393,7 +392,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateWorkModeOccurrenceNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                         LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
-        Integer OCCURRENCE_MAX = Integer.parseInt(lobConfigurationEntry.getOccurrence());
+        Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence()==null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
         List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(agent, cmsEntry);
 
@@ -414,8 +413,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 workModeOccurrenceNotification.setAgent(agent);
                 workModeOccurrenceNotification.setCreatedOn(new Date());
                 workModeOccurrenceNotification.setTeamLeader(teamLeader);
-                workModeOccurrenceNotification.setName(WorkModeOccurrenceNotification.class.getName() + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
-                workModeOccurrenceNotification.setType(WorkModeOccurrenceNotification.class.getName());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
                         cmsEntry.getFromTime(), cmsEntry.getToTime(), OCCURRENCE_MAX));
@@ -445,8 +444,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 invalidActivityCodeNotification.setAgent(agent);
                 invalidActivityCodeNotification.setCreatedOn(new Date());
                 invalidActivityCodeNotification.setTeamLeader(teamLeader);
-                invalidActivityCodeNotification.setName(InvalidActivityCodeNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode());
-                invalidActivityCodeNotification.setType(InvalidActivityCodeNotification.class.getName());
+                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
@@ -475,8 +474,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 nonBillableActivityNotification.setAgent(agent);
                 nonBillableActivityNotification.setCreatedOn(new Date());
                 nonBillableActivityNotification.setTeamLeader(teamLeader);
-                nonBillableActivityNotification.setName(NonBillableActivityNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode());
-                nonBillableActivityNotification.setType(NonBillableActivityNotification.class.getName());
+                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
                 nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -510,8 +509,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setAgent(agent);
                 occurrenceToleranceNotification.setCreatedOn(new Date());
                 occurrenceToleranceNotification.setTeamLeader(teamLeader);
-                occurrenceToleranceNotification.setName(OccurrenceToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
-                occurrenceToleranceNotification.setType(OccurrenceToleranceNotification.class.getName());
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
+                occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), OCCURRENCE_MAX));
@@ -544,8 +543,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setAgent(agent);
                 durationToleranceNotification.setCreatedOn(new Date());
                 durationToleranceNotification.setTeamLeader(teamLeader);
-                durationToleranceNotification.setName(DurationToleranceNotification.class.getName() + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
-                durationToleranceNotification.setType(DurationToleranceNotification.class.getName());
+                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationToleranceNotification.setType("DurationToleranceNotification");
 
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
@@ -569,7 +568,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
             //Check the the entry bellongs to
 
-            if (compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())) {
+            if (compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
+                    ( (watchedCMSEntry.getCMSAuxMode()==null && cmsEntry.getCMSAuxMode()==null)
+                            || watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))) {
                 cmsEntriesOfTheShift.add(cmsEntry);
             }
         }
