@@ -1,30 +1,31 @@
 DEFINE teamLeaderId='100500731';
 DEFINE agentId='100866511';
-DEFINE timecardDate =  '06-DEC-2015';
+DEFINE timecardDate =  '09-DEC-2015';
 
+--SELECT  * FROM pulse.MOB_CMS_DATA WHERE LOGIN_ID='&agentId' and to_char(start_time,'DD-MON-yyyy') ='&timecardDate';
 
---SELECT  * FROM pulse.MOB_CMS_DATA WHERE ID='&agentId' and to_char(start_time,'DD-MON-yyyy') ='&timecardDate';
+DELETE FROM pulse.MOB_CMS_DATA WHERE LOGIN_ID='&agentId' and to_char(start_time,'DD-MON-yyyy') ='&timecardDate';
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 14:04:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 15:07:00','DD-MON-yyyy HH24:mi:ss'), '63.48', '0', 'SWI84', '&agentId',PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 15:07:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 15:10:00','DD-MON-yyyy HH24:mi:ss'), '2.98', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 15:10:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 15:29:00','DD-MON-yyyy HH24:mi:ss'), '19.3', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 15:29:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 15:52:00','DD-MON-yyyy HH24:mi:ss'), '22.82', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 15:52:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 16:40:00','DD-MON-yyyy HH24:mi:ss'), '47.58', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 16:41:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 16:48:00','DD-MON-yyyy HH24:mi:ss'), '6.5', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 16:48:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 16:48:00','DD-MON-yyyy HH24:mi:ss'), '0.25', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 16:48:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 16:51:00','DD-MON-yyyy HH24:mi:ss'), '3.5', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 16:51:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 17:29:00','DD-MON-yyyy HH24:mi:ss'), '38.07', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 17:29:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 17:39:00','DD-MON-yyyy HH24:mi:ss'), '9.5', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 17:39:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 18:00:00','DD-MON-yyyy HH24:mi:ss'), '21.02', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 18:04:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 18:07:00','DD-MON-yyyy HH24:mi:ss'), '2.77', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 18:07:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 18:29:00','DD-MON-yyyy HH24:mi:ss'), '22.27', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 18:29:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 19:22:00','DD-MON-yyyy HH24:mi:ss'), '52.78', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 19:22:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 20:13:00','DD-MON-yyyy HH24:mi:ss'), '51.17', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 20:13:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 20:33:00','DD-MON-yyyy HH24:mi:ss'), '19.53', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 20:33:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 21:44:00','DD-MON-yyyy HH24:mi:ss'), '71.8', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 21:44:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 22:02:00','DD-MON-yyyy HH24:mi:ss'), '17.82', NULL, 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
+INSERT INTO pulse.MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES( to_date('&timecardDate 22:02:00','DD-MON-yyyy HH24:mi:ss'), to_date('&timecardDate 22:30:00','DD-MON-yyyy HH24:mi:ss'), '27.58', '0', 'SWI84', '&agentId', PULSE.MOB_CMS_DATA_SEQ.nextval);
 
-DELETE FROM pulse.MOB_CMS_DATA WHERE ID='&agentId' and to_char(start_time,'DD-MON-yyyy') ='&timecardDate';
+COMMIT;
 
-
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 14:04:00', '&timecardDate 15:07:00', '63.48', '0', 'SWI84', '&agentId', '13530385');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 15:07:00', '&timecardDate 15:10:00', '2.98', NULL, 'SWI84', '&agentId', '13534699');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 15:10:00', '&timecardDate 15:29:00', '19.3', '0', 'SWI84', '&agentId', '13534698');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 15:29:00', '&timecardDate 15:52:00', '22.82', NULL, 'SWI84', '&agentId', '13537621');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 15:52:00', '&timecardDate 16:40:00', '47.58', '0', 'SWI84', '&agentId', '13537620');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 16:41:00', '&timecardDate 16:48:00', '6.5', NULL, 'SWI84', '&agentId', '13542541');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 16:48:00', '&timecardDate 16:48:00', '0.25', '0', 'SWI84', '&agentId', '13542540');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 16:48:00', '&timecardDate 16:51:00', '3.5', NULL, 'SWI84', '&agentId', '13543529');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 16:51:00', '&timecardDate 17:29:00', '38.07', '0', 'SWI84', '&agentId', '13543528');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 17:29:00', '&timecardDate 17:39:00', '9.5', NULL, 'SWI84', '&agentId', '13547405');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 17:39:00', '&timecardDate 18:00:00', '21.02', '0', 'SWI84', '&agentId', '13547404');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 18:04:00', '&timecardDate 18:07:00', '2.77', NULL, 'SWI84', '&agentId', '13550472');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 18:07:00', '&timecardDate 18:29:00', '22.27', '0', 'SWI84', '&agentId', '13550471');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 18:29:00', '&timecardDate 19:22:00', '52.78', NULL, 'SWI84', '&agentId', '13559163');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 19:22:00', '&timecardDate 20:13:00', '51.17', '0', 'SWI84', '&agentId', '13559162');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 20:13:00', '&timecardDate 20:33:00', '19.53', NULL, 'SWI84', '&agentId', '13568466');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 20:33:00', '&timecardDate 21:44:00', '71.8', '0', 'SWI84', '&agentId', '13568465');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 21:44:00', '&timecardDate 22:02:00', '17.82', NULL, 'SWI84', '&agentId', '13582176');
-INSERT INTO MOB_CMS_DATA(START_TIME, END_TIME, EVENT_DURATION, AUXREASON, SWI_CODE, LOGIN_ID, ID) VALUES('&timecardDate 22:02:00', '&timecardDate 22:30:00', '27.58', '0', 'SWI84', '&agentId', '13582175');
+EXIT
 
