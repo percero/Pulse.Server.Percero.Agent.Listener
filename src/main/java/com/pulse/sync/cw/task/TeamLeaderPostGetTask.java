@@ -116,24 +116,25 @@ public class TeamLeaderPostGetTask implements Runnable {
 		}
 		
 		// Now remove old CoachingNotifications
-		if (earliestWeekDate != null) {
-			Iterator<Notification> itr = host.getNotifications().iterator();
-			while (itr.hasNext()) {
-				Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
-				if (nextNotify instanceof CoachingNotification) {
-					CoachingNotification coachingNotify = (CoachingNotification) nextNotify;
-					DateTime nextWeekDateTime = new DateTime(coachingNotify.getWeekDate(), dateTimeZone);
-					int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, earliestWeekDate);
-					if (dateCompareResult < 0) {
-						try {
-							syncAgentService.systemDeleteObject(coachingNotify, null, true);
-						} catch (Exception e) {
-							log.error("Unable to delete CoachingNotification " + coachingNotify.getID(), e);
-						}
-					}
-				}
-			}
-		}
+		//TODO : Temporarily disabling this due to incorrect logic
+//		if (earliestWeekDate != null) {
+//			Iterator<Notification> itr = host.getNotifications().iterator();
+//			while (itr.hasNext()) {
+//				Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
+//				if (nextNotify instanceof CoachingNotification) {
+//					CoachingNotification coachingNotify = (CoachingNotification) nextNotify;
+//					DateTime nextWeekDateTime = new DateTime(coachingNotify.getWeekDate(), dateTimeZone);
+//					int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextWeekDateTime, earliestWeekDate);
+//					if (dateCompareResult < 0) {
+//						try {
+//							syncAgentService.systemDeleteObject(coachingNotify, null, true);
+//						} catch (Exception e) {
+//							log.error("Unable to delete CoachingNotification " + coachingNotify.getID(), e);
+//						}
+//					}
+//				}
+//			}
+//		}
 	}
 
 	public CoachingNotification validateOrCreateCoachingNotificationForTeamLeaderScorecardAndWeekDate(
@@ -265,23 +266,24 @@ public class TeamLeaderPostGetTask implements Runnable {
 		}
 		
 		// Now remove old ShiftStatusNotifications
-		shiftDateTime = shiftDateTime.plusDays(1);
-		Iterator<Notification> itr = host.getNotifications().iterator();
-		while (itr.hasNext()) {
-			Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
-			if (nextNotify instanceof ShiftStatusNotification) {
-				ShiftStatusNotification shiftStatusNotify = (ShiftStatusNotification) nextNotify;
-				DateTime nextShiftDateTime = new DateTime(shiftStatusNotify.getShiftEndDate(), dateTimeZone);
-				int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextShiftDateTime, shiftDateTime);
-				if (dateCompareResult < 0) {
-					try {
-						syncAgentService.systemDeleteObject(shiftStatusNotify, null, true);
-					} catch (Exception e) {
-						log.error("Unable to delete ShiftStatusNotification " + shiftStatusNotify.getID(), e);
-					}
-				}
-			}
-		}
+		//TODO : Temporarily disabling this due to incorrect logic
+//		shiftDateTime = shiftDateTime.plusDays(1);
+//		Iterator<Notification> itr = host.getNotifications().iterator();
+//		while (itr.hasNext()) {
+//			Notification nextNotify = syncAgentService.systemGetByObject(itr.next());
+//			if (nextNotify instanceof ShiftStatusNotification) {
+//				ShiftStatusNotification shiftStatusNotify = (ShiftStatusNotification) nextNotify;
+//				DateTime nextShiftDateTime = new DateTime(shiftStatusNotify.getShiftEndDate(), dateTimeZone);
+//				int dateCompareResult = DateTimeComparator.getDateOnlyInstance().compare(nextShiftDateTime, shiftDateTime);
+//				if (dateCompareResult < 0) {
+//					try {
+//						syncAgentService.systemDeleteObject(shiftStatusNotify, null, true);
+//					} catch (Exception e) {
+//						log.error("Unable to delete ShiftStatusNotification " + shiftStatusNotify.getID(), e);
+//					}
+//				}
+//			}
+//		}
 	}
 	
 	public ShiftStatusNotification validateOrCreateShiftStatusNotificationForTeamLeaderAndShiftDate(TeamLeader teamLeader, Date shiftDate) {

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -52,13 +53,14 @@ public class TimerWorker {
 	@Autowired
 	IChangeWatcherHelperFactory changeWatcherHelperFactory;
 
-	@Autowired
+	@Autowired @Qualifier("executorWithCallerRunsPolicy")
 	TaskExecutor taskExecutor;
 	public void setTaskExecutor(TaskExecutor value) {
 		taskExecutor = value;
 	}
 
-	@Scheduled(fixedDelay=300000)	// Every 5 minutes
+	//TODO : this is commented intentionally to debugging
+//	@Scheduled(fixedDelay=300000)	// Every 5 minutes
 //	@Scheduled(fixedDelay=10000)	// Every 10 seconds
 	public void checkCurrentTime() {
 		System.out.println("Running TimerWorker");
