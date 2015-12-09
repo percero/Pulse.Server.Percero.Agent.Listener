@@ -303,62 +303,52 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 	protected void setPreparedStatmentUpdateParams(BehaviorResponse perceroObject, PreparedStatement pstmt) throws SQLException {
 
 		pstmt.setString(1, perceroObject.getUpdatedBy());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,6, perceroObject.getResponse());
+		pstmt.setString(2, perceroObject.getCreatedBy());
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
+		JdbcHelper.setInt(pstmt,6, perceroObject.getResponse());
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getAgent().getID());
-}
-
-
-if (perceroObject.getBehavior() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getBehavior().getID());
-}
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(7, null);
+		}
+		else
+		{
+			pstmt.setString(7, perceroObject.getAgent().getID());
+		}
 
 
-if (perceroObject.getCoachingSession() == null)
-{
-pstmt.setString(9, null);
-}
-else
-{
-		pstmt.setString(9, perceroObject.getCoachingSession().getID());
-}
+		if (perceroObject.getBehavior() == null)
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getBehavior().getID());
+		}
 
 
-if (perceroObject.getScorecardMeasure() == null)
-{
-pstmt.setString(10, null);
-}
-else
-{
-		pstmt.setString(10, perceroObject.getScorecardMeasure().getID());
-}
+		if (perceroObject.getCoachingSession() == null)
+		{
+			pstmt.setString(9, null);
+		}
+		else
+		{
+			pstmt.setString(9, perceroObject.getCoachingSession().getID());
+		}
 
 
-if (perceroObject.getScorecardWeeklyResult() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getScorecardWeeklyResult().getID());
-}
-
-pstmt.setString(12, perceroObject.getID());
+		if (perceroObject.getScorecardMeasure() == null)
+		{
+			pstmt.setString(10, null);
+		}
+		else
+		{
+			pstmt.setString(10, perceroObject.getScorecardMeasure().getID());
+		}
+		
+		pstmt.setString(11, perceroObject.getID());
 
 		
 	}
