@@ -1,12 +1,11 @@
 package com.pulse.amqp;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.text.MessageFormat;
+import java.util.*;
 
 import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.dao.LOBConfigurationDAO;
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -35,6 +34,17 @@ import com.pulse.mo.*;
 public class Main {
     private static Logger logger = Logger.getLogger(Main.class);
 
+    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
+
+
+    //Timecard based Notifications Messages
+    private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
+    private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
+    private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+
+
     /**
      * Main function for starting the process
      */
@@ -42,7 +52,8 @@ public class Main {
     public static void main(String[] args) {
 
         String config = "spring/percero-spring-config.xml"; // Default
-//        String config = "custom_spring/updateTable-estart-spring-config.xml"; // Default
+//        String config = "custom_spring/updateTable-estart-spring-config.xml";
+//          String config = "custom_spring/updateTable-cms-spring-config.xml";
         if (args.length > 0)
             config = args[0];
 
@@ -53,8 +64,12 @@ public class Main {
 
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
-        // Test Login
-/*
+
+        //unitTestOnMain( context);
+    }
+    private static void unitTestOnMain(ApplicationContext context){
+    // Test Login
+
 //		Map<String, Object> componentBeans = context.getBeansWithAnnotation(Component.class);
 //		PerceroAgentListener percero = PerceroAgentListener.getInstance();
 //		AuthenticationRequest authRequest = new AuthenticationRequest();
@@ -118,7 +133,7 @@ public class Main {
 ////		teamLeader.setID("100458644");
 //
         TeamLeader teamLeader = new TeamLeader();
-        teamLeader.setID("301003000");//100139921
+        teamLeader.setID("100407373");//100139921
 //        teamLeader.setID("100544696");
         try {
             teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
@@ -153,8 +168,39 @@ public class Main {
 //				}
 //			}
 //
+            Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
+            while (itrAgents.hasNext()) {
+                Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
 
+//                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
+//                while(itrCMSEntries.hasNext()) {
+//                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
+//
+//                    //9th dec entry process
+//                    if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
+//                        processCMSEntry(syncAgentService, cMSEntry);
+//                    }
+//                }
 
+                Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
+                while(itrTimecard.hasNext()) {
+                    Timecard timecard = syncAgentService.systemGetByObject(itrTimecard.next());
+
+                    System.out.println("timecard start date : " + timecard.getStartDate());
+                    //9th dec entry process
+                    if (timecard != null){ //&& timecard.getStartDate().getDay() == 9 && timecard.getStartDate().getMonth()==11){
+
+                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
+                        while(itrTimecardEntries.hasNext()) {
+                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
+                            if (timecardEntry != null){// && timecardEntry.getFromTime().getDay() == 9 && timecardEntry.getFromTime().getMonth()==11) {
+                                processTimecarEntry(syncAgentService, timecardEntry);
+                            }
+
+                        }
+                    }
+                }
+            }
 //
 
 //            Iterator<Notification> notificationsItr = teamLeader.getNotifications().iterator();
@@ -490,6 +536,483 @@ public class Main {
 //			e.printStackTrace();
 //		}
 
-*/
+
+    }
+
+    public static void processCMSEntry(ISyncAgentService syncAgentService, CMSEntry cmsEntry) throws Exception {
+//        if (updatedObject instanceof CMSEntry) {
+//            CMSEntry cmsEntry = (CMSEntry) updatedObject;
+            Agent agent = null;
+            TeamLeader teamLeader = null;
+
+            if (cmsEntry != null) {
+
+                // 1. Check for Work Mode DURATION Tolerance
+
+                //Work Mode Duration
+                //For the watched CMSEntry,
+                //Use the AuxCode in the Entry and look into the configuration.
+                //Use min and max value associated with it to check the duration is within the allowed range.
+                //In condition fails, generate notification
+                //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
+
+//                        cmsEntry.getCMSAuxMode()
+                if (agent == null) {
+                    agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+                }
+
+                if (agent != null) {
+                    if (agent.getAgentLOBs().size() == 1) {
+                        //Valid scenario for notification
+                        AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+                        if (agentLOB != null) {
+                            LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+                            if (lob != null) {
+                                List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+                                if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
+                                    LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+                                    Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+                                    while (itrLobConfigurationEntry.hasNext()) {
+                                        LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+                                        if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
+                                            if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
+                                                    (lobConfigurationEntry.getCMSAuxCode() != null &&
+                                                            cmsEntry.getCMSAuxMode() != null &&
+                                                            lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
+                                                //valid logic
+                                                //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+                                                //This implies that only one notiifcation of each type can be generated.
+                                                generateWorkDurationNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                                generateWorkModeOccurrenceNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+
+                                            }
+
+                                        }
+//                                                if (lobConfigurationEntry.getCMSAuxCode() != null &&
+//                                                        cmsEntry.getCMSAuxMode() != null &&
+//                                                        lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode())) {
+//                                                    //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+//                                                    //This implies that only one notiifcation of each type can be generated.
+//                                                    generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+//                                                    generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+//                                                }
+                                    }
+
+                                }
+                            }
+                        }
+                    } else {
+                        //Not a Valid scenario for notification
+                        // Do not send notification
+                        System.out.println("****** CMS Entry based notification is not generated due to following configuration ******");
+                        System.out.println("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+                    }
+                }
+
+
+                // 2.
+
+
+                // 3.
+
+
+                // 4.
+
+            }
+
+//        }
+    }
+
+    private static void generateWorkDurationNotification(ISyncAgentService syncAgentService, CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
+                                                  LOBConfigurationEntry lobConfigurationEntry) throws Exception {
+
+        Double DURATION_MIN = lobConfigurationEntry.getMin()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
+
+        Double duration = cmsEntry.getDuration();
+        // If the duration is > DURATION_MAX, then create the notification.
+        //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
+        //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
+        if (lobConfigurationEntry.getMax() != null && duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0) {
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+
+                WorkDurationNotification workDurationNotification = new WorkDurationNotification();
+                workDurationNotification.setID(UUID.randomUUID().toString());
+                workDurationNotification.setAgent(agent); //xxxx
+                workDurationNotification.setCreatedOn(new Date());
+                workDurationNotification.setTeamLeader(teamLeader);
+                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setType("WorkDurationNotification");
+
+                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
+                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
+                workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
+                workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
+                syncAgentService.systemCreateObject(workDurationNotification, null);
+            }
+        }
+    }
+
+    private static void generateWorkModeOccurrenceNotification(ISyncAgentService syncAgentService, CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
+                                                        LOBConfigurationEntry lobConfigurationEntry) throws Exception {
+
+        Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence()==null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
+
+        List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(syncAgentService,agent, cmsEntry);
+
+        // If the duration is > DURATION_MAX, then create the notification.
+        //lobConfigurationEntry.getOccurrence() == nul - that means no threshold set hence no notification should be generated
+        if (lobConfigurationEntry.getOccurrence() != null && cmsEntryList.size() > OCCURRENCE_MAX) {
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+
+                WorkModeOccurrenceNotification workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
+                workModeOccurrenceNotification.setID(UUID.randomUUID().toString());
+                workModeOccurrenceNotification.setAgent(agent);
+                workModeOccurrenceNotification.setCreatedOn(new Date());
+                workModeOccurrenceNotification.setTeamLeader(teamLeader);
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
+
+                workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
+                        cmsEntry.getFromTime(), cmsEntry.getToTime(), OCCURRENCE_MAX));
+                workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
+                workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
+            }
+        }
+    }
+
+    private static List<CMSEntry> getCurrentShiftCMSEntries(ISyncAgentService syncAgentService, Agent agent, CMSEntry watchedCMSEntry) {
+
+        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
+
+        Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
+        Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
+
+        while (itrCMSEntry.hasNext()) {
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
+            //Check the the entry bellongs to
+
+            if (compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
+                    ( (watchedCMSEntry.getCMSAuxMode()==null && cmsEntry.getCMSAuxMode()==null)
+                            || watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))) {
+                cmsEntriesOfTheShift.add(cmsEntry);
+            }
+        }
+
+        return cmsEntriesOfTheShift;
+    }
+    private static boolean compareDates(Date sourceDate, Date targetDate) {
+
+        sourceDate.setHours(0);
+        sourceDate.setMinutes(0);
+        sourceDate.setSeconds(0);
+
+        targetDate.setHours(0);
+        targetDate.setMinutes(0);
+        targetDate.setSeconds(0);
+
+        if (sourceDate.compareTo(targetDate) == 0) {
+            return true;
+
+        }
+        return false;
+
+    }
+
+    private static void processTimecarEntry(ISyncAgentService syncAgentService, TimecardEntry timecardEntry) throws Exception {
+
+            Agent agent = null;
+            TeamLeader teamLeader = null;
+
+            if (timecardEntry != null) {
+
+                // 1. eStart InValid Activity code
+
+                //For the watched TimecarEntry,
+                //Use the ActivityCode in the Entry and look into the configuration Along with key for "NON-BILLABLE" (Still need to be decided for the key).
+                //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
+                //In condition fails, generate notification
+
+                if (agent == null) {
+                    agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+                }
+//                LOB nlob = new LOB();
+//                nlob.setID("669");
+//
+//                AgentLOB agentLOB = new AgentLOB();
+//                agentLOB.setAgent(agent);
+//                agentLOB.setID(agent.getID()+"-"+nlob.getID());
+//                agentLOB.setLOB(nlob);
+//
+//                agent.getAgentLOBs().add(agentLOB);
+
+                if (agent != null) {
+                    if (agent.getAgentLOBs().size() == 1) {
+                        //Valid scenario for notification
+                        //Pick up the first AgentLOB because it is assumed that if Agent has other than 1 AgentLOB it is invalid scenario for Notification
+                        AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+
+                        if (agentLOB != null) {
+
+                            LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+
+                            if (lob != null) {
+
+                                List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+
+                                if (lobConfigurationList != null & lobConfigurationList.size() > 0) {
+
+                                    //Preloading objects inorder do code duplication in subsequent calls.
+                                    //Not passing them due to avoid long signatures. This will not make performance impact because rest
+                                    //is in memory operations
+                                    Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
+                                    TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+                                    List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
+
+                                    Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(syncAgentService, agent, timecardEntry, timecarActivity.getCode(), consecutiveActivityList);
+
+                                    //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
+                                    // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
+                                    // the first record.
+                                    // TODO: TO BE CONFIRMED WITH RICHARD.
+                                    LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+
+                                    List<String> validActivityCodeList = new ArrayList<String>();
+                                    List<String> nonBillableActivityCodeList = new ArrayList<String>();
+
+                                    Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+
+                                    while (itrLobConfigurationEntry.hasNext()) {
+
+                                        LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+
+                                        if (lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
+
+                                            if (lobConfigurationEntry.getType().equals("VALID_ACTIVITY_CODE")) {
+
+                                                validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+
+                                                if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
+                                                        (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
+
+                                                    generateOccurrenceToleranceNotification(syncAgentService, timecardEntry, agent, teamLeader,
+                                                            lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
+
+                                                    generateDurationToleranceNotification(syncAgentService, timecardEntry, agent, teamLeader,
+                                                            lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
+
+                                                }
+                                            } else if (lobConfigurationEntry.getType().equals("NONBILLABLE_ACTIVITY_CODE")) {
+
+                                                nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+
+                                            }
+                                        }
+                                    }
+
+
+                                    //Generate Invalid Activity Code Notification if TimecardEntry Activity's activity code is not in the list of valid code
+                                    generateInvalidActivityCodeNotification(syncAgentService, timecardEntry, agent, teamLeader, validActivityCodeList, lobConfiguration);
+
+                                    //Generate NonBillable Activity Code Notification if TimecardEntry Activity's activity code is in the list of NonBillable code
+                                    generateNonBillableActivityCodeNotification(syncAgentService, timecardEntry, agent, teamLeader, nonBillableActivityCodeList, lobConfiguration);
+
+
+                                }
+
+                            }
+                        }
+                    } else {
+
+                        //Not a Valid scenario for notification
+                        // Do not send notification
+                        System.out.println("****** TimeCard Entry based notification is not generated due to following configuration ******");
+                        System.out.println("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+                    }
+                }
+            }
+
+
+            // 3.
+
+
+            // 4.
+
+            }
+
+    private static Double getConsecutiveActivityCodeDetailFromTimecard(ISyncAgentService syncAgentService, Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
+
+//        Integer consecutiveAcitivityCount = 0;
+        Double activityTimeSpan = 0.0;
+
+        Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
+
+        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
+
+        boolean processData = true;
+
+        for (int cnt = timecardEntryList.size() - 1; cnt >= 0 && processData; cnt--) {
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(timecardEntryList.get(cnt));
+
+            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+            //If code does not have consecutiveness then brk the look
+            if (timecardActivity.getCode().equals(activityCode)) {
+
+                activityTimeSpan += timecardEntry.getDuration();
+                timecardEntryListOfActivityCode.add(timecardEntry);
+            } else {
+                processData = false;
+            }
+
+        }
+
+        return activityTimeSpan;
+    }
+
+    private static void generateOccurrenceToleranceNotification(ISyncAgentService syncAgentService, TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
+                                                                LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
+
+
+        int OCCURRENCE_MAX =  lobConfigurationEntry.getOccurrence()==null? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
+
+        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > Integer.parseInt(lobConfigurationEntry.getOccurrence())) {
+
+
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                OccurrenceToleranceNotification occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+                occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
+                occurrenceToleranceNotification.setAgent(agent);
+                occurrenceToleranceNotification.setCreatedOn(new Date());
+                occurrenceToleranceNotification.setTeamLeader(teamLeader);
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
+                occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
+
+                occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), OCCURRENCE_MAX));
+                occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
+                occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+            }
+        }
+    }
+
+    private static void generateDurationToleranceNotification(ISyncAgentService syncAgentService, TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
+                                                              LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
+                                                              Double totalDuration) throws Exception {
+
+        Double DURATION_MIN = lobConfigurationEntry.getMin()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
+
+        //if max is null than no threshold required which is based on config data
+        if (lobConfigurationEntry.getMax() != null && totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0) {
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
+                durationToleranceNotification.setID(UUID.randomUUID().toString());
+                durationToleranceNotification.setAgent(agent);
+                durationToleranceNotification.setCreatedOn(new Date());
+                durationToleranceNotification.setTeamLeader(teamLeader);
+                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationToleranceNotification.setType("DurationToleranceNotification");
+
+                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
+                durationToleranceNotification.setLOBConfiguration(lobConfiguration);
+                durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                syncAgentService.systemCreateObject(durationToleranceNotification, null);
+            }
+        }
+    }
+
+    private static void generateInvalidActivityCodeNotification(ISyncAgentService syncAgentService, TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader, List<String> validActivityCodeList,
+                                                                LOBConfiguration lobConfiguration) throws Exception {
+
+
+        if (!validActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                InvalidActivityCodeNotification invalidActivityCodeNotification = new InvalidActivityCodeNotification();
+                invalidActivityCodeNotification.setID(UUID.randomUUID().toString());
+                invalidActivityCodeNotification.setAgent(agent);
+                invalidActivityCodeNotification.setCreatedOn(new Date());
+                invalidActivityCodeNotification.setTeamLeader(teamLeader);
+                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
+                invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
+//                invalidActivityCodeNotification.setLOBConfigurationEntry();
+                syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
+            }
+        }
+    }
+
+    private static void generateNonBillableActivityCodeNotification(ISyncAgentService syncAgentService, TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader, List<String> nonBillableActivityCodeList,
+                                                                    LOBConfiguration lobConfiguration) throws Exception {
+
+
+        if (!nonBillableActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+            }
+            if (agent != null && teamLeader == null) {
+                teamLeader = agent.getTeamLeader();
+            }
+
+            if (agent != null && teamLeader != null) {
+                NonBillableActivityNotification nonBillableActivityNotification = new NonBillableActivityNotification();
+                nonBillableActivityNotification.setID(UUID.randomUUID().toString());
+                nonBillableActivityNotification.setAgent(agent);
+                nonBillableActivityNotification.setCreatedOn(new Date());
+                nonBillableActivityNotification.setTeamLeader(teamLeader);
+                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                nonBillableActivityNotification.setType("NonBillableActivityNotification");
+                nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
+
+                nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
+//                nonBillableActivityNotification.setLOBConfigurationEntry();
+                syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
+            }
+        }
     }
 }

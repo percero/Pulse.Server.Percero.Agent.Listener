@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -108,14 +109,14 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private Boolean nonBillable;
+private String nonBillable;
 
-public Boolean getNonBillable() 
+public String getNonBillable()
 {
 	return this.nonBillable;
 }
 
-public void setNonBillable(Boolean nonBillable)
+public void setNonBillable(String nonBillable)
 {
 	this.nonBillable = nonBillable;
 }/*
@@ -263,7 +264,8 @@ public void setCode(String code)
 		//From value of the Name property
 		setName(JsonUtils.getJsonString(jsonObject, "name"));
 		//From value of the Non Billable property
-		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
+//		setNonBillable(JsonUtils.getJsonBoolean(jsonObject, "nonBillable"));
+		setName(JsonUtils.getJsonString(jsonObject, "nonBillable"));
 		//From value of the Description property
 		setDescription(JsonUtils.getJsonString(jsonObject, "description"));
 		//From value of the Code property
@@ -288,4 +290,4 @@ public void setCode(String code)
 		return listSetters;
 	}
 }
-
+

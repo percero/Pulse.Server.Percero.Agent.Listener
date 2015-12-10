@@ -192,18 +192,18 @@ public void setCMSAuxCode(String cMSAuxCode)
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(contentUsing=BDOSerializer.class)
-@JsonDeserialize(contentUsing=BDODeserializer.class)
-@OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdExceededNotification.class, mappedBy="lOBConfigurationEntry", cascade=javax.persistence.CascadeType.REMOVE)
-private List<ThresholdExceededNotification> thresholdExceededNotifications;
-public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
-	return this.thresholdExceededNotifications;
-}
-
-public void setThresholdExceededNotifications(List<ThresholdExceededNotification> value) {
-	this.thresholdExceededNotifications = value;
-}
+//	@com.percero.agents.sync.metadata.annotations.Externalize
+//@JsonSerialize(contentUsing=BDOSerializer.class)
+//@JsonDeserialize(contentUsing=BDODeserializer.class)
+//@OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdExceededNotification.class, mappedBy="lOBConfigurationEntry", cascade=javax.persistence.CascadeType.REMOVE)
+//private List<ThresholdExceededNotification> thresholdExceededNotifications;
+//public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
+//	return this.thresholdExceededNotifications;
+//}
+//
+//public void setThresholdExceededNotifications(List<ThresholdExceededNotification> value) {
+//	this.thresholdExceededNotifications = value;
+//}
 
 
 
@@ -407,22 +407,22 @@ objectJson += ",\"notificationFrequency\":";
 		
 		// Target Relationships
 //Retrieve value of the LOB Configuration Entry of Threshold Exceeded Notification relationship
-objectJson += ",\"thresholdExceededNotifications\":[";
-		
-		if (getThresholdExceededNotifications() != null) {
-			int thresholdExceededNotificationsCounter = 0;
-			for(ThresholdExceededNotification nextThresholdExceededNotifications : getThresholdExceededNotifications()) {
-				if (thresholdExceededNotificationsCounter > 0)
-					objectJson += ",";
-				try {
-					objectJson += ((BaseDataObject) nextThresholdExceededNotifications).toEmbeddedJson();
-					thresholdExceededNotificationsCounter++;
-				} catch(Exception e) {
-					// Do nothing.
-				}
-			}
-		}
-		objectJson += "]";
+//objectJson += ",\"thresholdExceededNotifications\":[";
+//
+//		if (getThresholdExceededNotifications() != null) {
+//			int thresholdExceededNotificationsCounter = 0;
+//			for(ThresholdExceededNotification nextThresholdExceededNotifications : getThresholdExceededNotifications()) {
+//				if (thresholdExceededNotificationsCounter > 0)
+//					objectJson += ",";
+//				try {
+//					objectJson += ((BaseDataObject) nextThresholdExceededNotifications).toEmbeddedJson();
+//					thresholdExceededNotificationsCounter++;
+//				} catch(Exception e) {
+//					// Do nothing.
+//				}
+//			}
+//		}
+//		objectJson += "]";
 
 		
 		return objectJson;
@@ -454,7 +454,7 @@ objectJson += ",\"thresholdExceededNotifications\":[";
 
 
 		// Target Relationships
-		this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
+//		this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
 
 
 	}

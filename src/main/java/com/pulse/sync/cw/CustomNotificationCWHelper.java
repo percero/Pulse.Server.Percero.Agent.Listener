@@ -70,14 +70,17 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         Collection<String> cmsEntryFieldsToWatch = new HashSet<String>();
 
         Collection<String> timecardEntryFieldsToWatch = new HashSet<String>();
+        Collection<String> timecardFieldsToWatch = new HashSet<String>();
         // Listen for changes on ALL CMSEntry records.
         accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
         accessManager.addWatcherField(new ClassIDPair("0", TimecardEntry.class.getCanonicalName()), "", timecardEntryFieldsToWatch);
+//        accessManager.addWatcherField(new ClassIDPair("0", Timecard.class.getCanonicalName()), "", timecardFieldsToWatch);
         // Register the fields. This can always be called again with an updated
         // list of fields to watch, which would overwrite the list of fields
         // that trigger this change watcher code.
         accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleCmsEntryNotification", cmsEntryFieldsToWatch);
         accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleTimecardEntryNotification", timecardEntryFieldsToWatch);
+//        accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleTimecardEntryNotification", timecardFieldsToWatch);
     }
 
     /* (non-Javadoc)
@@ -249,6 +252,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
                         //In condition fails, generate notification
 
+                        if (agent == null) {
+                            agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+                        }
 
                         if (agent != null) {
                             if (agent.getAgentLOBs().size() == 1) {
@@ -295,7 +301,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                                     if (lobConfigurationEntry.getType().equals("VALID_ACTIVITY_CODE")) {
 
-                                                        validActivityCodeList.add(lobConfigurationEntry.getType());
+                                                        validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
 
                                                         if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
                                                                 (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
@@ -309,7 +315,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                         }
                                                     } else if (lobConfigurationEntry.getType().equals("NONBILLABLE_ACTIVITY_CODE")) {
 
-                                                        nonBillableActivityCodeList.add(lobConfigurationEntry.getType());
+                                                        nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
 
                                                     }
                                                 }
@@ -491,7 +497,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                          LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
 
-        int OCCURRENCE_MAX = Integer.parseInt(lobConfigurationEntry.getOccurrence());
+        int OCCURRENCE_MAX =  lobConfigurationEntry.getOccurrence()==null? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
         if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > Integer.parseInt(lobConfigurationEntry.getOccurrence())) {
 
@@ -525,8 +531,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
                                                        Double totalDuration) throws Exception {
 
-        Double DURATION_MIN = Double.parseDouble(lobConfigurationEntry.getMin());
-        Double DURATION_MAX = Double.parseDouble(lobConfigurationEntry.getMin());
+        Double DURATION_MIN = lobConfigurationEntry.getMin()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
 
         //if max is null than no threshold required which is based on config data
         if (lobConfigurationEntry.getMax() != null && totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0) {
