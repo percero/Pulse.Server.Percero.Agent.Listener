@@ -20,8 +20,6 @@ BEGIN
     to_date(timecardDate,'DD-MON-yyyy'),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,'F',null,null,
     '20151205150600','20151205150800','America/Chicago',null,'F','100500731','00327',1,'004','10000');
 
-    DBMS_LOCK.SLEEP(10);
-
     COMMIT;
 END;
 /
