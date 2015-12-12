@@ -18,7 +18,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
     private static final Logger log = Logger.getLogger(AgentCWHelper.class);
 
 
-	public static final String TIME_ZONE = "agenttTimeZone";
+	public static final String TIME_ZONE = "agentTimeZone";
 
 
 
