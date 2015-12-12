@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -314,7 +315,8 @@ public void setAgentLOBs(List<AgentLOB> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
@@ -483,7 +485,20 @@ objectJson += ",\"teamLeader\":";
 		
 		// Target Relationships
 //Retrieve value of the Agent of Agent Scorecard relationship
-objectJson += ",\"agentScorecards\":[";
+		objectJson += ",\"agentTimeZone\":";
+		if (getTeamLeader() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getAgentTimeZone()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
+
+		objectJson += ",\"agentScorecards\":[";
 		
 		if (getAgentScorecards() != null) {
 			int agentScorecardsCounter = 0;
@@ -677,9 +692,9 @@ objectJson += ",\"agentLOBs\":[";
 		listSetters.add(MappedClass.getFieldSetters(CorrectiveAction.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AdhocCoachingSession.class, "agent"));
 		listSetters.add(MappedClass.getFieldSetters(AgentLOB.class, "agent"));
-
+		listSetters.add(MappedClass.getFieldSetters(AgentTimeZone.class, "agent"));
 		
 		return listSetters;
 	}
 }
-
+
