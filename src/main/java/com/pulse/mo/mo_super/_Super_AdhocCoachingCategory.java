@@ -1,6 +1,5 @@
 
-
-package com.pulse.mo.mo_super;
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -89,20 +88,20 @@ public void setID(String value) {
 Name
 Notes:
 */
-	@Column
-	@com.percero.agents.sync.metadata.annotations.Externalize
+@Column
+@com.percero.agents.sync.metadata.annotations.Externalize
 
-	private String name;
+private String name;
 
-	public String getName()
-	{
-		return this.name;
-	}
+public String getName() 
+{
+	return this.name;
+}
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+public void setName(String name)
+{
+	this.name = name;
+}
 
 	//////////////////////////////////////////////////////
 	// Target Relationships
@@ -112,20 +111,7 @@ Notes:
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
-	@JsonSerialize(using=BDOSerializer.class)
-	@JsonDeserialize(using=BDODeserializer.class)
-	@JoinColumn(name="REGION_ID")
-	@org.hibernate.annotations.ForeignKey(name="FK_RegionsOfAdhocCoachingCategory")
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	private Region region;
-	public Region getRegion() {
-		return this.region;
-	}
-
-	public void setRegion(Region value) {
-		this.region = value;
-	}
+	
 
 	
 	//////////////////////////////////////////////////////
@@ -160,17 +146,7 @@ Notes:
 
 				
 		// Source Relationships
-		objectJson += ",\"region\":";
-		if (getRegion() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getRegion()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+
 		
 		// Target Relationships
 
@@ -189,7 +165,7 @@ Notes:
 
 		
 		// Source Relationships
-		this.region		= (Region)  JsonUtils.getJsonPerceroObject(jsonObject, "region");
+
 
 		// Target Relationships
 
@@ -206,4 +182,4 @@ Notes:
 		return listSetters;
 	}
 }
-
+
