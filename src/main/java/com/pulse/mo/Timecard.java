@@ -77,5 +77,12 @@ public class Timecard extends _Super_Timecard {
 		String result = (String) cwh.get(TimecardCWHelper.TIME_ZONE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
 		return result;
 	}
+
+    public Boolean getIEX() {
+        IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+        DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+        Boolean val = (Boolean) cwh.get(TimecardCWHelper.IEX, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+        return val;
+    }
 }
 
