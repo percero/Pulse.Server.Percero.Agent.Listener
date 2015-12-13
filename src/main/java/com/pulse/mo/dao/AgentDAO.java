@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -45,7 +46,7 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"AGENT\".\"ID\"";
-	public static final String SQL_VIEW = ",\"AGENT\".\"EMAIL_ADDRESS\",\"AGENT\".\"LAST_NAME\",\"AGENT\".\"EMPLOYEE_ID\",\"AGENT\".\"FIRST_NAME\",\"AGENT\".\"FULL_NAME\",\"AGENT\".\"PHOTO_URI\",\"AGENT\".\"TEAM_LEADER_ID\"";
+	public static final String SQL_VIEW = ",\"AGENT\".\"EMAIL_ADDRESS\",\"AGENT\".\"LAST_NAME\",\"AGENT\".\"EMPLOYEE_ID\",\"AGENT\".\"FIRST_NAME\",\"AGENT\".\"FULL_NAME\",\"AGENT\".\"PHOTO_URI\",\"AGENT\".\"TEAM_LEADER_ID\", \"AGENT\".\"REGION_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT\" \"AGENT\"";
 	private String whereClause = "  WHERE \"AGENT\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"AGENT\".\"ID\"= SQLLIST.column_value";
@@ -149,7 +150,8 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
 	protected Agent extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-Agent nextResult = null;
+
+Agent nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -163,33 +165,26 @@ public class AgentDAO extends SqlDataAccessObject<Agent> implements IDataAccessO
     	if (!shellOnly) 
 		{
 			nextResult.setEmailAddress(rs.getString("EMAIL_ADDRESS"));
+			nextResult.setLastName(rs.getString("LAST_NAME"));
+			nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
+			nextResult.setFirstName(rs.getString("FIRST_NAME"));
+			nextResult.setFullName(rs.getString("FULL_NAME"));
+			nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
 
+			String teamleaderID = rs.getString("TEAM_LEADER_ID");
+			if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
+			TeamLeader teamleader = new TeamLeader();
+			teamleader.setID(teamleaderID);
+			nextResult.setTeamLeader(teamleader);
+			}
 
-nextResult.setLastName(rs.getString("LAST_NAME"));
+			String regionID = rs.getString("REGION_ID");
+			if (StringUtils.hasText(regionID) && !"null".equalsIgnoreCase(regionID) ){
+				Region region = new Region();
+				region.setID(regionID);
+				nextResult.setRegion(region);
+			}
 
-
-nextResult.setEmployeeId(rs.getString("EMPLOYEE_ID"));
-
-
-nextResult.setFirstName(rs.getString("FIRST_NAME"));
-
-
-nextResult.setFullName(rs.getString("FULL_NAME"));
-
-
-nextResult.setPhotoUri(rs.getString("PHOTO_URI"));
-
-
-String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(teamleaderID);
-nextResult.setTeamLeader(teamleader);
-}
-
-
-
-			
     	}
 		
 		
@@ -199,24 +194,22 @@ nextResult.setTeamLeader(teamleader);
 	protected void setBaseStatmentInsertParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getEmailAddress());
-pstmt.setString(3, perceroObject.getLastName());
-pstmt.setString(4, perceroObject.getEmployeeId());
-pstmt.setString(5, perceroObject.getFirstName());
-pstmt.setString(6, perceroObject.getFullName());
-pstmt.setString(7, perceroObject.getPhotoUri());
+		pstmt.setString(2, perceroObject.getEmailAddress());
+		pstmt.setString(3, perceroObject.getLastName());
+		pstmt.setString(4, perceroObject.getEmployeeId());
+		pstmt.setString(5, perceroObject.getFirstName());
+		pstmt.setString(6, perceroObject.getFullName());
+		pstmt.setString(7, perceroObject.getPhotoUri());
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(8, null);
-}
-else
-{
-		pstmt.setString(8, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getTeamLeader() == null)
+		{
+		pstmt.setString(8, null);
+		}
+		else
+		{
+				pstmt.setString(8, perceroObject.getTeamLeader().getID());
+		}
 
-
-		
 	}
 	
 	@Override
@@ -239,23 +232,22 @@ else
 	protected void setPreparedStatmentUpdateParams(Agent perceroObject, PreparedStatement pstmt) throws SQLException {
 		
 		pstmt.setString(1, perceroObject.getEmailAddress());
-pstmt.setString(2, perceroObject.getLastName());
-pstmt.setString(3, perceroObject.getEmployeeId());
-pstmt.setString(4, perceroObject.getFirstName());
-pstmt.setString(5, perceroObject.getFullName());
-pstmt.setString(6, perceroObject.getPhotoUri());
+		pstmt.setString(2, perceroObject.getLastName());
+		pstmt.setString(3, perceroObject.getEmployeeId());
+		pstmt.setString(4, perceroObject.getFirstName());
+		pstmt.setString(5, perceroObject.getFullName());
+		pstmt.setString(6, perceroObject.getPhotoUri());
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(7, null);
-}
-else
-{
-		pstmt.setString(7, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getTeamLeader() == null)
+		{
+		pstmt.setString(7, null);
+		}
+		else
+		{
+				pstmt.setString(7, perceroObject.getTeamLeader().getID());
+		}
 
-pstmt.setString(8, perceroObject.getID());
-
+		pstmt.setString(8, perceroObject.getID());
 		
 	}
 	
@@ -378,6 +370,23 @@ paramValues.add(theQueryObject.getPhotoUri());
 propertyCounter++;
 }
 
+			boolean useRegionId = theQueryObject.getRegion() != null && (excludeProperties == null || !excludeProperties.contains("region"));
+
+			if (useRegionId)
+			{
+				if (propertyCounter > 0)
+				{
+					sql += " AND ";
+				}
+				else
+				{
+					sql += " WHERE ";
+				}
+				sql += " \"REGION_ID\" =? ";
+				paramValues.add(theQueryObject.getRegion().getID());
+				propertyCounter++;
+			}
+
 boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
 
 if (useTeamLeaderID)
@@ -418,7 +427,8 @@ propertyCounter++;
 	}
 	
 	
-public Agent createObject(Agent perceroObject, String userId)
+
+public Agent createObject(Agent perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -481,9 +491,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+

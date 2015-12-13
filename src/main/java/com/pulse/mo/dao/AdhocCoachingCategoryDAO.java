@@ -1,5 +1,6 @@
 
-package com.pulse.mo.dao;
+
+package com.pulse.mo.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -45,7 +46,7 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"ADHOC_COACHING_CATEGORY\".\"ID\"";
-	public static final String SQL_VIEW = ",\"ADHOC_COACHING_CATEGORY\".\"NAME\"";
+	public static final String SQL_VIEW = ",\"ADHOC_COACHING_CATEGORY\".\"NAME\", \"ADHOC_COACHING_CATEGORY\".\"REGION_ID\"";
 	private String selectFromStatementTableName = " FROM \"ADHOC_COACHING_CATEGORY\" \"ADHOC_COACHING_CATEGORY\"";
 	private String whereClause = "  WHERE \"ADHOC_COACHING_CATEGORY\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"ADHOC_COACHING_CATEGORY\".\"ID\"= SQLLIST.column_value";
@@ -149,7 +150,8 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
 	protected AdhocCoachingCategory extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
     	
 		
-AdhocCoachingCategory nextResult = null;
+
+AdhocCoachingCategory nextResult = null;
     	
 		    	
     	if (nextResult == null) {
@@ -163,7 +165,12 @@ public class AdhocCoachingCategoryDAO extends SqlDataAccessObject<AdhocCoachingC
     	if (!shellOnly) 
 		{
 			nextResult.setName(rs.getString("NAME"));
-
+			String regionID = rs.getString("REGION_ID");
+			if (StringUtils.hasText(regionID) && !"null".equalsIgnoreCase(regionID) ){
+				Region region = new Region();
+				region.setID(regionID);
+				nextResult.setRegion(region);
+			}
 
 
 			
@@ -239,6 +246,22 @@ sql += " \"NAME\" =? ";
 paramValues.add(theQueryObject.getName());
 propertyCounter++;
 }
+			boolean useRegionId = theQueryObject.getRegion() != null && (excludeProperties == null || !excludeProperties.contains("region"));
+
+			if (useRegionId)
+			{
+				if (propertyCounter > 0)
+				{
+					sql += " AND ";
+				}
+				else
+				{
+					sql += " WHERE ";
+				}
+				sql += " \"REGION_ID\" =? ";
+				paramValues.add(theQueryObject.getRegion().getID());
+				propertyCounter++;
+			}
 
 
 
@@ -263,7 +286,8 @@ propertyCounter++;
 	}
 	
 	
-public AdhocCoachingCategory createObject(AdhocCoachingCategory perceroObject, String userId)
+
+public AdhocCoachingCategory createObject(AdhocCoachingCategory perceroObject, String userId)
 		throws SyncException {
 	if ( !hasCreateAccess(BaseDataObject.toClassIdPair(perceroObject), userId) ) {
 		return null;
@@ -326,9 +350,10 @@ propertyCounter++;
 		return null;
 	}
 }
-
+
+
 
 	
 	
 }
-
+
