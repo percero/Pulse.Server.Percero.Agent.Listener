@@ -203,23 +203,6 @@ Notes:
 
 
         // Target Relationships
-        //Retrieve value of the Agent of Corrective Action relationship
-        objectJson += ",\"adhocCoachingCategories\":[";
-
-        if (getAdhocCoachingCategories() != null) {
-            int adhocCoachingCategoriesCounter = 0;
-            for(AdhocCoachingCategory nextAdhocCoachingCategories : getAdhocCoachingCategories()) {
-                if (adhocCoachingCategoriesCounter > 0)
-                    objectJson += ",";
-                try {
-                    objectJson += ((BaseDataObject) nextAdhocCoachingCategories).toEmbeddedJson();
-                    adhocCoachingCategoriesCounter++;
-                } catch(Exception e) {
-                    // Do nothing.
-                }
-            }
-        }
-        objectJson += "]";
 
 
         return objectJson;
@@ -240,7 +223,6 @@ Notes:
 
 
         // Target Relationships
-        this.adhocCoachingCategories = (List<AdhocCoachingCategory>) JsonUtils.getJsonListPerceroObject(jsonObject, "adhocCoachingCategories");
 
 
     }
@@ -250,7 +232,7 @@ Notes:
         List<MappedClassMethodPair> listSetters = super.getListSetters();
 
         // Target Relationships
-        listSetters.add(MappedClass.getFieldSetters(AdhocCoachingCategory.class, "region"));
+
 
         return listSetters;
     }
