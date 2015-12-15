@@ -93,6 +93,7 @@ public class Pulse_Manifest implements IManifest
 			classList.add(com.pulse.mo.WeeklyDevelopmentPlan.class);
 			classList.add(com.pulse.mo.CoachingNotification.class);
 			classList.add(com.pulse.mo.ShiftStatusNotification.class);
+			classList.add(com.pulse.mo.Region.class);
 
 		}
 		return classList;
@@ -178,6 +179,7 @@ public class Pulse_Manifest implements IManifest
 			objectList.add(new com.pulse.mo.WeeklyDevelopmentPlan());
 			objectList.add(new com.pulse.mo.CoachingNotification());
 			objectList.add(new com.pulse.mo.ShiftStatusNotification());
+			objectList.add(new com.pulse.mo.Region());
 
 		}
 		return objectList;
@@ -237,7 +239,7 @@ public class Pulse_Manifest implements IManifest
 			uuidMap.put("4a4cce59-3040-4576-92c5-d5893596717e", com.pulse.mo.BehaviorResponse.class);
 			uuidMap.put("9aa081cd-bd1c-4f42-94b6-1e360e840cff", com.pulse.mo.CoachingSession.class);
 			uuidMap.put("85cb863d-d97b-48ba-a161-c3787c225038", com.pulse.mo.CoachingSessionAttachment.class);
-			uuidMap.put("7d29073e-afd4-409d-aee1-ea8b4b51524d", com.pulse.mo.CorrectiveAction.class);
+			uuidMap.put("dd6eddf8-7912-4a93-a777-b9acedc815b0", com.pulse.mo.CorrectiveAction.class);
 			uuidMap.put("0ff09c90-687d-4052-b4af-a436b0f8a53c", com.pulse.mo.CorrectiveActionAttachment.class);
 			uuidMap.put("576025d2-d007-44cf-ba95-71c7d6d972cc", com.pulse.mo.DevelopmentActivity.class);
 			uuidMap.put("31f8807a-bfc8-4c23-83bd-0fb7efea96d6", com.pulse.mo.DevelopmentPlan.class);
@@ -263,6 +265,7 @@ public class Pulse_Manifest implements IManifest
 			uuidMap.put("7890c9c3-c835-4e26-9c86-24ce8825ea1f", com.pulse.mo.WeeklyDevelopmentPlan.class);
 			uuidMap.put("b0297cee-b5af-4917-b318-7321a976a503", com.pulse.mo.CoachingNotification.class);
 			uuidMap.put("426ab2be-33f3-4ec3-8826-ec3c283de198", com.pulse.mo.ShiftStatusNotification.class);
+			uuidMap.put("868161a2-443d-49e7-8dbf-898461d59aa3", com.pulse.mo.Region.class);
 
 		}
 		return uuidMap;

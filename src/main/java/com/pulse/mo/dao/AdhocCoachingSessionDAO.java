@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.percero.agents.sync.exceptions.SyncDataException;
+import java.util.Calendar;
 import com.pulse.mo.*;
 
 @Component
@@ -239,7 +240,10 @@ nextResult.setAgent(agent);
 		
 		pstmt.setString(1, perceroObject.getID());  //SESSION_ID
 		pstmt.setInt(2, perceroObject.getEmployeeId());  //EMPLOYEE_ID
-		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));  //WK_DATE
+
+		//WK_DATE always should be the previous saturday
+		pstmt.setDate(3, DateUtils.utilDateToSqlDate(getPreviosSaturdayDate()));  //WK_DATE
+
 		pstmt.setInt(4, 0); // not a follow up  session  SCORECARD_ID
 		pstmt.setInt(5, 3); //Adhoc Coaching session - TYPE
 		pstmt.setString(6, "3");  //STATUS  - 3 Pending Agent
@@ -673,9 +677,13 @@ public AdhocCoachingSession createObject(AdhocCoachingSession perceroObject, Str
 	}
 }
 
+	private java.util.Date getPreviosSaturdayDate(){
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		c.add(Calendar.DAY_OF_MONTH, -7);
+		return c.getTime();
+	}
 
-
-	
 	
 }
 

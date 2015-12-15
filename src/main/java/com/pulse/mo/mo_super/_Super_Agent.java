@@ -331,6 +331,20 @@ public void setTeamLeader(TeamLeader value) {
 	this.teamLeader = value;
 }
 
+	@com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
+	@JoinColumn(name="REGION_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_RegionsOfAgent")
+	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	private Region region;
+	public Region getRegion() {
+		return this.region;
+	}
+
+	public void setRegion(Region value) {
+		this.region = value;
+	}
 	
 	//////////////////////////////////////////////////////
 	// JSON
@@ -482,7 +496,20 @@ objectJson += ",\"teamLeader\":";
 		}
 		objectJson += "";
 
-		
+		objectJson += ",\"region\":";
+		if (getRegion() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getRegion()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
+
+
 		// Target Relationships
 //Retrieve value of the Agent of Agent Scorecard relationship
 		objectJson += ",\"agentTimeZone\":";
@@ -496,7 +523,6 @@ objectJson += ",\"teamLeader\":";
 			}
 		}
 		objectJson += "";
-
 
 		objectJson += ",\"agentScorecards\":[";
 		
@@ -662,7 +688,7 @@ objectJson += ",\"agentLOBs\":[";
 		
 		// Source Relationships
 		this.teamLeader = (TeamLeader) JsonUtils.getJsonPerceroObject(jsonObject, "teamLeader");
-
+		this.region		= (Region)  JsonUtils.getJsonPerceroObject(jsonObject, "region");
 
 		// Target Relationships
 		this.agentScorecards = (List<AgentScorecard>) JsonUtils.getJsonListPerceroObject(jsonObject, "agentScorecards");
