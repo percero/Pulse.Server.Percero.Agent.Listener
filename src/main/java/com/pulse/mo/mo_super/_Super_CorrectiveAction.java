@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -238,6 +239,54 @@ public void setCreatedOn(Date createdOn)
 {
 	this.createdOn = createdOn;
 }/*
+UpdatedOn
+Notes:
+*/
+	@Column
+	@com.percero.agents.sync.metadata.annotations.Externalize
+
+	private Date updatedOn;
+
+	public Date getUpdatedOn()
+	{
+		return this.updatedOn;
+	}
+
+	public void setUpdatedOn(Date updatedOn)
+	{
+		this.updatedOn = updatedOn;
+	}/*
+UpdatedOn
+Notes:
+*/
+	@Column
+	@com.percero.agents.sync.metadata.annotations.Externalize
+
+	private String updatedBy;
+
+	public String getUpdatedBy()
+	{
+		return this.updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy)
+	{
+		this.updatedBy = updatedBy;
+	}/*
+UpdatedOn
+Notes:
+*/
+	@Column
+	@com.percero.agents.sync.metadata.annotations.Externalize
+
+	private String createdBy;
+
+	public String getCreatedBy() { return this.createdBy; }
+
+	public void setCreatedBy(String createdBy)
+	{
+		this.createdBy = createdBy;
+	}/*
 CompletionDate
 Notes:
 */
@@ -460,7 +509,8 @@ public void setSessionComments(List<SessionComment> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_STATE_ID")
@@ -473,7 +523,8 @@ public CorrectiveActionState getCorrectiveActionState() {
 
 public void setCorrectiveActionState(CorrectiveActionState value) {
 	this.correctiveActionState = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="CORRECTIVE_ACTION_TYPE_ID")
@@ -486,7 +537,8 @@ public CorrectiveActionType getCorrectiveActionType() {
 
 public void setCorrectiveActionType(CorrectiveActionType value) {
 	this.correctiveActionType = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -499,7 +551,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_MANAGER_EMPLOYEE_ID")
@@ -512,7 +565,8 @@ public Employee getSupervisorManagerEmployee() {
 
 public void setSupervisorManagerEmployee(Employee value) {
 	this.supervisorManagerEmployee = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="HR_EMPLOYEE_ID")
@@ -525,7 +579,8 @@ public Employee getHREmployee() {
 
 public void setHREmployee(Employee value) {
 	this.hREmployee = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="MANAGER_EMPLOYEE_ID")
@@ -538,7 +593,8 @@ public Employee getManagerEmployee() {
 
 public void setManagerEmployee(Employee value) {
 	this.managerEmployee = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="SUPERVISOR_ID")
@@ -723,6 +779,14 @@ public void setSupervisor(Supervisor value) {
 		else {
 			objectJson += getCreatedOn().getTime();
 		}
+
+		//Retrieve value of the Updated On property
+		objectJson += ",\"updatedOn\":";
+		if (getUpdatedOn() == null)
+			objectJson += "null";
+		else {
+			objectJson += getUpdatedOn().getTime();
+		}
 		//Retrieve value of the Completion Date property
 		objectJson += ",\"completionDate\":";
 		if (getCompletionDate() == null)
@@ -740,6 +804,48 @@ public void setSupervisor(Supervisor value) {
 				objectMapper = new ObjectMapper();
 			try {
 				objectJson += objectMapper.writeValueAsString(getAttachmentName());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the created by property
+		objectJson += ",\"createdBy\":";
+
+		if (getCreatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getCreatedBy());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
+		//Retrieve value of the Attachment Name property
+		objectJson += ",\"updatedBy\":";
+
+		if (getUpdatedBy() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getUpdatedBy());
 			} catch (JsonGenerationException e) {
 				objectJson += "null";
 				e.printStackTrace();
@@ -1051,6 +1157,12 @@ objectJson += ",\"sessionComments\":[";
 		setSupervisorConfig(JsonUtils.getJsonString(jsonObject, "supervisorConfig"));
 		//From value of the Created On property
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
+		//From value of the Updated On property
+		setUpdatedOn(JsonUtils.getJsonDate(jsonObject, "updatedOn"));
+		//From value of the Attachment Name property
+		setUpdatedBy(JsonUtils.getJsonString(jsonObject, "updatedBy"));
+		//From value of the Attachment Name property
+		setCreatedBy(JsonUtils.getJsonString(jsonObject, "createdBy"));
 		//From value of the Completion Date property
 		setCompletionDate(JsonUtils.getJsonDate(jsonObject, "completionDate"));
 		//From value of the Attachment Name property
@@ -1104,4 +1216,4 @@ objectJson += ",\"sessionComments\":[";
 		return listSetters;
 	}
 }
-
+

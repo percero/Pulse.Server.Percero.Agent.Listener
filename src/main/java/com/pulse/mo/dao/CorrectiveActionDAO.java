@@ -46,7 +46,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	public static final String CONNECTION_FACTORY_NAME = "default";
 	
 	public static final String SHELL_ONLY_SELECT = "\"CORRECTIVE_ACTION\".\"ID\"";
-	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"REASON\",\"CORRECTIVE_ACTION\".\"REASON_TYPE\",\"CORRECTIVE_ACTION\".\"SESSION_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_CONFIG\",\"CORRECTIVE_ACTION\".\"CREATED_ON\",\"CORRECTIVE_ACTION\".\"EXPIRE_DATE\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_ID\",\"CORRECTIVE_ACTION\".\"CLIENT_ID\",\"CORRECTIVE_ACTION\".\"DISCIPLINE_TYPE\",\"CORRECTIVE_ACTION\".\"FORM_ID\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_NAME\",\"CORRECTIVE_ACTION\".\"DETAILS_CONFIG\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_ACK\",\"CORRECTIVE_ACTION\".\"METRIC_REF\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS\",\"CORRECTIVE_ACTION\".\"PROGRAM\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\"";
+	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"REASON\",\"CORRECTIVE_ACTION\".\"REASON_TYPE\",\"CORRECTIVE_ACTION\".\"SESSION_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_CONFIG\",\"CORRECTIVE_ACTION\".\"CREATED_ON\",\"CORRECTIVE_ACTION\".\"EXPIRE_DATE\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_ID\",\"CORRECTIVE_ACTION\".\"CLIENT_ID\",\"CORRECTIVE_ACTION\".\"DISCIPLINE_TYPE\",\"CORRECTIVE_ACTION\".\"FORM_ID\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_NAME\",\"CORRECTIVE_ACTION\".\"DETAILS_CONFIG\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_ACK\",\"CORRECTIVE_ACTION\".\"METRIC_REF\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS\",\"CORRECTIVE_ACTION\".\"PROGRAM\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"UPDATED_ON\",\"CORRECTIVE_ACTION\".\"UPDATED_BY\",\"CORRECTIVE_ACTION\".\"CREATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION\" \"CORRECTIVE_ACTION\"";
 	private String whereClause = "  WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
@@ -138,7 +138,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? WHERE \"PC_ID\"=?";
+		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? , \"UPDATED_BY\"=? , \"UPDATED_ON\"=? WHERE \"PC_ID\"=?";
 	}
 	
 	@Override
@@ -177,7 +177,9 @@ nextResult.setSupervisorConfig(rs.getString("SUPERVISOR_CONFIG"));
 
 
 nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
-
+nextResult.setUpdatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("UPDATED_ON")));
+			nextResult.setUpdatedBy(rs.getString("UPDATED_BY"));
+			nextResult.setCreatedBy(rs.getString("CREATED_BY"));
 
 nextResult.setExpireDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("EXPIRE_DATE")));
 
@@ -451,7 +453,14 @@ else
 			pstmt.setString(14, perceroObject.getCorrectiveActionState().getID());
 		}
 
-		pstmt.setString(15, perceroObject.getID());
+		pstmt.setString(15, perceroObject.getUpdatedBy());
+
+		java.util.Date date = new java.util.Date();
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+
+		pstmt.setTimestamp(16, timestamp);  //updated_ON
+
+		pstmt.setString(17, perceroObject.getID());
 
 
 	}
@@ -557,6 +566,57 @@ sql += " \"CREATED_ON\" =? ";
 paramValues.add(theQueryObject.getCreatedOn());
 propertyCounter++;
 }
+
+			boolean useUpdatedOn = theQueryObject.getUpdatedOn() != null && (excludeProperties == null || !excludeProperties.contains("updatedOn"));
+
+			if (useUpdatedOn)
+			{
+				if (propertyCounter > 0)
+				{
+					sql += " AND ";
+				}
+				else
+				{
+					sql += " WHERE ";
+				}
+				sql += " \"UPDATED_ON\" =? ";
+				paramValues.add(theQueryObject.getUpdatedOn());
+				propertyCounter++;
+			}
+
+			boolean useCreatedBy = StringUtils.hasText(theQueryObject.getCreatedBy()) && (excludeProperties == null || !excludeProperties.contains("createdBy"));
+
+			if (useCreatedBy)
+			{
+				if (propertyCounter > 0)
+				{
+					sql += " AND ";
+				}
+				else
+				{
+					sql += " WHERE ";
+				}
+				sql += " \"CREATED_BY\" =? ";
+				paramValues.add(theQueryObject.getCreatedBy());
+				propertyCounter++;
+			}
+
+			boolean useUpdatedBy = StringUtils.hasText(theQueryObject.getUpdatedBy()) && (excludeProperties == null || !excludeProperties.contains("updatedBy"));
+
+			if (useUpdatedBy)
+			{
+				if (propertyCounter > 0)
+				{
+					sql += " AND ";
+				}
+				else
+				{
+					sql += " WHERE ";
+				}
+				sql += " \"UPDATED_BY\" =? ";
+				paramValues.add(theQueryObject.getUpdatedBy());
+				propertyCounter++;
+			}
 
 boolean useExpireDate = theQueryObject.getExpireDate() != null && (excludeProperties == null || !excludeProperties.contains("expireDate"));
 
