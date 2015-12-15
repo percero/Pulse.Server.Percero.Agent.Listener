@@ -237,7 +237,7 @@ public class Pulse_Manifest implements IManifest
 			uuidMap.put("4a4cce59-3040-4576-92c5-d5893596717e", com.pulse.mo.BehaviorResponse.class);
 			uuidMap.put("9aa081cd-bd1c-4f42-94b6-1e360e840cff", com.pulse.mo.CoachingSession.class);
 			uuidMap.put("85cb863d-d97b-48ba-a161-c3787c225038", com.pulse.mo.CoachingSessionAttachment.class);
-			uuidMap.put("7d29073e-afd4-409d-aee1-ea8b4b51524d", com.pulse.mo.CorrectiveAction.class);
+			uuidMap.put("dd6eddf8-7912-4a93-a777-b9acedc815b0", com.pulse.mo.CorrectiveAction.class);
 			uuidMap.put("0ff09c90-687d-4052-b4af-a436b0f8a53c", com.pulse.mo.CorrectiveActionAttachment.class);
 			uuidMap.put("576025d2-d007-44cf-ba95-71c7d6d972cc", com.pulse.mo.DevelopmentActivity.class);
 			uuidMap.put("31f8807a-bfc8-4c23-83bd-0fb7efea96d6", com.pulse.mo.DevelopmentPlan.class);
