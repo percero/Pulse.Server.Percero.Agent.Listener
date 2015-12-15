@@ -61,10 +61,6 @@ public class _Super_Region extends BaseDataObject implements Serializable
         return "1.0.0";
     }
 
-
-    /*
-    Keys of AdhocCoachingCategory
-    */
     //////////////////////////////////////////////////////
 // ID
 //////////////////////////////////////////////////////
@@ -136,7 +132,7 @@ Notes:
         return this.adhocCoachingCategories;
     }
 
-    public void setAgents(List<AdhocCoachingCategory> value) {
+    public void setAdhocCoachingCategories(List<AdhocCoachingCategory> value) {
         this.adhocCoachingCategories = value;
     }
 
