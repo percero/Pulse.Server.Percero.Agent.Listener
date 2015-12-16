@@ -32,29 +32,29 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 
 	static final Logger log = Logger.getLogger(CorrectiveActionDAO.class);
 
-	
+
 	public CorrectiveActionDAO() {
 		super();
-		
+
 		DAORegistry.getInstance().registerDataAccessObject(CorrectiveAction.class.getCanonicalName(), this);
 	}
 
-	
+
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
-	
+
 	public static final String SHELL_ONLY_SELECT = "\"CORRECTIVE_ACTION\".\"ID\"";
 	public static final String SQL_VIEW = ",\"CORRECTIVE_ACTION\".\"REASON\",\"CORRECTIVE_ACTION\".\"REASON_TYPE\",\"CORRECTIVE_ACTION\".\"SESSION_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_CONFIG\",\"CORRECTIVE_ACTION\".\"CREATED_ON\",\"CORRECTIVE_ACTION\".\"EXPIRE_DATE\",\"CORRECTIVE_ACTION\".\"HR_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"MANAGER_APPROVAL_DATE\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ACK_DATE\",\"CORRECTIVE_ACTION\".\"COMPLETION_DATE\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_ID\",\"CORRECTIVE_ACTION\".\"CLIENT_ID\",\"CORRECTIVE_ACTION\".\"DISCIPLINE_TYPE\",\"CORRECTIVE_ACTION\".\"FORM_ID\",\"CORRECTIVE_ACTION\".\"ATTACHMENT_NAME\",\"CORRECTIVE_ACTION\".\"DETAILS_CONFIG\",\"CORRECTIVE_ACTION\".\"EMPLOYEE_ACK\",\"CORRECTIVE_ACTION\".\"METRIC_REF\",\"CORRECTIVE_ACTION\".\"NEXT_STEPS\",\"CORRECTIVE_ACTION\".\"PROGRAM\",\"CORRECTIVE_ACTION\".\"HR_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION\".\"CORRECTIVE_ACTION_TYPE_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_ID\",\"CORRECTIVE_ACTION\".\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION\".\"AGENT_ID\",\"CORRECTIVE_ACTION\".\"UPDATED_ON\",\"CORRECTIVE_ACTION\".\"UPDATED_BY\",\"CORRECTIVE_ACTION\".\"CREATED_BY\"";
 	private String selectFromStatementTableName = " FROM \"CORRECTIVE_ACTION\" \"CORRECTIVE_ACTION\"";
 	private String whereClause = "  WHERE \"CORRECTIVE_ACTION\".\"ID\"=?";
 	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"CORRECTIVE_ACTION\".\"ID\"= SQLLIST.column_value";
 	private String orderByTableName = "  ORDER BY \"CORRECTIVE_ACTION\".\"CREATED_ON\" DESC";
-	
-	
 
-	
+
+
+
 	@Override
 	protected String getConnectionFactoryName() {
 		return CorrectiveActionDAO.CONNECTION_FACTORY_NAME;
@@ -64,44 +64,44 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	protected String getSelectShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
-	
+
 	@Override
 	protected String getSelectStarSQL() {
 		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
-	
+
 	@Override
 	protected String getSelectAllShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
-	
+
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
-	
+
 	@Override
 	protected String getSelectAllStarSQL() {
 		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
-	
+
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
 		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
-	
+
 	@Override
-	protected String getCountAllSQL() 
+	protected String getCountAllSQL()
 	{
 		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
-	
+
 	@Override
-	protected String getSelectInStarSQL() 
+	protected String getSelectInStarSQL()
 	{
 		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
-	
+
 	@Override
 	protected String getSelectInShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
@@ -130,7 +130,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"CORRECTIVE_ACTION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
 		return "INSERT INTO TBL_CORRECTIVE_ACTION (\"ID\",\"REASON\",\"REASON_TYPE\",\"SESSION_ID\",\"SUPERVISOR_CONFIG\",\"CREATED_ON\",\"EXPIRE_DATE\",\"HR_APPROVAL_DATE\",\"MANAGER_APPROVAL_DATE\",\"SUPERVISOR_ACK_DATE\",\"COMPLETION_DATE\",\"ATTACHMENT_ID\",\"CLIENT_ID\",\"DISCIPLINE_TYPE\",\"FORM_ID\",\"ATTACHMENT_NAME\",\"DETAILS_CONFIG\",\"EMPLOYEE_ACK\",\"METRIC_REF\",\"NEXT_STEPS\",\"PROGRAM\",\"HR_EMPLOYEE_ID\",\"MANAGER_EMPLOYEE_ID\",\"CORRECTIVE_ACTION_STATE_ID\",\"CORRECTIVE_ACTION_TYPE_ID\",\"SUPERVISOR_ID\",\"SUPERVISOR_MANAGER_EMPLOYEE_ID\",\"AGENT_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -140,29 +140,29 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 	protected String getUpdateSet() {
 		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? , \"UPDATED_BY\"=? , \"UPDATED_ON\"=? WHERE \"PC_ID\"=?";
 	}
-	
+
 	@Override
 	protected String getDeleteFromSQL() {
 		return "DELETE FROM TBL_CORRECTIVE_ACTION WHERE \"ID\"=?";
 	}
-	
+
 	@Override
 	protected CorrectiveAction extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	
-		
+
+
 
 CorrectiveAction nextResult = null;
-    	
-		    	
+
+
     	if (nextResult == null) {
     		nextResult = new CorrectiveAction();
     	}
 
-		
+
     	// ID
     	nextResult.setID(rs.getString("ID"));
-    	
-    	if (!shellOnly) 
+
+    	if (!shellOnly)
 		{
 			nextResult.setReason(rs.getString("REASON"));
 
@@ -283,15 +283,15 @@ nextResult.setAgent(agent);
 
 
 
-			
+
     	}
-		
-		
+
+
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setString(2, perceroObject.getReason());
 pstmt.setString(3, perceroObject.getReasonType());
@@ -384,33 +384,36 @@ else
 }
 
 
-		
+
 	}
-	
+
 	@Override
 	protected void setPreparedStatmentInsertParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		setBaseStatmentInsertParams(perceroObject,pstmt);
-		
+
 	}
-	
+
 	@Override
 	protected void setCallableStatmentInsertParams(CorrectiveAction perceroObject, CallableStatement pstmt) throws SQLException {
-		
+
 		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	
+
+
 
 	}
 
 	@Override
 	protected void setPreparedStatmentUpdateParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
 
+		java.util.Date date = new java.util.Date();
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 		pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getExpireDate()));
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getHRApprovalDate()));
 		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getManagerApprovalDate()));
-		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getSupervisorACKDate()));
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(timestamp));
 		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
 		JdbcHelper.setInt(pstmt,7, perceroObject.getClientId());
 		JdbcHelper.setInt(pstmt,8, perceroObject.getDisciplineType());
@@ -455,40 +458,37 @@ else
 
 		pstmt.setString(15, perceroObject.getUpdatedBy());
 
-		java.util.Date date = new java.util.Date();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-
 		pstmt.setTimestamp(16, timestamp);  //updated_ON
 
 		pstmt.setString(17, perceroObject.getID());
 
 
 	}
-	
-	
+
+
 	@Override
-	protected void setCallableStatmentUpdateParams(CorrectiveAction perceroObject, CallableStatement pstmt) throws SQLException 
+	protected void setCallableStatmentUpdateParams(CorrectiveAction perceroObject, CallableStatement pstmt) throws SQLException
 	{
-		
+
 		//must be in same order as insert
 		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
+
 	}
-	
-	
+
+
 
 	@Override
 	public List<CorrectiveAction> findByExample(CorrectiveAction theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
 		{
-			
-			
-			
+
+
+
 		String sql = getFindByExampleSelectSql(shellOnly);
-		
+
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
-		
+
 		boolean useReason = StringUtils.hasText(theQueryObject.getReason()) && (excludeProperties == null || !excludeProperties.contains("reason"));
 
 if (useReason)
@@ -997,10 +997,10 @@ propertyCounter++;
 		if (propertyCounter == 0) {
 			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
+
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
 	}
-	
+
 	@Override
 	protected String getUpdateCallableStatementSql() {
 		return "{call UPDATE_CORRECTIVE_ACTION(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
@@ -1013,8 +1013,8 @@ propertyCounter++;
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_CORRECTIVE_ACTION(?)}";
 	}
-	
-	
+
+
 
 public CorrectiveAction createObject(CorrectiveAction perceroObject, String userId)
 		throws SyncException {
@@ -1082,7 +1082,7 @@ public CorrectiveAction createObject(CorrectiveAction perceroObject, String user
 
 
 
-	
-	
+
+
 }
 
