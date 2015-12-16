@@ -37,30 +37,30 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 
 	static final Logger log = Logger.getLogger(AgentScorecardDAO.class);
 
-	
+
 	public AgentScorecardDAO() {
 		super();
-		
+
 		DAORegistry.getInstance().registerDataAccessObject(AgentScorecard.class.getCanonicalName(), this);
 	}
 
-	
+
 	// This is the name of the Data Source that is registered to handle this class type.
 	// For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
 	public static final String CONNECTION_FACTORY_NAME = "default";
-	
+
 	public static final String SHELL_ONLY_SELECT = "\"AGENT_SCORECARD\".\"ID\"";
 	public static final String SQL_VIEW = ",\"AGENT_SCORECARD\".\"END_DATE\",\"AGENT_SCORECARD\".\"START_DATE\",\"AGENT_SCORECARD\".\"WEEK_DATE\",\"AGENT_SCORECARD\".\"POINTS_POSSIBLE\",\"AGENT_SCORECARD\".\"POINTS_RECEIVED\",\"AGENT_SCORECARD\".\"SCORE\",\"AGENT_SCORECARD\".\"GRADE\",\"AGENT_SCORECARD\".\"QUARTILE\",\"AGENT_SCORECARD\".\"LOCK_LEVEL\",\"AGENT_SCORECARD\".\"AGENT_ID\",\"AGENT_SCORECARD\".\"SCORECARD_ID\",\"AGENT_SCORECARD\".\"SCORECARD_WEEKLY_SCORE_ID\"";
 	private String selectFromStatementTableName = " FROM \"AGENT_SCORECARD\" \"AGENT_SCORECARD\"";
 	private String whereClause = " ,(select ? As SQLID From Dual) WHERE AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLID,0,9) AND AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLID,INSTR(SQLID,'-', 1, 1) + 1,INSTR(SQLID,'-', 1, 2)-INSTR(SQLID,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLID,INSTR(SQLID,'-', 1, 2) + 1,10)";
 	private String whereInClause = " Join Table(sys.dbmsdebugvc2coll(?)) SQLLIST On AGENT_SCORECARD.AGENT_ID= SUBSTR(SQLLIST.columnvalue,0,9) And AGENT_SCORECARD.SCORECARD_ID=SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 1) + 1,INSTR(SQLLIST.columnvalue,'-', 1, 2)-INSTR(SQLLIST.columnvalue,'-', 1, 1)-1) AND AGENT_SCORECARD.WEEK_DATE= SUBSTR(SQLLIST.columnvalue,INSTR(SQLLIST.columnvalue,'-', 1, 2) + 1,10)";
 	private String orderByTableName = " ORDER BY AGENT_SCORECARD.WEEK_DATE DESC";
-	private String extendedWhereClause = " WHERE ROWNUM <= 4 ";
+	private String extendedWhereClause =  ""; //" WHERE ROWNUM <= 4 ";
 
-	
 
-	
+
+
 	@Override
 	protected String getConnectionFactoryName() {
 		return AgentScorecardDAO.CONNECTION_FACTORY_NAME;
@@ -70,44 +70,44 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getSelectShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
 	}
-	
+
 	@Override
 	protected String getSelectStarSQL() {
 		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
 	}
-	
+
 	@Override
 	protected String getSelectAllShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
 	}
-	
+
 	@Override
 	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
 	}
-	
+
 	@Override
 	protected String getSelectAllStarSQL() {
 		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
 	}
-	
+
 	@Override
 	protected String getSelectAllStarWithLimitAndOffsetSQL() {
 		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
 	}
-	
+
 	@Override
-	protected String getCountAllSQL() 
+	protected String getCountAllSQL()
 	{
 		return "SELECT COUNT(ID) " + selectFromStatementTableName;
 	}
-	
+
 	@Override
-	protected String getSelectInStarSQL() 
+	protected String getSelectInStarSQL()
 	{
 		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
 	}
-	
+
 	@Override
 	protected String getSelectInShellOnlySQL() {
 		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
@@ -135,39 +135,39 @@ public class AgentScorecardDAO extends SqlDataAccessObject<AgentScorecard> imple
 	protected String getFindByExampleSelectAllStarSQL() {
 		return "SELECT \"AGENT_SCORECARD\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
 	}
-	
+
 	@Override
 	protected String getInsertIntoSQL() {
 		return "INSERT INTO TBL_AGENT_SCORECARD (\"ID\",\"END_DATE\",\"START_DATE\",\"WEEK_DATE\",\"POINTS_POSSIBLE\",\"POINTS_RECEIVED\",\"SCORE\",\"GRADE\",\"QUARTILE\",\"LOCK_LEVEL\",\"AGENT_ID\",\"SCORECARD_ID\",\"SCORECARD_WEEKLY_SCORE_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
-	
+
 	@Override
 	protected String getUpdateSet() {
 		return "UPDATE TBL_AGENT_SCORECARD SET \"END_DATE\"=?,\"START_DATE\"=?,\"WEEK_DATE\"=?,\"POINTS_POSSIBLE\"=?,\"POINTS_RECEIVED\"=?,\"SCORE\"=?,\"GRADE\"=?,\"QUARTILE\"=?,\"LOCK_LEVEL\"=?,\"AGENT_ID\"=?,\"SCORECARD_ID\"=?,\"SCORECARD_WEEKLY_SCORE_ID\"=? WHERE \"ID\"=?";
 	}
-	
+
 	@Override
 	protected String getDeleteFromSQL() {
 		return "DELETE FROM TBL_AGENT_SCORECARD WHERE \"ID\"=?";
 	}
-	
+
 	@Override
 	protected AgentScorecard extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	
-		
+
+
 
 AgentScorecard nextResult = null;
-    	
-		    	
+
+
     	if (nextResult == null) {
     		nextResult = new AgentScorecard();
     	}
 
-		
+
     	// ID
     	nextResult.setID(rs.getString("ID"));
-    	
-    	if (!shellOnly) 
+
+    	if (!shellOnly)
 		{
 			nextResult.setEndDate(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("END_DATE")));
 
@@ -221,15 +221,15 @@ nextResult.setScorecardWeeklyScore(scorecardweeklyscore);
 
 
 
-			
+
     	}
-		
-		
+
+
     	return nextResult;
 	}
-	
+
 	protected void setBaseStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getID());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
@@ -271,28 +271,28 @@ else
 }
 
 
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-		
-	}
-	
-	@Override
-	protected void setCallableStatmentInsertParams(AgentScorecard perceroObject, CallableStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	
 
 	}
-	
+
+	@Override
+	protected void setPreparedStatmentInsertParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
+
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+
+	}
+
+	@Override
+	protected void setCallableStatmentInsertParams(AgentScorecard perceroObject, CallableStatement pstmt) throws SQLException {
+
+		setBaseStatmentInsertParams(perceroObject,pstmt);
+
+
+
+	}
+
 	@Override
 	protected void setPreparedStatmentUpdateParams(AgentScorecard perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getEndDate()));
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getStartDate()));
 pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
@@ -334,33 +334,33 @@ else
 
 pstmt.setString(13, perceroObject.getID());
 
-		
+
 	}
-	
-	
+
+
 	@Override
-	protected void setCallableStatmentUpdateParams(AgentScorecard perceroObject, CallableStatement pstmt) throws SQLException 
+	protected void setCallableStatmentUpdateParams(AgentScorecard perceroObject, CallableStatement pstmt) throws SQLException
 	{
-		
+
 		//must be in same order as insert
 		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
+
 	}
-	
-	
+
+
 
 	@Override
 	public List<AgentScorecard> findByExample(AgentScorecard theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
+			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException
 		{
-			
-			
-			
+
+
+
 		String sql = getFindByExampleSelectSql(shellOnly);
-		
+
 		int propertyCounter = 0;
 		List<Object> paramValues = new ArrayList<Object>();
-		
+
 		boolean useEndDate = theQueryObject.getEndDate() != null && (excludeProperties == null || !excludeProperties.contains("endDate"));
 
 if (useEndDate)
@@ -563,10 +563,10 @@ propertyCounter++;
 		if (propertyCounter == 0) {
 			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
 		}
-		
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
+
+		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
 	}
-	
+
 	public List<Date> findCurrentWeekDates(String teamLeaderId) throws SyncException {
 //		String sql = "SELECT * FROM AGENT_SCORECARD WHERE AGENT_ID=? AND WEEK_DATE>? ORDER BY WEEK_DATE DESC";
 
@@ -634,8 +634,8 @@ propertyCounter++;
 	protected String getDeleteCallableStatementSql() {
 		return "{call Delete_AGENT_SCORECARD(?)}";
 	}
-	
-	
+
+
 
 public AgentScorecard createObject(AgentScorecard perceroObject, String userId)
 		throws SyncException {
@@ -703,7 +703,7 @@ public AgentScorecard createObject(AgentScorecard perceroObject, String userId)
 
 
 
-	
-	
+
+
 }
 
