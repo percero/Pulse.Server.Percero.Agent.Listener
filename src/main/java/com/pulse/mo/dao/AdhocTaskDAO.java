@@ -294,48 +294,39 @@ nextResult.setTeamLeader(teamleader);
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(AdhocTask perceroObject, PreparedStatement pstmt) throws SQLException {
-		
+
 		pstmt.setString(1, perceroObject.getUpdatedBy());
-pstmt.setString(2, perceroObject.getCreatedBy());
-pstmt.setString(3, perceroObject.getTaskDetail());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,9, perceroObject.getPlanId());
-JdbcHelper.setInt(pstmt,10, perceroObject.getType());
+		pstmt.setString(2, perceroObject.getCreatedBy());
+		pstmt.setString(3, perceroObject.getTaskDetail());
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date()));
+		JdbcHelper.setInt(pstmt,9, perceroObject.getPlanId());
+		JdbcHelper.setInt(pstmt,10, perceroObject.getType());
 
-if (perceroObject.getAdhocTaskState() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getAdhocTaskState().getID());
-}
-
-
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getAdhocTaskState() == null)
+		{
+			pstmt.setString(11, null);
+		}
+		else
+		{
+			pstmt.setString(11, perceroObject.getAdhocTaskState().getID());
+		}
 
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getAgent() == null)
+		{
+			pstmt.setString(12, null);
+		}
+		else
+		{
+			pstmt.setString(12, perceroObject.getAgent().getID());
+		}
 
-pstmt.setString(14, perceroObject.getID());
+
+		pstmt.setString(13, perceroObject.getID());
 
 		
 	}
