@@ -143,12 +143,12 @@ return "SELECT \"COACHING_SESSION\".\"ID\" " + selectFromStatementTableName + jo
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,sysdate,sysdate,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_SESSION SET \"IS_REQUIRED\"=?, \"CREATED_BY\"=?, \"TYPE\"=?, \"UPDATED_BY\"=?, \"CLOSED_ON\"=?, \"CREATED_ON\"=?, \"UPDATED_ON\"=?, \"WK_DATE\"=?, \"EMPLOYEE_ID\"=?, \"STATUS\"=?, \"SCORECARD_ID\"=? WHERE \"SESSION_ID\"=?";
+		return "UPDATE EFC_SESSION SET \"IS_REQUIRED\"=?, \"CREATED_BY\"=?, \"TYPE\"=?, \"UPDATED_BY\"=?, \"CLOSED_ON\"=?, \"CREATED_ON\"=?, \"UPDATED_ON\"=sysdate, \"WK_DATE\"=?, \"EMPLOYEE_ID\"=?, \"STATUS\"=?, \"SCORECARD_ID\"=? WHERE \"SESSION_ID\"=?";
 	}
 	
 	@Override
@@ -262,12 +262,11 @@ nextResult.setScorecard(scorecard);
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBy());    //UPDATED_BY
 
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date()));  //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date()));  //UPDATED_ON
-		pstmt.setInt(11, 0); //IS_REQUIRED
-		pstmt.setInt(12, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH     TODO Fix this
 
-		pstmt.setInt(13, 0);  //CATEGORY_ID  - For follow up it is 0.
+		pstmt.setInt(9, 0); //IS_REQUIRED
+		pstmt.setInt(10, perceroObject.getEmployeeId()); //RESPONSIBLE_COACH     TODO Fix this
+
+		pstmt.setInt(11, 0);  //CATEGORY_ID  - For follow up it is 0.
 
 
 	}
@@ -297,31 +296,31 @@ pstmt.setString(3, perceroObject.getType());
 pstmt.setString(4, perceroObject.getUpdatedBy());
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getClosedOn()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-JdbcHelper.setInt(pstmt,9, perceroObject.getEmployeeId());
+
+pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
+JdbcHelper.setInt(pstmt,8, perceroObject.getEmployeeId());
 
 
 if (perceroObject.getCoachingSessionState() == null)
 {
-pstmt.setString(10, null);
+pstmt.setString(9, null);
 }
 else
 {
-		pstmt.setString(10, perceroObject.getCoachingSessionState().getID());
+		pstmt.setString(9, perceroObject.getCoachingSessionState().getID());
 }
 
 
 if (perceroObject.getScorecard() == null)
 {
-pstmt.setString(11, null);
+pstmt.setString(10, null);
 }
 else
 {
-		pstmt.setString(11, perceroObject.getScorecard().getID());
+		pstmt.setString(10, perceroObject.getScorecard().getID());
 }
 
-pstmt.setString(12, perceroObject.getID());
+pstmt.setString(11, perceroObject.getID());
 
 		
 	}

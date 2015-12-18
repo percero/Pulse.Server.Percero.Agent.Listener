@@ -133,12 +133,12 @@ public class BehaviorResponseDAO extends SqlDataAccessObject<BehaviorResponse> i
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_BEHAVIOR_RESPONSE (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"EMPLOYEE_ID\",\"BEHAVIOR_ID\",\"SESSION_ID\",\"SCM_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_BEHAVIOR_RESPONSE (\"RESPONSE_ID\",\"UPDATED_BY\",\"CREATED_BY\",\"WK_DATE\",\"CREATED_ON\",\"UPDATED_ON\",\"RESPONSE\",\"EMPLOYEE_ID\",\"BEHAVIOR_ID\",\"SESSION_ID\",\"SCM_ID\") VALUES (?,?,?,?,sysdate,sysdate,?,?,?,?,?)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"RESPONSE\"=?,\"EMPLOYEE_ID\"=?,\"BEHAVIOR_ID\"=?,\"SESSION_ID\"=?,\"SCM_ID\"=? WHERE \"RESPONSE_ID\"=?";
+		return "UPDATE EFC_BEHAVIOR_RESPONSE SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"WK_DATE\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=sysdate,\"RESPONSE\"=?,\"EMPLOYEE_ID\"=?,\"BEHAVIOR_ID\"=?,\"SESSION_ID\"=?,\"SCM_ID\"=? WHERE \"RESPONSE_ID\"=?";
 	}
 	
 	@Override
@@ -236,47 +236,46 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 		pstmt.setString(2, perceroObject.getUpdatedBy()); //UPDATED_BY
 		pstmt.setString(3, perceroObject.getCreatedBy()); //CREATED_BY
 		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WEEK_DATE
-		pstmt.setDate(5, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
-		pstmt.setDate(6, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
-		JdbcHelper.setInt(pstmt,7, perceroObject.getResponse()); //RESPONSE
+
+		JdbcHelper.setInt(pstmt,5, perceroObject.getResponse()); //RESPONSE
 
 		if (perceroObject.getAgent() == null) //AGENT_ID
 		{
-			pstmt.setString(8, null);
+			pstmt.setString(6, null);
 		}
 		else
 		{
-			pstmt.setString(8, perceroObject.getAgent().getID());
+			pstmt.setString(6, perceroObject.getAgent().getID());
 		}
 
 
 		if (perceroObject.getBehavior() == null) //BEHAVIOR_ID
 		{
-			pstmt.setString(9, null);
+			pstmt.setString(7, null);
 		}
 		else
 		{
-			pstmt.setString(9, perceroObject.getBehavior().getID());
+			pstmt.setString(7, perceroObject.getBehavior().getID());
 		}
 
 
 		if (perceroObject.getCoachingSession() == null) //COACHING_SESSION_ID
 		{
-			pstmt.setString(10, null);
+			pstmt.setString(8, null);
 		}
 		else
 		{
-			pstmt.setString(10, perceroObject.getCoachingSession().getID());
+			pstmt.setString(8, perceroObject.getCoachingSession().getID());
 		}
 
 
 		if (perceroObject.getScorecardMeasure() == null) //SCORECARD_MEASURE_ID
 		{
-			pstmt.setString(11, null);
+			pstmt.setString(9, null);
 		}
 		else
 		{
-			pstmt.setString(11, perceroObject.getScorecardMeasure().getID());
+			pstmt.setString(9, perceroObject.getScorecardMeasure().getID());
 		}
 
 
@@ -306,49 +305,49 @@ nextResult.setScorecardWeeklyResult(scorecardweeklyresult);
 		pstmt.setString(2, perceroObject.getCreatedBy());
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-		JdbcHelper.setInt(pstmt,6, perceroObject.getResponse());
+
+		JdbcHelper.setInt(pstmt,5, perceroObject.getResponse());
 
 		if (perceroObject.getAgent() == null)
 		{
-			pstmt.setString(7, null);
+			pstmt.setString(6, null);
 		}
 		else
 		{
-			pstmt.setString(7, perceroObject.getAgent().getID());
+			pstmt.setString(6, perceroObject.getAgent().getID());
 		}
 
 
 		if (perceroObject.getBehavior() == null)
 		{
-			pstmt.setString(8, null);
+			pstmt.setString(7, null);
 		}
 		else
 		{
-			pstmt.setString(8, perceroObject.getBehavior().getID());
+			pstmt.setString(7, perceroObject.getBehavior().getID());
 		}
 
 
 		if (perceroObject.getCoachingSession() == null)
 		{
-			pstmt.setString(9, null);
+			pstmt.setString(8, null);
 		}
 		else
 		{
-			pstmt.setString(9, perceroObject.getCoachingSession().getID());
+			pstmt.setString(8, perceroObject.getCoachingSession().getID());
 		}
 
 
 		if (perceroObject.getScorecardMeasure() == null)
 		{
-			pstmt.setString(10, null);
+			pstmt.setString(9, null);
 		}
 		else
 		{
-			pstmt.setString(10, perceroObject.getScorecardMeasure().getID());
+			pstmt.setString(9, perceroObject.getScorecardMeasure().getID());
 		}
 		
-		pstmt.setString(11, perceroObject.getID());
+		pstmt.setString(10, perceroObject.getID());
 
 		
 	}

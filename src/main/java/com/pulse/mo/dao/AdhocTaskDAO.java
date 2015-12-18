@@ -154,12 +154,12 @@ private String joinTeamLeaderIDAdhocTask = "WHERE ADHOC_TASK.TEAM_LEADER_ID= ? A
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_TASK (\"TASK_DESC\", \"ASSIGNED_TO\", \"DUE_DATE\",  \"STATUS\",\"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"WK_DATE\", \"PLAN_ID\", \"TASK_ID\", \"TYPE\") VALUES (?,?,?,?,?,?,sysdate,sysdate,?,?,?,?)";
 	}
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DESC\"=?,\"DUE_DATE\"=?,\"WK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"PLAN_ID\"=?,\"TYPE\"=?,\"STATUS\"=?,\"ASSIGNED_TO\"=?  WHERE \"TASK_ID\"=?";
+		return "UPDATE EFC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DESC\"=?,\"DUE_DATE\"=?,\"WK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=sysdate,\"PLAN_ID\"=?,\"TYPE\"=?,\"STATUS\"=?,\"ASSIGNED_TO\"=?  WHERE \"TASK_ID\"=?";
 	}
 	
 	@Override
@@ -266,14 +266,11 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setString(5, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(6, perceroObject.getUpdatedBy());  //UPDATED_BY
 
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
 
-		pstmt.setDate(7, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
-		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
-
-		pstmt.setNull(10, java.sql.Types.INTEGER); // PLAN_ID
-		pstmt.setString(11, perceroObject.getID()); //TASK_ID
-		pstmt.setInt(12, 2); //TYPE  - Adhoc task
+		pstmt.setNull(8, java.sql.Types.INTEGER); // PLAN_ID
+		pstmt.setString(9, perceroObject.getID()); //TASK_ID
+		pstmt.setInt(10, 2); //TYPE  - Adhoc task
 	}
 	
 	@Override
@@ -302,31 +299,31 @@ nextResult.setTeamLeader(teamleader);
 		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
 		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-		pstmt.setDate(8, DateUtils.utilDateToSqlDate(new java.util.Date()));
-		JdbcHelper.setInt(pstmt,9, perceroObject.getPlanId());
-		JdbcHelper.setInt(pstmt,10, perceroObject.getType());
+
+		JdbcHelper.setInt(pstmt,8, perceroObject.getPlanId());
+		JdbcHelper.setInt(pstmt,9, perceroObject.getType());
 
 		if (perceroObject.getAdhocTaskState() == null)
 		{
-			pstmt.setString(11, null);
+			pstmt.setString(10, null);
 		}
 		else
 		{
-			pstmt.setString(11, perceroObject.getAdhocTaskState().getID());
+			pstmt.setString(10, perceroObject.getAdhocTaskState().getID());
 		}
 
 
 		if (perceroObject.getAgent() == null)
 		{
-			pstmt.setString(12, null);
+			pstmt.setString(11, null);
 		}
 		else
 		{
-			pstmt.setString(12, perceroObject.getAgent().getID());
+			pstmt.setString(11, perceroObject.getAgent().getID());
 		}
 
 
-		pstmt.setString(13, perceroObject.getID());
+		pstmt.setString(12, perceroObject.getID());
 
 		
 	}
