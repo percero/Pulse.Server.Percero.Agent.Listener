@@ -445,7 +445,7 @@ Notes:
 */
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
-
+@JsonProperty(value="hRApprovalDate")
 private Date hRApprovalDate;
 
 public Date getHRApprovalDate() 
