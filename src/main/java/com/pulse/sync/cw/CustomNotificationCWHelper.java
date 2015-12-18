@@ -330,30 +330,29 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                     }
                                 }
-                            }
-                        } else {
+                            } else {
 
-                            //Not a Valid scenario for notification
-                            // Do not send notification
-                            log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
-                            log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+                                //Not a Valid scenario for notification
+                                // Do not send notification
+                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
+                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+                            }
                         }
+
+
+                        // 3.
+
+
+                        // 4.
+
                     }
 
-
-                    // 3.
-
-
-                    // 4.
-
                 }
-
+            }catch(Exception e){
+                // Handle exception
+                log.error("Error in LOB Notification", e);
             }
-        } catch (Exception e) {
-            // Handle exception
-            log.error("Error in LOB Notification", e);
         }
-    }
 
     private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                   LOBConfigurationEntry lobConfigurationEntry) throws Exception {
