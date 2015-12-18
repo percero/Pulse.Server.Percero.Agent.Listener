@@ -207,7 +207,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
             }
 
             int cMSEntryID = rs.getInt("CMS_ENTRY_ID");
-            if(cMSEntryID>0){
+            if (cMSEntryID > 0) {
                 CMSEntry cMSEntry = new CMSEntry();
                 cMSEntry.setID(String.valueOf(cMSEntryID));
 
@@ -215,7 +215,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
             }
 
             int timecardID = rs.getInt("WORKED_ID");
-            if(timecardID>0){
+            if (timecardID > 0) {
                 TimecardEntry timecardEntry = new TimecardEntry();
                 timecardEntry.setID(String.valueOf(timecardID));
                 nextResult.setTimecardEntry(timecardEntry);
@@ -422,7 +422,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
                 sql += " WHERE ";
             }
             sql += " \"CMS_ENTRY_ID\" =? ";
-            paramValues.add(theQueryObject.getTeamLeader().getID());
+            paramValues.add(theQueryObject.getCMSEntry().getID());
             propertyCounter++;
         }
 
@@ -436,7 +436,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
                 sql += " WHERE ";
             }
             sql += " \"WORKED_ID\" =? ";
-            paramValues.add(theQueryObject.getTeamLeader().getID());
+            paramValues.add(theQueryObject.getTimecardEntry().getID());
             propertyCounter++;
         }
 
