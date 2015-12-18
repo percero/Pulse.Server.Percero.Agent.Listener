@@ -139,7 +139,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"EFC_TASK\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=?,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE \"EFC_TASK\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=sysdate,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -290,41 +290,41 @@ pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
 pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
 pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
-pstmt.setDate(8, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-pstmt.setString(9, perceroObject.getName());
-pstmt.setString(10, perceroObject.getPlanId());
-pstmt.setString(11, perceroObject.getStatus());
+
+pstmt.setString(8, perceroObject.getName());
+pstmt.setString(9, perceroObject.getPlanId());
+pstmt.setString(10, perceroObject.getStatus());
 
 if (perceroObject.getTeamLeader() == null)
 {
-pstmt.setString(12, null);
+pstmt.setString(11, null);
 }
 else
 {
-		pstmt.setString(12, perceroObject.getTeamLeader().getID());
+		pstmt.setString(11, perceroObject.getTeamLeader().getID());
 }
 
 
 if (perceroObject.getAgent() == null)
 {
-pstmt.setString(13, null);
+pstmt.setString(12, null);
 }
 else
 {
-		pstmt.setString(13, perceroObject.getAgent().getID());
+		pstmt.setString(12, perceroObject.getAgent().getID());
 }
 
 
 if (perceroObject.getDevelopmentPlan() == null)
 {
-pstmt.setString(14, null);
+pstmt.setString(13, null);
 }
 else
 {
-		pstmt.setString(14, perceroObject.getDevelopmentPlan().getID());
+		pstmt.setString(13, perceroObject.getDevelopmentPlan().getID());
 }
 
-pstmt.setString(15, perceroObject.getID());
+pstmt.setString(14, perceroObject.getID());
 
 		
 	}

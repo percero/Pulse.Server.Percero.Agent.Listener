@@ -133,12 +133,12 @@ public class SessionCommentDAO extends SqlDataAccessObject<SessionComment> imple
 	
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION_COMMENT  (\"COMMENT_ID\",\"SESSION_ID\", \"TYPE\", \"DATAREF_ID\", \"COMMENT_DESC\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\") VALUES (?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION_COMMENT  (\"COMMENT_ID\",\"SESSION_ID\", \"TYPE\", \"DATAREF_ID\", \"COMMENT_DESC\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\") VALUES (?,?,?,?,?,?,?,sysdate,sysdate)";
 	}
 	
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_SESSION_COMMENT SET \"COMMENT_DESC\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"COMMENT_ID\"=?";
+		return "UPDATE EFC_SESSION_COMMENT SET \"COMMENT_DESC\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=sysdate,\"DATAREF_ID\"=?,\"SESSION_ID\"=?,\"TYPE\"=?,\"CREATED_BY\"=?,\"UPDATED_BY\"=? WHERE \"COMMENT_ID\"=?";
 	}
 	
 	@Override
@@ -238,12 +238,6 @@ nextResult.setCorrectiveAction(correctiveaction);
 		pstmt.setString(6, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(7, perceroObject.getUpdatedBy());	//UPDATED_BY
 
-		java.util.Date date = new java.util.Date();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-
-		pstmt.setTimestamp(8, timestamp);  //CREATED_ON
-		pstmt.setTimestamp(9, timestamp);  //UPDATED_ON
-
 		
 	}
 	
@@ -268,22 +262,22 @@ nextResult.setCorrectiveAction(correctiveaction);
 		
 		pstmt.setString(1, perceroObject.getDescription());
 pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getUpdatedOn()));
-JdbcHelper.setInt(pstmt,4, perceroObject.getDatarefId());
+
+JdbcHelper.setInt(pstmt,3, perceroObject.getDatarefId());
 		if (perceroObject.getAdhocCoachingSession() != null)
 		{
-			pstmt.setString(5, perceroObject.getAdhocCoachingSession().getID());  //SESSION_ID
+			pstmt.setString(4, perceroObject.getAdhocCoachingSession().getID());  //SESSION_ID
 		} else if (perceroObject.getCoachingSession() != null)
 		{
-			pstmt.setString(5, perceroObject.getCoachingSession().getID());  //SESSION_ID
+			pstmt.setString(4, perceroObject.getCoachingSession().getID());  //SESSION_ID
 		} else if (perceroObject.getCorrectiveAction() != null)
 		{
-			pstmt.setString(5, perceroObject.getCorrectiveAction().getID());  //SESSION_ID
+			pstmt.setString(4, perceroObject.getCorrectiveAction().getID());  //SESSION_ID
 		}
-JdbcHelper.setInt(pstmt,6, perceroObject.getType());
-pstmt.setString(7, perceroObject.getCreatedBy());
-pstmt.setString(8, perceroObject.getUpdatedBy());
-pstmt.setString(9, perceroObject.getID());
+JdbcHelper.setInt(pstmt,5, perceroObject.getType());
+pstmt.setString(6, perceroObject.getCreatedBy());
+pstmt.setString(7, perceroObject.getUpdatedBy());
+pstmt.setString(8, perceroObject.getID());
 
 		
 	}

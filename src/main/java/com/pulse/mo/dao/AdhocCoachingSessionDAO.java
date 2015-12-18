@@ -143,12 +143,12 @@ public class AdhocCoachingSessionDAO extends SqlDataAccessObject<AdhocCoachingSe
 
 	@Override
 	protected String getInsertIntoSQL() {
-		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO EFC_SESSION  (\"SESSION_ID\", \"EMPLOYEE_ID\", \"WK_DATE\", \"SCORECARD_ID\", \"TYPE\", \"STATUS\", \"CREATED_BY\", \"UPDATED_BY\", \"CREATED_ON\", \"UPDATED_ON\", \"IS_REQUIRED\",\"RESPONSIBLE_COACH\", \"CATEGORY_ID\") VALUES (?,?,?,?,?,?,?,?,sysdate,sysdate,?,?,?)";
 	}
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=?,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"SESSION_COMMENT_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE TBL_ADHOC_COACHING_SESSION SET \"CREATED_BY\"=?,\"RESPONSIBLE_COACH\"=?,\"SESSION_TYPE\"=?,\"STATUS\"=?,\"UPDATED_BY\"=?,\"IS_REQUIRED\"=?,\"CLOSED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=sysdate,\"WEEK_DATE\"=?,\"EMPLOYEE_ID\"=?,\"SCORECARD_ID\"=?,\"ADHOC_COACHING_CATEGORY_ID\"=?,\"AGENT_ID\"=?,\"SESSION_COMMENT_ID\"=? WHERE \"ID\"=?";
 	}
 	
 	@Override
@@ -251,19 +251,17 @@ nextResult.setAgent(agent);
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBY());	//UPDATED_BY
 
-		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
-		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
 
-		pstmt.setInt(11, 0); //IS_REQUIRED
-		pstmt.setString(12, perceroObject.getResponsibleCoach()); //RESPONSIBLE_COACH
+		pstmt.setInt(9, 0); //IS_REQUIRED
+		pstmt.setString(10, perceroObject.getResponsibleCoach()); //RESPONSIBLE_COACH
 
 		if (perceroObject.getAdhocCoachingCategory() == null)
 		{
-			pstmt.setString(13, null);  //CATEGORY_ID
+			pstmt.setString(11, null);  //CATEGORY_ID
 		}
 		else
 		{
-			pstmt.setString(13, perceroObject.getAdhocCoachingCategory().getID());  //CATEGORY_ID
+			pstmt.setString(11, perceroObject.getAdhocCoachingCategory().getID());  //CATEGORY_ID
 		}
 
 	}
