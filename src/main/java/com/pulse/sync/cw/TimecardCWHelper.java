@@ -303,7 +303,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // We want to re-trigger this change watcher when Timecard.endDate changes.
             accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-            DateTime timecardDateTime = new DateTime(host.getDate());
+            DateTime timecardDateTime = new DateTime(host.getStartDate());
             DateTime timecardEndDateTime = new DateTime(host.getEndDate());
             int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
 

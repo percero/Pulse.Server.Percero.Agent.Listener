@@ -406,14 +406,11 @@ else
 	@Override
 	protected void setPreparedStatmentUpdateParams(CorrectiveAction perceroObject, PreparedStatement pstmt) throws SQLException {
 
-		java.util.Date date = new java.util.Date();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-
 		pstmt.setDate(1, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
 		pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getExpireDate()));
 		pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getHRApprovalDate()));
 		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getManagerApprovalDate()));
-		pstmt.setDate(5, DateUtils.utilDateToSqlDate(timestamp));
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getSupervisorACKDate()));
 		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletionDate()));
 		JdbcHelper.setInt(pstmt,7, perceroObject.getClientId());
 		JdbcHelper.setInt(pstmt,8, perceroObject.getDisciplineType());
@@ -458,7 +455,7 @@ else
 
 		pstmt.setString(15, perceroObject.getUpdatedBy());
 
-		pstmt.setTimestamp(16, timestamp);  //updated_ON
+		pstmt.setDate(16, DateUtils.utilDateToSqlDate(new java.util.Date())); //updated_ON
 
 		pstmt.setString(17, perceroObject.getID());
 

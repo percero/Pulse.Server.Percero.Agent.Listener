@@ -251,11 +251,8 @@ nextResult.setAgent(agent);
 		pstmt.setString(7, perceroObject.getCreatedBy());  //CREATED_BY
 		pstmt.setString(8, perceroObject.getUpdatedBY());	//UPDATED_BY
 
-		java.util.Date date = new java.util.Date();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-
-		pstmt.setTimestamp(9, timestamp);  //CREATED_ON
-		pstmt.setTimestamp(10, timestamp);  //UPDATED_ON
+		pstmt.setDate(9, DateUtils.utilDateToSqlDate(new java.util.Date())); //CREATED_ON
+		pstmt.setDate(10, DateUtils.utilDateToSqlDate(new java.util.Date())); //UPDATED_ON
 
 		pstmt.setInt(11, 0); //IS_REQUIRED
 		pstmt.setString(12, perceroObject.getResponsibleCoach()); //RESPONSIBLE_COACH
