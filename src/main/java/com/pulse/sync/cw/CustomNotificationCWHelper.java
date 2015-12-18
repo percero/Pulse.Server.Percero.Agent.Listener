@@ -348,6 +348,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     }
 
                 }
+            }
             }catch(Exception e){
                 // Handle exception
                 log.error("Error in LOB Notification", e);
