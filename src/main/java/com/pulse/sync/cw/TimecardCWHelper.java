@@ -221,14 +221,45 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     // to the current time using milliseconds since 0 (ie. compare
                     // UTC time) using the Joda DateTime object.
                     // http://www.joda.org/joda-time/
-                    DateTime timecardStartDateTime = new DateTime(host.getStartDate());
-                    DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+//                    DateTime timecardStartDateTime = new DateTime(host.getStartDate());
+//                    DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+
+                    DateTime timecardStartDateTime = new DateTime(host.getSourceStartDate());
+                    DateTime timecardEndDateTime = new DateTime(host.getSourceEndDate());
+
+                    AgentTimeZone agentTimeZone = null;
+                    accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+                    Agent agent = syncAgentService.systemGetByObject(host.getAgent());
+                    if (agent != null) {
+                        accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
+                        agentTimeZone = agent.getAgentTimeZone();    // We only need the ID here, so don't load from the database.
+                        if (agentTimeZone == null) {
+                            log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+                        }
+                    } else {
+                        log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
+                    }
 
                     DateTime currentTime = new DateTime(System.currentTimeMillis());
+                    try {
+                        DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
+                        if (dateTimeZone != null && agentTimeZone != null) {
+                            int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+
+                            // The Source Time MINUS the Offset gives us UTC.
+                            currentTime = new DateTime(currentTime.toDate().getTime() - offsetInMs);
+                        } else {
+                            log.warn("Invalid time zone " + host.getTimeZone());
+                        }
+                    } catch (Exception e) {
+                        // Invalid time zone.
+                        log.error("Invalid time zone " + host.getTimeZone(), e);
+                    }
+
 
                     //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
 //                    if (currentTime.isBefore(timecardStartDateTime)) {
-                    if(isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)){
+                    if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
                         // Local time is BEFORE the time card start date, so status is NOT_STARTED
                         result = TimecardStatus.NOT_STARTED.getValue();
                     } else if (currentTime.isBefore(timecardEndDateTime)) {
@@ -571,7 +602,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                         result = Boolean.TRUE;
                     }
                 }
-
 
 
             } else {

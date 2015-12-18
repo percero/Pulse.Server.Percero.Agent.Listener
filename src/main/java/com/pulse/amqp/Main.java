@@ -65,7 +65,7 @@ public class Main {
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
 
-        //unitTestOnMain( context);
+        unitTestOnMain( context);
     }
     private static void unitTestOnMain(ApplicationContext context){
     // Test Login
@@ -133,7 +133,7 @@ public class Main {
 ////		teamLeader.setID("100458644");
 //
         TeamLeader teamLeader = new TeamLeader();
-        teamLeader.setID("100407373");//100139921
+        teamLeader.setID("100634748");//100139921
 //        teamLeader.setID("100544696");
         try {
             teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
@@ -172,15 +172,15 @@ public class Main {
             while (itrAgents.hasNext()) {
                 Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
 
-//                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
-//                while(itrCMSEntries.hasNext()) {
-//                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
-//
-//                    //9th dec entry process
-//                    if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
+                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
+                while(itrCMSEntries.hasNext()) {
+                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
+
+                    //9th dec entry process
+                    //if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
 //                        processCMSEntry(syncAgentService, cMSEntry);
-//                    }
-//                }
+                    //}
+                }
 
                 Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
                 while(itrTimecard.hasNext()) {
@@ -194,7 +194,7 @@ public class Main {
                         while(itrTimecardEntries.hasNext()) {
                             TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
                             if (timecardEntry != null){// && timecardEntry.getFromTime().getDay() == 9 && timecardEntry.getFromTime().getMonth()==11) {
-                                processTimecarEntry(syncAgentService, timecardEntry);
+//                                processTimecarEntry(syncAgentService, timecardEntry);
                             }
 
                         }

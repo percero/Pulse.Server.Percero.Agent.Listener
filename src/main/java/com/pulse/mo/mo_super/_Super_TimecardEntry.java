@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -332,7 +333,8 @@ public void setCodeType(Integer codeType)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ACTIVITY_ID")
@@ -345,7 +347,8 @@ public TimecardActivity getTimecardActivity() {
 
 public void setTimecardActivity(TimecardActivity value) {
 	this.timecardActivity = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
@@ -358,7 +361,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TIMECARD_ID")
@@ -373,7 +377,21 @@ public void setTimecard(Timecard value) {
 	this.timecard = value;
 }
 
-	
+	@com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(contentUsing = BDOSerializer.class)
+	@JsonDeserialize(contentUsing = BDODeserializer.class)
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationNotification.class, mappedBy = "timecardEntry", cascade = javax.persistence.CascadeType.REMOVE)
+	private List<LOBConfigurationNotification> notifications;
+
+	public List<LOBConfigurationNotification> getNotifications() {
+		return this.notifications;
+	}
+
+	public void setNotifications(List<LOBConfigurationNotification> value) {
+		this.notifications = value;
+	}
+
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -648,6 +666,22 @@ objectJson += ",\"timecard\":";
 
 		
 		// Target Relationships
+		objectJson += ",\"notifications\":[";
+
+		if (getNotifications() != null) {
+			int notificationsCounter = 0;
+			for (LOBConfigurationNotification notification : getNotifications()) {
+				if (notificationsCounter > 0)
+					objectJson += ",";
+				try {
+					objectJson += ((BaseDataObject) notification).toEmbeddedJson();
+					notificationsCounter++;
+				} catch (Exception e) {
+					// Do nothing.
+				}
+			}
+		}
+		objectJson += "]";
 
 		
 		return objectJson;
@@ -697,7 +731,7 @@ objectJson += ",\"timecard\":";
 
 		// Target Relationships
 
-
+		this.notifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
 	}
 	
 	@Override
@@ -706,8 +740,9 @@ objectJson += ",\"timecard\":";
 
 		// Target Relationships
 
-		
+		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "cMSEntry"));
+
 		return listSetters;
 	}
 }
-
+

@@ -14,7 +14,7 @@ BEGIN
 
 
 
-SELECT to_char((to_date(endTime,'DD-MON-yyyyHH24:mi:ss')-to_date(startTime,'DD-MON-yyyyHH24:mi:ss'))*24*60, '9999999.99') into duration from DUAL;
+SELECT to_char((to_date(endTime,'DD-MON-yyyyHH24:mi:ss')-to_date(startTime,'DD-MON-yyyyHH24:mi:ss'))*24*60*60, '9999999.99') into duration from DUAL;
 
 select login_id into vLoginId from CMDCTR.rt_agent_detail rt  where employee_id = agentId ;
 SELECT SWI_CODE INTO vSwiCode from CMDCTR.rt_agent_detail rt  where employee_id = agentId ;

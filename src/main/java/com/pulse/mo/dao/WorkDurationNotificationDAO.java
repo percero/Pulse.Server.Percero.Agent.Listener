@@ -49,7 +49,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"WORK_DURATION_NOTIFICATION\".\"ID\"";
-    public static final String SQL_VIEW = ",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"CREATED_ON\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+    public static final String SQL_VIEW = ",\"WORK_DURATION_NOTIFICATION\".\"TYPE\",\"WORK_DURATION_NOTIFICATION\".\"CREATED_ON\",\"WORK_DURATION_NOTIFICATION\".\"MESSAGE\",\"WORK_DURATION_NOTIFICATION\".\"NAME\",\"WORK_DURATION_NOTIFICATION\".\"AGENT_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ID\",\"WORK_DURATION_NOTIFICATION\".\"TEAM_LEADER_ID\",\"WORK_DURATION_NOTIFICATION\".\"LOB_CONFIGURATION_ENTRY_ID\",\"WORK_DURATION_NOTIFICATION\".\"CMS_ENTRY_ID\"";
     private String selectFromStatementTableName = " FROM \"WORK_DURATION_NOTIFICATION\" \"WORK_DURATION_NOTIFICATION\"";
     private String whereClause = "  WHERE \"WORK_DURATION_NOTIFICATION\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"WORK_DURATION_NOTIFICATION\".\"ID\"= SQLLIST.column_value";
@@ -202,6 +202,13 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
                 nextResult.setLOBConfigurationEntry(lobconfigurationentry);
             }
 
+            String cMSEntryId = rs.getString("CMS_ENTRY_ID");
+            if (StringUtils.hasText(cMSEntryId) && !"null".equalsIgnoreCase(cMSEntryId)) {
+                CMSEntry cMSEntry = new CMSEntry();
+                cMSEntry.setID(cMSEntryId);
+                nextResult.setCMSEntry(cMSEntry);
+            }
+
 
         }
 
@@ -251,6 +258,15 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
         else
         {
             pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
+        }
+
+        if (perceroObject.getCMSEntry() == null)
+        {
+            pstmt.setString(10, null);
+        }
+        else
+        {
+            pstmt.setString(10, perceroObject.getCMSEntry().getID());
         }
 
     }
@@ -315,6 +331,14 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
             pstmt.setString(9, perceroObject.getLOBConfigurationEntry().getID());
         }
 
+        if (perceroObject.getCMSEntry() == null)
+        {
+            pstmt.setString(10, null);
+        }
+        else
+        {
+            pstmt.setString(10, perceroObject.getCMSEntry().getID());
+        }
     }
 
 
@@ -437,6 +461,19 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
             propertyCounter++;
         }
 
+        boolean useCMSEntryID = theQueryObject.getCMSEntry() != null && (excludeProperties == null || !excludeProperties.contains("cMSEntry"));
+
+        if (useLOBConfigurationEntryID) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"CMS_ENTRY_ID\" =? ";
+            paramValues.add(theQueryObject.getCMSEntry().getID());
+            propertyCounter++;
+        }
+
 
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -447,12 +484,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

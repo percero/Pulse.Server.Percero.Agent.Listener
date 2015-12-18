@@ -51,130 +51,124 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_CMSEntry extends BaseDataObject implements Serializable
-{
-	//////////////////////////////////////////////////////
-	// VERSION
-	//////////////////////////////////////////////////////
-	@Override
-	public String classVersion() {
-		return "1.0.0";
-	}
+public class _Super_CMSEntry extends BaseDataObject implements Serializable {
+    //////////////////////////////////////////////////////
+    // VERSION
+    //////////////////////////////////////////////////////
+    @Override
+    public String classVersion() {
+        return "1.0.0";
+    }
 
-	
-	/*
-	Keys of CMSEntry
-	*/
-	//////////////////////////////////////////////////////
+
+    /*
+    Keys of CMSEntry
+    */
+    //////////////////////////////////////////////////////
 // ID
 //////////////////////////////////////////////////////
-@Id
-@com.percero.agents.sync.metadata.annotations.Externalize
-@Column(unique=true,name="ID")
-private String ID;
-@JsonProperty(value="ID")
-public String getID() {
-	return this.ID;
-}
+    @Id
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @Column(unique = true, name = "ID")
+    private String ID;
 
-@JsonProperty(value="ID")
-public void setID(String value) {
-	this.ID = value;
-}
-	
-	//////////////////////////////////////////////////////
-	// Properties
-	//////////////////////////////////////////////////////
-	/*
+    @JsonProperty(value = "ID")
+    public String getID() {
+        return this.ID;
+    }
+
+    @JsonProperty(value = "ID")
+    public void setID(String value) {
+        this.ID = value;
+    }
+
+    //////////////////////////////////////////////////////
+    // Properties
+    //////////////////////////////////////////////////////
+    /*
 EStartProjectName
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String eStartProjectName;
+    private String eStartProjectName;
 
-public String getEStartProjectName() 
-{
-	return this.eStartProjectName;
-}
+    public String getEStartProjectName() {
+        return this.eStartProjectName;
+    }
 
-public void setEStartProjectName(String eStartProjectName)
-{
-	this.eStartProjectName = eStartProjectName;
-}/*
+    public void setEStartProjectName(String eStartProjectName) {
+        this.eStartProjectName = eStartProjectName;
+    }/*
 FromTime
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date fromTime;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public Date getFromTime() 
-{
-	return this.fromTime;
-}
+    private Date fromTime;
 
-public void setFromTime(Date fromTime)
-{
-	this.fromTime = fromTime;
-}/*
+    public Date getFromTime() {
+        return this.fromTime;
+    }
+
+    public void setFromTime(Date fromTime) {
+        this.fromTime = fromTime;
+    }/*
 Duration
 Notes:Number of minutes
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private Double duration;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public Double getDuration() 
-{
-	return this.duration;
-}
+    private Double duration;
 
-public void setDuration(Double duration)
-{
-	this.duration = duration;
-}/*
+    public Double getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(Double duration) {
+        this.duration = duration;
+    }/*
 ToTime
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private Date toTime;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public Date getToTime() 
-{
-	return this.toTime;
-}
+    private Date toTime;
 
-public void setToTime(Date toTime)
-{
-	this.toTime = toTime;
-}/*
+    public Date getToTime() {
+        return this.toTime;
+    }
+
+    public void setToTime(Date toTime) {
+        this.toTime = toTime;
+    }/*
 CMSAuxMode
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String cMSAuxMode;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getCMSAuxMode() 
-{
-	return this.cMSAuxMode;
-}
+    private String cMSAuxMode;
 
-public void setCMSAuxMode(String cMSAuxMode)
-{
-	this.cMSAuxMode = cMSAuxMode;
-}
+    public String getCMSAuxMode() {
+        return this.cMSAuxMode;
+    }
 
-	//////////////////////////////////////////////////////
-	// Target Relationships
-	//////////////////////////////////////////////////////
+    public void setCMSAuxMode(String cMSAuxMode) {
+        this.cMSAuxMode = cMSAuxMode;
+    }
+
+    //////////////////////////////////////////////////////
+    // Target Relationships
+    //////////////////////////////////////////////////////
 //	@com.percero.agents.sync.metadata.annotations.Externalize
 //@JsonSerialize(contentUsing=BDOSerializer.class)
 //@JsonDeserialize(contentUsing=BDODeserializer.class)
@@ -188,117 +182,130 @@ public void setCMSAuxMode(String cMSAuxMode)
 //	this.cMSEntryLOBs = value;
 //}
 
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(contentUsing = BDOSerializer.class)
+    @JsonDeserialize(contentUsing = BDODeserializer.class)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationNotification.class, mappedBy = "cMSEntry", cascade = javax.persistence.CascadeType.REMOVE)
+    private List<LOBConfigurationNotification> notifications;
+
+    public List<LOBConfigurationNotification> getNotifications() {
+        return this.notifications;
+    }
+
+    public void setNotifications(List<LOBConfigurationNotification> value) {
+        this.notifications = value;
+    }
+
+    //////////////////////////////////////////////////////
+    // Source Relationships
+    //////////////////////////////////////////////////////
+
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(using = BDOSerializer.class)
+    @JsonDeserialize(using = BDODeserializer.class)
+    @JoinColumn(name = "EMPLOYEE_ID")
+    @org.hibernate.annotations.ForeignKey(name = "FK_AgentOfCMSEntry")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Agent agent;
+
+    public Agent getAgent() {
+        return this.agent;
+    }
+
+    public void setAgent(Agent value) {
+        this.agent = value;
+    }
 
 
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="EMPLOYEE_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_AgentOfCMSEntry")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private Agent agent;
-public Agent getAgent() {
-	return this.agent;
-}
+    //////////////////////////////////////////////////////
+    // JSON
+    //////////////////////////////////////////////////////
+    @Override
+    public String retrieveJson(ObjectMapper objectMapper) {
+        String objectJson = super.retrieveJson(objectMapper);
 
-public void setAgent(Agent value) {
-	this.agent = value;
-}
+        // Properties
+        //Retrieve value of the EStart Project Name property
+        objectJson += ",\"eStartProjectName\":";
 
-	
-	//////////////////////////////////////////////////////
-	// JSON
-	//////////////////////////////////////////////////////
-	@Override
-	public String retrieveJson(ObjectMapper objectMapper) {
-		String objectJson = super.retrieveJson(objectMapper);
+        if (getEStartProjectName() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getEStartProjectName());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the From Time property
+        objectJson += ",\"fromTime\":";
+        if (getFromTime() == null)
+            objectJson += "null";
+        else {
+            objectJson += getFromTime().getTime();
+        }
+        //Retrieve value of the Duration property
+        objectJson += ",\"duration\":";
+        if (getDuration() == null)
+            objectJson += "null";
+        else {
+            objectJson += getDuration();
+        }
+        //Retrieve value of the To Time property
+        objectJson += ",\"toTime\":";
+        if (getToTime() == null)
+            objectJson += "null";
+        else {
+            objectJson += getToTime().getTime();
+        }
+        //Retrieve value of the CMS Aux Mode property
+        objectJson += ",\"cMSAuxMode\":";
 
-		// Properties		
-		//Retrieve value of the EStart Project Name property
-		objectJson += ",\"eStartProjectName\":";
-		
-		if (getEStartProjectName() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getEStartProjectName());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the From Time property
-		objectJson += ",\"fromTime\":";
-		if (getFromTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getFromTime().getTime();
-		}
-		//Retrieve value of the Duration property
-		objectJson += ",\"duration\":";
-		if (getDuration() == null)
-			objectJson += "null";
-		else {
-			objectJson += getDuration();
-		}
-		//Retrieve value of the To Time property
-		objectJson += ",\"toTime\":";
-		if (getToTime() == null)
-			objectJson += "null";
-		else {
-			objectJson += getToTime().getTime();
-		}
-		//Retrieve value of the CMS Aux Mode property
-		objectJson += ",\"cMSAuxMode\":";
-		
-		if (getCMSAuxMode() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCMSAuxMode());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+        if (getCMSAuxMode() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getCMSAuxMode());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
 
-				
-		// Source Relationships
+
+        // Source Relationships
 //Retrieve value of the Agent of CMS Entry relationship
-objectJson += ",\"agent\":";
-		if (getAgent() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+        objectJson += ",\"agent\":";
+        if (getAgent() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getAgent()).toEmbeddedJson();
+            } catch (Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
 
-		
-		// Target Relationships
+
+        // Target Relationships
 //Retrieve value of the CMS Entry of CMS Entry LOB relationship
 //objectJson += ",\"cMSEntryLOBs\":[";
 //
@@ -317,47 +324,66 @@ objectJson += ",\"agent\":";
 //		}
 //		objectJson += "]";
 
-		
-		return objectJson;
-	}
+        objectJson += ",\"notifications\":[";
+
+        if (getNotifications() != null) {
+            int notificationsCounter = 0;
+            for (LOBConfigurationNotification notification : getNotifications()) {
+                if (notificationsCounter > 0)
+                    objectJson += ",";
+                try {
+                    objectJson += ((BaseDataObject) notification).toEmbeddedJson();
+                    notificationsCounter++;
+                } catch (Exception e) {
+                    // Do nothing.
+                }
+            }
+        }
+        objectJson += "]";
 
 
-	@Override
-	protected void fromJson(JsonObject jsonObject) {
-	    super.fromJson(jsonObject);
-
-		// Properties
-		//From value of the EStart Project Name property
-		setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
-		//From value of the From Time property
-		setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
-		//From value of the Duration property
-		setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
-		//From value of the To Time property
-		setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
-		//From value of the CMS Aux Mode property
-		setCMSAuxMode(JsonUtils.getJsonString(jsonObject, "cMSAuxMode"));
-
-		
-		// Source Relationships
-		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+        return objectJson;
+    }
 
 
-		// Target Relationships
+    @Override
+    protected void fromJson(JsonObject jsonObject) {
+        super.fromJson(jsonObject);
+
+        // Properties
+        //From value of the EStart Project Name property
+        setEStartProjectName(JsonUtils.getJsonString(jsonObject, "eStartProjectName"));
+        //From value of the From Time property
+        setFromTime(JsonUtils.getJsonDate(jsonObject, "fromTime"));
+        //From value of the Duration property
+        setDuration(JsonUtils.getJsonDouble(jsonObject, "duration"));
+        //From value of the To Time property
+        setToTime(JsonUtils.getJsonDate(jsonObject, "toTime"));
+        //From value of the CMS Aux Mode property
+        setCMSAuxMode(JsonUtils.getJsonString(jsonObject, "cMSAuxMode"));
+
+
+        // Source Relationships
+        this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
+
+
+        // Target Relationships
 //		this.cMSEntryLOBs = (List<CMSEntryLOB>) JsonUtils.getJsonListPerceroObject(jsonObject, "cMSEntryLOBs");
+        this.notifications = (List<LOBConfigurationNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "notifications");
+
+    }
+
+    @Override
+    protected List<MappedClassMethodPair> getListSetters() {
+        List<MappedClassMethodPair> listSetters = super.getListSetters();
+
+        // Target Relationships
+//        listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "cmsentry"));
+
+        listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "cMSEntry"));
 
 
-	}
-	
-	@Override
-	protected List<MappedClassMethodPair> getListSetters() {
-		List<MappedClassMethodPair> listSetters = super.getListSetters();
-
-		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(CMSEntryLOB.class, "cmsentry"));
-
-		
-		return listSetters;
-	}
+        return listSetters;
+    }
 }
 

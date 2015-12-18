@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -96,7 +97,8 @@ public void setMessage(String message)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="AGENT_ID")
@@ -109,7 +111,8 @@ public Agent getAgent() {
 
 public void setAgent(Agent value) {
 	this.agent = value;
-}@com.percero.agents.sync.metadata.annotations.Externalize
+}
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="LOB_CONFIGURATION_ID")
@@ -124,7 +127,38 @@ public void setLOBConfiguration(LOBConfiguration value) {
 	this.lOBConfiguration = value;
 }
 
-	
+
+	@com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
+	@JoinColumn(name="CMS_ENTRY_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_CMSEntryOfLOBConfigurationNotification")
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
+	private CMSEntry cMSEntry;
+	public CMSEntry getCMSEntry() {
+		return this.cMSEntry;
+	}
+
+	public void setCMSEntry(CMSEntry value) {
+		this.cMSEntry = value;
+	}
+
+	@com.percero.agents.sync.metadata.annotations.Externalize
+	@JsonSerialize(using=BDOSerializer.class)
+	@JsonDeserialize(using=BDODeserializer.class)
+	@JoinColumn(name="WORKED_ID")
+	@org.hibernate.annotations.ForeignKey(name="FK_TimecardEntryOfLOBConfigurationNotification")
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
+	private TimecardEntry timecardEntry;
+	public TimecardEntry getTimecardEntry() {
+		return this.timecardEntry;
+	}
+
+	public void setTimecardEntry(TimecardEntry value) {
+		this.timecardEntry = value;
+	}
+
+	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -182,7 +216,29 @@ objectJson += ",\"lOBConfiguration\":";
 		}
 		objectJson += "";
 
-		
+		objectJson += ",\"cMSEntry\":";
+		if (getCMSEntry() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getCMSEntry()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
+
+		objectJson += ",\"timecarEntry\":";
+		if (getTimecardEntry() == null)
+			objectJson += "null";
+		else {
+			try {
+				objectJson += ((BaseDataObject) getTimecardEntry()).toEmbeddedJson();
+			} catch(Exception e) {
+				objectJson += "null";
+			}
+		}
+		objectJson += "";
 		// Target Relationships
 
 		
@@ -203,6 +259,8 @@ objectJson += ",\"lOBConfiguration\":";
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
 
+		this.cMSEntry = (CMSEntry) JsonUtils.getJsonPerceroObject(jsonObject, "cMSEntry");
+		this.timecardEntry = (TimecardEntry) JsonUtils.getJsonPerceroObject(jsonObject, "timecardEntry");
 
 		// Target Relationships
 
@@ -215,8 +273,10 @@ objectJson += ",\"lOBConfiguration\":";
 
 		// Target Relationships
 
-		
+		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "lOBConfigurationNotification"));
+		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "lOBConfigurationNotification"));
+
 		return listSetters;
 	}
 }
-
+

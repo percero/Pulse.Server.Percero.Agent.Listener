@@ -105,7 +105,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-                handleTimecardEntryNotification(category, subCategory, fieldName, params);
+             //   handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
@@ -181,14 +181,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                     }
 
                                                 }
-//                                                if (lobConfigurationEntry.getCMSAuxCode() != null &&
-//                                                        cmsEntry.getCMSAuxMode() != null &&
-//                                                        lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode())) {
-//                                                    //Logically there will be only one entry per AuxCode so this condition will be invoked only once
-//                                                    //This implies that only one notiifcation of each type can be generated.
-//                                                    generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-//                                                    generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-//                                                }
                                             }
 
                                         }
@@ -243,7 +235,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     Agent agent = null;
                     TeamLeader teamLeader = null;
 
-                    if (timecardEntry != null) {
+                    // DO NOT CHANGE THE CONDITION, THIS WILL MAKE SYSTEM CRAZY SINCE THERE ARE LOTS OF SYSTEM GENERATED TIMECARD ENTRIES HAVING ESTARTPROEJCTNAME = 'IEX'
+                    // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX" means the entry is genertaed by system not the one entered by Agent,...
+                    // ...hence there is no need to process it.
+                    // No notification on system generated Entries.
+                    if (timecardEntry != null && !timecardEntry.getEStartProjectName().equals("IEX")) {
 
                         // 1. eStart InValid Activity code
 
@@ -361,8 +357,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                   LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
-        Double DURATION_MIN = lobConfigurationEntry.getMin()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
-        Double DURATION_MAX = lobConfigurationEntry.getMax()==null? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
+        Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
 
         Double duration = cmsEntry.getDuration();
         // If the duration is > DURATION_MAX, then create the notification.
@@ -377,12 +373,28 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
 
             if (agent != null && teamLeader != null) {
+                WorkDurationNotification workDurationNotification = null;
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("WorkDurationNotification")) {
+                        workDurationNotification = new WorkDurationNotification();
+                        workDurationNotification.setID(notification.getID());
+                        workDurationNotification.setAgent(notification.getAgent()); //xxxx
+                        workDurationNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
 
-                WorkDurationNotification workDurationNotification = new WorkDurationNotification();
-                workDurationNotification.setID(UUID.randomUUID().toString());
-                workDurationNotification.setAgent(agent); //xxxx
+                if (workDurationNotification == null) {
+                    workDurationNotification = new WorkDurationNotification();
+                    workDurationNotification.setID(UUID.randomUUID().toString());
+                    workDurationNotification.setAgent(agent); //xxxx
+                    workDurationNotification.setTeamLeader(teamLeader);
+                }
+
                 workDurationNotification.setCreatedOn(new Date());
-                workDurationNotification.setTeamLeader(teamLeader);
                 workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
@@ -390,7 +402,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
-                syncAgentService.systemCreateObject(workDurationNotification, null);
+                workDurationNotification.setCMSEntry(cmsEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(workDurationNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(workDurationNotification, null);
+                }
             }
         }
     }
@@ -398,7 +416,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void generateWorkModeOccurrenceNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                         LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
-        Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence()==null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
+        Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
         List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(agent, cmsEntry);
 
@@ -414,11 +432,30 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (agent != null && teamLeader != null) {
 
-                WorkModeOccurrenceNotification workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
-                workModeOccurrenceNotification.setID(UUID.randomUUID().toString());
-                workModeOccurrenceNotification.setAgent(agent);
+                WorkModeOccurrenceNotification workModeOccurrenceNotification = null;
+
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("WorkModeOccurrenceNotification")) {
+                        workModeOccurrenceNotification.setID(notification.getID());
+                        workModeOccurrenceNotification.setAgent(notification.getAgent()); //xxxx
+                        workModeOccurrenceNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
+
+
+                if (workModeOccurrenceNotification == null) {
+                    workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
+                    workModeOccurrenceNotification.setID(UUID.randomUUID().toString());
+                    workModeOccurrenceNotification.setAgent(agent);
+                    workModeOccurrenceNotification.setTeamLeader(teamLeader);
+
+                }
+
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setTeamLeader(teamLeader);
                 workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
@@ -426,7 +463,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         cmsEntry.getFromTime(), cmsEntry.getToTime(), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
+                workModeOccurrenceNotification.setCMSEntry(cmsEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(workModeOccurrenceNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
+                }
+
             }
         }
     }
@@ -445,18 +489,42 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
 
             if (agent != null && teamLeader != null) {
-                InvalidActivityCodeNotification invalidActivityCodeNotification = new InvalidActivityCodeNotification();
-                invalidActivityCodeNotification.setID(UUID.randomUUID().toString());
-                invalidActivityCodeNotification.setAgent(agent);
+                InvalidActivityCodeNotification invalidActivityCodeNotification = null;
+
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("InvalidActivityCodeNotification")) {
+                        invalidActivityCodeNotification.setID(notification.getID());
+                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
+                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
+
+
+                if (invalidActivityCodeNotification == null) {
+                    invalidActivityCodeNotification = new InvalidActivityCodeNotification();
+                    invalidActivityCodeNotification.setID(UUID.randomUUID().toString());
+                    invalidActivityCodeNotification.setAgent(agent);
+                    invalidActivityCodeNotification.setTeamLeader(teamLeader);
+                }
+
                 invalidActivityCodeNotification.setCreatedOn(new Date());
-                invalidActivityCodeNotification.setTeamLeader(teamLeader);
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
-                syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
+                invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
+                }
             }
         }
     }
@@ -475,11 +543,29 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
 
             if (agent != null && teamLeader != null) {
-                NonBillableActivityNotification nonBillableActivityNotification = new NonBillableActivityNotification();
-                nonBillableActivityNotification.setID(UUID.randomUUID().toString());
-                nonBillableActivityNotification.setAgent(agent);
+                NonBillableActivityNotification nonBillableActivityNotification = null;
+
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("NonBillableActivityNotification")) {
+                        nonBillableActivityNotification.setID(notification.getID());
+                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
+                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
+
+
+                if (nonBillableActivityCodeList == null) {
+                    nonBillableActivityNotification = new NonBillableActivityNotification();
+                    nonBillableActivityNotification.setID(UUID.randomUUID().toString());
+                    nonBillableActivityNotification.setAgent(agent);
+                    nonBillableActivityNotification.setTeamLeader(teamLeader);
+                }
+
                 nonBillableActivityNotification.setCreatedOn(new Date());
-                nonBillableActivityNotification.setTeamLeader(teamLeader);
                 nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
@@ -488,7 +574,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
-                syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
+                nonBillableActivityNotification.setTimecardEntry(timecardEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
+                }
             }
         }
     }
@@ -497,7 +589,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                          LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
 
-        int OCCURRENCE_MAX =  lobConfigurationEntry.getOccurrence()==null? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
+        int OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
         if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > Integer.parseInt(lobConfigurationEntry.getOccurrence())) {
 
@@ -510,11 +602,30 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
 
             if (agent != null && teamLeader != null) {
-                OccurrenceToleranceNotification occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-                occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
-                occurrenceToleranceNotification.setAgent(agent);
+                OccurrenceToleranceNotification occurrenceToleranceNotification = null;
+
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("OccurrenceToleranceNotification")) {
+                        occurrenceToleranceNotification.setID(notification.getID());
+                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
+                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
+
+
+                if (occurrenceToleranceNotification == null) {
+                    occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+                    occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
+                    occurrenceToleranceNotification.setAgent(agent);
+                    occurrenceToleranceNotification.setTeamLeader(teamLeader);
+                }
+
                 occurrenceToleranceNotification.setCreatedOn(new Date());
-                occurrenceToleranceNotification.setTeamLeader(teamLeader);
                 occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
@@ -522,7 +633,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), OCCURRENCE_MAX));
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+                occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+                }
             }
         }
     }
@@ -531,8 +648,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
                                                        Double totalDuration) throws Exception {
 
-        Double DURATION_MIN = lobConfigurationEntry.getMin()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
-        Double DURATION_MAX = lobConfigurationEntry.getMax()==null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
+        Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
+        Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
 
         //if max is null than no threshold required which is based on config data
         if (lobConfigurationEntry.getMax() != null && totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0) {
@@ -544,11 +661,28 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
 
             if (agent != null && teamLeader != null) {
-                DurationToleranceNotification durationToleranceNotification = new DurationToleranceNotification();
-                durationToleranceNotification.setID(UUID.randomUUID().toString());
-                durationToleranceNotification.setAgent(agent);
+                DurationToleranceNotification durationToleranceNotification = null;
+                boolean isExistingNotif = false;
+                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+                while (itrNotifications.hasNext()) {
+                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+                    if (notification.getType().equals("DurationToleranceNotification")) {
+                        durationToleranceNotification.setID(notification.getID());
+                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
+                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
+                        isExistingNotif = true;
+                    }
+                }
+
+
+                if (durationToleranceNotification == null) {
+                    durationToleranceNotification = new DurationToleranceNotification();
+                    durationToleranceNotification.setID(UUID.randomUUID().toString());
+                    durationToleranceNotification.setAgent(agent);
+                    durationToleranceNotification.setTeamLeader(teamLeader);
+                }
+
                 durationToleranceNotification.setCreatedOn(new Date());
-                durationToleranceNotification.setTeamLeader(teamLeader);
                 durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
@@ -556,7 +690,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                syncAgentService.systemCreateObject(durationToleranceNotification, null);
+                durationToleranceNotification.setTimecardEntry(timecardEntry);
+
+                if (isExistingNotif) {
+                    syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
+                } else {
+                    syncAgentService.systemCreateObject(durationToleranceNotification, null);
+                }
             }
         }
     }
@@ -575,7 +715,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             //Check the the entry bellongs to
 
             if (compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
-                    ( (watchedCMSEntry.getCMSAuxMode()==null && cmsEntry.getCMSAuxMode()==null)
+                    ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))) {
                 cmsEntriesOfTheShift.add(cmsEntry);
             }
