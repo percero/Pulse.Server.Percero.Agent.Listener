@@ -303,8 +303,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // We want to re-trigger this change watcher when Timecard.endDate changes.
             accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-            DateTime timecardDateTime = new DateTime(host.getStartDate());
-            DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+            DateTime timecardDateTime = new DateTime(host.getDate());
+            DateTime timecardEndDateTime = new DateTime(host.getSourceEndDate());
             int daysBetweem = Math.abs(Days.daysBetween(timecardDateTime, timecardEndDateTime).getDays());
 
             // If the Timecard.date < 3 days old
@@ -352,7 +352,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                             existingShiftStatusNotification.setName("Shift Status");
                             existingShiftStatusNotification.setType("ShiftStatusNotification");
                             existingShiftStatusNotification.setTeamLeader(teamLeader);
-                            existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
+                            existingShiftStatusNotification.setShiftEndDate(host.getSourceEndDate());
                             existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
                         }
 
