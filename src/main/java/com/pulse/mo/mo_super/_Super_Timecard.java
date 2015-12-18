@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,7 +61,7 @@ public class _Super_Timecard extends BaseDataObject implements Serializable
 		return "1.0.0";
 	}
 
-	
+
 	/*
 	Keys of Timecard
 	*/
@@ -80,7 +81,7 @@ public String getID() {
 public void setID(String value) {
 	this.ID = value;
 }
-	
+
 	//////////////////////////////////////////////////////
 	// Properties
 	//////////////////////////////////////////////////////
@@ -93,7 +94,7 @@ Notes:
 
 private String approved;
 
-public String getApproved() 
+public String getApproved()
 {
 	return this.approved;
 }
@@ -110,7 +111,7 @@ Notes:
 
 private String lockLevel;
 
-public String getLockLevel() 
+public String getLockLevel()
 {
 	return this.lockLevel;
 }
@@ -127,7 +128,7 @@ Notes:
 
 private String timecardState;
 
-public String getTimecardState() 
+public String getTimecardState()
 {
 	return this.timecardState;
 }
@@ -144,7 +145,7 @@ Notes:
 
 private Date date;
 
-public Date getDate() 
+public Date getDate()
 {
 	return this.date;
 }
@@ -161,7 +162,7 @@ Notes:
 
 private Date sourceStartDate;
 
-public Date getSourceStartDate() 
+public Date getSourceStartDate()
 {
 	return this.sourceStartDate;
 }
@@ -178,7 +179,7 @@ Notes:
 
 private Date sourceEndDate;
 
-public Date getSourceEndDate() 
+public Date getSourceEndDate()
 {
 	return this.sourceEndDate;
 }
@@ -195,7 +196,7 @@ Notes:
 
 private Double totalTime;
 
-public Double getTotalTime() 
+public Double getTotalTime()
 {
 	return this.totalTime;
 }
@@ -212,7 +213,7 @@ Notes:
 
 private String assumedOff;
 
-public String getAssumedOff() 
+public String getAssumedOff()
 {
 	return this.assumedOff;
 }
@@ -229,7 +230,7 @@ Notes:
 
 private String isHoliday;
 
-public String getIsHoliday() 
+public String getIsHoliday()
 {
 	return this.isHoliday;
 }
@@ -246,7 +247,7 @@ Notes:
 
 private String localTimeCode;
 
-public String getLocalTimeCode() 
+public String getLocalTimeCode()
 {
 	return this.localTimeCode;
 }
@@ -277,7 +278,8 @@ public void setTimecardEntries(List<TimecardEntry> value) {
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="PAYROLL")
@@ -292,7 +294,7 @@ public void setAgent(Agent value) {
 	this.agent = value;
 }
 
-	
+
 	//////////////////////////////////////////////////////
 	// JSON
 	//////////////////////////////////////////////////////
@@ -300,10 +302,10 @@ public void setAgent(Agent value) {
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
-		// Properties		
+		// Properties
 		//Retrieve value of the Approved property
 		objectJson += ",\"approved\":";
-		
+
 		if (getApproved() == null)
 			objectJson += "null";
 		else {
@@ -324,7 +326,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Lock Level property
 		objectJson += ",\"lockLevel\":";
-		
+
 		if (getLockLevel() == null)
 			objectJson += "null";
 		else {
@@ -345,7 +347,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Timecard State property
 		objectJson += ",\"timecardState\":";
-		
+
 		if (getTimecardState() == null)
 			objectJson += "null";
 		else {
@@ -394,7 +396,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Assumed Off property
 		objectJson += ",\"assumedOff\":";
-		
+
 		if (getAssumedOff() == null)
 			objectJson += "null";
 		else {
@@ -415,7 +417,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Is Holiday property
 		objectJson += ",\"isHoliday\":";
-		
+
 		if (getIsHoliday() == null)
 			objectJson += "null";
 		else {
@@ -436,7 +438,7 @@ public void setAgent(Agent value) {
 		}
 		//Retrieve value of the Local Time Code property
 		objectJson += ",\"localTimeCode\":";
-		
+
 		if (getLocalTimeCode() == null)
 			objectJson += "null";
 		else {
@@ -456,7 +458,7 @@ public void setAgent(Agent value) {
 			}
 		}
 
-				
+
 		// Source Relationships
 //Retrieve value of the Agent of Timecard relationship
 objectJson += ",\"agent\":";
@@ -471,11 +473,11 @@ objectJson += ",\"agent\":";
 		}
 		objectJson += "";
 
-		
+
 		// Target Relationships
 //Retrieve value of the Timecard of Timecard Entry relationship
 objectJson += ",\"timecardEntries\":[";
-		
+
 		if (getTimecardEntries() != null) {
 			int timecardEntriesCounter = 0;
 			for(TimecardEntry nextTimecardEntries : getTimecardEntries()) {
@@ -491,7 +493,7 @@ objectJson += ",\"timecardEntries\":[";
 		}
 		objectJson += "]";
 
-		
+
 		return objectJson;
 	}
 
@@ -522,7 +524,7 @@ objectJson += ",\"timecardEntries\":[";
 		//From value of the Local Time Code property
 		setLocalTimeCode(JsonUtils.getJsonString(jsonObject, "localTimeCode"));
 
-		
+
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");
 
@@ -532,7 +534,7 @@ objectJson += ",\"timecardEntries\":[";
 
 
 	}
-	
+
 	@Override
 	protected List<MappedClassMethodPair> getListSetters() {
 		List<MappedClassMethodPair> listSetters = super.getListSetters();
@@ -540,8 +542,8 @@ objectJson += ",\"timecardEntries\":[";
 		// Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "timecard"));
 
-		
+
 		return listSetters;
 	}
 }
-
+

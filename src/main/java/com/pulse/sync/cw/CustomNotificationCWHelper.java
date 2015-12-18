@@ -105,7 +105,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-             //   handleTimecardEntryNotification(category, subCategory, fieldName, params);
+                //   handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
@@ -300,7 +300,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                         validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
 
                                                         if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
-                                                                (lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
+                                                                (lobConfigurationEntry.getESTARTActivityCode() != null && timecarActivity.getCode() != null &&
+                                                                        lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
 
                                                             generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
@@ -364,7 +365,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         // If the duration is > DURATION_MAX, then create the notification.
         //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
         //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
-        if (lobConfigurationEntry.getMax() != null && duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0) {
+        if (lobConfigurationEntry.getMax() != null && (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0)) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -439,6 +440,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if (notification.getType().equals("WorkModeOccurrenceNotification")) {
+                        workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
                         workModeOccurrenceNotification.setID(notification.getID());
                         workModeOccurrenceNotification.setAgent(notification.getAgent()); //xxxx
                         workModeOccurrenceNotification.setTeamLeader(notification.getTeamLeader());
@@ -496,6 +498,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if (notification.getType().equals("InvalidActivityCodeNotification")) {
+                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
                         invalidActivityCodeNotification.setID(notification.getID());
                         invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
                         invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
@@ -550,6 +553,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if (notification.getType().equals("NonBillableActivityNotification")) {
+                        nonBillableActivityNotification = new NonBillableActivityNotification();
                         nonBillableActivityNotification.setID(notification.getID());
                         nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
                         nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
@@ -591,7 +595,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         int OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
-        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > Integer.parseInt(lobConfigurationEntry.getOccurrence())) {
+        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > OCCURRENCE_MAX) {
 
 
             if (agent == null) {
@@ -610,6 +614,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if (notification.getType().equals("OccurrenceToleranceNotification")) {
+                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
                         occurrenceToleranceNotification.setID(notification.getID());
                         occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
                         occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
@@ -652,7 +657,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
 
         //if max is null than no threshold required which is based on config data
-        if (lobConfigurationEntry.getMax() != null && totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0) {
+        if (lobConfigurationEntry.getMax() != null && (totalDuration.compareTo(DURATION_MIN) < 0 || totalDuration.compareTo(DURATION_MAX) > 0)) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
             }
@@ -667,6 +672,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if (notification.getType().equals("DurationToleranceNotification")) {
+                        durationToleranceNotification = new DurationToleranceNotification();
                         durationToleranceNotification.setID(notification.getID());
                         durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
                         durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
@@ -716,7 +722,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
                     ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
-                            || watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))) {
+                            || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
+                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
                 cmsEntriesOfTheShift.add(cmsEntry);
             }
         }
@@ -741,7 +748,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
             //If code does not have consecutiveness then brk the look
-            if (timecardActivity.getCode().equals(activityCode)) {
+            if (activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
 
                 activityTimeSpan += timecardEntry.getDuration();
                 timecardEntryListOfActivityCode.add(timecardEntry);

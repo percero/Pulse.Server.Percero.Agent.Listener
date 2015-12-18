@@ -17,7 +17,7 @@ BEGIN
     --EXEC TRUTRACK.INIT_TC_SCH_DATA(agentId,timecardDate);
 
     --INSERT PAYROLL RECORD for TIMECARD
-    TRUTRACK.INSERT_PAYROLL(vID,agentId,to_date(timecardDate,'DD-MON-yyyy'),to_date(timecardDate,'DD-MON-yyyy'),1,1,to_date(timecardDate,'DD-MON-yyyy'),'F','F','F','T','F','F','10000','CST4',null,0,0,451,0,0,0,0,0,5,'Autopoll','F','F','F',0,0,null,'(W),BRK,LB,LUN,LLU,U',33,24,0,0,0,0,0,0,0,0,0,0,0,'US1','F',0,'T',0,1,null,null,'F','V',1,'F',null,'004',null,null,null,'US1',null,'F',null);
+    TRUTRACK.INSERT_PAYROLL(vID,agentId,to_date(timecardDate,'DD-MON-yyyy'),to_date(timecardDate || ' 06:00:00','DD-MON-yyyy HH24:mi:ss'),1,1,to_date(timecardDate || ' 20:45:00','DD-MON-yyyy HH24:mi:ss'),'F','F','F','T','F','F','10000','CST4',null,0,0,451,0,0,0,0,0,5,'Autopoll','F','F','F',0,0,null,'(W),BRK,LB,LUN,LLU,U',33,24,0,0,0,0,0,0,0,0,0,0,0,'US1','F',0,'T',0,1,null,null,'F','V',1,'F',null,'004',null,null,null,'US1',null,'F',null);
 
     TRUTRACK.INSERT_WORKED(vID,agentId,to_date(timecardDate,'DD-MON-yyyy'),1,to_date(timecardDate || ' 06:00:00','DD-MON-yyyy HH24:mi:ss'),to_date(timecardDate || ' 07:01:00','DD-MON-yyyy HH24:mi:ss'),'(W)',0,1,'0','L580','30-001','No',0,0,5,0,null,0,0,0,'T',null,null,0,null  ,to_date(timecardDate || ' 06:00:00','DD-MON-yyyy HH24:mi:ss'),to_date(timecardDate || ' 07:01:00','DD-MON-yyyy HH24:mi:ss'),null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,1,null,null,null,null,null,'AUTO','AUTO',null,null,null,to_date(timecardDate,'DD-MON-yyyy'),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,'20151205075600','20151205080100','America/Chicago',null,'F',teamLeaderId,'00327',1,'004','10000');
 
