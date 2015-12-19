@@ -138,7 +138,7 @@ public class CorrectiveActionDAO extends SqlDataAccessObject<CorrectiveAction> i
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? , \"UPDATED_BY\"=? , \"UPDATED_ON\"=? WHERE \"PC_ID\"=?";
+		return "UPDATE EFC_PC_EMP_FORM SET \"CREATED_ON\"=?, \"EXPIRE_DATE\"=?, \"HRMGR_APPR_DATE\"=?, \"MGR_APPR_DATE\"=?, \"SUPMGR_APPR_DATE\"=?, \"COMPLETED_DATE\"=?, \"CLIENT_ID\"=?, \"DISCIPLINE_TYPE\"=?, \"FORM_ID\"=?, \"METRIC_REF\"=?, \"SUPERVISOR_ID\"=?, \"HRMGR_ID\"=?, \"MGR_ID\"=?, \"STATUS\"=? , \"UPDATED_BY\"=? , \"UPDATED_ON\"=sysdate, \"SUPMGR_ID\"=? WHERE \"PC_ID\"=?";
 	}
 
 	@Override
@@ -455,7 +455,14 @@ else
 
 		pstmt.setString(15, perceroObject.getUpdatedBy());
 
-		pstmt.setDate(16, DateUtils.utilDateToSqlDate(new java.util.Date())); //updated_ON
+		if (perceroObject.getSupervisorManagerEmployee() == null)
+		{
+			pstmt.setString(16, null);
+		}
+		else
+		{
+			pstmt.setString(16, perceroObject.getSupervisorManagerEmployee().getID());
+		}
 
 		pstmt.setString(17, perceroObject.getID());
 
