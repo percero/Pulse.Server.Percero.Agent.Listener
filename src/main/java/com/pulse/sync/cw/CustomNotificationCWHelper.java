@@ -95,14 +95,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     public Object process(String category, String subCategory, String fieldName, String[] params) {
         if (fieldName.equalsIgnoreCase("handleCmsEntryNotification")) {
             try {
-                handleCmsEntryNotification(category, subCategory, fieldName, params);
+//                handleCmsEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleCmsEntryNotification", e);
             }
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-                handleTimecardEntryNotification(category, subCategory, fieldName, params);
+//                handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
