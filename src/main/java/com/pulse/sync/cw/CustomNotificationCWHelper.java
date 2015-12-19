@@ -562,7 +562,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-                if (nonBillableActivityCodeList == null) {
+                if (nonBillableActivityNotification == null) {
                     nonBillableActivityNotification = new NonBillableActivityNotification();
                     nonBillableActivityNotification.setID(UUID.randomUUID().toString());
                     nonBillableActivityNotification.setAgent(agent);
