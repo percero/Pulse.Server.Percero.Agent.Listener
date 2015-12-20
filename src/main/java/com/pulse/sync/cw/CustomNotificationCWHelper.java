@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     TeamLeader teamLeader = null;
 
                     if (cmsEntry != null) {
+                        //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
                         // 1. Check for Work Mode DURATION Tolerance
 
@@ -212,6 +214,22 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         // 4.
 
                     }
+                    else{
+                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                        //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+                        CMSEntry criteriaCMSEntry = new CMSEntry();
+                        criteriaCMSEntry.setID(classId);
+
+                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                        searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+
+
+                    }
 
                 }
             }
@@ -243,11 +261,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     Agent agent = null;
                     TeamLeader teamLeader = null;
 
-                    // DO NOT CHANGE THE CONDITION, THIS WILL MAKE SYSTEM CRAZY SINCE THERE ARE LOTS OF SYSTEM GENERATED TIMECARD ENTRIES HAVING ESTARTPROEJCTNAME = 'IEX'
-                    // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX" means the entry is genertaed by system not the one entered by Agent,...
-                    // ...hence there is no need to process it.
+                    // DO NOT CHANGE THE CONDITION, THIS WILL MAKE SYSTEM CRAZY SINCE THERE ARE LOTS OF SYSTEM GENERATED TIMECARD ENTRIES HAVING EStartProjectName = 'IEX'
+                    // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX"
+                    // means the entry is genertaed by system not the one entered by Agent, hence there is no need to process it.
                     // No notification on system generated Entries.
                     if (timecardEntry != null && !timecardEntry.getEStartProjectName().equalsIgnoreCase("IEX")) {
+                        //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
                         // 1. eStart InValid Activity code
 
@@ -357,7 +376,19 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         // 4.
 
                     }
+                    else{
+                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                        //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+                        TimecardEntry criteriaTimecardEntry = new TimecardEntry();
+                        criteriaTimecardEntry.setID(classId);
 
+                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                        searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
+
+                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+                    }
                 }
             }
             }catch(Exception e){
@@ -488,6 +519,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
+    /**
+     *
+     * @param timecardEntry
+     * @param agent
+     * @param teamLeader
+     * @param validActivityCodeList
+     * @param lobConfiguration
+     * @throws Exception
+     */
     private void generateInvalidActivityCodeNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader, List<String> validActivityCodeList,
                                                          LOBConfiguration lobConfiguration) throws Exception {
 
@@ -788,6 +828,34 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         }
         return false;
+
+    }
+
+    private void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
+        //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
+        log.info("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+        log.info(searchLOBNotification.getCMSEntry());
+        log.info(searchLOBNotification.getTimecardEntry());
+
+        List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
+
+        Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
+
+        while(itrNotifications.hasNext()) {
+            IPerceroObject iPerceroObject = itrNotifications.next();
+            ClassIDPair classIdPairLobNotif = new ClassIDPair(iPerceroObject.getID(), Notification.class.getCanonicalName());
+
+            Notification notification = (Notification) syncAgentService.findById(classIdPairLobNotif, null);
+            if(notification!=null) {
+
+                syncAgentService.systemDeleteObject(notification, null, true);
+                log.info("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+            }
+            else {
+                log.info("No Notification found for ID: " + classIdPairLobNotif);
+            }
+        }
+        log.info("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
 
     }
 }
