@@ -352,7 +352,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                             existingShiftStatusNotification.setName("Shift Status");
                             existingShiftStatusNotification.setType("ShiftStatusNotification");
                             existingShiftStatusNotification.setTeamLeader(teamLeader);
-                            existingShiftStatusNotification.setShiftEndDate(host.getSourceEndDate());
+                            existingShiftStatusNotification.setShiftEndDate(host.getEndDate());
                             existingShiftStatusNotification = syncAgentService.systemCreateObject(existingShiftStatusNotification, null);
                         }
 
