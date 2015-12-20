@@ -266,6 +266,7 @@ public class Pulse_Manifest implements IManifest
 			uuidMap.put("b0297cee-b5af-4917-b318-7321a976a503", com.pulse.mo.CoachingNotification.class);
 			uuidMap.put("426ab2be-33f3-4ec3-8826-ec3c283de198", com.pulse.mo.ShiftStatusNotification.class);
 			uuidMap.put("868161a2-443d-49e7-8dbf-898461d59aa3", com.pulse.mo.Region.class);
+			uuidMap.put("253c7ee8-8f84-466c-a934-bded7388cb37", com.pulse.mo.LOBConfigurationActivityAuxCode.class);
 
 		}
 		return uuidMap;

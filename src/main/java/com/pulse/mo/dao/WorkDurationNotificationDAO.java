@@ -494,7 +494,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 
     @Override
     protected String getDeleteCallableStatementSql() {
-        return "{call Delete_WORK_DURATION_NOTI(?)}";
+        return "{call DELETE_WORK_DURATION_NOTI(?)}";
     }
 
 

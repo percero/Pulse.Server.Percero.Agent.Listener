@@ -563,7 +563,7 @@ propertyCounter++;
 	}
 	@Override
 	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_DURATION_MISMATCH_NOTI(?)}";
+		return "{call DELETE_DURATION_MISMATCH_NOTI(?)}";
 	}
 	
 	

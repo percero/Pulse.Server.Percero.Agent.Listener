@@ -65,16 +65,16 @@ public class Main {
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
 
-//        unitTestOnMain(context);
+        unitTestOnMain(context);
     }
 
     private static void unitTestOnMain(ApplicationContext context) {
         // Test Login
 
         //Uncomment this to run the test
-        if (1==1){
-            return ;
-        }
+//        if (1==1){
+//            return ;
+//        }
 //		Map<String, Object> componentBeans = context.getBeansWithAnnotation(Component.class);
 //		PerceroAgentListener percero = PerceroAgentListener.getInstance();
 //		AuthenticationRequest authRequest = new AuthenticationRequest();
@@ -177,34 +177,34 @@ public class Main {
             while (itrAgents.hasNext()) {
                 Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
 
-//                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
-//                while (itrCMSEntries.hasNext()) {
-//                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
-//
-//                    //9th dec entry process
-//                    //if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
-//                    processCMSEntry(syncAgentService, cMSEntry);
-//                    //}
-//                }
-
-                Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
-                while(itrTimecard.hasNext()) {
-                    Timecard timecard = syncAgentService.systemGetByObject(itrTimecard.next());
-
-                    System.out.println("timecard start date : " + timecard.getStartDate());
+                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
+                while (itrCMSEntries.hasNext()) {
+                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
+//                    simulateCMSEntryDelete(syncAgentService, cMSEntry);
                     //9th dec entry process
-                    if (timecard != null){ //&& timecard.getStartDate().getDay() == 9 && timecard.getStartDate().getMonth()==11){
-
-                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
-                        while(itrTimecardEntries.hasNext()) {
-                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
-                            if (timecardEntry != null){// && timecardEntry.getFromTime().getDay() == 9 && timecardEntry.getFromTime().getMonth()==11) {
-                                processTimecarEntry(syncAgentService, timecardEntry);
-                            }
-
-                        }
-                    }
+                    //if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
+                    processCMSEntry(syncAgentService, cMSEntry);
+                    //}
                 }
+
+//                Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
+//                while(itrTimecard.hasNext()) {
+//                    Timecard timecard = syncAgentService.systemGetByObject(itrTimecard.next());
+//
+//                    System.out.println("timecard start date : " + timecard.getStartDate());
+//                    //9th dec entry process
+//                    if (timecard != null){ //&& timecard.getStartDate().getDay() == 9 && timecard.getStartDate().getMonth()==11){
+//
+//                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
+//                        while(itrTimecardEntries.hasNext()) {
+//                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
+//                            if (timecardEntry != null){// && timecardEntry.getFromTime().getDay() == 9 && timecardEntry.getFromTime().getMonth()==11) {
+//                                processTimecarEntry(syncAgentService, timecardEntry);
+//                            }
+//
+//                        }
+//                    }
+//                }
             }
 //
                 System.out.println("done");
@@ -542,6 +542,23 @@ public class Main {
 
     }
 
+    public static void simulateCMSEntryDelete(ISyncAgentService syncAgentService, CMSEntry cmsEntry) throws Exception {
+
+        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+        //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+        CMSEntry criteriaCMSEntry = new CMSEntry();
+        criteriaCMSEntry.setID("31475638");
+
+        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+        searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+        deleteOrphanedNotifications(syncAgentService, searchAndDeleteLOBNotification);
+
+
+    }
     public static void processCMSEntry(ISyncAgentService syncAgentService, CMSEntry cmsEntry) throws Exception {
 //        if (updatedObject instanceof CMSEntry) {
 //            CMSEntry cmsEntry = (CMSEntry) updatedObject;
@@ -564,10 +581,17 @@ public class Main {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
 
+            LOB lob1 = new LOB();
+            lob1.setID("13573");
+            AgentLOB agentLOB = new AgentLOB();
+            agentLOB.setID(agent.getID() +"-" + lob1.getID());
+            agentLOB.setAgent(agent);
+            agentLOB.setLOB(lob1);
+            agent.getAgentLOBs().add(agentLOB);
             if (agent != null) {
-                if (agent.getAgentLOBs().size() == 1) {
+                if (agent.getAgentLOBs().size() >= 1) {
                     //Valid scenario for notification
-                    AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+//                    AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
                     if (agentLOB != null) {
                         LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
                         if (lob != null) {
@@ -577,6 +601,7 @@ public class Main {
                                 Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
                                 while (itrLobConfigurationEntry.hasNext()) {
                                     LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+                                    LOBConfigurationActivityAuxCode lobConfigurationActivityAuxCode = syncAgentService.systemGetByObject(lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().get(0));
                                     if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
                                         if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
                                                 (lobConfigurationEntry.getCMSAuxCode() != null &&
@@ -1163,4 +1188,32 @@ public class Main {
     }
 
 
+    private static void deleteOrphanedNotifications(ISyncAgentService syncAgentService, LOBConfigurationNotification searchLOBNotification) throws Exception {
+        //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
+        System.out.println("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+        System.out.println(searchLOBNotification.getCMSEntry());
+        System.out.println(searchLOBNotification.getTimecardEntry());
+
+        List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
+
+        Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
+
+        while(itrNotifications.hasNext()) {
+            IPerceroObject iPerceroObject = itrNotifications.next();
+            ClassIDPair classIdPairLobNotif =BaseDataObject.toClassIdPair(iPerceroObject);
+
+            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+            if(notification!=null) {
+
+                syncAgentService.systemDeleteObject(notification, null, true);
+                System.out.println("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+            }
+            else {
+                System.out.println("No Notification found for ID: " + classIdPairLobNotif);
+            }
+        }
+        System.out.println("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+
+
+    }
 }

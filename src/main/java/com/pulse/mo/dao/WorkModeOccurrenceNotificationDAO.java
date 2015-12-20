@@ -468,7 +468,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 
     @Override
     protected String getDeleteCallableStatementSql() {
-        return "{call Delete_WORK_MODE_OCCURRENCE_NOTI(?)}";
+        return "{call DELETE_WORK_MODE_OCCUR_NOTI(?)}";
     }
 
 

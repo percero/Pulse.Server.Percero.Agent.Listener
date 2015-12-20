@@ -6,6 +6,7 @@ import java.util.*;
 import javax.annotation.PostConstruct;
 
 import com.percero.agents.sync.exceptions.SyncException;
+import com.percero.agents.sync.vo.BaseDataObject;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.boon.core.Sys;
@@ -859,7 +860,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return false;
 
     }
-    
 
     /**
      * @param watchedTimecardEntry    :
@@ -1040,9 +1040,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         while(itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
-            ClassIDPair classIdPairLobNotif = new ClassIDPair(iPerceroObject.getID(), Notification.class.getCanonicalName());
+            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
 
-            Notification notification = (Notification) syncAgentService.findById(classIdPairLobNotif, null);
+            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+
+//            IPerceroObject iPerceroObject = itrNotifications.next();
+//            ClassIDPair classIdPairLobNotif = new ClassIDPair(iPerceroObject.getID(), Notification.class.getCanonicalName());
+//
+//            Notification notification = (Notification) syncAgentService.findById(classIdPairLobNotif, null);
             if(notification!=null) {
 
                 syncAgentService.systemDeleteObject(notification, null, true);

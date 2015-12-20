@@ -464,7 +464,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getDeleteCallableStatementSql() {
-        return "{call Delete_INV_ACTVTY_CODE_NOTI(?)}";
+        return "{call DELETE_INV_ACTVTY_CODE_NOTI(?)}";
     }
 
 

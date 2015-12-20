@@ -241,20 +241,20 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     }
 
                     DateTime currentTime = new DateTime(System.currentTimeMillis());
-                    try {
-                        DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
-                        if (dateTimeZone != null && agentTimeZone != null) {
-                            int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
-
-                            // The Source Time MINUS the Offset gives us UTC.
-                            currentTime = new DateTime(currentTime.toDate().getTime() - offsetInMs);
-                        } else {
-                            log.warn("Invalid time zone " + host.getTimeZone());
-                        }
-                    } catch (Exception e) {
-                        // Invalid time zone.
-                        log.error("Invalid time zone " + host.getTimeZone(), e);
-                    }
+//                    try {
+//                        DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
+//                        if (dateTimeZone != null && agentTimeZone != null) {
+//                            int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
+//
+//                            // The Source Time MINUS the Offset gives us UTC.
+//                            currentTime = new DateTime(currentTime.toDate().getTime() - offsetInMs);
+//                        } else {
+//                            log.warn("Invalid time zone " + host.getTimeZone());
+//                        }
+//                    } catch (Exception e) {
+//                        // Invalid time zone.
+//                        log.error("Invalid time zone " + host.getTimeZone(), e);
+//                    }
 
 
                     //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00

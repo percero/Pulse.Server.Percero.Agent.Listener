@@ -51,423 +51,419 @@ Entity Tags based on semantic requirements
 */
 
 @MappedSuperclass
-public class _Super_LOBConfigurationEntry extends BaseDataObject implements Serializable
-{
-	//////////////////////////////////////////////////////
-	// VERSION
-	//////////////////////////////////////////////////////
-	@Override
-	public String classVersion() {
-		return "1.0.0";
-	}
+public class _Super_LOBConfigurationEntry extends BaseDataObject implements Serializable {
+    //////////////////////////////////////////////////////
+    // VERSION
+    //////////////////////////////////////////////////////
+    @Override
+    public String classVersion() {
+        return "1.0.0";
+    }
 
-	
-	/*
-	Keys of LOBConfigurationEntry
-	*/
-	//////////////////////////////////////////////////////
+
+    /*
+    Keys of LOBConfigurationEntry
+    */
+    //////////////////////////////////////////////////////
 // ID
 //////////////////////////////////////////////////////
-@Id
-@com.percero.agents.sync.metadata.annotations.Externalize
-@Column(unique=true,name="ID")
-private String ID;
-@JsonProperty(value="ID")
-public String getID() {
-	return this.ID;
-}
+    @Id
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @Column(unique = true, name = "ID")
+    private String ID;
 
-@JsonProperty(value="ID")
-public void setID(String value) {
-	this.ID = value;
-}
-	
-	//////////////////////////////////////////////////////
-	// Properties
-	//////////////////////////////////////////////////////
-	/*
+    @JsonProperty(value = "ID")
+    public String getID() {
+        return this.ID;
+    }
+
+    @JsonProperty(value = "ID")
+    public void setID(String value) {
+        this.ID = value;
+    }
+
+    //////////////////////////////////////////////////////
+    // Properties
+    //////////////////////////////////////////////////////
+    /*
 Min
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String min;
+    private String min;
 
-public String getMin()
-{
-	return this.min;
-}
+    public String getMin() {
+        return this.min;
+    }
 
-public void setMin(String min)
-{
-	this.min = min;
-}/*
+    public void setMin(String min) {
+        this.min = min;
+    }/*
 Occurrence
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String occurrence;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getOccurrence()
-{
-	return this.occurrence;
-}
+    private String occurrence;
 
-public void setOccurrence(String occurrence)
-{
-	this.occurrence = occurrence;
-}/*
+    public String getOccurrence() {
+        return this.occurrence;
+    }
+
+    public void setOccurrence(String occurrence) {
+        this.occurrence = occurrence;
+    }/*
 Type
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getType() 
-{
-	return this.type;
-}
+    private String type;
 
-public void setType(String type)
-{
-	this.type = type;
-}/*
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }/*
 Max
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String max;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getMax()
-{
-	return this.max;
-}
+    private String max;
 
-public void setMax(String max)
-{
-	this.max = max;
-}/*
+    public String getMax() {
+        return this.max;
+    }
+
+    public void setMax(String max) {
+        this.max = max;
+    }/*
 ESTARTActivityCode
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String eSTARTActivityCode;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getESTARTActivityCode() 
-{
-	return this.eSTARTActivityCode;
-}
+    private String eSTARTActivityCode;
 
-public void setESTARTActivityCode(String eSTARTActivityCode)
-{
-	this.eSTARTActivityCode = eSTARTActivityCode;
-}/*
+    public String getESTARTActivityCode() {
+        return this.eSTARTActivityCode;
+    }
+
+    public void setESTARTActivityCode(String eSTARTActivityCode) {
+        this.eSTARTActivityCode = eSTARTActivityCode;
+    }/*
 CMSAuxCode
 Notes:
 */
-@Column
-@com.percero.agents.sync.metadata.annotations.Externalize
 
-private String cMSAuxCode;
+    @Column
+    @com.percero.agents.sync.metadata.annotations.Externalize
 
-public String getCMSAuxCode() 
-{
-	return this.cMSAuxCode;
-}
+    private String cMSAuxCode;
 
-public void setCMSAuxCode(String cMSAuxCode)
-{
-	this.cMSAuxCode = cMSAuxCode;
-}
+    public String getCMSAuxCode() {
+        return this.cMSAuxCode;
+    }
 
-	//////////////////////////////////////////////////////
-	// Target Relationships
-	//////////////////////////////////////////////////////
-//	@com.percero.agents.sync.metadata.annotations.Externalize
-//@JsonSerialize(contentUsing=BDOSerializer.class)
-//@JsonDeserialize(contentUsing=BDODeserializer.class)
-//@OneToMany(fetch=FetchType.LAZY, targetEntity=ThresholdExceededNotification.class, mappedBy="lOBConfigurationEntry", cascade=javax.persistence.CascadeType.REMOVE)
-//private List<ThresholdExceededNotification> thresholdExceededNotifications;
-//public List<ThresholdExceededNotification> getThresholdExceededNotifications() {
-//	return this.thresholdExceededNotifications;
-//}
-//
-//public void setThresholdExceededNotifications(List<ThresholdExceededNotification> value) {
-//	this.thresholdExceededNotifications = value;
-//}
+    public void setCMSAuxCode(String cMSAuxCode) {
+        this.cMSAuxCode = cMSAuxCode;
+    }
+
+    //////////////////////////////////////////////////////
+    // Target Relationships
+    //////////////////////////////////////////////////////
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(contentUsing = BDOSerializer.class)
+    @JsonDeserialize(contentUsing = BDODeserializer.class)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationActivityAuxCode.class, mappedBy = "lOBConfigurationEntry", cascade = javax.persistence.CascadeType.REMOVE)
+    private List<LOBConfigurationActivityAuxCode> lOBConfigurationActivityAuxCodes;
+
+    public List<LOBConfigurationActivityAuxCode> getLOBConfigurationActivityAuxCodes() {
+        return this.lOBConfigurationActivityAuxCodes;
+    }
+
+    public void setLOBConfigurationActivityAuxCodes(List<LOBConfigurationActivityAuxCode> value) {
+        this.lOBConfigurationActivityAuxCodes = value;
+    }
 
 
+    //////////////////////////////////////////////////////
+    // Source Relationships
+    //////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////
-	// Source Relationships
-	//////////////////////////////////////////////////////
-	
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="LOB_CONFIGURATION_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_LOBConfigurationOfLOBConfigurationEntry")
-@ManyToOne(fetch=FetchType.LAZY, optional=false)
-private LOBConfiguration lOBConfiguration;
-public LOBConfiguration getLOBConfiguration() {
-	return this.lOBConfiguration;
-}
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(using = BDOSerializer.class)
+    @JsonDeserialize(using = BDODeserializer.class)
+    @JoinColumn(name = "LOB_CONFIGURATION_ID")
+    @org.hibernate.annotations.ForeignKey(name = "FK_LOBConfigurationOfLOBConfigurationEntry")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private LOBConfiguration lOBConfiguration;
 
-public void setLOBConfiguration(LOBConfiguration value) {
-	this.lOBConfiguration = value;
-}
-@com.percero.agents.sync.metadata.annotations.Externalize
-@JsonSerialize(using=BDOSerializer.class)
-@JsonDeserialize(using=BDODeserializer.class)
-@JoinColumn(name="NOTIFICATION_FREQUENCY_ID")
-@org.hibernate.annotations.ForeignKey(name="FK_NotificationFrequencyOfLOBConfigurationEntry")
-@OneToOne(fetch=FetchType.LAZY, optional=false)
-private NotificationFrequency notificationFrequency;
-public NotificationFrequency getNotificationFrequency() {
-	return this.notificationFrequency;
-}
+    public LOBConfiguration getLOBConfiguration() {
+        return this.lOBConfiguration;
+    }
 
-public void setNotificationFrequency(NotificationFrequency value) 
-{
-	this.notificationFrequency = value;
-}
+    public void setLOBConfiguration(LOBConfiguration value) {
+        this.lOBConfiguration = value;
+    }
 
-	
-	//////////////////////////////////////////////////////
-	// JSON
-	//////////////////////////////////////////////////////
-	@Override
-	public String retrieveJson(ObjectMapper objectMapper) {
-		String objectJson = super.retrieveJson(objectMapper);
+    @com.percero.agents.sync.metadata.annotations.Externalize
+    @JsonSerialize(using = BDOSerializer.class)
+    @JsonDeserialize(using = BDODeserializer.class)
+    @JoinColumn(name = "NOTIFICATION_FREQUENCY_ID")
+    @org.hibernate.annotations.ForeignKey(name = "FK_NotificationFrequencyOfLOBConfigurationEntry")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private NotificationFrequency notificationFrequency;
 
-		// Properties		
-		//Retrieve value of the Min property
-		objectJson += ",\"min\":";
-		
-		if (getMin() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getMin());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Occurrence property
-		objectJson += ",\"occurrence\":";
-		
-		if (getOccurrence() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getOccurrence());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Type property
-		objectJson += ",\"type\":";
-		
-		if (getType() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getType());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the Max property
-		objectJson += ",\"max\":";
-		
-		if (getMax() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getMax());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the ESTART Activity Code property
-		objectJson += ",\"eSTARTActivityCode\":";
-		
-		if (getESTARTActivityCode() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getESTARTActivityCode());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
-		//Retrieve value of the CMS Aux Code property
-		objectJson += ",\"cMSAuxCode\":";
-		
-		if (getCMSAuxCode() == null)
-			objectJson += "null";
-		else {
-			if (objectMapper == null)
-				objectMapper = new ObjectMapper();
-			try {
-				objectJson += objectMapper.writeValueAsString(getCMSAuxCode());
-			} catch (JsonGenerationException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			} catch (IOException e) {
-				objectJson += "null";
-				e.printStackTrace();
-			}
-		}
+    public NotificationFrequency getNotificationFrequency() {
+        return this.notificationFrequency;
+    }
 
-				
-		// Source Relationships
+    public void setNotificationFrequency(NotificationFrequency value) {
+        this.notificationFrequency = value;
+    }
+
+
+    //////////////////////////////////////////////////////
+    // JSON
+    //////////////////////////////////////////////////////
+    @Override
+    public String retrieveJson(ObjectMapper objectMapper) {
+        String objectJson = super.retrieveJson(objectMapper);
+
+        // Properties
+        //Retrieve value of the Min property
+        objectJson += ",\"min\":";
+
+        if (getMin() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getMin());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the Occurrence property
+        objectJson += ",\"occurrence\":";
+
+        if (getOccurrence() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getOccurrence());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the Type property
+        objectJson += ",\"type\":";
+
+        if (getType() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getType());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the Max property
+        objectJson += ",\"max\":";
+
+        if (getMax() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getMax());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the ESTART Activity Code property
+        objectJson += ",\"eSTARTActivityCode\":";
+
+        if (getESTARTActivityCode() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getESTARTActivityCode());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+        //Retrieve value of the CMS Aux Code property
+        objectJson += ",\"cMSAuxCode\":";
+
+        if (getCMSAuxCode() == null)
+            objectJson += "null";
+        else {
+            if (objectMapper == null)
+                objectMapper = new ObjectMapper();
+            try {
+                objectJson += objectMapper.writeValueAsString(getCMSAuxCode());
+            } catch (JsonGenerationException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            } catch (IOException e) {
+                objectJson += "null";
+                e.printStackTrace();
+            }
+        }
+
+
+        // Source Relationships
 //Retrieve value of the LOB Configuration of LOB Configuration Entry relationship
-objectJson += ",\"lOBConfiguration\":";
-		if (getLOBConfiguration() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+        objectJson += ",\"lOBConfiguration\":";
+        if (getLOBConfiguration() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getLOBConfiguration()).toEmbeddedJson();
+            } catch (Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
 //Retrieve value of the Notification Frequency of LOB Configuration Entry relationship
-objectJson += ",\"notificationFrequency\":";
-		if (getNotificationFrequency() == null)
-			objectJson += "null";
-		else {
-			try {
-				objectJson += ((BaseDataObject) getNotificationFrequency()).toEmbeddedJson();
-			} catch(Exception e) {
-				objectJson += "null";
-			}
-		}
-		objectJson += "";
+        objectJson += ",\"notificationFrequency\":";
+        if (getNotificationFrequency() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getNotificationFrequency()).toEmbeddedJson();
+            } catch (Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
 
-		
-		// Target Relationships
-//Retrieve value of the LOB Configuration Entry of Threshold Exceeded Notification relationship
-//objectJson += ",\"thresholdExceededNotifications\":[";
-//
-//		if (getThresholdExceededNotifications() != null) {
-//			int thresholdExceededNotificationsCounter = 0;
-//			for(ThresholdExceededNotification nextThresholdExceededNotifications : getThresholdExceededNotifications()) {
-//				if (thresholdExceededNotificationsCounter > 0)
-//					objectJson += ",";
-//				try {
-//					objectJson += ((BaseDataObject) nextThresholdExceededNotifications).toEmbeddedJson();
-//					thresholdExceededNotificationsCounter++;
-//				} catch(Exception e) {
-//					// Do nothing.
-//				}
-//			}
-//		}
-//		objectJson += "]";
+        objectJson += ",\"lOBConfigurationActivityAuxCode\":[";
 
-		
-		return objectJson;
-	}
+        if (getLOBConfigurationActivityAuxCodes() != null) {
+            int lOBConfigurationEntriesCounter = 0;
+            for(LOBConfigurationActivityAuxCode nextLOBConfigurationActivityAuxCode : getLOBConfigurationActivityAuxCodes()) {
+                if (lOBConfigurationEntriesCounter > 0)
+                    objectJson += ",";
+                try {
+                    objectJson += ((BaseDataObject) nextLOBConfigurationActivityAuxCode).toEmbeddedJson();
+                    lOBConfigurationEntriesCounter++;
+                } catch(Exception e) {
+                    // Do nothing.
+                }
+            }
+        }
+        objectJson += "]";
+
+        // Target Relationships
 
 
-	@Override
-	protected void fromJson(JsonObject jsonObject) {
-	    super.fromJson(jsonObject);
-
-		// Properties
-		//From value of the Min property
-		setMin(JsonUtils.getJsonString(jsonObject, "min"));
-		//From value of the Occurrence property
-		setOccurrence(JsonUtils.getJsonString(jsonObject, "occurrence"));
-		//From value of the Type property
-		setType(JsonUtils.getJsonString(jsonObject, "type"));
-		//From value of the Max property
-		setMax(JsonUtils.getJsonString(jsonObject, "max"));
-		//From value of the ESTART Activity Code property
-		setESTARTActivityCode(JsonUtils.getJsonString(jsonObject, "eSTARTActivityCode"));
-		//From value of the CMS Aux Code property
-		setCMSAuxCode(JsonUtils.getJsonString(jsonObject, "cMSAuxCode"));
-
-		
-		// Source Relationships
-		this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
-		this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
+        return objectJson;
+    }
 
 
-		// Target Relationships
+    @Override
+    protected void fromJson(JsonObject jsonObject) {
+        super.fromJson(jsonObject);
+
+        // Properties
+        //From value of the Min property
+        setMin(JsonUtils.getJsonString(jsonObject, "min"));
+        //From value of the Occurrence property
+        setOccurrence(JsonUtils.getJsonString(jsonObject, "occurrence"));
+        //From value of the Type property
+        setType(JsonUtils.getJsonString(jsonObject, "type"));
+        //From value of the Max property
+        setMax(JsonUtils.getJsonString(jsonObject, "max"));
+        //From value of the ESTART Activity Code property
+        setESTARTActivityCode(JsonUtils.getJsonString(jsonObject, "eSTARTActivityCode"));
+        //From value of the CMS Aux Code property
+        setCMSAuxCode(JsonUtils.getJsonString(jsonObject, "cMSAuxCode"));
+
+
+        // Source Relationships
+        this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
+        this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
+        this.lOBConfigurationActivityAuxCodes = (List<LOBConfigurationActivityAuxCode>) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationActivityAuxCodes");
+
+        // Target Relationships
 //		this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
 
+    }
 
-	}
-	
-	@Override
-	protected List<MappedClassMethodPair> getListSetters() {
-		List<MappedClassMethodPair> listSetters = super.getListSetters();
 
-		// Target Relationships
-		listSetters.add(MappedClass.getFieldSetters(ThresholdExceededNotification.class, "lobconfigurationentry"));
+    @Override
+    protected List<MappedClassMethodPair> getListSetters() {
+        List<MappedClassMethodPair> listSetters = super.getListSetters();
 
-		
-		return listSetters;
-	}
+        // Target Relationships
+//        listSetters.add(MappedClass.getFieldSetters(LOBConfigurationNotification.class, "lOBConfigurationEntry"));
+        listSetters.add(MappedClass.getFieldSetters(LOBConfigurationActivityAuxCode.class, "lOBConfigurationEntry"));
+
+
+        return listSetters;
+    }
 }
+
 

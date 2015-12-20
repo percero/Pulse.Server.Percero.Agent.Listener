@@ -485,7 +485,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getDeleteCallableStatementSql() {
-        return "{call Delete_NON_BILLABLE_ACT_NOTI(?)}";
+        return "{call DELETE_NON_BILLABLE_ACT_NOTI(?)}";
     }
 
 
