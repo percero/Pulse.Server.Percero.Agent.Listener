@@ -945,7 +945,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Double duration = 0.0;
 
-        if (consecutiveActivityList.size() < 0) {
+        if (consecutiveActivityList.size() < 1) {
             return duration;
         }
 
