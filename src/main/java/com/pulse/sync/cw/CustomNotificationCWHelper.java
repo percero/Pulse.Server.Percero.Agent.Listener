@@ -35,6 +35,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
     private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
+
+
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -893,46 +896,44 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (agent != null && teamLeader != null) {
 
-
-
-                OccurrenceToleranceNotification occurrenceToleranceNotification = null;
+                DurationMismatchNotification durationMismatchNotification = null;
 
                 boolean isExistingNotif = false;
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("OccurrenceToleranceNotification".equals(notification.getType())) {
-                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-                        occurrenceToleranceNotification.setID(notification.getID());
-                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
-                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
+                    if ("DurationMismatchNotification".equals(notification.getType())) {
+                        durationMismatchNotification = new DurationMismatchNotification();
+                        durationMismatchNotification.setID(notification.getID());
+                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
+                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
 
 
-                if (occurrenceToleranceNotification == null) {
-                    occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-                    occurrenceToleranceNotification.setID(UUID.randomUUID().toString());
-                    occurrenceToleranceNotification.setAgent(agent);
-                    occurrenceToleranceNotification.setTeamLeader(teamLeader);
+                if (durationMismatchNotification == null) {
+                    durationMismatchNotification = new DurationMismatchNotification();
+                    durationMismatchNotification.setID(UUID.randomUUID().toString());
+                    durationMismatchNotification.setAgent(agent);
+                    durationMismatchNotification.setTeamLeader(teamLeader);
                 }
 
-                occurrenceToleranceNotification.setCreatedOn(new Date());
-                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
-                occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
+                durationMismatchNotification.setCreatedOn(new Date());
+                durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationMismatchNotification.setType("DurationMismatchNotification");
 
-                occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
-                occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
-                occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
+                durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
+                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                durationMismatchNotification.setLOBConfiguration(lobConfiguration);
+//                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
+                durationMismatchNotification.setTimecardEntry(timecardEntry);
 
                 if (isExistingNotif) {
-                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
+                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
                 } else {
-                    syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+                    syncAgentService.systemCreateObject(durationMismatchNotification, null);
                 }
             }
         }
