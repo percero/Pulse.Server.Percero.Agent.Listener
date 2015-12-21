@@ -6,10 +6,8 @@ import java.util.*;
 import javax.annotation.PostConstruct;
 
 import com.percero.agents.sync.exceptions.SyncException;
-import com.percero.agents.sync.vo.BaseDataObject;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
-import org.boon.core.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +33,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
-    private static final String PHONE_TIME_VARAIANCE_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -199,12 +196,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                         }
                                     }
                                 }
-                            } else {
-                                //Not a Valid scenario for notification
-                                // Do not send notification
-                                log.info("****** CMS Entry based notification is not generated due to following configuration ******");
-                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                             }
+//                            else {
+//                                //Not a Valid scenario for notification
+//                                // Do not send notification
+//                                log.info("****** CMS Entry based notification is not generated due to following configuration ******");
+//                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                            }
                         }
 
 
@@ -323,12 +321,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                                 LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
 
-                                                if (lobConfigurationEntry != null && lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
+                                                if (lobConfigurationEntry!=null && lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
 
                                                     if ("VALID_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
 
 
-                                                        validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+                                                            validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
 
 
                                                         if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
@@ -341,14 +339,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                             generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
 
-                                                            generatePhoneTimeVarianceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration, consecutiveActivityList);
-
                                                         }
                                                     } else if ("NONBILLABLE_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
 
 
-                                                        nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+                                                            nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
 
                                                     }
                                                 }
@@ -366,13 +361,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                     }
                                 }
-                            } else {
-
-                                //Not a Valid scenario for notification
-                                // Do not send notification
-                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
-                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                             }
+//                            else {
+//
+//                                //Not a Valid scenario for notification
+//                                // Do not send notification
+//                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
+//                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                            }
                         }
 
 
@@ -397,11 +393,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     }
                 }
             }
-        } catch (Exception e) {
-            // Handle exception
-            log.error("Error in LOB Notification", e);
+            }catch(Exception e){
+                // Handle exception
+                log.error("Error in LOB Notification", e);
+            }
         }
-    }
 
     private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
                                                   LOBConfigurationEntry lobConfigurationEntry) throws Exception {
@@ -413,7 +409,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         // If the duration is > DURATION_MAX, then create the notification.
         //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
         //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
-        if (duration != null && lobConfigurationEntry.getMax() != null && (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0)) {
+        if (duration !=null && lobConfigurationEntry.getMax() != null && (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0)) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -777,7 +773,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
             //Check the the entry bellongs to
 
-            if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
+            if (cmsEntry!=null &&compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
                     ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
                             && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
@@ -788,52 +784,28 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return cmsEntriesOfTheShift;
     }
 
-    /**
-     * @param agent                   : For which the timecardEntry is received
-     * @param watchedTimecardEntry    : for the TimecardEntry for which the watcher is invoked
-     * @param activityCode            : activityCode ofthe watched
-     * @param consecutiveActivityList : List of timecardEntries matches with watched TimecardEntry activity code.
-     * @return Duration : Total duration of all the consicutive timecardEntries starting from watchedTimecardEntry
-     */
-    private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, final List<TimecardEntry> consecutiveActivityList) {
+    private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
 
 //        Integer consecutiveAcitivityCount = 0;
         Double activityTimeSpan = 0.0;
 
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
-        //Take all timecardEntries on the timecard. This timecard wil
-        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
 
-        //Get the index/location of entry of the watchedTimecarEntry (i.e for TimecardEntr for which ChangeWatcher invoked)
-        int indexOfWatchedEntry = timecardEntryList.indexOf(watchedTimecardEntry);
+        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
 
         boolean processData = true;
 
-//        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
-
-        //Example of the timecarEntry scanning
-        //Entry 7 (Activity Code - B)
-        //Entry 6 (Activity Code - B)
-        //Entry 5 (Activity Code - A) <----Watched Entry (Traversed)
-        //Entry 4 (Activity Code - A) (Traversed)
-        //Entry 3 (Activity Code - A) (Traversed)
-        //Entry 2 (Activity Code - C)
-        //Entry 1 (Activity Code - C)
-
-        //Traversing from last to first
-        for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
+        for (int cnt = timecardEntryList.size() - 1; cnt >= 0 && processData; cnt--) {
             TimecardEntry timecardEntry = syncAgentService.systemGetByObject(timecardEntryList.get(cnt));
 
-            if (timecardEntry != null) {
-
+            if (timecardEntry!=null) {
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                //Find Match for the activity code of traversed activity with wachedTimecardEntry
+                //If code does not have consecutiveness then brk the loop
                 if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
-                    //add duration to activity span duration span
+
                     activityTimeSpan += timecardEntry.getDuration();
-                    //Add to matched
-                    consecutiveActivityList.add(timecardEntry);
+                    timecardEntryListOfActivityCode.add(timecardEntry);
                 } else {
                     processData = false;
                 }
@@ -853,7 +825,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         targetDate.setMinutes(0);
         targetDate.setSeconds(0);
 
-        if (sourceDate != null && targetDate != null && sourceDate.compareTo(targetDate) == 0) {
+        if (sourceDate!=null && targetDate!=null && sourceDate.compareTo(targetDate) == 0) {
             return true;
 
         }
@@ -861,180 +833,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     }
 
-    /**
-     * @param watchedTimecardEntry    :
-     * @param agent
-     * @param teamLeader
-     * @param lobConfiguration
-     * @param lobConfigurationEntry
-     * @param consecutiveActivityList
-     * @throws Exception
-     */
-    private void generatePhoneTimeVarianceNotification(TimecardEntry watchedTimecardEntry, Agent agent, TeamLeader teamLeader,
-                                                       LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
-                                                       Double consecutiveActivityDuration,
-                                                       List<TimecardEntry> consecutiveActivityList) throws Exception {
-
-
-        //TODO : Take this from new property call phone_time_variance
-        int phoneTimeVarianceThreshold = lobConfigurationEntry.getMax() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getMax());
-
-        //Get Total duration of CMSEntries for closes timeslot for matching timecardEntries
-        // and
-        // For those CMSEntry AuxCode associated with watchedTimecardEntry ActivityCode.
-        // POS/ActivityCode --> Associated AuxCodes (1-M) relation
-        //i.e. 11-001      ---> 0,null
-        Double cMSDuration = getDurationOfAccociatedCMSEntries(watchedTimecardEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
-
-        Double variance = cMSDuration > consecutiveActivityDuration ? cMSDuration - consecutiveActivityDuration :
-                consecutiveActivityDuration - cMSDuration;
-
-        if (lobConfigurationEntry.getMax() != null && variance > phoneTimeVarianceThreshold) {
-
-            if (agent == null) {
-                agent = syncAgentService.systemGetByObject(watchedTimecardEntry.getAgent());
-            }
-            if (agent != null && teamLeader == null) {
-                teamLeader = agent.getTeamLeader();
-            }
-
-            if (agent != null && teamLeader != null) {
-
-                DurationMismatchNotification durationMismatchNotification = null;
-
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = watchedTimecardEntry.getNotifications().iterator();
-
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("DurationMismatchNotification".equals(notification.getType())) {
-                        durationMismatchNotification = new DurationMismatchNotification();
-                        durationMismatchNotification.setID(notification.getID());
-                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
-                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
-
-
-                if (durationMismatchNotification == null) {
-                    durationMismatchNotification = new DurationMismatchNotification();
-                    durationMismatchNotification.setID(UUID.randomUUID().toString());
-                    durationMismatchNotification.setAgent(agent);
-                    durationMismatchNotification.setTeamLeader(teamLeader);
-                }
-
-                durationMismatchNotification.setCreatedOn(new Date());
-                durationMismatchNotification.setName("Occurrence Tolerance Notification" + "-" + watchedTimecardEntry.getTimecardActivity().getCode() + "-" + phoneTimeVarianceThreshold);
-                durationMismatchNotification.setType("OccurrenceToleranceNotification");
-
-                durationMismatchNotification.setMessage(MessageFormat.format(PHONE_TIME_VARAIANCE_NOTIFICATION_MESSAGE, agent.getFullName(),
-                        watchedTimecardEntry.getTimecardActivity().getCode(), watchedTimecardEntry.getFromTime(), watchedTimecardEntry.getToTime(), cMSDuration));
-                durationMismatchNotification.setLOBConfiguration(lobConfiguration);
-//                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                durationMismatchNotification.setTimecardEntry(watchedTimecardEntry);
-
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
-                } else {
-                    syncAgentService.systemCreateObject(durationMismatchNotification, null);
-                }
-            }
-        }
-    }
-
-
-    /**
-     * 
-     * @param watchedTimecardEntry      : for the TimecardEntry for which the watcher is invoked
-     * @param agent                     : For which the timecardEntry is received
-     * @param teamLeader                : teamLeader of the agent
-     * @param lobConfiguration          : matched lobConfiugration
-     * @param lobConfigurationEntry     : matched lobConfiugrationEntry
-     * @param consecutiveActivityList   : List of consecutiveActivity matched to watchedTimecardEntry
-     * @return
-     * @throws Exception
-     */
-    
-    private Double getDurationOfAccociatedCMSEntries(TimecardEntry watchedTimecardEntry, Agent agent, TeamLeader teamLeader,
-                                                     LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
-
-        Double duration = 0.0;
-
-        if (consecutiveActivityList.size() < 0) {
-            return duration;
-        }
-
-        List<CMSEntry> associatedCMSEntries = new ArrayList<CMSEntry>();
-
-        //Take the start time of first matching entry and end of last matching entry
-        //This is required to get timeslot for which we need to find related CMS Entry
-        //The consecutiveActivityList gets list of TimecardEntries in reverse order so first is last entry and last is first entry.
-        Date timecarEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getFromTime();
-        Date timecarEntryEndTime = consecutiveActivityList.get(0).getToTime();
-
-        //Once we have new object call auxCodesForActivity on LOBConfigurationEnry, we will get this list filled
-        List<String> auxCodesForActivity = new ArrayList<String>();
-
-        Iterator<LOBConfigurationActivityAuxCode> lobConfigurationActivityAuxCodeIterator =
-                lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().iterator();
-        while(lobConfigurationActivityAuxCodeIterator.hasNext()){
-            LOBConfigurationActivityAuxCode lOBConfigurationActivityAuxCode = syncAgentService.systemGetByObject(lobConfigurationActivityAuxCodeIterator.next());
-            auxCodesForActivity.add(lOBConfigurationActivityAuxCode.getCMSAuxCode());
-        }
-
-//        lobConfigurationEntry.getMappedCMSAuxCode()
-        //Take all CMSEntries of an agent.
-        List<CMSEntry> agentCMSEntries = agent.getCMSEntries();
-
-        int firstClosestCMSEntryIndex = 0;
-        int lastClosestCMSEntryIndex = 0;
-
-        //Just initializing with large number because other CMSEntry duration will be smaller. Hence will be considered immediately
-
-        long minStartTimeDiff = timecarEntryStartTime.getTime();//Some large number initialization to have
-        long minEndTimeDiff = timecarEntryEndTime.getTime();//Some large number initialization to have
-
-        //Loop through the CMSentries
-        for (int index = 0; index < agentCMSEntries.size(); index++) {
-
-            //Take one CMSEntry
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
-
-            //To choose the closes entry to eStart entry (TimecardEntry) received, find the laps time bet'n them
-            //Compare with min Start/End time and keep storing it when all the entries are scanned irrespective of CMS AuxCode
-            //
-            if (getTimeDiff(timecarEntryStartTime, cMSEntry.getFromTime()) <= minStartTimeDiff) {
-                //Choosing the closest CMSntry Index
-                firstClosestCMSEntryIndex = index;
-            }
-
-            if (getTimeDiff(timecarEntryEndTime, cMSEntry.getToTime()) <= minEndTimeDiff) {
-                //Choosing the closest CMSntry Index
-                lastClosestCMSEntryIndex = index;
-            }
-        }
-
-        //Iterate through the closest CMSEntries portion and get sum of duration where AuxCode Matches to
-        //ActivityCode in lOBConfigurationEntry.getEstartActivityCode() associated
-        for (int index = firstClosestCMSEntryIndex; index <= lastClosestCMSEntryIndex; index++) {
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
-            if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
-                duration += cMSEntry.getDuration();
-            }
-        }
-
-        return duration;
-    }
-
-
-    private long getTimeDiff(Date date1, Date date2) {
-        if (date1.getTime() > date1.getTime()) {
-            return date1.getTime() - date2.getTime();
-        } else {
-            return date2.getTime() - date1.getTime();
-        }
-    }
     private void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
         //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
         log.info("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
@@ -1047,14 +845,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         while(itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
-            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
+            ClassIDPair classIdPairLobNotif = new ClassIDPair(iPerceroObject.getID(), Notification.class.getCanonicalName());
 
-            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
-
-//            IPerceroObject iPerceroObject = itrNotifications.next();
-//            ClassIDPair classIdPairLobNotif = new ClassIDPair(iPerceroObject.getID(), Notification.class.getCanonicalName());
-//
-//            Notification notification = (Notification) syncAgentService.findById(classIdPairLobNotif, null);
+            Notification notification = (Notification) syncAgentService.findById(classIdPairLobNotif, null);
             if(notification!=null) {
 
                 syncAgentService.systemDeleteObject(notification, null, true);
@@ -1065,7 +858,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
         log.info("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
-
 
     }
 }

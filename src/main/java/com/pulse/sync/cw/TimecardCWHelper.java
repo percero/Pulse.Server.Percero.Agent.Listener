@@ -144,8 +144,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
             //
 
-            //&& isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime) - optional
-            if (!iEXForForTheShiftExists) {
+            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+//            if (!iEXForForTheShiftExists) {
                 //No Shift
                 result = Boolean.FALSE;
             } else {
@@ -181,12 +181,10 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
             /**
              UNKNOWN --> NOT STARTED --> IN PROGRESS --> COMPLETED --> APPROVED
-
              IN PROGRESS - would be based on the ON_TIME field and the OFF_TIME field for the
              CURRENT DAY, and the actual time it is based on the timezone for that agent.
              For example if it is 14:12 on 11/5 and the OFF_TIME is 14:45 which is Greater than
              the actual time of day it is for the agent (the agent local time), then she's still IN PROGRESS
-
              COMPLETED - would be based on the reverse of IN PROGRESS, if the time of day is less that the actual
              time of day it is for the agents current time zone, then their shift is complete. For example if
              the OFF_TIME field equals 13:30 on 11/5 and teh current time is 14:12 CST (and that is the agents
@@ -221,41 +219,12 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     // to the current time using milliseconds since 0 (ie. compare
                     // UTC time) using the Joda DateTime object.
                     // http://www.joda.org/joda-time/
-//                    DateTime timecardStartDateTime = new DateTime(host.getStartDate());
-//                    DateTime timecardEndDateTime = new DateTime(host.getEndDate());
 
-                    DateTime timecardStartDateTime = new DateTime(host.getSourceStartDate());
-                    DateTime timecardEndDateTime = new DateTime(host.getSourceEndDate());
 
-                    AgentTimeZone agentTimeZone = null;
-                    accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-                    Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-                    if (agent != null) {
-                        accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "agentTimeZone", fieldsToWatch);
-                        agentTimeZone = agent.getAgentTimeZone();    // We only need the ID here, so don't load from the database.
-                        if (agentTimeZone == null) {
-                            log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
-                        }
-                    } else {
-                        log.warn("Unable to get AgentTimeZone, using SourceStartDate as StartDate");
-                    }
+                    DateTime timecardStartDateTime = new DateTime(host.getStartDate());
+                    DateTime timecardEndDateTime = new DateTime(host.getEndDate());
 
                     DateTime currentTime = new DateTime(System.currentTimeMillis());
-//                    try {
-//                        DateTimeZone dateTimeZone = DateTimeZone.forID(host.getTimeZone());
-//                        if (dateTimeZone != null && agentTimeZone != null) {
-//                            int offsetInMs = dateTimeZone.getOffset(System.currentTimeMillis());
-//
-//                            // The Source Time MINUS the Offset gives us UTC.
-//                            currentTime = new DateTime(currentTime.toDate().getTime() - offsetInMs);
-//                        } else {
-//                            log.warn("Invalid time zone " + host.getTimeZone());
-//                        }
-//                    } catch (Exception e) {
-//                        // Invalid time zone.
-//                        log.error("Invalid time zone " + host.getTimeZone(), e);
-//                    }
-
 
                     //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
 //                    if (currentTime.isBefore(timecardStartDateTime)) {
