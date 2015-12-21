@@ -219,6 +219,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     // to the current time using milliseconds since 0 (ie. compare
                     // UTC time) using the Joda DateTime object.
                     // http://www.joda.org/joda-time/
+
+
                     DateTime timecardStartDateTime = new DateTime(host.getStartDate());
                     DateTime timecardEndDateTime = new DateTime(host.getEndDate());
 

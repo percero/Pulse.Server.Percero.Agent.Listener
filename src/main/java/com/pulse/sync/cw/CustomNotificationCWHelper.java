@@ -196,12 +196,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                         }
                                     }
                                 }
-                            } else {
-                                //Not a Valid scenario for notification
-                                // Do not send notification
-                                log.info("****** CMS Entry based notification is not generated due to following configuration ******");
-                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                             }
+//                            else {
+//                                //Not a Valid scenario for notification
+//                                // Do not send notification
+//                                log.info("****** CMS Entry based notification is not generated due to following configuration ******");
+//                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                            }
                         }
 
 
@@ -360,13 +361,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                     }
                                 }
-                            } else {
-
-                                //Not a Valid scenario for notification
-                                // Do not send notification
-                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
-                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                             }
+//                            else {
+//
+//                                //Not a Valid scenario for notification
+//                                // Do not send notification
+//                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
+//                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                            }
                         }
 
 
