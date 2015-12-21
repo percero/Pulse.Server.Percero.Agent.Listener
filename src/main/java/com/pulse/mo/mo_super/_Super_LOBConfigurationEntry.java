@@ -399,7 +399,7 @@ Notes:
         }
         objectJson += "";
 
-        objectJson += ",\"lOBConfigurationActivityAuxCode\":[";
+        objectJson += ",\"lOBConfigurationActivityAuxCodes\":[";
 
         if (getLOBConfigurationActivityAuxCodes() != null) {
             int lOBConfigurationEntriesCounter = 0;
@@ -445,8 +445,7 @@ Notes:
         // Source Relationships
         this.lOBConfiguration = (LOBConfiguration) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfiguration");
         this.notificationFrequency = (NotificationFrequency) JsonUtils.getJsonPerceroObject(jsonObject, "notificationFrequency");
-        this.lOBConfigurationActivityAuxCodes = (List<LOBConfigurationActivityAuxCode>) JsonUtils.getJsonPerceroObject(jsonObject, "lOBConfigurationActivityAuxCodes");
-
+        this.lOBConfigurationActivityAuxCodes = (List<LOBConfigurationActivityAuxCode>) JsonUtils.getJsonListPerceroObject(jsonObject, "lOBConfigurationActivityAuxCodes");
         // Target Relationships
 //		this.thresholdExceededNotifications = (List<ThresholdExceededNotification>) JsonUtils.getJsonListPerceroObject(jsonObject, "thresholdExceededNotifications");
 

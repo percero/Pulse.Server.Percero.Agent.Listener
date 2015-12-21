@@ -86,11 +86,10 @@ public class _Super_LOBConfigurationActivityAuxCode extends BaseDataObject imple
 //	this.lOBConfigurationNotifications = value;
 //}
 
-
     @com.percero.agents.sync.metadata.annotations.Externalize
     @JsonSerialize(using = BDOSerializer.class)
     @JsonDeserialize(using = BDODeserializer.class)
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "LOB_CONFIGURATION_ENTRY_ID")
     @org.hibernate.annotations.ForeignKey(name = "FK_LOBConfigurationActivityAuxCodeOfLOBConfigurationEntry")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private LOBConfigurationEntry lOBConfigurationEntry;
@@ -102,26 +101,23 @@ public class _Super_LOBConfigurationActivityAuxCode extends BaseDataObject imple
     public void setLOBConfigurationEntry(LOBConfigurationEntry value) {
         this.lOBConfigurationEntry = value;
     }
+
     //////////////////////////////////////////////////////
     // Source Relationships
     //////////////////////////////////////////////////////
 
+    @Column
     @com.percero.agents.sync.metadata.annotations.Externalize
-    @JsonSerialize(using = BDOSerializer.class)
-    @JsonDeserialize(using = BDODeserializer.class)
-    @JoinColumn(name = "CMS_AUX_CODE")
-    @org.hibernate.annotations.ForeignKey(name = "FK_CMSAuxCodeOfLOBConfiguration")
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+
     private String cMSAuxCode;
 
     public String getCMSAuxCode() {
         return this.cMSAuxCode;
     }
 
-    public void setCMSAuxCode(String value) {
-        this.cMSAuxCode = value;
+    public void setCMSAuxCode(String cMSAuxCode) {
+        this.cMSAuxCode = cMSAuxCode;
     }
-
 
     //////////////////////////////////////////////////////
     // JSON
@@ -154,6 +150,18 @@ public class _Super_LOBConfigurationActivityAuxCode extends BaseDataObject imple
             }
         }
 
+        objectJson += ",\"lOBConfigurationEntry\":";
+        if (getLOBConfigurationEntry() == null)
+            objectJson += "null";
+        else {
+            try {
+                objectJson += ((BaseDataObject) getLOBConfigurationEntry()).toEmbeddedJson();
+            } catch(Exception e) {
+                objectJson += "null";
+            }
+        }
+        objectJson += "";
+
         return objectJson;
     }
 
@@ -179,7 +187,6 @@ public class _Super_LOBConfigurationActivityAuxCode extends BaseDataObject imple
     protected List<MappedClassMethodPair> getListSetters() {
         List<MappedClassMethodPair> listSetters = super.getListSetters();
 
-        // Target Relationships
 		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lOBConfigurationActivityAuxCode"));
 //		listSetters.add(MappedClass.getFieldSetters(LOBConfigurationEntry.class, "lobConfiguration"));
 

@@ -7,6 +7,7 @@ import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.pulse.mo.LOB;
 import com.pulse.mo.LOBConfigurationActivityAuxCode;
+import com.pulse.mo.LOBConfigurationEntry;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -36,8 +37,8 @@ public class LOBConfigurationActivityAuxCodeDAO extends SqlDataAccessObject<LOBC
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
     public static final String CONNECTION_FACTORY_NAME = "default";
 
-    public static final String SHELL_ONLY_SELECT = "\"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"ID\"";
-    public static final String SQL_VIEW = ",\"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"CMS_AUX_CODE\"";
+    public static final String SHELL_ONLY_SELECT = "\"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"ID\", \"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"LOB_CONFIGURATION_ENTRY_ID\"";
+    public static final String SQL_VIEW = ",\"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"CMS_AUX_CODE\", \"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"LOB_CONFIGURATION_ENTRY_ID\"";
     private String selectFromStatementTableName = " FROM \"LOB_CONF_ACTVT_ASOC_AUXCOD\" \"LOB_CONF_ACTVT_ASOC_AUXCOD\"";
     private String whereClause = "  WHERE \"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONF_ACTVT_ASOC_AUXCOD\".\"ID\"= SQLLIST.column_value";
@@ -153,6 +154,12 @@ public class LOBConfigurationActivityAuxCodeDAO extends SqlDataAccessObject<LOBC
                 nextResult.setCMSAuxCode(cMSAuxCode);
             }
 
+            String lOBConfigurationEntryId = rs.getString("LOB_CONFIGURATION_ENTRY_ID");
+            if (StringUtils.hasText(lOBConfigurationEntryId) && !"null".equalsIgnoreCase(lOBConfigurationEntryId)) {
+                LOBConfigurationEntry lobConfigurationEntry = new LOBConfigurationEntry();
+                lobConfigurationEntry.setID(lOBConfigurationEntryId);
+                nextResult.setLOBConfigurationEntry(lobConfigurationEntry);
+            }
 
         }
 
@@ -233,6 +240,14 @@ public class LOBConfigurationActivityAuxCodeDAO extends SqlDataAccessObject<LOBC
         }
 
 
+        boolean useLOBConfigurationEntryID = theQueryObject.getLOBConfigurationEntry().getID() != null && (excludeProperties == null || !excludeProperties.contains("lOBConfigurationEntry"));
+
+        if (useLOBID) {
+            sql += " WHERE ";
+            sql += " \"LOB_CONFIGURATION_ENTRY_ID\" =? ";
+            paramValues.add(theQueryObject.getLOBConfigurationEntry().getID());
+            propertyCounter++;
+        }
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
         }

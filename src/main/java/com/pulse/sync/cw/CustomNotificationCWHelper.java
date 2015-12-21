@@ -956,6 +956,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
+        Iterator<LOBConfigurationActivityAuxCode> itrLOBConfigurationActivityAuxCode =  lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().iterator();
+
+        while(itrLOBConfigurationActivityAuxCode.hasNext()) {
+            LOBConfigurationActivityAuxCode lobConfigurationActivityAuxCode = syncAgentService.systemGetByObject(itrLOBConfigurationActivityAuxCode.next());
+            auxCodesForActivity.add(lobConfigurationActivityAuxCode.getCMSAuxCode());
+        }
+
 
 //        lobConfigurationEntry.getMappedCMSAuxCode()
         List<CMSEntry> agentCMSEntries = agent.getCMSEntries();

@@ -176,16 +176,16 @@ public class Main {
             Iterator<Agent> itrAgents = teamLeader.getAgents().iterator();
             while (itrAgents.hasNext()) {
                 Agent nextAgent = syncAgentService.systemGetByObject(itrAgents.next());
-
-                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
-                while (itrCMSEntries.hasNext()) {
-                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
-//                    simulateCMSEntryDelete(syncAgentService, cMSEntry);
-                    //9th dec entry process
-                    //if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
-                    processCMSEntry(syncAgentService, cMSEntry);
-                    //}
-                }
+                extractConfiguration(syncAgentService);
+//                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
+//                while (itrCMSEntries.hasNext()) {
+//                    CMSEntry cMSEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
+////                    simulateCMSEntryDelete(syncAgentService, cMSEntry);
+//                    //9th dec entry process
+//                    //if (cMSEntry != null && cMSEntry.getFromTime().getDay() == 9 && cMSEntry.getFromTime().getMonth()==11){
+//                    processCMSEntry(syncAgentService, cMSEntry);
+//                    //}
+//                }
 
 //                Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
 //                while(itrTimecard.hasNext()) {
@@ -560,106 +560,136 @@ public class Main {
 
     }
 
+    public static void extractConfiguration(ISyncAgentService syncAgentService) {
+        LOBConfiguration lobConfiguration = new LOBConfiguration();
+
+        lobConfiguration.setID("10");
+
+        lobConfiguration = syncAgentService.systemGetByObject(lobConfiguration);
+
+        Iterator<LOBConfigurationEntry> itr = lobConfiguration.getLOBConfigurationEntries().iterator();
+
+
+        while (itr.hasNext()) {
+            LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itr.next());
+
+            if (lobConfigurationEntry != null) {
+
+                System.out.println(lobConfigurationEntry.getLOBConfigurationActivityAuxCodes());
+
+                Iterator<LOBConfigurationActivityAuxCode> itr2 = lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().iterator();
+
+                if (lobConfigurationEntry.getID().equals("77")) {
+//                    System.out.println("tes");
+                    while (itr2.hasNext()) {
+                        LOBConfigurationActivityAuxCode lacc = syncAgentService.systemGetByObject(itr2.next());
+                        System.out.println(lacc.getID());
+                    }
+                }
+            }
+        }
+
+    }
+
     public static void processCMSEntry(ISyncAgentService syncAgentService, CMSEntry cmsEntry) throws Exception {
 //        if (updatedObject instanceof CMSEntry) {
 //            CMSEntry cmsEntry = (CMSEntry) updatedObject;
         Agent agent = null;
         TeamLeader teamLeader = null;
 
-            if (cmsEntry != null) {
-                //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+        if (cmsEntry != null) {
+            //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
-                // 1. Check for Work Mode DURATION Tolerance
+            // 1. Check for Work Mode DURATION Tolerance
 
-                //Work Mode Duration
-                //For the watched CMSEntry,
-                //Use the AuxCode in the Entry and look into the configuration.
-                //Use min and max value associated with it to check the duration is within the allowed range.
-                //In condition fails, generate notification
-                //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
+            //Work Mode Duration
+            //For the watched CMSEntry,
+            //Use the AuxCode in the Entry and look into the configuration.
+            //Use min and max value associated with it to check the duration is within the allowed range.
+            //In condition fails, generate notification
+            //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
 
 //                        cmsEntry.getCMSAuxMode()
-                if (agent == null) {
-                    agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
-                }
+            if (agent == null) {
+                agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+            }
 
-                if (agent != null) {
+            if (agent != null) {
 
-                    if (agent.getAgentLOBs().size() == 1) {
+                if (agent.getAgentLOBs().size() == 1) {
 
-                        //Valid scenario for notification
-                        AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+                    //Valid scenario for notification
+                    AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
 
-                        if (agentLOB != null) {
+                    if (agentLOB != null) {
 
-                            LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+                        LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
 
-                            if (lob != null) {
+                        if (lob != null) {
 
-                                List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+                            List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
 
-                                if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
+                            if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
 
-                                    LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
-                                    Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+                                LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+                                Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
 
-                                    while (itrLobConfigurationEntry.hasNext()) {
+                                while (itrLobConfigurationEntry.hasNext()) {
 
-                                        LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+                                    LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
 
-                                        if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
-                                            if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
-                                                    (lobConfigurationEntry.getCMSAuxCode() != null &&
-                                                            cmsEntry.getCMSAuxMode() != null &&
-                                                            lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
-                                                //valid logic
-                                                //Logically there will be only one entry per AuxCode so this condition will be invoked only once
-                                                //This implies that only one notiifcation of each type can be generated.
-                                                generateWorkDurationNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-                                                generateWorkModeOccurrenceNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-
-                                            }
+                                    if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
+                                        if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
+                                                (lobConfigurationEntry.getCMSAuxCode() != null &&
+                                                        cmsEntry.getCMSAuxMode() != null &&
+                                                        lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
+                                            //valid logic
+                                            //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+                                            //This implies that only one notiifcation of each type can be generated.
+                                            generateWorkDurationNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                            generateWorkModeOccurrenceNotification(syncAgentService, cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
 
                                         }
-                                    }
 
+                                    }
                                 }
+
                             }
                         }
-                    } else {
-                        //Not a Valid scenario for notification
-                        // Do not send notification
-                        System.out.println("****** CMS Entry based notification is not generated due to following configuration ******");
-                        System.out.println("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                     }
+                } else {
+                    //Not a Valid scenario for notification
+                    // Do not send notification
+                    System.out.println("****** CMS Entry based notification is not generated due to following configuration ******");
+                    System.out.println("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
                 }
-
-
-                // 2.
-
-
-                // 3.
-
-
-                // 4.
-
             }
-            else{
-                //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-
-                CMSEntry criteriaCMSEntry = new CMSEntry();
-                criteriaCMSEntry.setID(cmsEntry.getID());
-
-                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
-
-                deleteOrphanedNotifications(syncAgentService, searchAndDeleteLOBNotification);
 
 
-            }
+            // 2.
+
+
+            // 3.
+
+
+            // 4.
+
+        } else {
+            //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+            //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+            //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+            //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+            CMSEntry criteriaCMSEntry = new CMSEntry();
+            criteriaCMSEntry.setID(cmsEntry.getID());
+
+            LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+            searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+            deleteOrphanedNotifications(syncAgentService, searchAndDeleteLOBNotification);
+
+
+        }
 
 
 //        }
