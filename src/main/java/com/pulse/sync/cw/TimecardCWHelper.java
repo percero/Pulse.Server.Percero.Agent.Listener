@@ -127,11 +127,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // We want to re-trigger this change watcher when Timecard.endDate changes.
             accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-            accessManager.addWatcherField(pair, "iEX", fieldsToWatch);
-
             DateTime timecardStartDateTime = new DateTime(host.getStartDate());
             DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-            Boolean iEXForForTheShiftExists = host.getIEX();
 
             // Business Logic: NO SHIFT -- would be based on the
             // ON_TIME/startDate field and the OFF_TIME/endDate field having
@@ -214,12 +211,15 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     // We want to re-trigger this change watcher when Timecard.endDate changes.
                     accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
+                    accessManager.addWatcherField(pair, "iEX", fieldsToWatch);
                     // Timecard.StartDate and Timecard.EndDate appear to also carry
                     // the timezone. We can compare
                     // to the current time using milliseconds since 0 (ie. compare
                     // UTC time) using the Joda DateTime object.
                     // http://www.joda.org/joda-time/
 
+
+                    Boolean iEXForForTheShiftExists = host.getIEX();
 
                     DateTime timecardStartDateTime = new DateTime(host.getStartDate());
                     DateTime timecardEndDateTime = new DateTime(host.getEndDate());
@@ -228,7 +228,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
                     //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
 //                    if (currentTime.isBefore(timecardStartDateTime)) {
-                    if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+                    //Source date should be used in this first condition because we need 00:00:00 from the date, if we apply any change to it using timezone it is incorrect
+                    if (iEXForForTheShiftExists && isZeroHourOfDay(new DateTime(host.getSourceStartDate())) && isZeroHourOfDay(new DateTime(host.getSourceEndDate()))) {
                         // Local time is BEFORE the time card start date, so status is NOT_STARTED
                         result = TimecardStatus.NOT_STARTED.getValue();
                     } else if (currentTime.isBefore(timecardEndDateTime)) {
