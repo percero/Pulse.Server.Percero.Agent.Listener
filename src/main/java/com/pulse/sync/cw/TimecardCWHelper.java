@@ -144,14 +144,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             //
 
 
-            if (!iEXForForTheShiftExists && isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
-//            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
-//            if (!iEXForForTheShiftExists) {
-                //No Shift
-                result = Boolean.FALSE;
-            } else {
+//            if (!iEXForForTheShiftExists && isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+////            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+////            if (!iEXForForTheShiftExists) {
+//                //No Shift
+//                result = Boolean.FALSE;
+//            } else {
+//                //Shift there a shift
+//                result = Boolean.TRUE;
+//            }
+
+            if (iEXForForTheShiftExists ) {
                 //Shift there a shift
                 result = Boolean.TRUE;
+            } else {
+                //NO Shift
+                result = Boolean.FALSE;
             }
 
 
