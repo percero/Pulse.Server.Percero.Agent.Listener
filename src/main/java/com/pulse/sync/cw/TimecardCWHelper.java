@@ -127,9 +127,11 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // We want to re-trigger this change watcher when Timecard.endDate changes.
             accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
+            accessManager.addWatcherField(pair, "iEX", fieldsToWatch);
+
             DateTime timecardStartDateTime = new DateTime(host.getStartDate());
             DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-
+            Boolean iEXForForTheShiftExists = host.getIEX();
             // Business Logic: NO SHIFT -- would be based on the
             // ON_TIME/startDate field and the OFF_TIME/endDate field having
             // dates but 0:00 as the time in both fields
@@ -141,7 +143,9 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
             //
 
-            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+
+            if (!iEXForForTheShiftExists && isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
+//            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
 //            if (!iEXForForTheShiftExists) {
                 //No Shift
                 result = Boolean.FALSE;
