@@ -105,8 +105,10 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipStarSQL(String joinColumnName) 
 	{
 		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
-			return SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) and ROWNUM < 15 order by \"SCHEDULE\".\"START_DATE\" desc";
+//			return SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) and ROWNUM < 15 order by \"SCHEDULE\".\"START_DATE\" desc";
+			return "SELECT * FROM (" + SQL_VIEW + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) order by \"SCHEDULE\".\"START_DATE\" desc) WHERE ROWNUM < 15";
 		}
+
 		return "SELECT * FROM (" + SQL_VIEW + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
 
@@ -114,7 +116,7 @@ public class ScheduleDAO extends SqlDataAccessObject<Schedule> implements IDataA
 	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) 
 	{
 		if ("\"PAYROLL\"".equalsIgnoreCase(joinColumnName)) {
-			return "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) and ROWNUM < 15 order by\"SCHEDULE\".\"START_DATE\" desc";
+			return "SELECT * FROM (" + "SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\".\"PAYROLL\" =? and \"SCHEDULE\".\"START_DATE\" >= Trunc(sysdate - 30) AND  \"SCHEDULE\".\"START_DATE\" < Trunc(sysdate + 1)  AND \"SCHEDULE\".\"END_DATE\" > Trunc(sysdate - 30) order by\"SCHEDULE\".\"START_DATE\" desc) WHERE ROWNUM < 15 ";
 		}
 		return "SELECT * FROM (SELECT \"SCHEDULE\".\"ID\" as \"ID\" " + selectFromStatementTableName + " WHERE \"SCHEDULE\"." + joinColumnName + "=? ORDER BY \"SCHEDULE\".\"START_DATE\" DESC) WHERE ROWNUM < 15";
 	}
