@@ -238,18 +238,18 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
                     DateTime currentTime = new DateTime(System.currentTimeMillis());
 
-                    //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
-//                    if (currentTime.isBefore(timecardStartDateTime)) {
-                    //Source date should be used in this first condition because we need 00:00:00 from the date, if we apply any change to it using timezone it is incorrect
-                    if (iEXForForTheShiftExists && isZeroHourOfDay(new DateTime(host.getSourceStartDate())) && isZeroHourOfDay(new DateTime(host.getSourceEndDate()))) {
-                        // Local time is BEFORE the time card start date, so status is NOT_STARTED
-                        result = TimecardStatus.NOT_STARTED.getValue();
-                    } else if (currentTime.isBefore(timecardEndDateTime)) {
-                        // Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
-                        result = TimecardStatus.IN_PROGRESS.getValue();
-                    } else {
-                        // Local time is AFTER the timecard end dtae, so status is COMPLETED
-                        result = TimecardStatus.COMPLETED.getValue();
+                    if (iEXForForTheShiftExists) {  //calculate status only if  there is an iEX data
+                        //Source date should be used in this first condition because we need 00:00:00 from the date, if we apply any change to it using timezone it is incorrect
+                        if (isZeroHourOfDay(new DateTime(host.getSourceStartDate())) && isZeroHourOfDay(new DateTime(host.getSourceEndDate()))) {
+                            // Local time is BEFORE the time card start date, so status is NOT_STARTED
+                            result = TimecardStatus.NOT_STARTED.getValue();
+                        } else if (currentTime.isBefore(timecardEndDateTime)) {
+                            // Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
+                            result = TimecardStatus.IN_PROGRESS.getValue();
+                        } else {
+                            // Local time is AFTER the timecard end dtae, so status is COMPLETED
+                            result = TimecardStatus.COMPLETED.getValue();
+                        }
                     }
                 }
             }
