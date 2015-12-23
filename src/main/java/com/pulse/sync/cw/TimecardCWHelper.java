@@ -222,8 +222,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
                     // We want to re-trigger this change watcher when Timecard.endDate changes.
                     accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
-
-                    accessManager.addWatcherField(pair, "iEX", fieldsToWatch);
+                    
                     // Timecard.StartDate and Timecard.EndDate appear to also carry
                     // the timezone. We can compare
                     // to the current time using milliseconds since 0 (ie. compare
