@@ -208,7 +208,15 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     || "yes".equalsIgnoreCase(approved)) {
                 // Timecard has been APPROVED
                 result = TimecardStatus.APPROVED.getValue();
-            } else {
+            }
+            else if ("f".equalsIgnoreCase(approved)
+                    || "F".equalsIgnoreCase(approved)) {
+                //Note: This is speccial case where Agent has schedule and agent is absent.  Since he did not started his work his start/end date has 00:00:00. But every shift has some timecard
+                // In this there is a time card with 8 hrs CODE - ABU /Absent
+                // At the end of the shift eStart set teh status in APPROVED as "F" means complete but does not change start/end time.
+                // To handle this this explicit condition is introduced iwht CVG#309
+                result = TimecardStatus.COMPLETED.getValue();
+            }else {
                 // We want to re-trigger this change watcher when Timecard.shift changes.
                 accessManager.addWatcherField(pair, "shift", fieldsToWatch);
                 Boolean shift = host.getShift();
