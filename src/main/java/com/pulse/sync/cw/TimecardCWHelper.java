@@ -222,7 +222,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
                     // We want to re-trigger this change watcher when Timecard.endDate changes.
                     accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
-                    
+
                     // Timecard.StartDate and Timecard.EndDate appear to also carry
                     // the timezone. We can compare
                     // to the current time using milliseconds since 0 (ie. compare
@@ -239,7 +239,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
                     if (iEXForForTheShiftExists) {  //calculate status only if  there is an iEX data
                         //Source date should be used in this first condition because we need 00:00:00 from the date, if we apply any change to it using timezone it is incorrect
-                        if (isZeroHourOfDay(new DateTime(host.getSourceStartDate())) && isZeroHourOfDay(new DateTime(host.getSourceEndDate()))) {
+                        if (currentTime.isBefore(timecardStartDateTime)) {
                             // Local time is BEFORE the time card start date, so status is NOT_STARTED
                             result = TimecardStatus.NOT_STARTED.getValue();
                         } else if (currentTime.isBefore(timecardEndDateTime)) {
