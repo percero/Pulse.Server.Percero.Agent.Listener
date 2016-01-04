@@ -142,7 +142,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-                if (updatedObject instanceof CMSEntry) {
+                if (updatedObject != null && updatedObject instanceof CMSEntry) {
                     CMSEntry cmsEntry = (CMSEntry) updatedObject;
                     Agent agent = null;
                     TeamLeader teamLeader = null;
@@ -215,34 +215,34 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
-
-
-                        // 2.
-
-
-                        // 3.
-
-
-                        // 4.
-
-                    } else {
-                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                        //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-
-                        CMSEntry criteriaCMSEntry = new CMSEntry();
-                        criteriaCMSEntry.setID(classId);
-
-                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                        searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
-
-                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
-
-
                     }
 
+                    // 2.
+
+
+                    // 3.
+
+
+                    // 4.
+
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+                    CMSEntry criteriaCMSEntry = new CMSEntry();
+                    criteriaCMSEntry.setID(classId);
+
+                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                    searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+
+
                 }
+
+
             }
         } catch (Exception e) {
             // Handle exception
@@ -267,7 +267,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-                if (updatedObject instanceof TimecardEntry) {
+                if (updatedObject != null && updatedObject instanceof TimecardEntry) {
                     TimecardEntry timecardEntry = (TimecardEntry) updatedObject;
                     Agent agent = null;
                     TeamLeader teamLeader = null;
@@ -383,27 +383,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
-
-
-                        // 3.
-
-
-                        // 4.
-
-                    } else {
-                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                        //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-                        TimecardEntry criteriaTimecardEntry = new TimecardEntry();
-                        criteriaTimecardEntry.setID(classId);
-
-                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                        searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
-
-                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                     }
+
+                    // 3.
+
+
+                    // 4.
+
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+                    TimecardEntry criteriaTimecardEntry = new TimecardEntry();
+                    criteriaTimecardEntry.setID(classId);
+
+                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                    searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
+
+                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                 }
+
             }
         } catch (Exception e) {
             // Handle exception
