@@ -2,6 +2,7 @@ package com.pulse.sync.cw;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,6 +42,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
 
+
+    private static final String DATE_TIME_FORMAT_WITH_SECONDS = "MM/dd/yyyy HH:mm:ss";
+    private static final String DATE_TIME_FORMAT_WITHOUT_SECONDS = "MM/dd/yyyy HH:mm";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -475,17 +479,18 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
-                //Rounding up duration to 0th precision i.e. 19.75-->20 or 19.45 --> 19.0
-                BigDecimal bd = new BigDecimal(duration);
-                bd = bd.setScale(0, BigDecimal.ROUND_HALF_UP);
 
+                //Do not use the duration property of the CMSEntry, since it has decimal value. Customer do not want round half up either hence followed a patterned
+                // which was implemented on UI for calculating duration
+                int intDuration = calLapsMin(fromDate, toDate);
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate), formatDate(toDate), bd.intValue())); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), intDuration)); //xxx
+
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 workDurationNotification.setCMSEntry(cmsEntry);
@@ -571,11 +576,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate), formatDate(toDate), OCCURRENCE_MAX));
+                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
@@ -1073,8 +1078,30 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     }
 
-    private String formatDate(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    private String formatDate(Date date, String dateFormat) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         return simpleDateFormat.format(date);
+    }
+    private Date stringToDate(String strDate, String dateFormat) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+        Date date = null;
+
+        try {
+            date = simpleDateFormat.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    private int calLapsMin(Date oriFromDate, Date oriToDate){
+        String strFromDate = formatDate(oriFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
+        String strToDate = formatDate(oriToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
+
+        oriFromDate = stringToDate(strFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
+        oriToDate = stringToDate(strToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
+
+        return (int)(oriToDate.getTime()/60 - oriFromDate.getTime()/60);
     }
 }
