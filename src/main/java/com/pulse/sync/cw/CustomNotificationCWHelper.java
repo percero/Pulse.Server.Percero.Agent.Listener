@@ -30,6 +30,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private static final Logger log = Logger.getLogger(CustomNotificationCWHelper.class);
 
+    private static final int MS_IN_MIN = 60 * 1000;
     //CMSEntry based Notifications Messages
     private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
     private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
@@ -847,13 +848,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
             //Check the the entry bellongs to
 
-            if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
-                beginDate = cmsEntry.getFromTime();
-            }
+
             if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
                     ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
                             && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
+                //Get the date/time of the first entry of the day
+                if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
+                    beginDate = cmsEntry.getFromTime();
+                }
                 cmsEntriesOfTheShift.add(cmsEntry);
             }
         }
@@ -1102,6 +1105,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         oriFromDate = stringToDate(strFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
         oriToDate = stringToDate(strToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
 
-        return (int)(oriToDate.getTime()/60 - oriFromDate.getTime()/60);
+        return (int)(oriToDate.getTime()/MS_IN_MIN - oriFromDate.getTime()/MS_IN_MIN);
     }
 }
