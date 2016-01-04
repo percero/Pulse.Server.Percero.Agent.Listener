@@ -1,6 +1,8 @@
 package com.pulse.sync.cw;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +11,8 @@ import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +40,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
     private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
-
 
 
     // This is required for CUSTOM change watchers.
@@ -100,14 +103,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     public Object process(String category, String subCategory, String fieldName, String[] params) {
         if (fieldName.equalsIgnoreCase("handleCmsEntryNotification")) {
             try {
-				handleCmsEntryNotification(category, subCategory, fieldName, params);
+                handleCmsEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleCmsEntryNotification", e);
             }
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-               // handleTimecardEntryNotification(category, subCategory, fieldName, params);
+                // handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
@@ -218,8 +221,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         // 4.
 
-                    }
-                    else{
+                    } else {
                         //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
                         //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
                         //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
@@ -384,8 +386,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         // 4.
 
-                    }
-                    else{
+                    } else {
                         //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
                         //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
                         //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
@@ -446,12 +447,45 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     workDurationNotification.setTeamLeader(teamLeader);
                 }
 
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
+                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
+                //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
+                String timeZone = agent.getTimeZone();
+                Date fromDate = null;
+                Date toDate = null;
+                try {
+                    DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+                    if (dateTimeZone != null) {
+                        //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+                        // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+                        // Do not change the code here. Following is the best approach
+                        int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+
+                        fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
+                        toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
+                    } else {
+                        log.warn("Invalid time zone " + timeZone);
+                    }
+                } catch (Exception e) {
+                    // Invalid time zone.
+                    log.error("Invalid time zone " + timeZone, e);
+                }
+
+
                 workDurationNotification.setCreatedOn(new Date());
-                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
+//                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
+                //Rounding up duration to 0th precision i.e. 19.75-->20 or 19.45 --> 19.0
+                BigDecimal bd = new BigDecimal(duration);
+                bd = bd.setScale(0, BigDecimal.ROUND_HALF_UP);
+
+//                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
+//                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
+                        formatDate(fromDate), formatDate(toDate), bd.intValue())); //xxx
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 workDurationNotification.setCMSEntry(cmsEntry);
@@ -470,7 +504,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
-        List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(agent, cmsEntry);
+//        List<CMSEntry> cmsEntryList = getCurrentShiftCMSEntries(agent, cmsEntry);
+
+        List<CMSEntry> cmsEntryList = new ArrayList<CMSEntry>();
+        //Two objectives solved with this method. 1-Get smallest date in the list of entries, and list of entries associdated with the auxcode within shift
+        Date beginDate = getCurrentShiftCMSEntries(agent, cmsEntryList, cmsEntry);
 
         // If the duration is > DURATION_MAX, then create the notification.
         //lobConfigurationEntry.getOccurrence() == nul - that means no threshold set hence no notification should be generated
@@ -505,15 +543,39 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     workModeOccurrenceNotification.setID(UUID.randomUUID().toString());
                     workModeOccurrenceNotification.setAgent(agent);
                     workModeOccurrenceNotification.setTeamLeader(teamLeader);
+                }
 
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
+                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
+                //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
+                String timeZone = agent.getTimeZone();
+                Date fromDate = null;
+                Date toDate = null;
+                try {
+                    DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+                    if (dateTimeZone != null) {
+                        //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+                        // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+                        // Do not change the code here. Following is the best approach
+                        int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+
+                        fromDate = new DateTime(beginDate.getTime() + offsetInMs).toDate();
+                        toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
+                    } else {
+                        log.warn("Invalid time zone " + timeZone);
+                    }
+                } catch (Exception e) {
+                    // Invalid time zone.
+                    log.error("Invalid time zone " + timeZone, e);
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        cmsEntry.getFromTime(), cmsEntry.getToTime(), OCCURRENCE_MAX));
+                        formatDate(fromDate), formatDate(toDate), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
@@ -529,7 +591,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     /**
-     *
      * @param timecardEntry
      * @param agent
      * @param teamLeader
@@ -769,10 +830,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
     //Utility methods specific to the notifications
-    private List<CMSEntry> getCurrentShiftCMSEntries(Agent agent, CMSEntry watchedCMSEntry) {
+    private Date getCurrentShiftCMSEntries(Agent agent, final List<CMSEntry> cmsEntriesOfTheShift, CMSEntry watchedCMSEntry) {
 
-        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
+//        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
 
+        Date beginDate = watchedCMSEntry.getFromTime();
         Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
         Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
 
@@ -780,6 +842,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
             //Check the the entry bellongs to
 
+            if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
+                beginDate = cmsEntry.getFromTime();
+            }
             if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
                     ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
@@ -788,7 +853,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
 
-        return cmsEntriesOfTheShift;
+//        return cmsEntriesOfTheShift;
+        return beginDate;
     }
 
     private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
@@ -957,9 +1023,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
-        Iterator<LOBConfigurationActivityAuxCode> itrLOBConfigurationActivityAuxCode =  lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().iterator();
+        Iterator<LOBConfigurationActivityAuxCode> itrLOBConfigurationActivityAuxCode = lobConfigurationEntry.getLOBConfigurationActivityAuxCodes().iterator();
 
-        while(itrLOBConfigurationActivityAuxCode.hasNext()) {
+        while (itrLOBConfigurationActivityAuxCode.hasNext()) {
             LOBConfigurationActivityAuxCode lobConfigurationActivityAuxCode = syncAgentService.systemGetByObject(itrLOBConfigurationActivityAuxCode.next());
             auxCodesForActivity.add(lobConfigurationActivityAuxCode.getCMSAuxCode());
         }
@@ -1005,5 +1071,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return date2.getTime() - date1.getTime();
         }
 
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        return simpleDateFormat.format(date);
     }
 }
