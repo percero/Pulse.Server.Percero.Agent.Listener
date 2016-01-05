@@ -99,7 +99,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
      */
     @Override
     public Object process(String category, String subCategory, String fieldName, IPerceroObject oldValue) {
-        return process(category, subCategory, fieldName, oldValue);
+        return process(category, subCategory, fieldName, null, oldValue);
     }
 
     /* (non-Javadoc)
