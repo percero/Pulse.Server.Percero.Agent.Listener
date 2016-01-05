@@ -102,7 +102,7 @@ public class TimerWorker {
 	private void recalcChangeWatcher(String className, String classId, String fieldName) {
 		if (changeWatcherHelperFactory != null) {
 			IChangeWatcherHelper cwh = changeWatcherHelperFactory.getHelper(className);
-			cwh.reprocess(className, classId, fieldName, null, null, null);
+			cwh.reprocess(className, classId, fieldName, null, null, null, null);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.pulse.amqp;
 import java.text.MessageFormat;
 import java.util.*;
 
+import com.percero.agents.sync.helpers.PostPutHelper;
 import com.percero.framework.vo.IPerceroObject;
 import com.pulse.mo.dao.LOBConfigurationDAO;
 import com.sun.corba.se.impl.orbutil.concurrent.Sync;
@@ -65,10 +66,28 @@ public class Main {
         logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
 
-//        unitTestOnMain(context);
+//        doUnitTestsOnMain(context);
     }
 
-    private static void unitTestOnMain(ApplicationContext context) {
+    private static void doUnitTestsOnMain(ApplicationContext context){
+        testEnqueueCheckChangeWatcher(context);
+//        testNotifications(context);
+    }
+
+    private static void testEnqueueCheckChangeWatcher(ApplicationContext context){
+        PostPutHelper postPutHelper = context.getBean(PostPutHelper.class);
+        TeamLeader teamLeader = new TeamLeader();
+        teamLeader.setID("asdf");
+
+        Setting setting = new Setting();
+        setting.setID("setting");
+        teamLeader.setSettings(new ArrayList<Setting>());
+        teamLeader.getSettings().add(setting);
+
+        postPutHelper.enqueueCheckChangeWatcher(BaseDataObject.toClassIdPair(teamLeader), null, null, teamLeader);
+    }
+
+    private static void testNotifications(ApplicationContext context) {
         // Test Login
 
         //Uncomment this to run the test
@@ -129,6 +148,7 @@ public class Main {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+
 
 
         ISyncAgentService syncAgentService = context.getBean(ISyncAgentService.class);

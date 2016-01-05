@@ -63,15 +63,15 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	 * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object process(String category, String subCategory, String fieldName) {
-		return process(category, subCategory, fieldName, null);
+	public Object process(String category, String subCategory, String fieldName, IPerceroObject oldValue) {
+		return process(category, subCategory, fieldName, null, oldValue);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
 	 */
 	@Override
-	public Object process(String category, String subCategory, String fieldName, String[] params) {
+	public Object process(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) {
 		String className = subCategory;
 		String classId = fieldName;
 

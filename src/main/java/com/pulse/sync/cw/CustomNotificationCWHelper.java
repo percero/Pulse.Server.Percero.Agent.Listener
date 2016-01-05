@@ -96,15 +96,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
      * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public Object process(String category, String subCategory, String fieldName) {
-        return process(category, subCategory, fieldName, null);
+    public Object process(String category, String subCategory, String fieldName, IPerceroObject oldValue) {
+        return process(category, subCategory, fieldName, oldValue);
     }
 
     /* (non-Javadoc)
      * @see com.percero.agents.sync.cw.ChangeWatcherHelper#process(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
      */
     @Override
-    public Object process(String category, String subCategory, String fieldName, String[] params) {
+    public Object process(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) {
         if (fieldName.equalsIgnoreCase("handleCmsEntryNotification")) {
             try {
                 handleCmsEntryNotification(category, subCategory, fieldName, params);
@@ -120,7 +120,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
             return null;
         } else {
-            return super.process(category, subCategory, fieldName, params);
+            return super.process(category, subCategory, fieldName, params, oldValue);
         }
     }
 
