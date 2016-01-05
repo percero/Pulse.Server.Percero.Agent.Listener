@@ -30,8 +30,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private static final Logger log = Logger.getLogger(CustomNotificationCWHelper.class);
 
+    private static final int MS_IN_MIN = 60 * 1000;
     //CMSEntry based Notifications Messages
-    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
     private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
 
 
@@ -39,12 +40,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
 
 
     private static final String DATE_TIME_FORMAT_WITH_SECONDS = "MM/dd/yyyy HH:mm:ss";
     private static final String DATE_TIME_FORMAT_WITHOUT_SECONDS = "MM/dd/yyyy HH:mm";
+    private static final String DATE_TIME_FORMAT_12_HR_WITH_SECONDS = "MM/dd/yyyy hh:mm a";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -142,7 +144,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-                if (updatedObject instanceof CMSEntry) {
+                if (updatedObject != null && updatedObject instanceof CMSEntry) {
                     CMSEntry cmsEntry = (CMSEntry) updatedObject;
                     Agent agent = null;
                     TeamLeader teamLeader = null;
@@ -215,34 +217,34 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
-
-
-                        // 2.
-
-
-                        // 3.
-
-
-                        // 4.
-
-                    } else {
-                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                        //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-
-                        CMSEntry criteriaCMSEntry = new CMSEntry();
-                        criteriaCMSEntry.setID(classId);
-
-                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                        searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
-
-                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
-
-
                     }
 
+                    // 2.
+
+
+                    // 3.
+
+
+                    // 4.
+
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+                    CMSEntry criteriaCMSEntry = new CMSEntry();
+                    criteriaCMSEntry.setID(classId);
+
+                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                    searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+
+
                 }
+
+
             }
         } catch (Exception e) {
             // Handle exception
@@ -267,7 +269,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-                if (updatedObject instanceof TimecardEntry) {
+                if (updatedObject != null && updatedObject instanceof TimecardEntry) {
                     TimecardEntry timecardEntry = (TimecardEntry) updatedObject;
                     Agent agent = null;
                     TeamLeader teamLeader = null;
@@ -383,27 +385,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
-
-
-                        // 3.
-
-
-                        // 4.
-
-                    } else {
-                        //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                        //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                        //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                        //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-                        TimecardEntry criteriaTimecardEntry = new TimecardEntry();
-                        criteriaTimecardEntry.setID(classId);
-
-                        LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                        searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
-
-                        deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                     }
+
+                    // 3.
+
+
+                    // 4.
+
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+                    TimecardEntry criteriaTimecardEntry = new TimecardEntry();
+                    criteriaTimecardEntry.setID(classId);
+
+                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                    searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
+
+                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                 }
+
             }
         } catch (Exception e) {
             // Handle exception
@@ -479,7 +481,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
 
@@ -489,7 +491,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), intDuration)); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), intDuration)); //xxx
 
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
@@ -576,11 +578,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), OCCURRENCE_MAX));
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
@@ -840,23 +842,57 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
 
         Date beginDate = watchedCMSEntry.getFromTime();
-        Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
+
+        List<CMSEntry> sortedList = agent.getCMSEntries();
+
+        Collections.sort(sortedList, new CMSEntryDateComparator());
+
+        //Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
         Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
+        CMSEntry lastCMSEntry = null;
 
-        while (itrCMSEntry.hasNext()) {
-            CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
-            //Check the the entry bellongs to
+        boolean exitCondi = false;
+        for (int index=0 ; index < sortedList.size() && !exitCondi ; index++ ) {
 
-            if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
-                beginDate = cmsEntry.getFromTime();
-            }
-            if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
-                    ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(sortedList.get(index));
+            //Check the the entry belongs to the current shift
+
+            if (cmsEntry != null) {
+                //Laps time bet'n current and last entry is more than 4 hrs means this is new shift entry / first entry of the shift
+                if (lastCMSEntry!=null && calLapsMin(lastCMSEntry.getFromTime(), cmsEntry.getToTime())> 240){
+                    exitCondi = true;
+                }
+                else {
+
+                    lastCMSEntry = cmsEntry;
+
+                    if((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
-                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
-                cmsEntriesOfTheShift.add(cmsEntry);
+                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))){
+                        cmsEntriesOfTheShift.add(cmsEntry);
+
+                        beginDate = cmsEntry.getFromTime(); // This is the first occurrence of the auxcode for the current shift
+                    }
+                }
             }
         }
+
+//        for (int index=cmsEntriesOfTheShift.size()-1 ; index>=0 ; index++ ) {
+//
+//            CMSEntry cmsEntry = syncAgentService.systemGetByObject(cmsEntriesOfTheShift.get(index));
+//            //Check the the entry bellongs to
+//
+//            if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
+//                    ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
+//                            || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
+//                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
+//                //Get the date/time of the first entry of the day
+//                if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
+//                    beginDate = cmsEntry.getFromTime();
+//                }
+//                cmsEntriesOfTheShift.add(cmsEntry);
+//            }
+//        }
 
 //        return cmsEntriesOfTheShift;
         return beginDate;
@@ -1102,6 +1138,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         oriFromDate = stringToDate(strFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
         oriToDate = stringToDate(strToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
 
-        return (int)(oriToDate.getTime()/60 - oriFromDate.getTime()/60);
+        return (int)(oriToDate.getTime()/MS_IN_MIN - oriFromDate.getTime()/MS_IN_MIN);
+    }
+
+     class CMSEntryDateComparator implements Comparator<CMSEntry> {
+
+        @Override
+        public int compare(CMSEntry entry1, CMSEntry entry2) {
+            return entry2.getFromTime().compareTo(entry1.getFromTime());
+        }
     }
 }
