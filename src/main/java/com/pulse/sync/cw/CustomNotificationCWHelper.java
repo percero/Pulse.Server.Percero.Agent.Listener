@@ -32,7 +32,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private static final int MS_IN_MIN = 60 * 1000;
     //CMSEntry based Notifications Messages
-    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
     private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
 
 
@@ -40,12 +40,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the durration tolerance.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
 
 
     private static final String DATE_TIME_FORMAT_WITH_SECONDS = "MM/dd/yyyy HH:mm:ss";
     private static final String DATE_TIME_FORMAT_WITHOUT_SECONDS = "MM/dd/yyyy HH:mm";
+    private static final String DATE_TIME_FORMAT_12_HR_WITH_SECONDS = "MM/dd/yyyy hh:mm a";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -480,7 +481,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
 
@@ -490,7 +491,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), intDuration)); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), intDuration)); //xxx
 
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
@@ -577,11 +578,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_WITH_SECONDS), OCCURRENCE_MAX));
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
