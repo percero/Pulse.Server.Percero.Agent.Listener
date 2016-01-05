@@ -842,25 +842,57 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
 
         Date beginDate = watchedCMSEntry.getFromTime();
-        Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
+
+        List<CMSEntry> sortedList = agent.getCMSEntries();
+
+        Collections.sort(sortedList, new CMSEntryDateComparator());
+
+        //Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
         Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
+        CMSEntry lastCMSEntry = null;
 
-        while (itrCMSEntry.hasNext()) {
-            CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntry.next());
-            //Check the the entry bellongs to
+        boolean exitCondi = false;
+        for (int index=0 ; index < sortedList.size() && !exitCondi ; index++ ) {
 
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(sortedList.get(index));
+            //Check the the entry belongs to the current shift
 
-            if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
-                    ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
-                            || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
-                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
-                //Get the date/time of the first entry of the day
-                if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
-                    beginDate = cmsEntry.getFromTime();
+            if (cmsEntry != null) {
+                //Laps time bet'n current and last entry is more than 4 hrs means this is new shift entry / first entry of the shift
+                if (lastCMSEntry!=null && calLapsMin(lastCMSEntry.getFromTime(), cmsEntry.getToTime())> 240){
+                    exitCondi = true;
                 }
-                cmsEntriesOfTheShift.add(cmsEntry);
+                else {
+
+                    lastCMSEntry = cmsEntry;
+
+                    if((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
+                            || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
+                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))){
+                        cmsEntriesOfTheShift.add(cmsEntry);
+
+                        beginDate = cmsEntry.getFromTime(); // This is the first occurrence of the auxcode for the current shift
+                    }
+                }
             }
         }
+
+//        for (int index=cmsEntriesOfTheShift.size()-1 ; index>=0 ; index++ ) {
+//
+//            CMSEntry cmsEntry = syncAgentService.systemGetByObject(cmsEntriesOfTheShift.get(index));
+//            //Check the the entry bellongs to
+//
+//            if (cmsEntry != null && compareDates(watchedCMSEntry.getFromTime(), cmsEntry.getFromTime()) &&
+//                    ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
+//                            || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
+//                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode())))) {
+//                //Get the date/time of the first entry of the day
+//                if (cmsEntry.getFromTime().compareTo(beginDate) < 0) {
+//                    beginDate = cmsEntry.getFromTime();
+//                }
+//                cmsEntriesOfTheShift.add(cmsEntry);
+//            }
+//        }
 
 //        return cmsEntriesOfTheShift;
         return beginDate;
@@ -1107,5 +1139,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         oriToDate = stringToDate(strToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
 
         return (int)(oriToDate.getTime()/MS_IN_MIN - oriFromDate.getTime()/MS_IN_MIN);
+    }
+
+     class CMSEntryDateComparator implements Comparator<CMSEntry> {
+
+        @Override
+        public int compare(CMSEntry entry1, CMSEntry entry2) {
+            return entry2.getFromTime().compareTo(entry1.getFromTime());
+        }
     }
 }
