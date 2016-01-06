@@ -171,6 +171,9 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
             nextResult.setName(rs.getString("NAME"));
 
 
+            nextResult.setIsRead(rs.getBoolean("IS_READ"));
+
+
             String agentID = rs.getString("AGENT_ID");
             if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
                 Agent agent = new Agent();
@@ -253,6 +256,8 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
             pstmt.setString(10, perceroObject.getTimecardEntry().getID());
         }
 
+        pstmt.setBoolean(11, perceroObject.getIsRead());
+
     }
 
     @Override
@@ -308,6 +313,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
             pstmt.setString(10, perceroObject.getTimecardEntry().getID());
         }
 
+        pstmt.setBoolean(11, perceroObject.getIsRead());
     }
 
 
@@ -443,7 +449,18 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
             propertyCounter++;
         }
 
+        boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
 
+        if (useIsRead) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"IS_READ\" =? ";
+            paramValues.add(theQueryObject.getIsRead());
+            propertyCounter++;
+        }
 
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -454,12 +471,12 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

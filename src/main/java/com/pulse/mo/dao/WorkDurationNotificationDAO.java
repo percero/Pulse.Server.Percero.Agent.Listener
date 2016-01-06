@@ -171,6 +171,8 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
             nextResult.setName(rs.getString("NAME"));
 
 
+            nextResult.setIsRead(rs.getBoolean("IS_READ"));
+
             String agentID = rs.getString("AGENT_ID");
             if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
                 Agent agent = new Agent();
@@ -268,7 +270,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
         {
             pstmt.setString(10, perceroObject.getCMSEntry().getID());
         }
-
+        pstmt.setBoolean(11, perceroObject.getIsRead());
     }
 
     @Override
@@ -339,6 +341,7 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
         {
             pstmt.setString(10, perceroObject.getCMSEntry().getID());
         }
+        pstmt.setBoolean(11, perceroObject.getIsRead());
     }
 
 
@@ -473,7 +476,18 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
             paramValues.add(theQueryObject.getCMSEntry().getID());
             propertyCounter++;
         }
+        boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
 
+        if (useIsRead) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"IS_READ\" =? ";
+            paramValues.add(theQueryObject.getIsRead());
+            propertyCounter++;
+        }
 
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
@@ -484,12 +498,12 @@ public class WorkDurationNotificationDAO extends SqlDataAccessProcObject<WorkDur
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_WORK_DURATION_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

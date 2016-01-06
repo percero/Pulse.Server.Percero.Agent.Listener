@@ -1,5 +1,6 @@
 
-package com.pulse.mo.mo_super;
+
+package com.pulse.mo.mo_super;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -125,18 +126,32 @@ Notes:
 @Column
 @com.percero.agents.sync.metadata.annotations.Externalize
 
-private String type;
+private Boolean isRead;
 
-public String getType() 
+public Boolean getIsRead()
 {
-	return this.type;
+	return this.isRead;
 }
 
-public void setType(String type)
+public void setIsRead(boolean read)
 {
-	this.type = type;
+	this.isRead = isRead;
 }
 
+	@Column
+	@com.percero.agents.sync.metadata.annotations.Externalize
+
+	private String type;
+
+	public String getType()
+	{
+		return this.type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
+	}
 	//////////////////////////////////////////////////////
 	// Target Relationships
 	//////////////////////////////////////////////////////
@@ -145,7 +160,8 @@ public void setType(String type)
 	//////////////////////////////////////////////////////
 	// Source Relationships
 	//////////////////////////////////////////////////////
-	@com.percero.agents.sync.metadata.annotations.Externalize
+	
+@com.percero.agents.sync.metadata.annotations.Externalize
 @JsonSerialize(using=BDOSerializer.class)
 @JsonDeserialize(using=BDODeserializer.class)
 @JoinColumn(name="TEAM_LEADER_ID")
@@ -219,7 +235,16 @@ public void setTeamLeader(TeamLeader value) {
 			}
 		}
 
-				
+
+		//Retrieve value of the Type property
+		objectJson += ",\"isRead\":";
+
+
+		if (getIsRead() == null)
+			objectJson += "null";
+		else {
+			objectJson += getIsRead();
+		}
 		// Source Relationships
 //Retrieve value of the Team Leader of Notification relationship
 objectJson += ",\"teamLeader\":";
@@ -253,6 +278,7 @@ objectJson += ",\"teamLeader\":";
 		setCreatedOn(JsonUtils.getJsonDate(jsonObject, "createdOn"));
 		//From value of the Type property
 		setType(JsonUtils.getJsonString(jsonObject, "type"));
+		setIsRead(JsonUtils.getJsonBoolean(jsonObject, "isRead"));
 
 		
 		// Source Relationships
@@ -274,4 +300,4 @@ objectJson += ",\"teamLeader\":";
 		return listSetters;
 	}
 }
-
+

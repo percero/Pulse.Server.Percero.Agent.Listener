@@ -170,6 +170,7 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 
             nextResult.setName(rs.getString("NAME"));
 
+            nextResult.setIsRead(rs.getBoolean("IS_READ"));
 
             String agentID = rs.getString("AGENT_ID");
             if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
@@ -256,6 +257,8 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
             pstmt.setString(10, perceroObject.getCMSEntry().getID());
         }
 
+        pstmt.setBoolean(11, perceroObject.getIsRead());
+
     }
 
     @Override
@@ -314,6 +317,8 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
         {
             pstmt.setString(10, perceroObject.getCMSEntry().getID());
         }
+
+        pstmt.setBoolean(11, perceroObject.getIsRead());
     }
 
 
@@ -449,6 +454,19 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
             propertyCounter++;
         }
 
+        boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
+
+        if (useIsRead) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"IS_READ\" =? ";
+            paramValues.add(theQueryObject.getIsRead());
+            propertyCounter++;
+        }
+
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
         }
@@ -458,12 +476,12 @@ public class WorkModeOccurrenceNotificationDAO extends SqlDataAccessProcObject<W
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_WORK_MODE_OCCUR_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_WORK_MODE_OCCUR_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_WORK_MODE_OCCUR_NOTI(?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_WORK_MODE_OCCUR_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

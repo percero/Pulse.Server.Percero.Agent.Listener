@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.percero.util.DateUtils;
 import com.pulse.dataprovider.IConnectionFactory;
@@ -21,8 +22,10 @@ import com.percero.agents.sync.dao.DAORegistry;
 import com.percero.agents.sync.dao.IDataAccessObject;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
+
 import java.sql.Connection;
 import java.sql.Statement;
+
 import com.pulse.dataprovider.IConnectionFactory;
 import com.percero.agents.sync.exceptions.SyncDataException;
 import com.pulse.mo.*;
@@ -30,341 +33,317 @@ import com.pulse.mo.*;
 @Component
 public class NotificationDAO extends SqlDataAccessObject<Notification> implements IDataAccessObject<Notification> {
 
-	static final Logger log = Logger.getLogger(NotificationDAO.class);
+    static final Logger log = Logger.getLogger(NotificationDAO.class);
 
-	
-	public NotificationDAO() {
-		super();
-		
-		DAORegistry.getInstance().registerDataAccessObject(Notification.class.getCanonicalName(), this);
-	}
 
-	
-	// This is the name of the Data Source that is registered to handle this class type.
-	// For example, this might be "ECoaching" or "Default".
+    public NotificationDAO() {
+        super();
+
+        DAORegistry.getInstance().registerDataAccessObject(Notification.class.getCanonicalName(), this);
+    }
+
+
+    // This is the name of the Data Source that is registered to handle this class type.
+    // For example, this might be "ECoaching" or "Default".
 //	public static final String CONNECTION_FACTORY_NAME = "jdbc:mysql://pulse.cta6j6w4rrxw.us-west-2.rds.amazonaws.com:3306/Pulse?autoReconnect=true";
-	public static final String CONNECTION_FACTORY_NAME = "default";
-	
-	public static final String SHELL_ONLY_SELECT = "\"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\"";
-	public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"CREATED_ON\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\"";
-	private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
-	private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
-	private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
-	private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"CREATED_ON\" DESC";
-	
-	
+    public static final String CONNECTION_FACTORY_NAME = "default";
 
-	
-	@Override
-	protected String getConnectionFactoryName() {
-		return NotificationDAO.CONNECTION_FACTORY_NAME;
-	}
-
-	@Override
-	protected String getSelectShellOnlySQL() {
-		return "SELECT " + SHELL_ONLY_SELECT +  " " + selectFromStatementTableName + whereClause;
-	}
-	
-	@Override
-	protected String getSelectStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW  + selectFromStatementTableName + whereClause;
-	}
-	
-	@Override
-	protected String getSelectAllShellOnlySQL() {
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName +  orderByTableName;
-	}
-	
-	@Override
-	protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName  +  orderByTableName  + " LIMIT ? OFFSET ?";
-	}
-	
-	@Override
-	protected String getSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName  + orderByTableName;
-	}
-	
-	@Override
-	protected String getSelectAllStarWithLimitAndOffsetSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
-	}
-	
-	@Override
-	protected String getCountAllSQL() 
-	{
-		return "SELECT COUNT(ID) " + selectFromStatementTableName;
-	}
-	
-	@Override
-	protected String getSelectInStarSQL() 
-	{
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
-	}
-	
-	@Override
-	protected String getSelectInShellOnlySQL() {
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
-	}
-
-	@Override
-	protected String getSelectByRelationshipStarSQL(String joinColumnName)
-	{
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
-	}
-
-	@Override
-	protected String getSelectByRelationshipShellOnlySQL(String joinColumnName)
-	{
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
-	}
-
-	@Override
-	protected String getFindByExampleSelectShellOnlySQL() {
-		return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
-	}
-
-	@Override
-	protected String getFindByExampleSelectAllStarSQL() {
-		return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
-	}
-	
-	@Override
-	protected String getInsertIntoSQL() {
-		return "INSERT INTO TBL_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"NAME\",\"TEAM_LEADER_ID\") VALUES (?,?,?,?,?)";
-	}
-	
-	@Override
-	protected String getUpdateSet() {
-		return "UPDATE TBL_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=? WHERE \"ID\"=?";
-	}
-	
-	@Override
-	protected String getDeleteFromSQL() {
-		return "DELETE FROM TBL_NOTIFICATION WHERE \"ID\"=?";
-	}
-	
-	@Override
-	protected Notification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
-    	
-		
-
-Notification nextResult = null;
-    	
-		String type = rs.getString("TYPE");
-		
-    	String className = type;
-		
-    	if (className.indexOf("com.pulse.mo.") != 0) {
-    		className = "com.pulse.mo." + className;
-    	}
-    	try {
-    		nextResult = (Notification) MappedClass.forName(className).newInstance();
-    	} catch(Exception e) {
-    		// Do nothing.
-    	}
-    	
-    	if (nextResult == null) {
-    		nextResult = new Notification();
-    	}
-
-		
-    	// ID
-    	nextResult.setID(rs.getString("ID"));
-    	
-    	if (!shellOnly) 
-		{
-			nextResult.setType(rs.getString("TYPE"));
+    public static final String SHELL_ONLY_SELECT = "\"NOTIFICATION\".\"ID\",\"NOTIFICATION\".\"TYPE\"";
+    public static final String SQL_VIEW = ",\"NOTIFICATION\".\"TYPE\",\"NOTIFICATION\".\"CREATED_ON\",\"NOTIFICATION\".\"NAME\",\"NOTIFICATION\".\"TEAM_LEADER_ID\",\"NOTIFICATION\".\"IS_READ\"";
+    private String selectFromStatementTableName = " FROM \"NOTIFICATION\" \"NOTIFICATION\"";
+    private String whereClause = "  WHERE \"NOTIFICATION\".\"ID\"=?";
+    private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NOTIFICATION\".\"ID\"= SQLLIST.column_value";
+    private String orderByTableName = "  ORDER BY \"NOTIFICATION\".\"CREATED_ON\" DESC";
 
 
-nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
+    @Override
+    protected String getConnectionFactoryName() {
+        return NotificationDAO.CONNECTION_FACTORY_NAME;
+    }
+
+    @Override
+    protected String getSelectShellOnlySQL() {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereClause;
+    }
+
+    @Override
+    protected String getSelectStarSQL() {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + selectFromStatementTableName + whereClause;
+    }
+
+    @Override
+    protected String getSelectAllShellOnlySQL() {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + orderByTableName;
+    }
+
+    @Override
+    protected String getSelectAllShellOnlyWithLimitAndOffsetSQL() {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+    }
+
+    @Override
+    protected String getSelectAllStarSQL() {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName;
+    }
+
+    @Override
+    protected String getSelectAllStarWithLimitAndOffsetSQL() {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + orderByTableName + " LIMIT ? OFFSET ?";
+    }
+
+    @Override
+    protected String getCountAllSQL() {
+        return "SELECT COUNT(ID) " + selectFromStatementTableName;
+    }
+
+    @Override
+    protected String getSelectInStarSQL() {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+    }
+
+    @Override
+    protected String getSelectInShellOnlySQL() {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
+    }
+
+    @Override
+    protected String getSelectByRelationshipStarSQL(String joinColumnName) {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
+    }
+
+    @Override
+    protected String getSelectByRelationshipShellOnlySQL(String joinColumnName) {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + " WHERE \"NOTIFICATION\"." + joinColumnName + "=?" + orderByTableName;
+    }
+
+    @Override
+    protected String getFindByExampleSelectShellOnlySQL() {
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
+    }
+
+    @Override
+    protected String getFindByExampleSelectAllStarSQL() {
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName;
+    }
+
+    @Override
+    protected String getInsertIntoSQL() {
+        return "INSERT INTO TBL_NOTIFICATION (\"ID\",\"TYPE\",\"CREATED_ON\",\"NAME\",\"TEAM_LEADER_ID\", \"IS_READ\") VALUES (?,?,?,?,?,?)";
+    }
+
+    @Override
+    protected String getUpdateSet() {
+        return "UPDATE TBL_NOTIFICATION SET \"TYPE\"=?,\"CREATED_ON\"=?,\"NAME\"=?,\"TEAM_LEADER_ID\"=?,\"IS_READ\"=? WHERE \"ID\"=?";
+    }
+
+    @Override
+    protected String getDeleteFromSQL() {
+        return "DELETE FROM TBL_NOTIFICATION WHERE \"ID\"=?";
+    }
+
+    @Override
+    protected Notification extractObjectFromResultSet(ResultSet rs, Boolean shellOnly) throws SQLException {
 
 
-nextResult.setName(rs.getString("NAME"));
+        Notification nextResult = null;
+
+        String type = rs.getString("TYPE");
+
+        String className = type;
+
+        if (className.indexOf("com.pulse.mo.") != 0) {
+            className = "com.pulse.mo." + className;
+        }
+        try {
+            nextResult = (Notification) MappedClass.forName(className).newInstance();
+        } catch (Exception e) {
+            // Do nothing.
+        }
+
+        if (nextResult == null) {
+            nextResult = new Notification();
+        }
 
 
-String teamleaderID = rs.getString("TEAM_LEADER_ID");
-if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID) ){
-TeamLeader teamleader = new TeamLeader();
-teamleader.setID(teamleaderID);
-nextResult.setTeamLeader(teamleader);
-}
+        // ID
+        nextResult.setID(rs.getString("ID"));
+
+        if (!shellOnly) {
+            nextResult.setType(rs.getString("TYPE"));
 
 
-
-			
-    	}
-		
-		
-    	return nextResult;
-	}
-	
-	protected void setBaseStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getID());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(4, perceroObject.getName());
-
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(5, null);
-}
-else
-{
-		pstmt.setString(5, perceroObject.getTeamLeader().getID());
-}
+            nextResult.setCreatedOn(DateUtils.utilDateFromSqlTimestamp(rs.getTimestamp("CREATED_ON")));
 
 
-		
-	}
-	
-	@Override
-	protected void setPreparedStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-		
-	}
-	
-	@Override
-	protected void setCallableStatmentInsertParams(Notification perceroObject, CallableStatement pstmt) throws SQLException {
-		
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	
+            nextResult.setName(rs.getString("NAME"));
 
-	}
-	
-	@Override
-	protected void setPreparedStatmentUpdateParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getType());
-pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setString(3, perceroObject.getName());
+            nextResult.setIsRead(rs.getBoolean("IS_READ"));
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(4, null);
-}
-else
-{
-		pstmt.setString(4, perceroObject.getTeamLeader().getID());
-}
-
-pstmt.setString(5, perceroObject.getID());
-
-		
-	}
-	
-	
-	@Override
-	protected void setCallableStatmentUpdateParams(Notification perceroObject, CallableStatement pstmt) throws SQLException 
-	{
-		
-		//must be in same order as insert
-		setBaseStatmentInsertParams(perceroObject,pstmt);
-			
-	}
-	
-	
-
-	@Override
-	public List<Notification> findByExample(Notification theQueryObject,
-			List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException 
-		{
-			
-			
-			
-		String sql = getFindByExampleSelectSql(shellOnly);
-		
-		int propertyCounter = 0;
-		List<Object> paramValues = new ArrayList<Object>();
-		
-		boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
-
-if (useType)
-{
-sql += " WHERE ";
-sql += " \"TYPE\" =? ";
-paramValues.add(theQueryObject.getType());
-propertyCounter++;
-}
-
-boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
-
-if (useCreatedOn)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"CREATED_ON\" =? ";
-paramValues.add(theQueryObject.getCreatedOn());
-propertyCounter++;
-}
-
-boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
-
-if (useName)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"NAME\" =? ";
-paramValues.add(theQueryObject.getName());
-propertyCounter++;
-}
-
-boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
-
-if (useTeamLeaderID)
-{
-if (propertyCounter > 0)
-{
-sql += " AND ";
-}
-else
-{
-sql += " WHERE ";
-}
-sql += " \"TEAM_LEADER_ID\" =? ";
-paramValues.add(theQueryObject.getTeamLeader().getID());
-propertyCounter++;
-}
+            String teamleaderID = rs.getString("TEAM_LEADER_ID");
+            if (StringUtils.hasText(teamleaderID) && !"null".equalsIgnoreCase(teamleaderID)) {
+                TeamLeader teamleader = new TeamLeader();
+                teamleader.setID(teamleaderID);
+                nextResult.setTeamLeader(teamleader);
+            }
 
 
+        }
 
-		if (propertyCounter == 0) {
-			throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
-		}
-		
-		return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);		
-	}
-	
-	@Override
-	protected String getUpdateCallableStatementSql() {
-		return "{call UPDATE_NOTIFICATION(?,?,?,?,?)}";
-	}
-	@Override
-	protected String getInsertCallableStatementSql() {
-		return "{call CREATE_NOTIFICATION(?,?,?,?,?)}";
-	}
-	@Override
-	protected String getDeleteCallableStatementSql() {
-		return "{call Delete_NOTIFICATION(?)}";
-	}
-	
-	
-	
-	
+
+        return nextResult;
+    }
+
+    protected void setBaseStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
+
+        pstmt.setString(1, perceroObject.getID());
+        pstmt.setString(2, perceroObject.getType());
+        pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+        pstmt.setString(4, perceroObject.getName());
+
+        if (perceroObject.getTeamLeader() == null) {
+            pstmt.setString(5, null);
+        } else {
+            pstmt.setString(5, perceroObject.getTeamLeader().getID());
+        }
+        pstmt.setBoolean(6, perceroObject.getIsRead());
+
+    }
+
+    @Override
+    protected void setPreparedStatmentInsertParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
+
+        setBaseStatmentInsertParams(perceroObject, pstmt);
+
+    }
+
+    @Override
+    protected void setCallableStatmentInsertParams(Notification perceroObject, CallableStatement pstmt) throws SQLException {
+
+        setBaseStatmentInsertParams(perceroObject, pstmt);
+
+
+    }
+
+    @Override
+    protected void setPreparedStatmentUpdateParams(Notification perceroObject, PreparedStatement pstmt) throws SQLException {
+
+        pstmt.setString(1, perceroObject.getType());
+        pstmt.setDate(2, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+        pstmt.setString(3, perceroObject.getName());
+
+        if (perceroObject.getTeamLeader() == null) {
+            pstmt.setString(4, null);
+        } else {
+            pstmt.setString(4, perceroObject.getTeamLeader().getID());
+        }
+
+        pstmt.setString(5, perceroObject.getID());
+        pstmt.setBoolean(6, perceroObject.getIsRead());
+
+
+    }
+
+
+    @Override
+    protected void setCallableStatmentUpdateParams(Notification perceroObject, CallableStatement pstmt) throws SQLException {
+
+        //must be in same order as insert
+        setBaseStatmentInsertParams(perceroObject, pstmt);
+
+    }
+
+
+    @Override
+    public List<Notification> findByExample(Notification theQueryObject,
+                                            List<String> excludeProperties, String userId, Boolean shellOnly) throws SyncException {
+
+
+        String sql = getFindByExampleSelectSql(shellOnly);
+
+        int propertyCounter = 0;
+        List<Object> paramValues = new ArrayList<Object>();
+
+        boolean useType = StringUtils.hasText(theQueryObject.getType()) && (excludeProperties == null || !excludeProperties.contains("type"));
+
+        if (useType) {
+            sql += " WHERE ";
+            sql += " \"TYPE\" =? ";
+            paramValues.add(theQueryObject.getType());
+            propertyCounter++;
+        }
+
+        boolean useCreatedOn = theQueryObject.getCreatedOn() != null && (excludeProperties == null || !excludeProperties.contains("createdOn"));
+
+        if (useCreatedOn) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"CREATED_ON\" =? ";
+            paramValues.add(theQueryObject.getCreatedOn());
+            propertyCounter++;
+        }
+
+        boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
+
+        if (useName) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"NAME\" =? ";
+            paramValues.add(theQueryObject.getName());
+            propertyCounter++;
+        }
+
+        boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
+
+        if (useIsRead)
+        {
+            sql += " WHERE ";
+            sql += " \"IS_READ\" =? ";
+            paramValues.add(theQueryObject.getIsRead());
+            propertyCounter++;
+        }
+
+        boolean useTeamLeaderID = theQueryObject.getTeamLeader() != null && (excludeProperties == null || !excludeProperties.contains("teamLeader"));
+
+        if (useTeamLeaderID) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TEAM_LEADER_ID\" =? ";
+            paramValues.add(theQueryObject.getTeamLeader().getID());
+            propertyCounter++;
+        }
+
+
+        if (propertyCounter == 0) {
+            throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
+        }
+
+        return executeSelectWithParams(sql, paramValues.toArray(), shellOnly);
+    }
+
+    @Override
+    protected String getUpdateCallableStatementSql() {
+        return "{call UPDATE_NOTIFICATION(?,?,?,?,?,?)}";
+    }
+
+    @Override
+    protected String getInsertCallableStatementSql() {
+        return "{call CREATE_NOTIFICATION(?,?,?,?,?,?)}";
+    }
+
+    @Override
+    protected String getDeleteCallableStatementSql() {
+        return "{call Delete_NOTIFICATION(?)}";
+    }
+
+
 }
 
