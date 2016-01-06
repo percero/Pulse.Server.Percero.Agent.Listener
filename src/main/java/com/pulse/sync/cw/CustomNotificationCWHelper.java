@@ -114,7 +114,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
+//                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
