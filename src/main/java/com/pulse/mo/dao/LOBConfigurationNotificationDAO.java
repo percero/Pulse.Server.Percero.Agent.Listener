@@ -49,7 +49,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\"";
-    public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"CREATED_ON\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_NOTIF\".\"CMS_ENTRY_ID\",\"LOB_CONFIGURATION_NOTIF\".\"WORKED_ID\"";
+    public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"CREATED_ON\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_NOTIF\".\"CMS_ENTRY_ID\",\"LOB_CONFIGURATION_NOTIF\".\"WORKED_ID\",\"LOB_CONFIGURATION_NOTIF\".\"IS_READ\"";
     private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
     private String whereClause = "  WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -182,6 +182,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 
             nextResult.setName(rs.getString("NAME"));
 
+            nextResult.setIsRead(rs.getBoolean("IS_READ"));
 
             String agentID = rs.getString("AGENT_ID");
             if (StringUtils.hasText(agentID) && !"null".equalsIgnoreCase(agentID)) {
@@ -255,6 +256,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
             pstmt.setString(8, perceroObject.getTeamLeader().getID());
         }
 
+        pstmt.setBoolean(9, perceroObject.getIsRead());
 
     }
 
@@ -303,6 +305,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 
         pstmt.setString(8, perceroObject.getID());
 
+        pstmt.setBoolean(9, perceroObject.getIsRead());
 
     }
 
@@ -440,6 +443,19 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
             propertyCounter++;
         }
 
+        boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
+
+        if (useIsRead) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"IS_READ\" =? ";
+            paramValues.add(theQueryObject.getIsRead());
+            propertyCounter++;
+        }
+
         if (propertyCounter == 0) {
             throw new SyncException(SyncException.METHOD_UNSUPPORTED, SyncException.METHOD_UNSUPPORTED_CODE);
         }
@@ -449,12 +465,12 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_LOB_CONFIGURATION_NOTIF(?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_LOB_CONFIGURATION_NOTIF(?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_LOB_CONFIGURATION_NOTIF(?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_LOB_CONFIGURATION_NOTIF(?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

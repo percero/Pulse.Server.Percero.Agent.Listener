@@ -168,6 +168,17 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         if (agent != null) {
 
+                            //TODO:Test Data : Remove once LOB done
+//                            LOB tlob = new LOB();
+//                            tlob.setID("13573");
+//
+//                            AgentLOB agentLOB = new AgentLOB();
+//                            agentLOB.setID(agent.getID() + "-" +tlob.getID());
+//                            agentLOB.setLOB(tlob);
+//                            agentLOB.setAgent(agent);
+//
+//                            agent.getAgentLOBs().add(agentLOB);
+
                             if (agent.getAgentLOBs().size() == 1) {
 
                                 //Valid scenario for notification
@@ -496,6 +507,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 workDurationNotification.setCMSEntry(cmsEntry);
+                workDurationNotification.setIsRead(false);
 
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(workDurationNotification, null, null, null, true);
@@ -586,7 +598,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
-
+                workModeOccurrenceNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(workModeOccurrenceNotification, null, null, null, true);
                 } else {
@@ -650,7 +662,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
-
+                invalidActivityCodeNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
                 } else {
@@ -707,7 +719,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
-
+                nonBillableActivityNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
                 } else {
@@ -767,7 +779,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
-
+                occurrenceToleranceNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
                 } else {
@@ -825,7 +837,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
-
+                durationToleranceNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
                 } else {
@@ -843,7 +855,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Date beginDate = watchedCMSEntry.getFromTime();
 
-        List<CMSEntry> sortedList = agent.getCMSEntries();
+        List<CMSEntry> rawList = agent.getCMSEntries();
+
+        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+
+        for (int index=0 ; index < rawList.size() ; index++ ) {
+
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(rawList.get(index));
+            sortedList.add(cmsEntry);
+        }
 
         Collections.sort(sortedList, new CMSEntryDateComparator());
 
@@ -859,7 +879,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (cmsEntry != null) {
                 //Laps time bet'n current and last entry is more than 4 hrs means this is new shift entry / first entry of the shift
-                if (lastCMSEntry!=null && calLapsMin(lastCMSEntry.getFromTime(), cmsEntry.getToTime())> 120){ //2hrs
+
+                if (lastCMSEntry!=null && calLapsMin(cmsEntry.getToTime(), lastCMSEntry.getFromTime())> 120){ //2hrs
                     exitCondi = true;
                 }
                 else {
@@ -1036,7 +1057,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
-
+                durationMismatchNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
                 } else {
@@ -1145,7 +1166,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         @Override
         public int compare(CMSEntry entry1, CMSEntry entry2) {
-            return entry1.getFromTime().compareTo(entry2.getFromTime());
+            return entry2.getFromTime().compareTo(entry1.getFromTime());
         }
     }
 }
