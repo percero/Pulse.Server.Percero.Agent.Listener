@@ -859,7 +859,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (cmsEntry != null) {
                 //Laps time bet'n current and last entry is more than 4 hrs means this is new shift entry / first entry of the shift
-                if (lastCMSEntry!=null && calLapsMin(lastCMSEntry.getFromTime(), cmsEntry.getToTime())> 240){ //4hrs
+                if (lastCMSEntry!=null && calLapsMin(lastCMSEntry.getFromTime(), cmsEntry.getToTime())> 120){ //2hrs
                     exitCondi = true;
                 }
                 else {
