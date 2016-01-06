@@ -49,7 +49,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"WORKED_ID\"";
+    public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"WORKED_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"IS_READ    \"";
     private String selectFromStatementTableName = " FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\"";
     private String whereClause = "  WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"INV_ACTVTY_CODE_NOTIF\".\"ID\"= SQLLIST.column_value";

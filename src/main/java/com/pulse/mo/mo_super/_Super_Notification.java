@@ -133,7 +133,7 @@ public Boolean getIsRead()
 	return this.isRead;
 }
 
-public void setIsRead(boolean read)
+public void setIsRead(Boolean isRead)
 {
 	this.isRead = isRead;
 }
