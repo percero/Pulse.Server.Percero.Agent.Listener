@@ -1,6 +1,5 @@
 package com.pulse.sync.cw;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,7 +7,6 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
-import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
@@ -46,7 +44,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private static final String DATE_TIME_FORMAT_WITH_SECONDS = "MM/dd/yyyy HH:mm:ss";
     private static final String DATE_TIME_FORMAT_WITHOUT_SECONDS = "MM/dd/yyyy HH:mm";
-    private static final String DATE_TIME_FORMAT_12_HR_WITH_SECONDS = "MM/dd/yyyy hh:mm a";
+    private static final String DATE_TIME_FORMAT_12_HR = "MM/dd/yyyy hh:mm a";
 
     // This is required for CUSTOM change watchers.
     private static final String CATEGORY = "CUSTOM";
@@ -492,7 +490,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
 
@@ -502,7 +500,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), intDuration)); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), intDuration)); //xxx
 
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
@@ -590,11 +588,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), formatDate(toDate, DATE_TIME_FORMAT_12_HR_WITH_SECONDS), OCCURRENCE_MAX));
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
                 workModeOccurrenceNotification.setLOBConfiguration(lobConfiguration);
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
@@ -658,7 +656,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
@@ -715,7 +713,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
                 nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
@@ -775,7 +773,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), OCCURRENCE_MAX));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR) , OCCURRENCE_MAX));
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
@@ -833,7 +831,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime(), DURATION_MAX));
+                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
@@ -1053,7 +1051,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
                 durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), timecardEntry.getFromTime(), timecardEntry.getToTime()));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
