@@ -28,7 +28,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     public static final String ENDDATE = "endDate";
     public static final String AGENT_TIME_ZONE = "agentTimeZone";
     public static final String TIME_ZONE = "agenttTimeZone";
-    public static final String IEX = "iEX";
 
 
     @Override
@@ -94,13 +93,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             } catch (Exception e) {
                 log.error("Unable to calculate " + ENDDATE, e);
             }
-        } else if (fieldName.equalsIgnoreCase(IEX)) {
-            try {
-                result = calc_iEX(pair, fieldName);
-                postCalculate(fieldName, pair, params, result, oldValue);
-            } catch (Exception e) {
-                log.error("Unable to calculate " + IEX, e);
-            }
         } else {
             result = super.calculate(fieldName, pair, params);
         }
@@ -127,41 +119,22 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
             // We want to re-trigger this change watcher when Timecard.endDate changes.
             accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-            accessManager.addWatcherField(pair, "iEX", fieldsToWatch);
-
             DateTime timecardStartDateTime = new DateTime(host.getStartDate());
             DateTime timecardEndDateTime = new DateTime(host.getEndDate());
-            Boolean iEXForForTheShiftExists = host.getIEX();
+
             // Business Logic: NO SHIFT -- would be based on the
             // ON_TIME/startDate field and the OFF_TIME/endDate field having
             // dates but 0:00 as the time in both fields
             // OR ON_TIME/startDate >= OFF_TIME/endDate
 
-//            if ((isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) || timecardEndDateTime.isBefore(timecardStartDateTime) || timecardEndDateTime.isEqual(timecardStartDateTime)) {
-            //Logic to determine
-            //NO_SHIFT means : If IEX schedule for the agent for the day DOES NOT EXIST. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
-            //SHIFT_NOT_STARTED : If IEX schedule for the agent for the day EXISTS. Additional condition (but not mendatory) If startDateTime and endDateTime is 00:00
-            //
-
-
-//            if (!iEXForForTheShiftExists && isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
-////            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime)) {
-////            if (!iEXForForTheShiftExists) {
-//                //No Shift
-//                result = Boolean.FALSE;
-//            } else {
-//                //Shift there a shift
-//                result = Boolean.TRUE;
-//            }
-
-            if (iEXForForTheShiftExists ) {
-                //Shift there a shift
-                result = Boolean.TRUE;
-            } else {
-                //NO Shift
+            if (isZeroHourOfDay(timecardStartDateTime) && isZeroHourOfDay(timecardEndDateTime) || timecardEndDateTime.isBefore(timecardStartDateTime) || timecardEndDateTime.isEqual(timecardStartDateTime)) {
+                //Shift yet not started
                 result = Boolean.FALSE;
             }
-
+            else{
+                //Shift is started
+                result = Boolean.TRUE;
+            }
 
             accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
 
@@ -190,10 +163,12 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
             /**
              UNKNOWN --> NOT STARTED --> IN PROGRESS --> COMPLETED --> APPROVED
+
              IN PROGRESS - would be based on the ON_TIME field and the OFF_TIME field for the
              CURRENT DAY, and the actual time it is based on the timezone for that agent.
              For example if it is 14:12 on 11/5 and the OFF_TIME is 14:45 which is Greater than
              the actual time of day it is for the agent (the agent local time), then she's still IN PROGRESS
+
              COMPLETED - would be based on the reverse of IN PROGRESS, if the time of day is less that the actual
              time of day it is for the agents current time zone, then their shift is complete. For example if
              the OFF_TIME field equals 13:30 on 11/5 and teh current time is 14:12 CST (and that is the agents
@@ -208,7 +183,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     || "yes".equalsIgnoreCase(approved)) {
                 // Timecard has been APPROVED
                 result = TimecardStatus.APPROVED.getValue();
-            } else {
+            }
+            else {
                 // We want to re-trigger this change watcher when Timecard.shift changes.
                 accessManager.addWatcherField(pair, "shift", fieldsToWatch);
                 Boolean shift = host.getShift();
@@ -216,7 +192,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 if (!shift) {
                     // The Timecard does NOT have a shift.
                     result = TimecardStatus.NO_SHIFT.getValue();
-                } else {
+                }
+                else {
                     // The Timecard DOES have a shift.
                     // We want to re-trigger this change watcher when Timecard.date changes.
                     accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
@@ -228,30 +205,26 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                     // to the current time using milliseconds since 0 (ie. compare
                     // UTC time) using the Joda DateTime object.
                     // http://www.joda.org/joda-time/
-
-
-                    Boolean iEXForForTheShiftExists = host.getIEX();
-
                     DateTime timecardStartDateTime = new DateTime(host.getStartDate());
                     DateTime timecardEndDateTime = new DateTime(host.getEndDate());
 
                     DateTime currentTime = new DateTime(System.currentTimeMillis());
 
-                    if (iEXForForTheShiftExists) {  //calculate status only if  there is an iEX data
-                        //Source date should be used in this first condition because we need 00:00:00 from the date, if we apply any change to it using timezone it is incorrect
-                        if (currentTime.isBefore(timecardStartDateTime)) {
-                            // Local time is BEFORE the time card start date, so status is NOT_STARTED
-                            result = TimecardStatus.NOT_STARTED.getValue();
-                        } else if (currentTime.isBefore(timecardEndDateTime)) {
-                            // Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
-                            result = TimecardStatus.IN_PROGRESS.getValue();
-                        } else {
-                            // Local time is AFTER the timecard end dtae, so status is COMPLETED
-                            result = TimecardStatus.COMPLETED.getValue();
-                        }
+                    if (currentTime.isBefore(timecardStartDateTime)) {
+                        // Local time is BEFORE the time card start date, so status is NOT_STARTED
+                        result = TimecardStatus.NOT_STARTED.getValue();
+                    }
+                    else if (currentTime.isBefore(timecardEndDateTime)) {
+                        // Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
+                        result = TimecardStatus.IN_PROGRESS.getValue();
+                    }
+                    else {
+                        // Local time is AFTER the timecard end dtae, so status is COMPLETED
+                        result = TimecardStatus.COMPLETED.getValue();
                     }
                 }
             }
+
 
 
             accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
@@ -552,54 +525,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
         return result;
     }
-
-    private Boolean calc_iEX(ClassIDPair pair, String derivedValueName) {
-        Boolean result = Boolean.FALSE; // It is considered that there is no IEX entry for the Agent for the Agent
-
-        try {
-            Timecard host = (Timecard) syncAgentService.systemGetById(pair);
-            if (host == null) {
-                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
-                return result;
-            }
-
-            // Setup fieldsToWatch.
-            Collection<String> fieldsToWatch = new HashSet<String>();
-
-            // We want to re-trigger this change watcher when AgentScorecard.weekDate changes.
-            accessManager.addWatcherField(pair, "agent", fieldsToWatch);
-            Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-            if (agent != null) {
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "schedules", fieldsToWatch);
-                Iterator<Schedule> itrSchedule = agent.getSchedules().iterator();
-
-                while (itrSchedule.hasNext()) {
-                    Schedule schedule = syncAgentService.systemGetByObject(itrSchedule.next());
-
-                    if (schedule.getStartDate().getDay() == host.getStartDate().getDay() &&
-                            schedule.getStartDate().getMonth() == host.getStartDate().getMonth() &&
-                            schedule.getStartDate().getYear() == host.getStartDate().getYear()) {
-
-                        result = Boolean.TRUE;
-                    }
-                }
-
-
-            } else {
-                log.warn("Unable to get Agent / schedules");
-            }
-
-            // Register all the fields to watch for this ChangeWatcher. Whenever
-            // ANY of these fields change, this ChangeWatcher will get re-run
-            accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
-
-            // Store the result for caching, and also for comparing new results to see if there has been a change.
-            accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
-
-        } catch (Exception e) {
-            log.error("Unable to calculate " + derivedValueName, e);
-        }
-        return result;
-    }
+    
 
 }
