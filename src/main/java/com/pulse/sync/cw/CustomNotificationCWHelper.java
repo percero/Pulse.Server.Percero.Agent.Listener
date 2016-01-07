@@ -124,7 +124,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
+//                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
@@ -132,7 +132,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
         else if (fieldName.equalsIgnoreCase("handleTimecardUpdate")) {
             try {
-                handleTimecardUpdate(category, subCategory, fieldName, params, oldValue);
+//                handleTimecardUpdate(category, subCategory, fieldName, params, oldValue);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardUpdate", e);
             }
