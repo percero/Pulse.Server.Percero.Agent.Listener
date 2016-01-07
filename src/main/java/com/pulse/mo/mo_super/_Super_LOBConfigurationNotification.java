@@ -228,7 +228,7 @@ objectJson += ",\"lOBConfiguration\":";
 		}
 		objectJson += "";
 
-		objectJson += ",\"timecarEntry\":";
+		objectJson += ",\"timecardEntry\":";
 		if (getTimecardEntry() == null)
 			objectJson += "null";
 		else {

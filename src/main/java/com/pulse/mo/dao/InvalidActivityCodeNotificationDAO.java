@@ -433,9 +433,9 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
             propertyCounter++;
         }
 
-        boolean useTimecarEntryId = theQueryObject.getTimecardEntry() != null && (excludeProperties == null || !excludeProperties.contains("timecardEntry"));
+        boolean useTimecardEntryId = theQueryObject.getTimecardEntry() != null && (excludeProperties == null || !excludeProperties.contains("timecardEntry"));
 
-        if (useTimecarEntryId) {
+        if (useTimecardEntryId) {
             if (propertyCounter > 0) {
                 sql += " AND ";
             } else {

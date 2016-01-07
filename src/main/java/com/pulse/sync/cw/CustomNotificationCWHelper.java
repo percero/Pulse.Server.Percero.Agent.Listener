@@ -311,7 +311,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         // 1. eStart InValid Activity code
 
-                        //For the watched TimecarEntry,
+                        //For the watched TimecardEntry,
                         //Use the ActivityCode in the Entry and look into the configuration Along with key for "NON-BILLABLE" (Still need to be decided for the key).
                         //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
                         //In condition fails, generate notification
@@ -434,7 +434,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 } else {
                     //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                    //This is a special case where TimecarEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //This is a special case where TimecardEntry is deleted but watched by Watcher since there is change in the Entry/Object.
                     //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
                     //This is a situation where we need to clean the orphaned notifications associated with deleted entry
                     TimecardEntry criteriaTimecardEntry = new TimecardEntry();
@@ -1109,8 +1109,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         List<CMSEntry> associatedCMSEntries = new ArrayList<CMSEntry>();
 
         //The consecutiveActivityList gets list of TimecardEntries in reverse order so first is last entry and last is first entry.
-        Date timecarEntryEndTime = consecutiveActivityList.get(0).getToTime();
-        Date timecarEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getFromTime();
+        Date timecardEntryEndTime = consecutiveActivityList.get(0).getToTime();
+        Date timecardEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getFromTime();
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
@@ -1128,18 +1128,18 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         int firstClosestCMSEntryIndex = 0;
         int lastClosestCMSEntryIndex = 0;
 
-        long startTimeDiff = timecarEntryStartTime.getTime();//Some large number initialization to have
-        long endTimeDiff = timecarEntryEndTime.getTime();//Some large number initialization to have
+        long startTimeDiff = timecardEntryStartTime.getTime();//Some large number initialization to have
+        long endTimeDiff = timecardEntryEndTime.getTime();//Some large number initialization to have
 
         for (int index = 0; index < agentCMSEntries.size(); index++) {
 
             CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
 
-            if (getTimeDiff(timecarEntryStartTime, cMSEntry.getFromTime()) <= startTimeDiff) {
+            if (getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime()) <= startTimeDiff) {
                 firstClosestCMSEntryIndex = index;
             }
 
-            if (getTimeDiff(timecarEntryEndTime, cMSEntry.getToTime()) <= endTimeDiff) {
+            if (getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime()) <= endTimeDiff) {
                 lastClosestCMSEntryIndex = index;
             }
         }
