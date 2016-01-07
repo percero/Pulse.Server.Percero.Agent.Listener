@@ -1,5 +1,8 @@
 package com.pulse.sync.cw;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +11,8 @@ import java.util.*;
 import javax.annotation.PostConstruct;
 
 import com.percero.agents.sync.vo.BaseDataObject;
+import com.pulse.dataprovider.IConnectionFactory;
+import com.pulse.dataprovider.PulseDataConnectionRegistry;
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -27,6 +32,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
     private static final Logger log = Logger.getLogger(CustomNotificationCWHelper.class);
+
+    public static final String CONNECTION_FACTORY_NAME = "estart";
+    public static long LONG_RUNNING_QUERY_TIME = 2000;
+    public static int QUERY_TIMEOUT = 10;
 
     private static final int MS_IN_MIN = 60 * 1000;
     //CMSEntry based Notifications Messages
@@ -83,12 +92,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         // Listen for changes on ALL CMSEntry records.
         accessManager.addWatcherField(new ClassIDPair("0", CMSEntry.class.getCanonicalName()), "", cmsEntryFieldsToWatch);
         accessManager.addWatcherField(new ClassIDPair("0", TimecardEntry.class.getCanonicalName()), "", timecardEntryFieldsToWatch);
-//        accessManager.addWatcherField(new ClassIDPair("0", Timecard.class.getCanonicalName()), "", timecardFieldsToWatch);
+        accessManager.addWatcherField(new ClassIDPair("0", Timecard.class.getCanonicalName()), "", timecardFieldsToWatch);
         // Register the fields. This can always be called again with an updated
         // list of fields to watch, which would overwrite the list of fields
         // that trigger this change watcher code.
         accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleCmsEntryNotification", cmsEntryFieldsToWatch);
         accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleTimecardEntryNotification", timecardEntryFieldsToWatch);
+        accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleTimecardUpdate", timecardFieldsToWatch);
 //        accessManager.updateWatcherFields(CATEGORY, SUB_CATEGORY, "handleTimecardEntryNotification", timecardFieldsToWatch);
     }
 
@@ -114,12 +124,21 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-//                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
+                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
             return null;
-        } else {
+        }
+        else if (fieldName.equalsIgnoreCase("handleTimecardUpdate")) {
+            try {
+                handleTimecardUpdate(category, subCategory, fieldName, params, oldValue);
+            } catch (Exception e) {
+                log.error("Unable to process handleTimecardUpdate", e);
+            }
+            return null;
+        }
+        else {
             return super.process(category, subCategory, fieldName, params, oldValue);
         }
     }
@@ -300,9 +319,21 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         if (agent == null) {
                             agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
                         }
+//                        LOB tlob = new LOB();
+//                        tlob.setID("13573");
+//
+//                        AgentLOB agentLOB = new AgentLOB();
+//                        agentLOB.setID(agent.getID() + "-" +tlob.getID());
+//                        agentLOB.setLOB(tlob);
+//                        agentLOB.setAgent(agent);
+//
+//                        agent.getAgentLOBs().add(agentLOB);
 
                         if (agent != null) {
                             if (agent.getAgentLOBs().size() == 1) {
+
+
+
                                 //Valid scenario for notification
                                 //Pick up the first AgentLOB because it is assumed that if Agent has other than 1 AgentLOB it is invalid scenario for Notification
                                 AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
@@ -1167,4 +1198,99 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return entry2.getFromTime().compareTo(entry1.getFromTime());
         }
     }
+
+    private void handleTimecardUpdate(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) throws Exception {
+        // This is where the logic would go to create a Notification based on when the data requested above changes.
+        //
+        try {
+
+            if (params != null && params.length >= 2) {
+                String className = params[0];
+                String classId = params[1];
+
+                ClassIDPair classIdPair = new ClassIDPair(classId, className);
+                IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
+
+                if (updatedObject != null && updatedObject instanceof Timecard && oldValue!=null) {
+                    Timecard timecard = (Timecard) updatedObject;
+
+                    if (timecard != null) {
+
+                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
+
+                        while(itrTimecardEntries.hasNext()){
+                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+                        }
+
+
+                    }
+
+
+                }
+
+
+            }
+        } catch (Exception e) {
+            // Handle exception
+            log.error("Error in LOB Notification", e);
+        }
+    }
+
+    private void insertRecToUpdateTable(String timecardEntryId){
+        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
+
+        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP, ID) VALUES (?, ?, ?, sysdate, ?)";
+
+        int updateTableId = 1; // default value
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+            conn = connectionFactory.getConnection();
+            pstmt = conn.prepareStatement(selectQueryString);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()){
+                updateTableId = rs.getInt("ID");
+            }
+
+            pstmt.close();
+
+            //Insert recode
+            pstmt = conn.prepareStatement(insertQueryString);
+            pstmt.setQueryTimeout(QUERY_TIMEOUT);
+            pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
+            pstmt.setString(2, timecardEntryId);
+            pstmt.setString(3, "DELETE");
+           // pstmt.setDate(4, (java.sql.Date) new Date());
+            pstmt.setInt(4, ++updateTableId);
+            pstmt.execute();
+
+
+        } catch(Exception e) {
+            log.error("Unable to retrieveObjects\n" + selectQueryString, e);
+
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                log.error("Error closing database statement/connection", e);
+            }
+        }
+    }
+
+    PulseDataConnectionRegistry connectionRegistry;
+    public PulseDataConnectionRegistry getConnectionRegistry() {
+        if (connectionRegistry == null) {
+            connectionRegistry = PulseDataConnectionRegistry.getInstance();
+        }
+        return connectionRegistry;
+    }
+
 }
