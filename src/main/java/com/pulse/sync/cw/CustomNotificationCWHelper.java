@@ -1237,39 +1237,39 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     private void insertRecToUpdateTable(String timecardEntryId){
-        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
+//        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
-        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP, ID) VALUES (?, ?, ?, sysdate, ?)";
+        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
 
         int updateTableId = 1; // default value
 
         Connection conn = null;
         PreparedStatement pstmt = null;
         try {
-            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
-            conn = connectionFactory.getConnection();
-            pstmt = conn.prepareStatement(selectQueryString);
-            ResultSet rs = pstmt.executeQuery();
+//            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+//            conn = connectionFactory.getConnection();
+//            pstmt = conn.prepareStatement(selectQueryString);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            if (rs.next()){
+//                updateTableId = rs.getInt("ID");
+//            }
+//
+//            pstmt.close();
 
-            if (rs.next()){
-                updateTableId = rs.getInt("ID");
-            }
-
-            pstmt.close();
-
-            //Insert recode
+            //Insert record
             pstmt = conn.prepareStatement(insertQueryString);
             pstmt.setQueryTimeout(QUERY_TIMEOUT);
             pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
             pstmt.setString(2, timecardEntryId);
             pstmt.setString(3, "DELETE");
            // pstmt.setDate(4, (java.sql.Date) new Date());
-            pstmt.setInt(4, ++updateTableId);
+//            pstmt.setInt(4, ++updateTableId);
             pstmt.execute();
 
 
         } catch(Exception e) {
-            log.error("Unable to retrieveObjects\n" + selectQueryString, e);
+            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
 
         } finally {
             try {
