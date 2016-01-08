@@ -218,7 +218,8 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 
         pstmt.setString(1, perceroObject.getID());
         pstmt.setString(2, perceroObject.getType());
-        pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+//        pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+        pstmt.setTimestamp(3, DateUtils.sqlTimestampFromUtilDate(perceroObject.getCreatedOn()));
         pstmt.setString(4, perceroObject.getName());
 
         if (perceroObject.getTeamLeader() == null) {
@@ -271,7 +272,8 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 
         pstmt.setString(1, perceroObject.getID());
         pstmt.setString(2, perceroObject.getType());
-        pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+//        pstmt.setDate(3, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
+        pstmt.setTimestamp(3, DateUtils.sqlTimestampFromUtilDate(perceroObject.getCreatedOn()));
         pstmt.setString(4, perceroObject.getName());
 
         if (perceroObject.getTeamLeader() == null) {
