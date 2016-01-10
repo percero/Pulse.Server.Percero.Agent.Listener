@@ -185,28 +185,41 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 result = TimecardStatus.APPROVED.getValue();
             }
             else {
-                // We want to re-trigger this change watcher when Timecard.date changes.
-                accessManager.addWatcherField(pair, "sourceEndDate", fieldsToWatch);
+                // We want to re-trigger this change watcher when Timecard.shift changes.
+                accessManager.addWatcherField(pair, "shift", fieldsToWatch);
+                Boolean shift = host.getShift();
 
+                if (!shift) {
+                    // The Timecard does NOT have a shift.
+                    result = TimecardStatus.NO_SHIFT.getValue();
+                }
+                else {
+                    // The Timecard DOES have a shift.
+                    // We want to re-trigger this change watcher when Timecard.date changes.
+                    accessManager.addWatcherField(pair, "startDate", fieldsToWatch);
+                    // We want to re-trigger this change watcher when Timecard.endDate changes.
+                    accessManager.addWatcherField(pair, "endDate", fieldsToWatch);
 
-                DateTime sourceEndDate = new DateTime(host.getSourceEndDate());
-                if (isZeroHourOfDay(sourceEndDate)) {
-                    if (host.getTimecardEntries().get(0).getActionCode() == "UA") {
+                    // Timecard.StartDate and Timecard.EndDate appear to also carry
+                    // the timezone. We can compare
+                    // to the current time using milliseconds since 0 (ie. compare
+                    // UTC time) using the Joda DateTime object.
+                    // http://www.joda.org/joda-time/
+                    DateTime timecardStartDateTime = new DateTime(host.getStartDate());
+                    DateTime timecardEndDateTime = new DateTime(host.getEndDate());
+
+                    DateTime currentTime = new DateTime(System.currentTimeMillis());
+
+                    if (currentTime.isBefore(timecardStartDateTime)) {
+                        // Local time is BEFORE the time card start date, so status is NOT_STARTED
                         result = TimecardStatus.NOT_STARTED.getValue();
-                    } else {
-                        result = TimecardStatus.NO_SHIFT.getValue();
                     }
-                } else {
-                    Schedule schedule = getSchedule(host);
-                    boolean inProgress = false;
-                    for (ScheduleEntry scheduleEntry : schedule.getScheduleEntries()) {
-                        Date endTime = scheduleEntry.getSourceEndTime();
-                        if (sourceEndDate.getMillis() == endTime.getTime()) {
-                            inProgress = true;
-                            result = TimecardStatus.IN_PROGRESS.getValue();
-                        }
+                    else if (currentTime.isBefore(timecardEndDateTime)) {
+                        // Local time is AFTER the time card start date and BEFORE the timecard end date, so status is IN_PROGRESS
+                        result = TimecardStatus.IN_PROGRESS.getValue();
                     }
-                    if (!inProgress) {
+                    else {
+                        // Local time is AFTER the timecard end dtae, so status is COMPLETED
                         result = TimecardStatus.COMPLETED.getValue();
                     }
                 }
@@ -512,25 +525,6 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
         return result;
     }
-
-    private Schedule getSchedule(Timecard host) {
-        Schedule schedule = null;
-
-        Agent agent = host.getAgent();
-        Iterator<Schedule> itrSchedule = agent.getSchedules().iterator();
-
-        while (itrSchedule.hasNext()) {
-            schedule = syncAgentService.systemGetByObject(itrSchedule.next());
-
-            if (schedule.getStartDate().getDay() == host.getStartDate().getDay() &&
-                    schedule.getStartDate().getMonth() == host.getStartDate().getMonth() &&
-                    schedule.getStartDate().getYear() == host.getStartDate().getYear()) {
-
-                break;
-            }
-        }
-
-        return schedule;
-    }
+    
 
 }
