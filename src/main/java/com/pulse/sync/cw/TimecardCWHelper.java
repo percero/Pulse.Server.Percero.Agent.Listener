@@ -526,7 +526,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     private Schedule getSchedule(Timecard host) {
         Schedule schedule = null;
 
-        Agent agent = host.getAgent();
+        Agent agent = syncAgentService.systemGetByObject(host.getAgent());
         Iterator<Schedule> itrSchedule = agent.getSchedules().iterator();
 
         while (itrSchedule.hasNext()) {
