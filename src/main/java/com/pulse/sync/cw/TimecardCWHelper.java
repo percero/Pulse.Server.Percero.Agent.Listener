@@ -191,7 +191,11 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 DateTime sourceEndDate = new DateTime(host.getSourceEndDate());
                 if (isZeroHourOfDay(sourceEndDate)) {
 
-                    TimecardEntry timecardEntry = syncAgentService.systemGetByObject(host.getTimecardEntries().get(0));
+                    TimecardEntry timecardEntry = null;
+
+                    if (host.getTimecardEntries().size()> 0) {
+                        timecardEntry = syncAgentService.systemGetByObject(host.getTimecardEntries().get(0));
+                    }
 
                     if (timecardEntry!=null && "UA".equalsIgnoreCase(timecardEntry.getActionCode())) {
                         result = TimecardStatus.NOT_STARTED.getValue();

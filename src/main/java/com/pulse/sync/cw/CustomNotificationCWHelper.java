@@ -241,8 +241,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                            else {
 //                                //Not a Valid scenario for notification
 //                                // Do not send notification
-//                                log.info("****** CMS Entry based notification is not generated due to following configuration ******");
-//                                log.info("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                                log.debug("****** CMS Entry based notification is not generated due to following configuration ******");
+//                                log.debug("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
                     }
@@ -421,8 +421,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //
 //                                //Not a Valid scenario for notification
 //                                // Do not send notification
-//                                log.info("****** TimeCard Entry based notification is not generated due to following configuration ******");
-//                                log.info("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                                log.debug("****** TimeCard Entry based notification is not generated due to following configuration ******");
+//                                log.debug("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
                         }
                     }
@@ -1007,9 +1007,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
         //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
         //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
-        log.info("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
-        log.info(searchLOBNotification.getCMSEntry());
-        log.info(searchLOBNotification.getTimecardEntry());
+        log.debug("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+        log.debug(searchLOBNotification.getCMSEntry());
+        log.debug(searchLOBNotification.getTimecardEntry());
 
         List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
 
@@ -1024,12 +1024,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (notification != null) {
 
                 syncAgentService.systemDeleteObject(notification, null, true);
-                log.info("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+                log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
             } else {
-                log.info("No Notification found for ID: " + classIdPairLobNotif);
+                log.debug("No Notification found for ID: " + classIdPairLobNotif);
             }
         }
-        log.info("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+        log.debug("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
     }
 
     private void generatePhoneTimeVarianceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
