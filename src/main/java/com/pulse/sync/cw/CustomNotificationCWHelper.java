@@ -579,10 +579,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("WorkModeOccurrenceNotification".equals(notification.getType())) {
-                        workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
-                        workModeOccurrenceNotification.setID(notification.getID());
-                        workModeOccurrenceNotification.setAgent(notification.getAgent()); //xxxx
-                        workModeOccurrenceNotification.setTeamLeader(notification.getTeamLeader());
+                        workModeOccurrenceNotification = (WorkModeOccurrenceNotification) notification;
+//                        workModeOccurrenceNotification = new WorkModeOccurrenceNotification();
+//                        workModeOccurrenceNotification.setID(notification.getID());
+//                        workModeOccurrenceNotification.setAgent(notification.getAgent()); //xxxx
+//                        workModeOccurrenceNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
@@ -669,10 +670,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("InvalidActivityCodeNotification".equals(notification.getType())) {
-                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
-                        invalidActivityCodeNotification.setID(notification.getID());
-                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
-                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
+                        invalidActivityCodeNotification = (InvalidActivityCodeNotification) notification;
+//                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
+//                        invalidActivityCodeNotification.setID(notification.getID());
+//                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
+//                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
@@ -724,10 +726,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("NonBillableActivityNotification".equals(notification.getType())) {
-                        nonBillableActivityNotification = new NonBillableActivityNotification();
-                        nonBillableActivityNotification.setID(notification.getID());
-                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
-                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
+                        nonBillableActivityNotification = (NonBillableActivityNotification) notification;
+//                        nonBillableActivityNotification = new NonBillableActivityNotification();
+//                        nonBillableActivityNotification.setID(notification.getID());
+//                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
+//                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
@@ -785,10 +788,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("OccurrenceToleranceNotification".equals(notification.getType())) {
-                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-                        occurrenceToleranceNotification.setID(notification.getID());
-                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
-                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
+                        occurrenceToleranceNotification = (OccurrenceToleranceNotification) notification;
+//                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+//                        occurrenceToleranceNotification.setID(notification.getID());
+//                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
+//                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
@@ -843,10 +847,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("DurationToleranceNotification".equals(notification.getType())) {
-                        durationToleranceNotification = new DurationToleranceNotification();
-                        durationToleranceNotification.setID(notification.getID());
-                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
-                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
+                        durationToleranceNotification = (DurationToleranceNotification)notification;
+//                        durationToleranceNotification = new DurationToleranceNotification();
+//                        durationToleranceNotification.setID(notification.getID());
+//                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
+//                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
@@ -1063,10 +1068,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("DurationMismatchNotification".equals(notification.getType())) {
-                        durationMismatchNotification = new DurationMismatchNotification();
-                        durationMismatchNotification.setID(notification.getID());
-                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
-                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
+                        durationMismatchNotification = (DurationMismatchNotification) notification;
+//                        durationMismatchNotification = new DurationMismatchNotification();
+//                        durationMismatchNotification.setID(notification.getID());
+//                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
+//                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
                         isExistingNotif = true;
                     }
                 }
