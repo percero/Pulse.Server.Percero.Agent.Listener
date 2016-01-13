@@ -964,7 +964,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
 
-        int indexOfWatchedEntry = timecardEntryList.indexOf(watchedTimecardEntry);
+        int indexOfWatchedEntry = 0;
+
+        for (int cnt=0; cnt<timecardEntryList.size(); cnt++){
+            if(timecardEntryList.get(cnt).getID().equals(watchedTimecardEntry.getID())){
+                indexOfWatchedEntry = cnt;
+            }
+        }
 
         boolean processData = true;
 
