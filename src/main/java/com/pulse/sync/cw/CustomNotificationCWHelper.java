@@ -1254,8 +1254,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         Connection conn = null;
         PreparedStatement pstmt = null;
         try {
-//            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
-//            conn = connectionFactory.getConnection();
+            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+            conn = connectionFactory.getConnection();
 //            pstmt = conn.prepareStatement(selectQueryString);
 //            ResultSet rs = pstmt.executeQuery();
 //
