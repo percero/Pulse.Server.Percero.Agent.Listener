@@ -3,6 +3,7 @@ package com.pulse.sync.cw;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Time;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -124,21 +125,19 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             return null;
         } else if (fieldName.equalsIgnoreCase("handleTimecardEntryNotification")) {
             try {
-                 handleTimecardEntryNotification(category, subCategory, fieldName, params);
+                handleTimecardEntryNotification(category, subCategory, fieldName, params);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardEntryNotification", e);
             }
             return null;
-        }
-        else if (fieldName.equalsIgnoreCase("handleTimecardUpdate")) {
+        } else if (fieldName.equalsIgnoreCase("handleTimecardUpdate")) {
             try {
                 handleTimecardUpdate(category, subCategory, fieldName, params, oldValue);
             } catch (Exception e) {
                 log.error("Unable to process handleTimecardUpdate", e);
             }
             return null;
-        }
-        else {
+        } else {
             return super.process(category, subCategory, fieldName, params, oldValue);
         }
     }
@@ -333,7 +332,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             if (agent.getAgentLOBs().size() == 1) {
 
 
-
                                 //Valid scenario for notification
                                 //Pick up the first AgentLOB because it is assumed that if Agent has other than 1 AgentLOB it is invalid scenario for Notification
                                 AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
@@ -354,9 +352,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                             Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
                                             TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
+                                            List<TimecardEntry> sortedTimecartEntries = getSortedTimecardEntries(timecard.getTimecardEntries());
                                             List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
 
-                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, timecardEntry, timecarActivity.getCode(), consecutiveActivityList);
+
+                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, sortedTimecartEntries, timecardEntry,
+                                                    timecarActivity.getCode(), consecutiveActivityList);
 
                                             //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
                                             // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
@@ -459,11 +460,39 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
         Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
 
-        Double duration = cmsEntry.getDuration();
+        Collection<String> fieldsToWatch = new HashSet<String>();
+        ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
+        accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
+        //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
+        String timeZone = agent.getTimeZone();
+        Date fromDate = null;
+        Date toDate = null;
+        try {
+            DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+            if (dateTimeZone != null) {
+                //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+                // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+                // Do not change the code here. Following is the best approach
+                int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+
+                fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
+                toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
+            } else {
+                log.warn("Invalid time zone " + timeZone);
+            }
+        } catch (Exception e) {
+            // Invalid time zone.
+            log.error("Invalid time zone " + timeZone, e);
+        }
+
+        //Instead of using cmsEntry duration calc from from/to date
+//        Double duration = cmsEntry.getDuration();
+        int intDuration = calLapsMin(fromDate, toDate);
         // If the duration is > DURATION_MAX, then create the notification.
         //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
         //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
-        if (duration != null && lobConfigurationEntry.getMax() != null && (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0)) {
+
+        if (lobConfigurationEntry.getMax() != null && (intDuration < DURATION_MIN || intDuration > DURATION_MAX)) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -495,31 +524,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     workDurationNotification.setTeamLeader(teamLeader);
                 }
 
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
-                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
-                //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
-                String timeZone = agent.getTimeZone();
-                Date fromDate = null;
-                Date toDate = null;
-                try {
-                    DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
-                    if (dateTimeZone != null) {
-                        //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
-                        // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
-                        // Do not change the code here. Following is the best approach
-                        int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
-
-                        fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
-                        toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
-                    } else {
-                        log.warn("Invalid time zone " + timeZone);
-                    }
-                } catch (Exception e) {
-                    // Invalid time zone.
-                    log.error("Invalid time zone " + timeZone, e);
-                }
-
 
                 workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
@@ -529,7 +533,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 //Do not use the duration property of the CMSEntry, since it has decimal value. Customer do not want round half up either hence followed a patterned
                 // which was implemented on UI for calculating duration
-                int intDuration = calLapsMin(fromDate, toDate);
+//                int intDuration = calLapsMin(fromDate, toDate);
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
@@ -691,7 +695,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
@@ -749,7 +753,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
                 nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
@@ -810,7 +814,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR) , OCCURRENCE_MAX));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
@@ -847,7 +851,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
                     if ("DurationToleranceNotification".equals(notification.getType())) {
-                        durationToleranceNotification = (DurationToleranceNotification)notification;
+                        durationToleranceNotification = (DurationToleranceNotification) notification;
 //                        durationToleranceNotification = new DurationToleranceNotification();
 //                        durationToleranceNotification.setID(notification.getID());
 //                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
@@ -869,7 +873,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(),  formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
@@ -891,24 +895,29 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Date beginDate = watchedCMSEntry.getFromTime();
 
-        List<CMSEntry> rawList = agent.getCMSEntries();
+//        List<CMSEntry> rawList = agent.getCMSEntries();
+//
+//
+//        ;;;;;;;;;;;;;==========
+//
+//        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+//
+//        for (int index=0 ; index < rawList.size() ; index++ ) {
+//
+//            CMSEntry cmsEntry = syncAgentService.systemGetByObject(rawList.get(index));
+//            sortedList.add(cmsEntry);
+//        }
 
-        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+        List<CMSEntry> sortedList = getSortedCMSEntries(agent.getCMSEntries());
 
-        for (int index=0 ; index < rawList.size() ; index++ ) {
-
-            CMSEntry cmsEntry = syncAgentService.systemGetByObject(rawList.get(index));
-            sortedList.add(cmsEntry);
-        }
-
-        Collections.sort(sortedList, new CMSEntryDateComparator());
+//        Collections.sort(sortedList, new CMSEntryDateComparator());
 
         //Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
         Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
         CMSEntry lastCMSEntry = null;
 
         boolean exitCondi = false;
-        for (int index=0 ; index < sortedList.size() && !exitCondi ; index++ ) {
+        for (int index = 0; index < sortedList.size() && !exitCondi; index++) {
 
             CMSEntry cmsEntry = syncAgentService.systemGetByObject(sortedList.get(index));
             //Check the the entry belongs to the current shift
@@ -916,16 +925,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (cmsEntry != null) {
                 //Laps time bet'n current and last entry is more than 4 hrs means this is new shift entry / first entry of the shift
 
-                if (lastCMSEntry!=null && calLapsMin(cmsEntry.getToTime(), lastCMSEntry.getFromTime())> 120){ //2hrs
+                if (lastCMSEntry != null && calLapsMin(cmsEntry.getToTime(), lastCMSEntry.getFromTime()) > 120) { //2hrs
                     exitCondi = true;
-                }
-                else {
+                } else {
 
                     lastCMSEntry = cmsEntry;
 
-                    if((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
+                    if ((watchedCMSEntry.getCMSAuxMode() == null && cmsEntry.getCMSAuxMode() == null)
                             || (watchedCMSEntry.getCMSAuxMode() != null && cmsEntry.getCMSAuxMode() != null
-                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))){
+                            && watchedCMSEntry.getCMSAuxMode().equals(cmsEntry.getCMSAuxMode()))) {
                         cmsEntriesOfTheShift.add(cmsEntry);
 
                         beginDate = cmsEntry.getFromTime(); // This is the first occurrence of the auxcode for the current shift
@@ -955,19 +963,20 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return beginDate;
     }
 
-    private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
+    private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
+                                                                String activityCode, final List<TimecardEntry> timecardEntryListOfActivityCode) {
 
 //        Integer consecutiveAcitivityCount = 0;
         Double activityTimeSpan = 0.0;
 
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
 
-        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
+//        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
 
         int indexOfWatchedEntry = 0;
 
-        for (int cnt=0; cnt<timecardEntryList.size(); cnt++){
-            if(timecardEntryList.get(cnt).getID().equals(watchedTimecardEntry.getID())){
+        for (int cnt = 0; cnt < sortedTimecardEntries.size(); cnt++) {
+            if (sortedTimecardEntries.get(cnt).getID().equals(watchedTimecardEntry.getID())) {
                 indexOfWatchedEntry = cnt;
             }
         }
@@ -978,7 +987,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         //Infact this logic is provided by CVG and they have assumption on this front
 //        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
         for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
-            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(timecardEntryList.get(cnt));
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
 
             if (timecardEntry != null) {
 
@@ -1096,7 +1105,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
                 durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR) , formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
@@ -1116,15 +1125,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Double duration = 0.0;
 
-        if (consecutiveActivityList.size() < 1) {
+        if (consecutiveActivityList.size() <= 0) {
             return duration;
         }
 
         List<CMSEntry> associatedCMSEntries = new ArrayList<CMSEntry>();
 
         //The consecutiveActivityList gets list of TimecardEntries in reverse order so first is last entry and last is first entry.
-        Date timecardEntryEndTime = consecutiveActivityList.get(0).getToTime();
-        Date timecardEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getFromTime();
+        Date timecardEntryStartTime = consecutiveActivityList.get(0).getFromTime();
+        Date timecardEntryEndTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getToTime();
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
@@ -1137,7 +1146,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
 //        lobConfigurationEntry.getMappedCMSAuxCode()
-        List<CMSEntry> agentCMSEntries = agent.getCMSEntries();
+        List<CMSEntry> agentCMSEntries = getSortedCMSEntries(agent.getCMSEntries());
 
         int firstClosestCMSEntryIndex = 0;
         int lastClosestCMSEntryIndex = 0;
@@ -1147,18 +1156,31 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         for (int index = 0; index < agentCMSEntries.size(); index++) {
 
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+            //Do not load data again since sorting function already did it
+//            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
 
-            if (getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime()) <= startTimeDiff) {
+            CMSEntry cMSEntry = agentCMSEntries.get(index);
+
+            if (getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime()) < startTimeDiff) {
+                startTimeDiff = getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime());
                 firstClosestCMSEntryIndex = index;
             }
 
-            if (getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime()) <= endTimeDiff) {
+            if (getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime()) < endTimeDiff) {
+                endTimeDiff = getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime());
                 lastClosestCMSEntryIndex = index;
             }
         }
 
-        for (int index = 0; index < agentCMSEntries.size(); index++) {
+//        for (int index = 0; index < agentCMSEntries.size(); index++) {
+//            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+//            if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
+//                duration += cMSEntry.getDuration();
+//            }
+//        }
+
+
+        for (int index = firstClosestCMSEntryIndex; index <= lastClosestCMSEntryIndex; index++) {
             CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
             if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
                 duration += cMSEntry.getDuration();
@@ -1182,6 +1204,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         return simpleDateFormat.format(date);
     }
+
     private Date stringToDate(String strDate, String dateFormat) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date date = null;
@@ -1195,22 +1218,58 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return date;
     }
 
-    private int calLapsMin(Date oriFromDate, Date oriToDate){
+    private int calLapsMin(Date oriFromDate, Date oriToDate) {
         String strFromDate = formatDate(oriFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
         String strToDate = formatDate(oriToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
 
         oriFromDate = stringToDate(strFromDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
         oriToDate = stringToDate(strToDate, DATE_TIME_FORMAT_WITHOUT_SECONDS);
 
-        return (int)(oriToDate.getTime()/MS_IN_MIN - oriFromDate.getTime()/MS_IN_MIN);
+        return (int) (oriToDate.getTime() / MS_IN_MIN - oriFromDate.getTime() / MS_IN_MIN);
     }
 
-     class CMSEntryDateComparator implements Comparator<CMSEntry> {
+    class CMSEntryDateComparator implements Comparator<CMSEntry> {
 
         @Override
         public int compare(CMSEntry entry1, CMSEntry entry2) {
             return entry2.getFromTime().compareTo(entry1.getFromTime());
         }
+    }
+
+    class TimecardEntryDateComparator implements Comparator<TimecardEntry> {
+
+        @Override
+        public int compare(TimecardEntry entry1, TimecardEntry entry2) {
+            return entry1.getFromTime().compareTo(entry2.getFromTime());
+        }
+    }
+
+    private List<CMSEntry> getSortedCMSEntries(List<CMSEntry> cmsEntries) {
+        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+
+        for (int index = 0; index < cmsEntries.size(); index++) {
+
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(cmsEntries.get(index));
+            sortedList.add(cmsEntry);
+        }
+
+        Collections.sort(sortedList, new CMSEntryDateComparator());
+
+        return sortedList;
+    }
+
+    private List<TimecardEntry> getSortedTimecardEntries(List<TimecardEntry> entryList) {
+        List<TimecardEntry> sortedList = new ArrayList<TimecardEntry>();
+
+        for (TimecardEntry timecardEntry : entryList) {
+            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+            sortedList.add(timecardEntry);
+        }
+
+        Collections.sort(sortedList, new TimecardEntryDateComparator());
+
+        return sortedList;
+
     }
 
     private void handleTimecardUpdate(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) throws Exception {
@@ -1225,14 +1284,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-                if (updatedObject != null && updatedObject instanceof Timecard && oldValue!=null) {
+                if (updatedObject != null && updatedObject instanceof Timecard && oldValue != null) {
                     Timecard timecard = (Timecard) updatedObject;
 
                     if (timecard != null) {
 
                         Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
 
-                        while(itrTimecardEntries.hasNext()){
+                        while (itrTimecardEntries.hasNext()) {
                             insertRecToUpdateTable(itrTimecardEntries.next().getID());
                         }
 
@@ -1250,7 +1309,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-    private void insertRecToUpdateTable(String timecardEntryId){
+    private void insertRecToUpdateTable(String timecardEntryId) {
 //        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
         String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
@@ -1277,12 +1336,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
             pstmt.setString(2, timecardEntryId);
             pstmt.setString(3, "DELETE");
-           // pstmt.setDate(4, (java.sql.Date) new Date());
+            // pstmt.setDate(4, (java.sql.Date) new Date());
 //            pstmt.setInt(4, ++updateTableId);
             pstmt.execute();
 
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to retrieveObjects\n" + insertQueryString, e);
 
         } finally {
@@ -1300,6 +1359,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     PulseDataConnectionRegistry connectionRegistry;
+
     public PulseDataConnectionRegistry getConnectionRegistry() {
         if (connectionRegistry == null) {
             connectionRegistry = PulseDataConnectionRegistry.getInstance();
