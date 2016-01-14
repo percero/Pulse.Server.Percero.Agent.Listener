@@ -1064,7 +1064,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
 
-        int DURATION_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getMax());
+        int DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getMax());
 
         Double duration = getDurationOfAccociatedCMSEntries(timecardEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
 
