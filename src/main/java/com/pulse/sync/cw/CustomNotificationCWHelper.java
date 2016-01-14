@@ -525,7 +525,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-                workDurationNotification.setCreatedOn(new Date());
+//                workDurationNotification.setCreatedOn(new Date());
+                workDurationNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
@@ -625,7 +626,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     log.error("Invalid time zone " + timeZone, e);
                 }
 
-                workModeOccurrenceNotification.setCreatedOn(new Date());
+//                workModeOccurrenceNotification.setCreatedOn(new Date());
+                workModeOccurrenceNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
@@ -691,7 +693,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     invalidActivityCodeNotification.setTeamLeader(teamLeader);
                 }
 
-                invalidActivityCodeNotification.setCreatedOn(new Date());
+//                invalidActivityCodeNotification.setCreatedOn(new Date());
+                invalidActivityCodeNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -747,7 +750,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     nonBillableActivityNotification.setTeamLeader(teamLeader);
                 }
 
-                nonBillableActivityNotification.setCreatedOn(new Date());
+//                nonBillableActivityNotification.setCreatedOn(new Date());
+                nonBillableActivityNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
@@ -809,7 +813,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     occurrenceToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                occurrenceToleranceNotification.setCreatedOn(new Date());
+//                occurrenceToleranceNotification.setCreatedOn(new Date());
+                occurrenceToleranceNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
@@ -868,7 +873,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                durationToleranceNotification.setCreatedOn(new Date());
+//                durationToleranceNotification.setCreatedOn(new Date());
+                durationToleranceNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
@@ -1100,7 +1106,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationMismatchNotification.setTeamLeader(teamLeader);
                 }
 
-                durationMismatchNotification.setCreatedOn(new Date());
+//                durationMismatchNotification.setCreatedOn(new Date());
+                durationMismatchNotification.setCreatedOn(getCreatedOnInAgentTimezone(agent));
                 durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
@@ -1356,6 +1363,30 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 log.error("Error closing database statement/connection", e);
             }
         }
+    }
+
+    private Date getCreatedOnInAgentTimezone(Agent agent){
+        String timeZone = agent.getTimeZone();
+        Date createdOn = null;
+
+        try {
+            DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+            if (dateTimeZone != null) {
+                //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+                // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+                // Do not change the code here. Following is the best approach
+                int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+
+                createdOn = new DateTime((new Date()).getTime() + offsetInMs).toDate();
+
+            } else {
+                log.warn("Invalid time zone " + timeZone);
+            }
+        } catch (Exception e) {
+            // Invalid time zone.
+            log.error("Invalid time zone " + timeZone, e);
+        }
+        return createdOn;
     }
 
     PulseDataConnectionRegistry connectionRegistry;
