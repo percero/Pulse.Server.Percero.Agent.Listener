@@ -176,6 +176,7 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
              */
 
             accessManager.addWatcherField(pair, "approved", fieldsToWatch);
+
             String approved = host.getApproved();
             if ("t".equalsIgnoreCase(approved)
                     || "true".equalsIgnoreCase(approved)
@@ -184,46 +185,34 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 // Timecard has been APPROVED
                 result = TimecardStatus.APPROVED.getValue();
             } else {
+                accessManager.addWatcherField(pair, "assumedOff", fieldsToWatch);
 
-                // We want to re-trigger this change watcher when Timecard.date changes.
-                accessManager.addWatcherField(pair, "sourceEndDate", fieldsToWatch);
-
-                DateTime sourceEndDate = new DateTime(host.getSourceEndDate());
-                if (isZeroHourOfDay(sourceEndDate)) {
-
-                    TimecardEntry timecardEntry = null;
-
-                    if (host.getTimecardEntries().size()> 0) {
-                        timecardEntry = syncAgentService.systemGetByObject(host.getTimecardEntries().get(0));
-                    }
-
-                    if (timecardEntry!=null && "UA".equalsIgnoreCase(timecardEntry.getActionCode())) {
-                        result = TimecardStatus.NOT_STARTED.getValue();
-                    } else {
-                        result = TimecardStatus.NO_SHIFT.getValue();
-                    }
-
+                if ("t".equalsIgnoreCase(host.getAssumedOff())) {
+                    result = TimecardStatus.IN_PROGRESS.getValue();
                 } else {
 
-                    Schedule schedule = getSchedule(host);
+                    // We want to re-trigger this change watcher when Timecard.date changes.
+                    accessManager.addWatcherField(pair, "sourceEndDate", fieldsToWatch);
 
-                    boolean inProgress = false;
+                    DateTime sourceEndDate = new DateTime(host.getSourceEndDate());
+                    if (isZeroHourOfDay(sourceEndDate)) {
 
-                    for (ScheduleEntry scheduleEntry : schedule.getScheduleEntries()) {
+                        TimecardEntry timecardEntry = null;
 
-                        scheduleEntry = syncAgentService.systemGetByObject(scheduleEntry);
-
-                        Date endTime = scheduleEntry.getSourceEndTime();
-                        if (sourceEndDate.getMillis() == endTime.getTime()) {
-                            inProgress = true;
-                            result = TimecardStatus.IN_PROGRESS.getValue();
+                        if (host.getTimecardEntries().size()> 0) {
+                            timecardEntry = syncAgentService.systemGetByObject(host.getTimecardEntries().get(0));
                         }
-                    }
-                    if (!inProgress) {
+
+                        if (timecardEntry!=null && "UA".equalsIgnoreCase(timecardEntry.getActionCode())) {
+                            result = TimecardStatus.NOT_STARTED.getValue();
+                        } else {
+                            result = TimecardStatus.NO_SHIFT.getValue();
+                        }
+
+                    } else {
                         result = TimecardStatus.COMPLETED.getValue();
                     }
                 }
-
             }
 
 
@@ -526,25 +515,5 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         return result;
     }
 
-
-    private Schedule getSchedule(Timecard host) {
-        Schedule schedule = null;
-
-        Agent agent = syncAgentService.systemGetByObject(host.getAgent());
-        Iterator<Schedule> itrSchedule = agent.getSchedules().iterator();
-
-        while (itrSchedule.hasNext()) {
-            schedule = syncAgentService.systemGetByObject(itrSchedule.next());
-
-            if (schedule.getStartDate().getDay() == host.getStartDate().getDay() &&
-                    schedule.getStartDate().getMonth() == host.getStartDate().getMonth() &&
-                    schedule.getStartDate().getYear() == host.getStartDate().getYear()) {
-
-                break;
-            }
-        }
-
-        return schedule;
-    }
 
 }
