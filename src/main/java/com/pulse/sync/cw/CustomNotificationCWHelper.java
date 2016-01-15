@@ -659,7 +659,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                          LOBConfiguration lobConfiguration) throws Exception {
 
 
-        if (!validActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+        TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+        if (!validActivityCodeList.contains(timecardActivity.getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
@@ -693,12 +695,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     invalidActivityCodeNotification.setTeamLeader(teamLeader);
                 }
 
+
+
                 invalidActivityCodeNotification.setCreatedOn(new Date());
 
-                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardActivity.getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
@@ -716,7 +720,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                              LOBConfiguration lobConfiguration) throws Exception {
 
 
-        if (!nonBillableActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+        TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+        if (!nonBillableActivityCodeList.contains(timecardActivity.getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
@@ -750,14 +756,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     nonBillableActivityNotification.setTeamLeader(teamLeader);
                 }
 
+
                 nonBillableActivityNotification.setCreatedOn(new Date());
 
-                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardActivity.getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
                 nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
@@ -813,13 +820,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     occurrenceToleranceNotification.setTeamLeader(teamLeader);
                 }
 
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
                 occurrenceToleranceNotification.setCreatedOn(new Date());
 
-                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + OCCURRENCE_MAX);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
@@ -873,13 +881,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
                 durationToleranceNotification.setCreatedOn(new Date());
 
-                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + DURATION_MAX);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
@@ -1105,14 +1114,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationMismatchNotification.setAgent(agent);
                     durationMismatchNotification.setTeamLeader(teamLeader);
                 }
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
                 durationMismatchNotification.setCreatedOn(new Date());
 
-                durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+                durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardActivity.getCode() + "-" + DURATION_MAX);
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
                 durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
@@ -1247,7 +1257,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         @Override
         public int compare(TimecardEntry entry1, TimecardEntry entry2) {
-            return entry1.getFromTime().compareTo(entry2.getFromTime());
+            return entry1.getSourceFromTime().compareTo(entry2.getSourceFromTime());
         }
     }
 
@@ -1267,9 +1277,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private List<TimecardEntry> getSortedTimecardEntries(List<TimecardEntry> entryList) {
         List<TimecardEntry> sortedList = new ArrayList<TimecardEntry>();
-
+        Collection<String> fieldsToWatch = new HashSet<String>();
         for (TimecardEntry timecardEntry : entryList) {
             timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+            //watch derived fields
+            accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "fromTime", fieldsToWatch);
+            accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "toTime", fieldsToWatch);
             sortedList.add(timecardEntry);
         }
 
@@ -1299,7 +1312,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
 
                         while (itrTimecardEntries.hasNext()) {
-                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+//                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+                            deleteTimecardEntries(itrTimecardEntries.next());
                         }
 
 
@@ -1316,6 +1330,16 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
+    private void deleteTimecardEntries(TimecardEntry timecardEntry){
+
+        try {
+            //Delete the object and communicate back to user that the object is deleted.
+            syncAgentService.systemDeleteObject(timecardEntry, null, true);
+        } catch (Exception e) {
+            log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID() ,e);
+        }
+
+    }
     private void insertRecToUpdateTable(String timecardEntryId) {
 //        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
