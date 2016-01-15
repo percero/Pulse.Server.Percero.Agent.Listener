@@ -370,8 +370,7 @@ Notes:
     @com.percero.agents.sync.metadata.annotations.Externalize
     @JsonSerialize(contentUsing = BDOSerializer.class)
     @JsonDeserialize(contentUsing = BDODeserializer.class)
-//    @OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationNotification.class, mappedBy = "timecardEntry", cascade = javax.persistence.CascadeType.REMOVE)
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationNotification.class, mappedBy = "timecardEntry")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = LOBConfigurationNotification.class, mappedBy = "timecardEntry", cascade = javax.persistence.CascadeType.REMOVE)
     private List<LOBConfigurationNotification> notifications;
 
     public List<LOBConfigurationNotification> getNotifications() {
