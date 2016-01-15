@@ -8,10 +8,21 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 
-import com.percero.agents.sync.vo.BaseDataObject;
+import com.percero.agents.sync.access.RedisKeyUtils;
+import com.percero.agents.sync.datastore.ICacheDataStore;
+import com.percero.agents.sync.helpers.PostDeleteHelper;
+import com.percero.agents.sync.helpers.PostPutHelper;
+import com.percero.agents.sync.metadata.IMappedClassManager;
+import com.percero.agents.sync.metadata.MappedClass;
+import com.percero.agents.sync.metadata.MappedClassManagerFactory;
+import com.percero.agents.sync.metadata.MappedField;
+import com.percero.agents.sync.services.IDataProvider;
+import com.percero.agents.sync.services.IDataProviderManager;
+import com.percero.agents.sync.vo.*;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
 import com.pulse.mo.*;
@@ -24,7 +35,6 @@ import org.springframework.stereotype.Component;
 import com.percero.agents.sync.cw.ChangeWatcherHelper;
 import com.percero.agents.sync.cw.ChangeWatcherHelperFactory;
 import com.percero.agents.sync.services.ISyncAgentService;
-import com.percero.agents.sync.vo.ClassIDPair;
 import com.percero.framework.vo.IPerceroObject;
 
 // This should get picked up by Spring and be auto-wired.
@@ -63,6 +73,21 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     @Autowired
     protected ISyncAgentService syncAgentService;
+
+    @Autowired
+    ICacheDataStore cacheDataStore;
+
+    @Autowired
+    Long cacheTimeout = Long.valueOf(60 * 60 * 24 * 14);	// Two weeks
+
+    @Autowired
+    IDataProviderManager dataProviderManager;
+
+    @Autowired
+    PostDeleteHelper postDeleteHelper;
+
+    @Autowired
+    PostPutHelper postPutHelper;
 
     public void setSyncAgentService(ISyncAgentService value) {
         syncAgentService = value;
@@ -438,13 +463,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     //This is a special case where TimecardEntry is deleted but watched by Watcher since there is change in the Entry/Object.
                     //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
                     //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-                    TimecardEntry criteriaTimecardEntry = new TimecardEntry();
-                    criteriaTimecardEntry.setID(classId);
 
-                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                    searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
-
-                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+                    //This code moved to delete Timecard Entry logic
+//                    TimecardEntry criteriaTimecardEntry = new TimecardEntry();
+//                    criteriaTimecardEntry.setID(classId);
+//
+//                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+//                    searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
+//
+//                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                 }
 
             }
@@ -1313,7 +1340,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         while (itrTimecardEntries.hasNext()) {
 //                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
-                            deleteTimecardEntries(itrTimecardEntries.next());
+                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
+                            if (deleteTimecardEntry(timecardEntry)){
+
+                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+
+                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+                            }
                         }
 
 
@@ -1330,64 +1364,60 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-    private void deleteTimecardEntries(TimecardEntry timecardEntry){
+    private boolean deleteTimecardEntry(TimecardEntry timecardEntry){
 
         try {
             //Delete the object and communicate back to user that the object is deleted.
-            syncAgentService.systemDeleteObject(timecardEntry, null, true);
+//            syncAgentService.systemDeleteObject(timecardEntry, null, true);
+            return systemDeleteObject(timecardEntry, null, true);
         } catch (Exception e) {
             log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID() ,e);
+            return false;
         }
 
+
     }
-    private void insertRecToUpdateTable(String timecardEntryId) {
-//        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
-
-        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
-
-        int updateTableId = 1; // default value
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
-            conn = connectionFactory.getConnection();
-//            pstmt = conn.prepareStatement(selectQueryString);
-//            ResultSet rs = pstmt.executeQuery();
+//    private void insertRecToUpdateTable(String timecardEntryId) {
+////        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 //
-//            if (rs.next()){
-//                updateTableId = rs.getInt("ID");
+//        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
+//
+//        int updateTableId = 1; // default value
+//
+//        Connection conn = null;
+//        PreparedStatement pstmt = null;
+//        try {
+//            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+//            conn = connectionFactory.getConnection();
+//
+//
+//            //Insert record
+//            pstmt = conn.prepareStatement(insertQueryString);
+//            pstmt.setQueryTimeout(QUERY_TIMEOUT);
+//            pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
+//            pstmt.setString(2, timecardEntryId);
+//            pstmt.setString(3, "DELETE");
+//            // pstmt.setDate(4, (java.sql.Date) new Date());
+////            pstmt.setInt(4, ++updateTableId);
+//            pstmt.execute();
+//
+//
+//        } catch (Exception e) {
+//            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
+//
+//        } finally {
+//            try {
+//                if (pstmt != null) {
+//                    pstmt.close();
+//                }
+//                if (conn != null) {
+//                    conn.close();
+//                }
+//            } catch (Exception e) {
+//                log.error("Error closing database statement/connection", e);
 //            }
-//
-//            pstmt.close();
-
-            //Insert record
-            pstmt = conn.prepareStatement(insertQueryString);
-            pstmt.setQueryTimeout(QUERY_TIMEOUT);
-            pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
-            pstmt.setString(2, timecardEntryId);
-            pstmt.setString(3, "DELETE");
-            // pstmt.setDate(4, (java.sql.Date) new Date());
-//            pstmt.setInt(4, ++updateTableId);
-            pstmt.execute();
-
-
-        } catch (Exception e) {
-            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
-
-        } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                log.error("Error closing database statement/connection", e);
-            }
-        }
-    }
+//        }
+//    }
 
 //    private Date getCreatedOnInAgentTimezone(Agent agent){
 //        String timeZone = agent.getTimeZone();
@@ -1420,6 +1450,254 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             connectionRegistry = PulseDataConnectionRegistry.getInstance();
         }
         return connectionRegistry;
+    }
+
+    private boolean systemDeleteObject(IPerceroObject perceroObject, String clientId, boolean pushToUser) throws Exception {
+        boolean result = true;
+        if(perceroObject == null)
+            return true;
+
+        String userId = accessManager.getClientUserId(clientId);
+        IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+        MappedClass mappedClass = mcm.getMappedClassByClassName(perceroObject.getClass().getName());
+        if (mappedClass != null) {
+            IDataProvider dataProvider = dataProviderManager.getDataProviderByName(mappedClass.dataProviderName);
+
+            perceroObject = (IPerceroObject) dataProvider.findById(new ClassIDPair(perceroObject.getID(), perceroObject.getClass().getCanonicalName()), null);
+
+            if (perceroObject == null) {
+                return true;
+            }
+
+            Iterator<Map.Entry<MappedField, MappedField>> itrCascadeRemoveFieldReferencesEntrySet = mappedClass.cascadeRemoveFieldReferences.entrySet().iterator();
+            while (itrCascadeRemoveFieldReferencesEntrySet.hasNext()) {
+                Map.Entry<MappedField, MappedField> nextEntry = itrCascadeRemoveFieldReferencesEntrySet.next();
+                MappedField nextRemoveMappedFieldRef = nextEntry.getKey();
+                try {
+                    MappedField nextMappedField = nextEntry.getValue();
+                    if (nextMappedField == null) {
+                        // There is no direct link from mappedClass, so need to get all by example.
+                        IPerceroObject tempObject = (IPerceroObject) nextRemoveMappedFieldRef.getMappedClass().clazz.newInstance();
+                        nextRemoveMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextRemoveMappedFieldRef.getMappedClass().dataProviderName);
+                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+                        while (itrReferencingObjects.hasNext()) {
+                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+                            systemDeleteObject(nextReferencingObject, clientId, true);
+                        }
+                    }
+                    else {
+                        // We have the reverse lookup right here.
+                        IPerceroObject tempObject = (IPerceroObject) nextRemoveMappedFieldRef.getMappedClass().clazz.newInstance();
+                        nextRemoveMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextRemoveMappedFieldRef.getMappedClass().dataProviderName);
+                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+                        while (itrReferencingObjects.hasNext()) {
+                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+                            systemDeleteObject(nextReferencingObject, clientId, true);
+                        }
+                    }
+                } catch(Exception e) {
+                    log.error("Unable to remove referenced object", e);
+                    result = false;
+                }
+            }
+
+            Object[] nullObject = new Object[1];
+            nullObject[0] = null;
+            Iterator<Map.Entry<MappedField, MappedField>> itrNulledOnRemoveFieldReferencesEntrySet = mappedClass.nulledOnRemoveFieldReferences.entrySet().iterator();
+            while (itrNulledOnRemoveFieldReferencesEntrySet.hasNext()) {
+                Map.Entry<MappedField, MappedField> nextEntry = itrNulledOnRemoveFieldReferencesEntrySet.next();
+                MappedField nextToNullMappedFieldRef = nextEntry.getKey();
+                try {
+                    MappedField nextMappedField = nextEntry.getValue();
+                    if (nextMappedField == null) {
+                        // There is no direct link from mappedClass, so need to get all by example.
+                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
+                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
+                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+                        while (itrReferencingObjects.hasNext()) {
+                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
+                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
+                        }
+                    }
+                    else {
+                        // We have the reverse lookup right here.
+                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
+                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
+                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+                        while (itrReferencingObjects.hasNext()) {
+                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
+                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
+                        }
+                    }
+                } catch(Exception e) {
+                    log.error("Unable to remove referenced object", e);
+                    result = false;
+                }
+            }
+
+            Map<ClassIDPair, MappedField> objectsToUpdate = mappedClass.getRelatedClassIdPairMappedFieldMap(perceroObject, false);
+
+            ArrayList objectsToDelete = new ArrayList();
+            objectsToDelete.add(BaseDataObject.toClassIdPair(perceroObject));
+
+            // If the result has been set to false, it means that deletion/update of one of the related objects failed.
+//            if (result && dataProvider.deleteObject(BaseDataObject.toClassIdPair(perceroObject), null)) {
+            if(result && deleteObjectsFromRedisCache(objectsToDelete)){
+                // Also store historical record, if necessary.
+
+                postDeleteHelper.postDeleteObject(perceroObject, userId, clientId, pushToUser);
+
+                Iterator<Entry<ClassIDPair, MappedField>> itrObjectsToUpdate = objectsToUpdate.entrySet().iterator();
+                while (itrObjectsToUpdate.hasNext()) {
+                    Entry<ClassIDPair, MappedField> nextObjectToUpdate = itrObjectsToUpdate.next();
+                    Map<ClassIDPair, Collection<MappedField>> changedFields = new HashMap<ClassIDPair, Collection<MappedField>>();
+                    Collection<MappedField> changedMappedFields = new ArrayList<MappedField>(1);
+                    changedMappedFields.add(nextObjectToUpdate.getValue());
+                    changedFields.put(nextObjectToUpdate.getKey(), changedMappedFields);
+                    postPutHelper.postPutObject(nextObjectToUpdate.getKey(), userId, clientId, true, changedFields);
+                }
+
+                result = true;
+            }
+            else {
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean systemPutObject(IPerceroObject perceroObject, String transactionId, Date updateDate, String userId, boolean pushToUser) {
+        // Get the MappedClass and determine which DataProvider provides data for this object.
+        IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+        MappedClass mappedClass = mcm.getMappedClassByClassName(perceroObject.getClass().getName());
+        IPerceroObject result = null;
+        Map<ClassIDPair, Collection<MappedField>> changedFields = null;
+
+        // Check to see if object has a history.
+        ObjectModJournal objectModJournal = null;
+        try {
+            // Get the most recent ObjectModJournal.
+            try {
+                objectModJournal = (ObjectModJournal) cacheDataStore.listIndex(RedisKeyUtils.objectModJournal(perceroObject.getClass().getName(), perceroObject.getID()));
+            } catch(Exception e) {
+                log.warn("Unable to retrieve most recent objectModJournal", e);
+            }
+
+            boolean isOkToUpdate = true;
+
+            Date currentDate = new Date();
+            if (updateDate != null && updateDate.getTime() > currentDate.getTime()) {
+                updateDate.setTime(currentDate.getTime());
+            }
+
+            // Compare Modification dates.
+            if (objectModJournal != null && objectModJournal.getDateModified() != null && updateDate != null) {
+                if (objectModJournal.getDateModified().compareTo(updateDate) >= 0) {
+                    // The ObjectModJournal is newer, therefore reject this update.
+                    isOkToUpdate = false;
+                }
+            }
+
+            if (updateDate == null)
+                updateDate = new Date();
+
+            if (isOkToUpdate) {
+                IDataProvider dataProvider = dataProviderManager.getDataProviderByName(mappedClass.dataProviderName);
+                changedFields = dataProvider.getChangedMappedFields(perceroObject);
+                if (changedFields == null || changedFields.size() > 0) {
+                    result = dataProvider.putObject(perceroObject, changedFields, null);
+
+                    if (result != null) {
+                        // Now record the updated object.
+                        ObjectModJournal newModJournal = new ObjectModJournal();
+                        newModJournal.setID(UUID.randomUUID().toString());
+                        if (transactionId == null || transactionId.length() == 0)
+                            transactionId = UUID.randomUUID().toString();
+                        newModJournal.setTransactionId(transactionId);
+                        newModJournal.setClassID(result.getID());
+                        newModJournal.setClassName(result.getClass().getName());
+                        newModJournal.setDateModified(updateDate);
+
+                        cacheDataStore.lpushListValue(RedisKeyUtils.objectModJournal(result.getClass().getCanonicalName(), result.getID()), newModJournal);
+
+                        // Also store historical record, if necessary.
+                        // Get the Current object if this is a BaseHistoryObject.
+//                        if (storeHistory && (result instanceof IHistoryObject))
+//                        {
+//                            HistoricalObject historyObject = new HistoricalObject();
+//                            historyObject.setObjectVersion(result.classVersion());
+//                            historyObject.setID(UUID.randomUUID().toString());
+//                            historyObject.setObjectChangeDate(updateDate);
+//                            historyObject.setObjectClassName(result.getClass().getName());
+//                            historyObject.setObjectId(result.getID());
+//                            historyObject.setObjectChangerId(userId);
+//                            historyObject.setObjectData(safeObjectMapper.writeValueAsString(result));
+//
+//                            cacheDataStore.lpushListValue(RedisKeyUtils.historicalObject(result.getClass().getCanonicalName(), result.getID()), historyObject);
+//
+//                            //syncSession.save(historyObject);
+//                        }
+
+//                        if (taskExecutor != null && false) {
+//                            taskExecutor.execute(new PostPutTask(postPutHelper, BaseDataObject.toClassIdPair((BaseDataObject) result), userId, null, pushToUser, changedFields));
+//                        } else {
+                            postPutHelper.postPutObject(BaseDataObject.toClassIdPair((BaseDataObject) result), userId, null, pushToUser, changedFields);
+//                        }
+                    }
+                }
+                else {
+                    log.info("Unnecessary PutObject: " + perceroObject.getClass().getCanonicalName() + " (" + perceroObject.getID() + ")");
+                    result = perceroObject;
+                }
+            }
+
+        } catch(Exception e) {
+            log.error("Error getting ObjectModJournal", e);
+        }
+
+        return (result != null);
+    }
+
+
+    private boolean deleteObjectsFromRedisCache(List<ClassIDPair> results) {
+        if (cacheTimeout > 0) {
+            Set<String> objectStrings = new HashSet<String>(results.size());
+            Map<String, Set<String>> mapJsonClassIdStrings = new HashMap<String, Set<String>>();
+            Iterator<ClassIDPair> itrDatabaseObjects = results.iterator();
+            while (itrDatabaseObjects.hasNext()) {
+                ClassIDPair nextDatabaseObject = itrDatabaseObjects.next();
+                String nextCacheKey = RedisKeyUtils.classIdPair(nextDatabaseObject.getClassName(), nextDatabaseObject.getID());
+                objectStrings.add(nextCacheKey);
+
+                Set<String> classIdList = mapJsonClassIdStrings.get(RedisKeyUtils.classIds(nextDatabaseObject.getClassName()));
+                if (classIdList == null) {
+                    classIdList = new HashSet<String>();
+                    mapJsonClassIdStrings.put(RedisKeyUtils.classIds(nextDatabaseObject.getClassName()), classIdList);
+                }
+                classIdList.add(nextDatabaseObject.getID());
+            }
+
+            // Store the objects in redis.
+            cacheDataStore.deleteKeys(objectStrings);
+            // Store the class Id's list in redis.
+            cacheDataStore.removeSetsValues(mapJsonClassIdStrings);
+        }
+        return true;
     }
 
 }
