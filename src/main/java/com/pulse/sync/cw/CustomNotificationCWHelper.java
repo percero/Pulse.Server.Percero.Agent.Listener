@@ -26,6 +26,7 @@ import com.percero.agents.sync.vo.*;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
 import com.pulse.mo.*;
+import com.pulse.mo.dao.LOBConfigurationNotificationDAO;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -78,7 +79,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     ICacheDataStore cacheDataStore;
 
     @Autowired
-    Long cacheTimeout = Long.valueOf(60 * 60 * 24 * 14);	// Two weeks
+    Long cacheTimeout = Long.valueOf(60 * 60 * 24 * 14);    // Two weeks
 
     @Autowired
     IDataProviderManager dataProviderManager;
@@ -723,7 +724,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-
                 invalidActivityCodeNotification.setCreatedOn(new Date());
 
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardActivity.getCode());
@@ -1096,6 +1096,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         log.debug("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
     }
 
+    private void deleteTimecardEntryOrphanedNotifications(LOBConfigurationNotification lOBNotification) throws Exception {
+        //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
+        //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
+        log.debug("********************************** TimecardEntry Orphaned Notification Clean Process [Starts] **********************************:");
+
+
+//        ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(lOBNotification);
+
+        LOBConfigurationNotification notification = (LOBConfigurationNotification) syncAgentService.systemGetByObject(lOBNotification);
+
+        if (notification != null) {
+
+            syncAgentService.systemDeleteObject(notification, null, true);
+            log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+        } else {
+            log.debug("No Notification found for ID: " + lOBNotification.getID());
+        }
+
+        log.debug("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+    }
+
     private void generatePhoneTimeVarianceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
@@ -1332,7 +1353,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
                 if (updatedObject != null && updatedObject instanceof Timecard && oldValue != null) {
-                    Timecard timecard = (Timecard) updatedObject;
+                    Timecard timecard = (Timecard) oldValue;
 
                     if (timecard != null) {
 
@@ -1341,12 +1362,17 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         while (itrTimecardEntries.hasNext()) {
 //                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
                             TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
-                            if (deleteTimecardEntry(timecardEntry)){
+                            if (timecardEntry!=null && deleteTimecardEntry(timecardEntry)) {
 
-                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+                                Iterator<LOBConfigurationNotification> itrLobConfigurationNotif = timecardEntry.getNotifications().iterator();
+                                while(itrLobConfigurationNotif.hasNext()) {
 
-                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+                                    deleteTimecardEntryOrphanedNotifications(itrLobConfigurationNotif.next());
+                                }
+//                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+//                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+//
+//                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                             }
                         }
 
@@ -1364,14 +1390,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-    private boolean deleteTimecardEntry(TimecardEntry timecardEntry){
+    private boolean deleteTimecardEntry(TimecardEntry timecardEntry) {
 
         try {
             //Delete the object and communicate back to user that the object is deleted.
 //            syncAgentService.systemDeleteObject(timecardEntry, null, true);
             return systemDeleteObject(timecardEntry, null, true);
         } catch (Exception e) {
-            log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID() ,e);
+            log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID(), e);
             return false;
         }
 
@@ -1454,7 +1480,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private boolean systemDeleteObject(IPerceroObject perceroObject, String clientId, boolean pushToUser) throws Exception {
         boolean result = true;
-        if(perceroObject == null)
+        if (perceroObject == null)
             return true;
 
         String userId = accessManager.getClientUserId(clientId);
@@ -1487,8 +1513,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             IPerceroObject nextReferencingObject = itrReferencingObjects.next();
                             systemDeleteObject(nextReferencingObject, clientId, true);
                         }
-                    }
-                    else {
+                    } else {
                         // We have the reverse lookup right here.
                         IPerceroObject tempObject = (IPerceroObject) nextRemoveMappedFieldRef.getMappedClass().clazz.newInstance();
                         nextRemoveMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
@@ -1501,53 +1526,52 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             systemDeleteObject(nextReferencingObject, clientId, true);
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     log.error("Unable to remove referenced object", e);
                     result = false;
                 }
             }
 
-            Object[] nullObject = new Object[1];
-            nullObject[0] = null;
-            Iterator<Map.Entry<MappedField, MappedField>> itrNulledOnRemoveFieldReferencesEntrySet = mappedClass.nulledOnRemoveFieldReferences.entrySet().iterator();
-            while (itrNulledOnRemoveFieldReferencesEntrySet.hasNext()) {
-                Map.Entry<MappedField, MappedField> nextEntry = itrNulledOnRemoveFieldReferencesEntrySet.next();
-                MappedField nextToNullMappedFieldRef = nextEntry.getKey();
-                try {
-                    MappedField nextMappedField = nextEntry.getValue();
-                    if (nextMappedField == null) {
-                        // There is no direct link from mappedClass, so need to get all by example.
-                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
-                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
-                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
-                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
-                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
-                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
-                        while (itrReferencingObjects.hasNext()) {
-                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
-                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
-                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
-                        }
-                    }
-                    else {
-                        // We have the reverse lookup right here.
-                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
-                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
-                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
-                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
-                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
-                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
-                        while (itrReferencingObjects.hasNext()) {
-                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
-                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
-                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
-                        }
-                    }
-                } catch(Exception e) {
-                    log.error("Unable to remove referenced object", e);
-                    result = false;
-                }
-            }
+//            Object[] nullObject = new Object[1];
+//            nullObject[0] = null;
+//            Iterator<Map.Entry<MappedField, MappedField>> itrNulledOnRemoveFieldReferencesEntrySet = mappedClass.nulledOnRemoveFieldReferences.entrySet().iterator();
+//            while (itrNulledOnRemoveFieldReferencesEntrySet.hasNext()) {
+//                Map.Entry<MappedField, MappedField> nextEntry = itrNulledOnRemoveFieldReferencesEntrySet.next();
+//                MappedField nextToNullMappedFieldRef = nextEntry.getKey();
+//                try {
+//                    MappedField nextMappedField = nextEntry.getValue();
+//                    if (nextMappedField == null) {
+//                        // There is no direct link from mappedClass, so need to get all by example.
+//                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
+//                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+//                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
+//                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+//                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+//                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+//                        while (itrReferencingObjects.hasNext()) {
+//                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+//                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
+//                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
+//                        }
+//                    } else {
+//                        // We have the reverse lookup right here.
+//                        IPerceroObject tempObject = (IPerceroObject) nextToNullMappedFieldRef.getMappedClass().clazz.newInstance();
+//                        nextToNullMappedFieldRef.getSetter().invoke(tempObject, perceroObject);
+//                        IDataProvider dataProviderRef = dataProviderManager.getDataProviderByName(nextToNullMappedFieldRef.getMappedClass().dataProviderName);
+//                        List<IPerceroObject> referencingObjectsNew = dataProviderRef.findAllRelatedObjects(perceroObject, nextMappedField, false, null);
+//                        List<IPerceroObject> referencingObjects = dataProviderRef.findByExample(tempObject, null, null, false);
+//                        Iterator<IPerceroObject> itrReferencingObjects = referencingObjects.iterator();
+//                        while (itrReferencingObjects.hasNext()) {
+//                            IPerceroObject nextReferencingObject = itrReferencingObjects.next();
+//                            nextToNullMappedFieldRef.getSetter().invoke(nextReferencingObject, nullObject);
+//                            systemPutObject((IPerceroObject) nextReferencingObject, null, new Date(), userId, true);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    log.error("Unable to remove referenced object", e);
+//                    result = false;
+//                }
+//            }
 
             Map<ClassIDPair, MappedField> objectsToUpdate = mappedClass.getRelatedClassIdPairMappedFieldMap(perceroObject, false);
 
@@ -1556,7 +1580,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             // If the result has been set to false, it means that deletion/update of one of the related objects failed.
 //            if (result && dataProvider.deleteObject(BaseDataObject.toClassIdPair(perceroObject), null)) {
-            if(result && deleteObjectsFromRedisCache(objectsToDelete)){
+            if (result && deleteObjectsFromRedisCache(objectsToDelete)) {
                 // Also store historical record, if necessary.
 
                 postDeleteHelper.postDeleteObject(perceroObject, userId, clientId, pushToUser);
@@ -1572,8 +1596,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 result = true;
-            }
-            else {
+            } else {
                 result = false;
             }
         }
@@ -1594,7 +1617,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             // Get the most recent ObjectModJournal.
             try {
                 objectModJournal = (ObjectModJournal) cacheDataStore.listIndex(RedisKeyUtils.objectModJournal(perceroObject.getClass().getName(), perceroObject.getID()));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 log.warn("Unable to retrieve most recent objectModJournal", e);
             }
 
@@ -1656,17 +1679,16 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                        if (taskExecutor != null && false) {
 //                            taskExecutor.execute(new PostPutTask(postPutHelper, BaseDataObject.toClassIdPair((BaseDataObject) result), userId, null, pushToUser, changedFields));
 //                        } else {
-                            postPutHelper.postPutObject(BaseDataObject.toClassIdPair((BaseDataObject) result), userId, null, pushToUser, changedFields);
+                        postPutHelper.postPutObject(BaseDataObject.toClassIdPair((BaseDataObject) result), userId, null, pushToUser, changedFields);
 //                        }
                     }
-                }
-                else {
+                } else {
                     log.info("Unnecessary PutObject: " + perceroObject.getClass().getCanonicalName() + " (" + perceroObject.getID() + ")");
                     result = perceroObject;
                 }
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Error getting ObjectModJournal", e);
         }
 
