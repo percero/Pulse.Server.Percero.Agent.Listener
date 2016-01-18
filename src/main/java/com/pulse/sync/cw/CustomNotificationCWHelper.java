@@ -749,7 +749,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-        if (!nonBillableActivityCodeList.contains(timecardActivity.getCode())) {
+        if (nonBillableActivityCodeList.contains(timecardActivity.getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
