@@ -1248,15 +1248,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                duration += cMSEntry.getDuration();
 //            }
 //        }
+        if (agentCMSEntries.size() > 0) {
 
-
-        for (int index = firstClosestCMSEntryIndex; index <= lastClosestCMSEntryIndex; index++) {
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
-            if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
-                duration += cMSEntry.getDuration();
+            for (int index = firstClosestCMSEntryIndex; index <= lastClosestCMSEntryIndex; index++) {
+                CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+                if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
+                    duration += cMSEntry.getDuration();
+                }
             }
         }
-
         return duration;
     }
 
