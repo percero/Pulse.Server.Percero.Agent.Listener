@@ -274,7 +274,7 @@ objectJson += ",\"lOBConfiguration\":";
 		// Target Relationships
 
 		listSetters.add(MappedClass.getFieldSetters(CMSEntry.class, "lOBConfigurationNotification"));
-		listSetters.add(MappedClass.getFieldSetters(Timecard.class, "lOBConfigurationNotification"));
+		listSetters.add(MappedClass.getFieldSetters(TimecardEntry.class, "lOBConfigurationNotification"));
 
 		return listSetters;
 	}

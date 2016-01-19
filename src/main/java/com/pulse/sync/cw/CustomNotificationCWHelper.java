@@ -702,6 +702,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 InvalidActivityCodeNotification invalidActivityCodeNotification = null;
 
                 boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -762,6 +763,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 NonBillableActivityNotification nonBillableActivityNotification = null;
 
                 boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -825,6 +827,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 OccurrenceToleranceNotification occurrenceToleranceNotification = null;
 
                 boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
                 while (itrNotifications.hasNext()) {
@@ -887,6 +890,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
                 DurationToleranceNotification durationToleranceNotification = null;
                 boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -916,9 +920,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), totalDuration));
+                durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setIsRead(false);
                 if (isExistingNotif) {
                     syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
@@ -1141,6 +1145,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 DurationMismatchNotification durationMismatchNotification = null;
 
                 boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
                 while (itrNotifications.hasNext()) {
