@@ -139,7 +139,7 @@ public class DevelopmentActivityDAO extends SqlDataAccessObject<DevelopmentActiv
 
 	@Override
 	protected String getUpdateSet() {
-		return "UPDATE \"EFC_TASK\" SET \"CREATED_BY\"=?,\"TYPE\"=?,\"UPDATED_BY\"=?,\"WEEK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"DUE_DATE\"=?,\"UPDATED_ON\"=sysdate,\"NAME\"=?,\"PLAN_ID\"=?,\"STATUS\"=?,\"TEAM_LEADER_ID\"=?,\"AGENT_ID\"=?,\"DEVELOPMENT_PLAN_ID\"=? WHERE \"ID\"=?";
+		return "UPDATE EFC_TASK SET \"UPDATED_BY\"=?,\"CREATED_BY\"=?,\"TASK_DESC\"=?,\"DUE_DATE\"=?,\"WK_DATE\"=?,\"COMPLETED_ON\"=?,\"CREATED_ON\"=?,\"UPDATED_ON\"=sysdate,\"PLAN_ID\"=?,\"TYPE\"=?,\"STATUS\"=?,\"ASSIGNED_TO\"=?  WHERE \"TASK_ID\"=?";
 	}
 	
 	@Override
@@ -282,49 +282,37 @@ nextResult.setDevelopmentPlan(developmentplan);
 	
 	@Override
 	protected void setPreparedStatmentUpdateParams(DevelopmentActivity perceroObject, PreparedStatement pstmt) throws SQLException {
-		
-		pstmt.setString(1, perceroObject.getCreatedBy());
-pstmt.setString(2, perceroObject.getType());
-pstmt.setString(3, perceroObject.getUpdatedBy());
-pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate()));
-pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));
-pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));
-pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));
 
-pstmt.setString(8, perceroObject.getName());
-pstmt.setString(9, perceroObject.getPlanId());
-pstmt.setString(10, perceroObject.getStatus());
+		pstmt.setString(1, perceroObject.getUpdatedBy()); //UPDATED_BY
+		pstmt.setString(2, perceroObject.getCreatedBy()); //CREATED_BY
+		pstmt.setString(3, perceroObject.getName());		//TASK_DESC
+		pstmt.setDate(4, DateUtils.utilDateToSqlDate(perceroObject.getDueDate()));  //DUE_DATE
+		pstmt.setDate(5, DateUtils.utilDateToSqlDate(perceroObject.getWeekDate())); //WK_DATE
+		pstmt.setDate(6, DateUtils.utilDateToSqlDate(perceroObject.getCompletedOn()));  //COMPLETED_ON
+		pstmt.setDate(7, DateUtils.utilDateToSqlDate(perceroObject.getCreatedOn()));  //CREATED_ON
 
-if (perceroObject.getTeamLeader() == null)
-{
-pstmt.setString(11, null);
-}
-else
-{
-		pstmt.setString(11, perceroObject.getTeamLeader().getID());
-}
+		if (perceroObject.getDevelopmentPlan() == null) //PLAN_ID
+		{
+			pstmt.setString(8, null);
+		}
+		else
+		{
+			pstmt.setString(8, perceroObject.getDevelopmentPlan().getID());
+		}
 
+		pstmt.setString(9, perceroObject.getType());     // TYPE
+		pstmt.setString(10, perceroObject.getStatus());  //STATUS
 
-if (perceroObject.getAgent() == null)
-{
-pstmt.setString(12, null);
-}
-else
-{
-		pstmt.setString(12, perceroObject.getAgent().getID());
-}
+		if (perceroObject.getAgent() == null) //ASSIGNED_TO
+		{
+			pstmt.setString(11, null);
+		}
+		else
+		{
+			pstmt.setString(11, perceroObject.getAgent().getID());
+		}
 
-
-if (perceroObject.getDevelopmentPlan() == null)
-{
-pstmt.setString(13, null);
-}
-else
-{
-		pstmt.setString(13, perceroObject.getDevelopmentPlan().getID());
-}
-
-pstmt.setString(14, perceroObject.getID());
+		pstmt.setString(12, perceroObject.getID());  //TASK_ID
 
 		
 	}
