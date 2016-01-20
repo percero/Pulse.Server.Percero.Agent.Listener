@@ -531,6 +531,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
                 WorkDurationNotification workDurationNotification = null;
                 boolean isExistingNotif = false;
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -606,8 +607,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
 
                 WorkModeOccurrenceNotification workModeOccurrenceNotification = null;
-
+                Collection<String> fieldsToWatch = new HashSet<String>();
                 boolean isExistingNotif = false;
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -629,7 +631,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     workModeOccurrenceNotification.setTeamLeader(teamLeader);
                 }
 
-                Collection<String> fieldsToWatch = new HashSet<String>();
+
                 ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
                 accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
                 //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
