@@ -705,6 +705,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -766,6 +768,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -828,8 +832,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
                 OccurrenceToleranceNotification occurrenceToleranceNotification = null;
 
+
                 boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
                 while (itrNotifications.hasNext()) {
@@ -893,6 +900,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 DurationToleranceNotification durationToleranceNotification = null;
                 boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -1148,6 +1157,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                Collection<String> fieldsToWatch = new HashSet<String>();
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
                 while (itrNotifications.hasNext()) {
