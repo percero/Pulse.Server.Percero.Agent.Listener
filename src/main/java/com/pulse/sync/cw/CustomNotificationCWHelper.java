@@ -370,7 +370,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                         List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
 
-                                        if (lobConfigurationList != null & lobConfigurationList.size() > 0) {
+                                        if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
 
                                             //Preloading objects inorder do code duplication in subsequent calls.
                                             //Not passing them due to avoid long signatures. This will not make performance impact because rest
@@ -703,22 +703,24 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
                 InvalidActivityCodeNotification invalidActivityCodeNotification = null;
 
-                boolean isExistingNotif = false;
+//                boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("InvalidActivityCodeNotification".equals(notification.getType())) {
-                        invalidActivityCodeNotification = (InvalidActivityCodeNotification) notification;
-//                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
-//                        invalidActivityCodeNotification.setID(notification.getID());
-//                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
-//                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("InvalidActivityCodeNotification".equals(notification.getType())) {
+//                        invalidActivityCodeNotification = (InvalidActivityCodeNotification) notification;
+////                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
+////                        invalidActivityCodeNotification.setID(notification.getID());
+////                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
+////                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (invalidActivityCodeNotification == null) {
@@ -739,11 +741,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
                 invalidActivityCodeNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
-                } else {
+
+//                if (isExistingNotif) {
+//                    //Update notification
+//                    syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
+//                } else {
+//                  //Create notification
                     syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
-                }
+//                }
             }
         }
     }
@@ -766,22 +771,24 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             if (agent != null && teamLeader != null) {
                 NonBillableActivityNotification nonBillableActivityNotification = null;
 
-                boolean isExistingNotif = false;
+//                boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("NonBillableActivityNotification".equals(notification.getType())) {
-                        nonBillableActivityNotification = (NonBillableActivityNotification) notification;
-//                        nonBillableActivityNotification = new NonBillableActivityNotification();
-//                        nonBillableActivityNotification.setID(notification.getID());
-//                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
-//                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("NonBillableActivityNotification".equals(notification.getType())) {
+//                        nonBillableActivityNotification = (NonBillableActivityNotification) notification;
+////                        nonBillableActivityNotification = new NonBillableActivityNotification();
+////                        nonBillableActivityNotification.setID(notification.getID());
+////                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
+////                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (nonBillableActivityNotification == null) {
@@ -804,11 +811,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
                 nonBillableActivityNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
-                } else {
+
+//                if (isExistingNotif) {
+//                   //update notification
+//                    syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
+//                } else {
+//                  //create notification
                     syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
-                }
+//                }
             }
         }
     }
@@ -833,23 +843,25 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 OccurrenceToleranceNotification occurrenceToleranceNotification = null;
 
 
-                boolean isExistingNotif = false;
+//                boolean isExistingNotif = false;
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("OccurrenceToleranceNotification".equals(notification.getType())) {
-                        occurrenceToleranceNotification = (OccurrenceToleranceNotification) notification;
-//                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-//                        occurrenceToleranceNotification.setID(notification.getID());
-//                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
-//                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("OccurrenceToleranceNotification".equals(notification.getType())) {
+//                        occurrenceToleranceNotification = (OccurrenceToleranceNotification) notification;
+////                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+////                        occurrenceToleranceNotification.setID(notification.getID());
+////                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
+////                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (occurrenceToleranceNotification == null) {
@@ -871,11 +883,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
                 occurrenceToleranceNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
-                } else {
+//                if (isExistingNotif) {
+//                    Notification already exists hence call update
+//                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
+//                } else {
+//                      Create notification
                     syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
-                }
+//                }
             }
         }
     }
@@ -898,22 +912,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (agent != null && teamLeader != null) {
                 DurationToleranceNotification durationToleranceNotification = null;
-                boolean isExistingNotif = false;
+
+//                boolean isExistingNotif = false;
+
                 timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("DurationToleranceNotification".equals(notification.getType())) {
-                        durationToleranceNotification = (DurationToleranceNotification) notification;
-//                        durationToleranceNotification = new DurationToleranceNotification();
-//                        durationToleranceNotification.setID(notification.getID());
-//                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
-//                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("DurationToleranceNotification".equals(notification.getType())) {
+//                        durationToleranceNotification = (DurationToleranceNotification) notification;
+////                        durationToleranceNotification = new DurationToleranceNotification();
+////                        durationToleranceNotification.setID(notification.getID());
+////                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
+////                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (durationToleranceNotification == null) {
@@ -935,11 +954,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
-                } else {
+//                if (isExistingNotif) {
+//                 // update notification
+//                    syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
+//                } else {
+//                 // create notification
                     syncAgentService.systemCreateObject(durationToleranceNotification, null);
-                }
+//                }
             }
         }
     }
@@ -1155,23 +1176,26 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                 DurationMismatchNotification durationMismatchNotification = null;
 
-                boolean isExistingNotif = false;
-                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                boolean isExistingNotif = false;
 
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("DurationMismatchNotification".equals(notification.getType())) {
-                        durationMismatchNotification = (DurationMismatchNotification) notification;
-//                        durationMismatchNotification = new DurationMismatchNotification();
-//                        durationMismatchNotification.setID(notification.getID());
-//                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
-//                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("DurationMismatchNotification".equals(notification.getType())) {
+//                        durationMismatchNotification = (DurationMismatchNotification) notification;
+////                        durationMismatchNotification = new DurationMismatchNotification();
+////                        durationMismatchNotification.setID(notification.getID());
+////                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
+////                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (durationMismatchNotification == null) {
@@ -1193,11 +1217,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
                 durationMismatchNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
-                } else {
+//                if (isExistingNotif) {
+//                    //Update Notification
+//                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
+//                } else {
+//                   //Create Notification
                     syncAgentService.systemCreateObject(durationMismatchNotification, null);
-                }
+//                }
             }
         }
     }

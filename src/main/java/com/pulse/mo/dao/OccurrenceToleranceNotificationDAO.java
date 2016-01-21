@@ -256,7 +256,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
             pstmt.setString(10, perceroObject.getTimecardEntry().getID());
         }
         pstmt.setBoolean(11, perceroObject.getIsRead());
-        pstmt.setString(12, perceroObject.getTimecardEntry().getID());
+
     }
 
     @Override
@@ -478,7 +478,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_OCCUR_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_OCCUR_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
