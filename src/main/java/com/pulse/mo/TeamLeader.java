@@ -199,6 +199,35 @@ public class TeamLeader extends _Super_TeamLeader
 		return results;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<CMSEntry> getFindCMSEntriesForDate(String theDate) {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+		
+		String[] params = new String[1];
+		params[0] = theDate;
+		
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+		
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.FIND_CMS_ENTRIES_FOR_DATE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()), params);
+		
+		List<CMSEntry> results = new ArrayList<CMSEntry>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+			
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+				
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (CMSEntry) dataProvider.findById(nextResult, null) );
+			}
+		}
+		
+		return results;
+	}
+	
 
 }
 
