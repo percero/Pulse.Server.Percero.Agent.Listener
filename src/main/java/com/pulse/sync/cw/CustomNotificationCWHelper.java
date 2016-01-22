@@ -378,12 +378,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                             Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
                                             TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                                            List<TimecardEntry> sortedTimecartEntries = getSortedTimecardEntries(timecard.getTimecardEntries());
+                                            List<TimecardEntry> sortedTimecardEntries = getSortedTimecardEntries(timecard.getTimecardEntries());
                                             List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
 
 
-                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, sortedTimecartEntries, timecardEntry,
+                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, sortedTimecardEntries, timecardEntry,
                                                     timecarActivity.getCode(), consecutiveActivityList);
+                                            int activityCodeOccurrenceCount = getOccurrenceOfActivityCode(agent, sortedTimecardEntries,  timecardEntry,
+                                                    timecarActivity.getCode());
 
                                             //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
                                             // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
@@ -413,7 +415,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                                         lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
 
                                                             generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
+                                                                    lobConfiguration, lobConfigurationEntry, activityCodeOccurrenceCount);
 
                                                             generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
@@ -829,12 +831,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     private void generateOccurrenceToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
-                                                         LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
+                                                         LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
+                                                         int activityCodeOccurrenceCount) throws Exception {
 
 
         int OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
-        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > OCCURRENCE_MAX) {
+        if (lobConfigurationEntry.getOccurrence() != null && activityCodeOccurrenceCount > OCCURRENCE_MAX) {
 
 
             if (agent == null) {
@@ -880,7 +883,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                occurrenceToleranceNotification.setCreatedOn(new Date());
 
                 occurrenceToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + consecutiveActivityList.size());
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + activityCodeOccurrenceCount);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -1107,6 +1110,47 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return activityTimeSpan;
     }
 
+    private int getOccurrenceOfActivityCode(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
+                                                                String activityCode) {
+
+
+        int activityCodeOccurrenceCount = 0;
+        Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
+
+        int indexOfWatchedEntry = 0;
+
+        for (int cnt = 0; cnt < sortedTimecardEntries.size(); cnt++) {
+            if (sortedTimecardEntries.get(cnt).getID().equals(watchedTimecardEntry.getID())) {
+                indexOfWatchedEntry = cnt;
+            }
+        }
+
+        //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
+        //Infact this logic is provided by CVG and they have assumption on this front
+//        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
+        String previousActivityCode = "";
+        for (int cnt = indexOfWatchedEntry; cnt >= 0; cnt--) {
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
+
+            if (timecardEntry != null) {
+
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+                //If code does not have consecutiveness then brk the loop
+                if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null
+                        && timecardActivity.getCode().equals(activityCode)
+                        && !previousActivityCode.equals(timecardActivity.getCode())) {
+                    activityCodeOccurrenceCount++;
+                }
+
+                previousActivityCode = timecardActivity.getCode();
+            }
+        }
+
+
+        return activityCodeOccurrenceCount;
+    }
+
     private boolean compareDates(Date sourceDate, Date targetDate) {
 
         sourceDate.setHours(0);
@@ -1263,8 +1307,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         List<CMSEntry> associatedCMSEntries = new ArrayList<CMSEntry>();
 
         //The consecutiveActivityList gets list of TimecardEntries in reverse order so first is last entry and last is first entry.
-        Date timecardEntryStartTime = consecutiveActivityList.get(0).getFromTime();
-        Date timecardEntryEndTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getToTime();
+        Date timecardEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getToTime();
+        Date timecardEntryEndTime = consecutiveActivityList.get(0).getFromTime();
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
