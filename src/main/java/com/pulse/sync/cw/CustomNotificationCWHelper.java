@@ -554,7 +554,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-                workDurationNotification.setCreatedOn(new Date());
+//                workDurationNotification.setCreatedOn(new Date());
+                workDurationNotification.setCreatedOn(cmsEntry.getFromTime());
+
 
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode());
@@ -656,8 +658,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     log.error("Invalid time zone " + timeZone, e);
                 }
 
-                workModeOccurrenceNotification.setCreatedOn(new Date());
+//                workModeOccurrenceNotification.setCreatedOn(new Date());
 
+                workModeOccurrenceNotification.setCreatedOn(cmsEntry.getFromTime());
                 workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
@@ -731,8 +734,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-                invalidActivityCodeNotification.setCreatedOn(new Date());
+//                invalidActivityCodeNotification.setCreatedOn(new Date());
 
+                invalidActivityCodeNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardActivity.getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -799,8 +803,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-                nonBillableActivityNotification.setCreatedOn(new Date());
+//                nonBillableActivityNotification.setCreatedOn(new Date());
 
+                nonBillableActivityNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardActivity.getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
@@ -872,8 +877,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
-                occurrenceToleranceNotification.setCreatedOn(new Date());
+//                occurrenceToleranceNotification.setCreatedOn(new Date());
 
+                occurrenceToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + consecutiveActivityList.size());
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
@@ -943,8 +949,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
-                durationToleranceNotification.setCreatedOn(new Date());
-
+//                durationToleranceNotification.setCreatedOn(new Date());
+                durationToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + totalDuration);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
@@ -1206,8 +1212,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                durationMismatchNotification.setCreatedOn(new Date());
-
+//                durationMismatchNotification.setCreatedOn(new Date());
+                durationMismatchNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardActivity.getCode() + "-" + duration);
                 durationMismatchNotification.setType("DurationMismatchNotification");
 

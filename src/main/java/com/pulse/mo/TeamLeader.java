@@ -1,5 +1,6 @@
 
-package com.pulse.mo;
+
+package com.pulse.mo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -91,6 +92,35 @@ public class TeamLeader extends _Super_TeamLeader
 		
 		return null;
 	}
-	
+
+
+	@SuppressWarnings("unchecked")
+	public List<Notification> getNotificationsUnRead() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.NOTIFICATIONS_UNREADS, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+		List<Notification> results = new ArrayList<Notification>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (Notification) dataProvider.findById(nextResult, null) );
+			}
+		}
+
+		return results;
+	}
+
+
+
 }
-
+

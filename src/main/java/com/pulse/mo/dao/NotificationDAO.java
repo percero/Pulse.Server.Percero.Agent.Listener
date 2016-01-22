@@ -63,12 +63,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
     @Override
     protected String getSelectShellOnlySQL() {
-        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereClause;
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereClause + orderByTableName;
     }
 
     @Override
     protected String getSelectStarSQL() {
-        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + selectFromStatementTableName + whereClause;
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + selectFromStatementTableName + whereClause + orderByTableName;
     }
 
     @Override
@@ -98,12 +98,12 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
     @Override
     protected String getSelectInStarSQL() {
-        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause;
+        return "SELECT \"NOTIFICATION\".\"ID\"" + SQL_VIEW + " " + selectFromStatementTableName + whereInClause + orderByTableName;
     }
 
     @Override
     protected String getSelectInShellOnlySQL() {
-        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause;
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName + whereInClause + orderByTableName;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class NotificationDAO extends SqlDataAccessObject<Notification> implement
 
     @Override
     protected String getFindByExampleSelectShellOnlySQL() {
-        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName;
+        return "SELECT " + SHELL_ONLY_SELECT + " " + selectFromStatementTableName ;
     }
 
     @Override

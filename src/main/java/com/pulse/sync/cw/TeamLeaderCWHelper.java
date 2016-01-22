@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,11 +15,6 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
 import com.percero.agents.sync.vo.BaseDataObject;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.Agent;
-import com.pulse.mo.AgentScorecard;
-import com.pulse.mo.AgentTimeZone;
-import com.pulse.mo.Scorecard;
-import com.pulse.mo.TeamLeader;
 
 @Component
 public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
@@ -33,6 +29,7 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 	public static final String SCORECARDS = "scorecards";
 	public static final String TIMEZONE = "timeZone";
 	public static final String AGENT_SCORECARDS = "agentScorecards";
+	public static final String NOTIFICATIONS_UNREADS = "notificationsUnReads";
 
 	@Override
 	public Object calculate(String fieldName, ClassIDPair pair, String[] params) {
@@ -64,6 +61,14 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 				postCalculate(fieldName, pair, params, result, oldValue);
 			} catch(Exception e) {
 				log.error("Unable to calculate " + TIMEZONE, e);
+			}
+		}
+		else if (NOTIFICATIONS_UNREADS.equalsIgnoreCase(fieldName)) {
+			try {
+				result = calc_notificationsUnReads(pair, NOTIFICATIONS_UNREADS);
+				postCalculate(fieldName, pair, params, result, oldValue);
+			} catch(Exception e) {
+				log.error("Unable to calculate " + NOTIFICATIONS_UNREADS, e);
 			}
 		}
 		else {
@@ -229,5 +234,56 @@ public class TeamLeaderCWHelper extends DerivedValueChangeWatcherHelper {
 
 		return result;
 	}
+
+	private List<ClassIDPair> calc_notificationsUnReads(ClassIDPair pair, String derivedValueName) {
+		List<ClassIDPair> results = new ArrayList<ClassIDPair>();
+
+		try {
+			TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
+			if (host == null) {
+				log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
+				return results;
+			}
+
+//			List<Notification> notifications  = new ArrayList<Notification>();
+
+			// Setup fieldsToWatch.
+			Collection<String> fieldsToWatch = new HashSet<String>();
+
+			// We want to re-trigger this change watcher when TeamLeader.Agents changes.
+			accessManager.addWatcherField(pair, "notifications", fieldsToWatch);
+			Iterator<Notification> itrNotifications = host.getNotifications().iterator();
+			while (itrNotifications.hasNext()) {
+				Notification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+				if (notification != null) {
+					// We want to re-trigger this change watcher when Agent.AgentScorecards changes.
+					accessManager.addWatcherField(BaseDataObject.toClassIdPair(notification), "isRead", fieldsToWatch);
+					if (notification.getIsRead()==null || notification.getIsRead().equals(Boolean.FALSE)){
+//						notifications.add(notification);
+						results.add(new ClassIDPair(notification.getID(), notification.getClass().getCanonicalName()));
+					}
+
+				}
+			}
+
+//			Iterator<Notification> itrNotifications = notifications.iterator();
+//			while (itrNotifications.hasNext()) {
+//				String nextResult = itrNotifications.next().getID();
+//				results.add(new ClassIDPair(nextResult, ));
+//			}
+
+			// Register all the fields to watch for this ChangeWatcher. Whenever
+			// ANY of these fields change, this ChangeWatcher will get re-run
+			accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+			// Store the result for caching, and also for comparing new results to see if there has been a change.
+			accessManager.saveChangeWatcherResult(pair, derivedValueName, results);
+		} catch(Exception e) {
+			log.error("Unable to calculate " + derivedValueName, e);
+		}
+
+		return results;
+	}
+
 
 }
