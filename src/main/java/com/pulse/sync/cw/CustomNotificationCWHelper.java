@@ -751,7 +751,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
 //                } else {
 //                  //Create notification
-                    syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
+                syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
 //                }
             }
         }
@@ -822,7 +822,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
 //                } else {
 //                  //create notification
-                    syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
+                syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
 //                }
             }
         }
@@ -894,7 +894,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
 //                } else {
 //                      Create notification
-                    syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+                syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
 //                }
             }
         }
@@ -965,7 +965,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
 //                } else {
 //                 // create notification
-                    syncAgentService.systemCreateObject(durationToleranceNotification, null);
+                syncAgentService.systemCreateObject(durationToleranceNotification, null);
 //                }
             }
         }
@@ -1065,6 +1065,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
 
+        //Assmuption is that it is the single entry having activity code at the position
+//        TimecardEntry endTimecardActivity = watchedTimecardEntry;
+//        TimecardEntry startTimecardActivity = watchedTimecardEntry;
+
         boolean processData = true;
 
         //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
@@ -1080,7 +1084,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 //If code does not have consecutiveness then brk the loop
                 if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
 
-                    activityTimeSpan += timecardEntry.getDuration();
+//                    activityTimeSpan += timecardEntry.getDuration();
                     timecardEntryListOfActivityCode.add(timecardEntry);
                 } else {
                     processData = false;
@@ -1088,6 +1092,18 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
 
+        if (timecardEntryListOfActivityCode.size() > 0) {
+            //Entries are in reverse order due to last loop
+            TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
+            TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size()-1);
+
+            activityTimeSpan = (double)calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getToTime());
+
+            //Incase if there laps time in nagative this will cover it up
+            if (activityTimeSpan < 0){
+                activityTimeSpan *= -1;
+            }
+        }
         return activityTimeSpan;
     }
 
@@ -1228,7 +1244,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
 //                } else {
 //                   //Create Notification
-                    syncAgentService.systemCreateObject(durationMismatchNotification, null);
+                syncAgentService.systemCreateObject(durationMismatchNotification, null);
 //                }
             }
         }
@@ -1412,10 +1428,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         while (itrTimecardEntries.hasNext()) {
 //                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
                             TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
-                            if (timecardEntry!=null && deleteTimecardEntry(timecardEntry)) {
+                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
 
                                 Iterator<LOBConfigurationNotification> itrLobConfigurationNotif = timecardEntry.getNotifications().iterator();
-                                while(itrLobConfigurationNotif.hasNext()) {
+                                while (itrLobConfigurationNotif.hasNext()) {
 
                                     deleteTimecardEntryOrphanedNotifications(itrLobConfigurationNotif.next());
                                 }

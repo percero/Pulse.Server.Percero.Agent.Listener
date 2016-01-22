@@ -120,6 +120,84 @@ public class TeamLeader extends _Super_TeamLeader
 		return results;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Notification> getNotificationsCoachings() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.NOTIFICATIONS_COACHINGS, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+		List<Notification> results = new ArrayList<Notification>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (Notification) dataProvider.findById(nextResult, null) );
+			}
+		}
+
+		return results;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Notification> getNotificationsShiftStatus() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.NOTIFICATIONS_SHIFTSTATUS, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+		List<Notification> results = new ArrayList<Notification>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (Notification) dataProvider.findById(nextResult, null) );
+			}
+		}
+
+		return results;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public List<Notification> getNotificationsTimeDiscrepancies() {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.NOTIFICATIONS_TIME_DISCREPANCIES, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+		List<Notification> results = new ArrayList<Notification>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (Notification) dataProvider.findById(nextResult, null) );
+			}
+		}
+
+		return results;
+	}
 
 
 }
