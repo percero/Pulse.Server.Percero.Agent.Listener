@@ -242,3 +242,146 @@ Scorecard object.  This is really a Set of all the Scorecards (meaning no duplic
 		return results;
 	}
     ```
+
+### TeamLeader -> CMSEntries for Date
+This is to be a List of all the TeamLeader's CMS Entries on a particular date.  This list is retrieved by iterating over all the 
+TeamLeader's Agents, then iterating over each Agent's CMSEntries and pulling the ones that match the specified date into a list.
+
+1. Add the getter method to TeamLeader.
+    ```
+	public List<CMSEntry> getFindCMSEntriesForDate(String theDate) {
+		IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+		
+		String[] params = new String[1];
+		params[0] = theDate;
+		
+		DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+		
+		List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TeamLeaderCWHelper.FIND_CMS_ENTRIES_FOR_DATE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()), params);
+		
+		List<CMSEntry> results = new ArrayList<CMSEntry>();
+		if (result != null)
+		{
+			IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+			
+			Iterator<ClassIDPair> itrResult = result.iterator();
+			while(itrResult.hasNext()) {
+				ClassIDPair nextResult = itrResult.next();
+				
+				MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+				IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+				results.add( (CMSEntry) dataProvider.findById(nextResult, null) );
+			}
+		}
+		
+		return results;
+	}
+    ```
+2. Create com.pulse.sync.cw.TeamLeaderCWHelper (if it does not exist).  Note that the path and file name are important as ActiveStack will pick these up based on the package and class name.
+3. Override the `calculate` function, registering the variable name (`findCMSEntriesForDate`):
+    ```
+	public static final String FIND_CMS_ENTRIES_FOR_DATE = "findCMSEntriesForDate";
+	
+	...
+	
+	@Override
+	public Object calculate(String fieldName, ClassIDPair pair, String[] params) {
+		Object result = null;
+		Object oldValue = null;
+		try {
+			oldValue = accessManager.getChangeWatcherResult(pair, fieldName, params);
+		} catch(Exception e) {}
+
+	        if (FIND_CMS_ENTRIES_FOR_DATE.equalsIgnoreCase(fieldName)) {
+	        	try {
+	        		result = calc_findCMSEntriesForDate(pair, FIND_CMS_ENTRIES_FOR_DATE, params[0]);
+	        		postCalculate(fieldName, pair, params, result, oldValue);
+	        	} catch (Exception e) {
+	        		log.error("Unable to calculate " + FIND_CMS_ENTRIES_FOR_DATE, e);
+	        	}
+		}
+		else {
+			result = super.calculate(fieldName, pair, params);
+		}
+
+		return result;
+	}
+    ```
+4. Implement the function to do the actual retrieval.
+    ```
+	private List<ClassIDPair> calc_findCMSEntriesForDate(ClassIDPair pair, String derivedValueName, String theDate) {
+	    List<ClassIDPair> results = new ArrayList<ClassIDPair>();
+	    
+	    try {
+	    	TeamLeader host = (TeamLeader) syncAgentService.systemGetById(pair);
+	    	if (host == null) {
+	    		log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
+	    		return results;
+	    	}
+	    	
+			// Setup params array. If nothing else, this is used to uniquely
+	    	// identify this ChangeWatcher.
+			String[] params = new String[1];
+			params[0] = theDate;
+			
+			// Convert the date String. Since the date string format is completely up to
+			// the developer, the build int `parseDateTime` function may or may not be
+			// applicable. The point here is to accurately convert the passed in String
+			// into a Date object (including its time zone).
+			DateTime theDateTime = parseDateTime(theDate);
+			LocalDate localDate = theDateTime.toLocalDate();
+			
+	    	// Setup fieldsToWatch.
+	    	Collection<String> fieldsToWatch = new HashSet<String>();
+	    	
+	    	// We want to re-trigger this change watcher when TeamLeader.Agents changes.
+	    	accessManager.addWatcherField(pair, "agents", fieldsToWatch);
+	    	Iterator<Agent> itrAgents = host.getAgents().iterator();
+	    	while (itrAgents.hasNext()) {
+	    		Agent agent = syncAgentService.systemGetByObject(itrAgents.next());
+	    		if (agent != null) {
+	    			// We want to re-trigger this change watcher when Agent.CMSEntries changes.
+	    			accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "cmsEntries", fieldsToWatch);
+	    			Iterator<CMSEntry> itrCmsEntries = agent.getCMSEntries().iterator();
+	    			while (itrCmsEntries.hasNext()) {
+	    				CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCmsEntries.next());
+	    				if (cmsEntry != null) {
+	    					// We want to re-trigger this change watcher when CMSEntry.FromTime changes.
+	    					accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "fromTime", fieldsToWatch);
+	    					
+	    					Date fromTime = cmsEntry.getFromTime();
+	    					if (fromTime != null) {
+	    						// Convert the fromTime to the same time zone as the date that was passed in.
+	    						DateTime fromDateTime = new DateTime(fromTime);
+	    						fromDateTime = fromDateTime.withZone(theDateTime.getZone());
+	    						
+	    						// Check to see if fromTime is the same date as the passed in date.
+								if (fromDateTime.toLocalDate().equals(localDate)) {
+									// The date matched, so we add this CMSEntry to our set of results.
+									results.add(new ClassIDPair(agent.getID(), agent.getClass().getCanonicalName()));
+								}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	}
+	    	
+	    	// Register all the fields to watch for this ChangeWatcher. Whenever
+	    	// ANY of these fields change, this ChangeWatcher will get re-run
+	    	// Don't forget to include the params array here, since that is part of what
+	    	// uniquely identifies this ChangeWatcher.
+	    	accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch, params);
+	    	
+	    	// Store the result for caching, and also for comparing new results to see
+	    	// if there has been a change.
+	    	// Don't forget to include the params array here, since that is part of what
+	    	// uniquely identifies this ChangeWatcher.
+	    	accessManager.saveChangeWatcherResult(pair, derivedValueName, results, params);
+	    } catch (Exception e) {
+	    	log.error("Unable to calculate " + derivedValueName, e);
+	    }
+	    
+	    return results;
+	}
+    ```
+
