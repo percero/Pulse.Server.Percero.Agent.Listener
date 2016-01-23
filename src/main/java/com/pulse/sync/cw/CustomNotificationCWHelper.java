@@ -1100,7 +1100,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
             TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size()-1);
 
-            activityTimeSpan = (double)calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getToTime());
+            activityTimeSpan = (double)calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
 
             //Incase if there laps time in nagative this will cover it up
             if (activityTimeSpan < 0){
