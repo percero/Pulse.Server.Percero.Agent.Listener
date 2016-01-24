@@ -1111,7 +1111,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     private int getOccurrenceOfActivityCode(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
-                                                                String activityCode) {
+                                            String activityCode) {
 
 
         int activityCodeOccurrenceCount = 0;
@@ -1470,20 +1470,20 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
 
                         while (itrTimecardEntries.hasNext()) {
-//                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
-                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
-                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
-
-                                Iterator<LOBConfigurationNotification> itrLobConfigurationNotif = timecardEntry.getNotifications().iterator();
-                                while (itrLobConfigurationNotif.hasNext()) {
-
-                                    deleteTimecardEntryOrphanedNotifications(itrLobConfigurationNotif.next());
-                                }
-//                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-//                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+//                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
+//                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
 //
-//                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
-                            }
+//                                Iterator<LOBConfigurationNotification> itrLobConfigurationNotif = timecardEntry.getNotifications().iterator();
+//                                while (itrLobConfigurationNotif.hasNext()) {
+//
+//                                    deleteTimecardEntryOrphanedNotifications(itrLobConfigurationNotif.next());
+//                                }
+////                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+////                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+////
+////                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+//                            }
                         }
 
 
@@ -1504,8 +1504,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         try {
             //Delete the object and communicate back to user that the object is deleted.
-//            syncAgentService.systemDeleteObject(timecardEntry, null, true);
-            return systemDeleteObject(timecardEntry, null, true);
+            return syncAgentService.systemDeleteObject(timecardEntry, null, true);
+            //return systemDeleteObject(timecardEntry, null, true);
         } catch (Exception e) {
             log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID(), e);
             return false;
@@ -1513,47 +1513,47 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
     }
-//    private void insertRecToUpdateTable(String timecardEntryId) {
-////        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
-//
-//        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
-//
-//        int updateTableId = 1; // default value
-//
-//        Connection conn = null;
-//        PreparedStatement pstmt = null;
-//        try {
-//            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
-//            conn = connectionFactory.getConnection();
-//
-//
-//            //Insert record
-//            pstmt = conn.prepareStatement(insertQueryString);
-//            pstmt.setQueryTimeout(QUERY_TIMEOUT);
-//            pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
-//            pstmt.setString(2, timecardEntryId);
-//            pstmt.setString(3, "DELETE");
-//            // pstmt.setDate(4, (java.sql.Date) new Date());
-////            pstmt.setInt(4, ++updateTableId);
-//            pstmt.execute();
-//
-//
-//        } catch (Exception e) {
-//            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
-//
-//        } finally {
-//            try {
-//                if (pstmt != null) {
-//                    pstmt.close();
-//                }
-//                if (conn != null) {
-//                    conn.close();
-//                }
-//            } catch (Exception e) {
-//                log.error("Error closing database statement/connection", e);
-//            }
-//        }
-//    }
+    private void insertRecToUpdateTable(String timecardEntryId) {
+//        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
+
+        String insertQueryString = "INSERT INTO UPDATE_TABLE (TABLENAME, ROW_ID, TYPE, TIMESTAMP) VALUES (?, ?, ?, sysdate)";
+
+        int updateTableId = 1; // default value
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+            conn = connectionFactory.getConnection();
+
+
+            //Insert record
+            pstmt = conn.prepareStatement(insertQueryString);
+            pstmt.setQueryTimeout(QUERY_TIMEOUT);
+            pstmt.setString(1, "AGENT_TIME_ENTRY_VW");
+            pstmt.setString(2, timecardEntryId);
+            pstmt.setString(3, "DELETE");
+            // pstmt.setDate(4, (java.sql.Date) new Date());
+//            pstmt.setInt(4, ++updateTableId);
+            pstmt.execute();
+
+
+        } catch (Exception e) {
+            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
+
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                log.error("Error closing database statement/connection", e);
+            }
+        }
+    }
 
 //    private Date getCreatedOnInAgentTimezone(Agent agent){
 //        String timeZone = agent.getTimeZone();
@@ -1588,6 +1588,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return connectionRegistry;
     }
 
+
+    /*
     private boolean systemDeleteObject(IPerceroObject perceroObject, String clientId, boolean pushToUser) throws Exception {
         boolean result = true;
         if (perceroObject == null)
@@ -1713,7 +1715,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         return result;
     }
-
+    */
     private boolean systemPutObject(IPerceroObject perceroObject, String transactionId, Date updateDate, String userId, boolean pushToUser) {
         // Get the MappedClass and determine which DataProvider provides data for this object.
         IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
