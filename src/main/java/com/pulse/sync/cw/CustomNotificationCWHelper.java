@@ -1469,7 +1469,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         while (itrTimecardEntries.hasNext()) {
                             TimecardEntry timecardEntry = itrTimecardEntries.next();
-                            log.warn("inside handleTimecardUpdate method -  TimeCard oldValue - "+ oldValue.getID() + " : calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
+                            log.warn("inside handleTimecardUpdate method  calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
                             insertRecToUpdateTable(timecardEntry.getID());
 //                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
 //                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
