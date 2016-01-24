@@ -1188,7 +1188,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
 
             if (notification != null) {
-                log.warn("Inside deleteOrphanedNotifications method - calling syncAgentService.systemDeleteObject with param - Notification - " + notification.getID());
                 syncAgentService.systemDeleteObject(notification, null, true);
                 log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
             } else {
@@ -1209,7 +1208,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         LOBConfigurationNotification notification = (LOBConfigurationNotification) syncAgentService.systemGetByObject(lOBNotification);
 
         if (notification != null) {
-            log.warn("Inside deleteTimecardEntryOrphanedNotifications method - calling syncAgentService.systemDeleteObject with param - Notification - " + notification.getID());
             syncAgentService.systemDeleteObject(notification, null, true);
             log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
         } else {
@@ -1470,7 +1468,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
 
                         while (itrTimecardEntries.hasNext()) {
-                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+                            TimecardEntry timecardEntry = itrTimecardEntries.next();
+                            log.warn("inside handleTimecardUpdate method -  TimeCard oldValue - "+ oldValue.getID() + " : calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
+                            insertRecToUpdateTable(timecardEntry.getID());
 //                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
 //                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
 //
@@ -1504,7 +1504,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         try {
             //Delete the object and communicate back to user that the object is deleted.
-            log.warn("Inside deleteTimecardEntry Method - Calling syncAgentService.systemDeleteObject with param  TimecardEntry" + timecardEntry.getID());
             return syncAgentService.systemDeleteObject(timecardEntry, null, true);
             //return systemDeleteObject(timecardEntry, null, true);
         } catch (Exception e) {
