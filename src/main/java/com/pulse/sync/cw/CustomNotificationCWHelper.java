@@ -1480,7 +1480,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
                             if (timecardEntry != null) {
-                                log.warn("inside handleTimecardUpdate method  calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
+                                log.warn("Inside HandleTimecardUpdate Method Calling InsertRecToUpdateTable With Param TimecardEntries - " + timecardEntry.getID());
 
                                 LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
                                 findLOBConfigurationNotificaiton.setTimecardEntry(timecardEntry);
