@@ -1460,8 +1460,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
+
                 if (updatedObject != null && updatedObject instanceof Timecard && oldValue != null) {
                     Timecard timecard = (Timecard) oldValue;
+
+                    timecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
 
                     if (timecard != null) {
 
@@ -1469,13 +1472,39 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         while (itrTimecardEntries.hasNext()) {
                             TimecardEntry timecardEntry = itrTimecardEntries.next();
-                            log.warn("inside handleTimecardUpdate method  calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
-                            for(LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
-                                log.warn(" inside handleTimecardUpdate method calling systemDeleteObject with param - " + lobConfigurationNotification.getID());
-                                syncAgentService.systemDeleteObject(lobConfigurationNotification, null, true);
-                            };
 
-                            insertRecToUpdateTable(timecardEntry.getID());
+                            String timecardEntryId =timecardEntry.getID();
+
+                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+
+                            if (timecardEntry != null) {
+                                log.warn("inside handleTimecardUpdate method  calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
+
+                                for (LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
+
+                                    log.warn(" inside handleTimecardUpdate method calling scanning LOB Notification ID : " + lobConfigurationNotification.getID());
+
+                                    LOBConfigurationNotification notificationToDelete = syncAgentService.systemGetByObject(lobConfigurationNotification);
+
+                                    if (notificationToDelete != null) {
+                                        log.warn(" inside handleTimecardUpdate method calling systemDeleteObject with param - " + lobConfigurationNotification.getID());
+                                        syncAgentService.systemDeleteObject(notificationToDelete, null, true);
+                                    }
+                                    else{
+                                        log.warn("inside handleTimecardUpdate method OOPS : notificationToDelete (ID : "+lobConfigurationNotification.getID() + "  ) Cound not retrieve");
+                                    }
+
+                                }
+                            }
+                            else{
+
+                                log.warn("inside handleTimecardUpdate method OOPS : TimecardEntry ( ID : "+timecardEntryId+" ) : Cound not retrieve");
+
+                            }
+
+//                            insertRecToUpdateTable(timecardEntry.getID()); //Commented out this since I believe that system will take care of if.
+
 //                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
 //                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
 //
