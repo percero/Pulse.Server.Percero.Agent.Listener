@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.Lob;
 
 import com.percero.agents.sync.access.RedisKeyUtils;
 import com.percero.agents.sync.datastore.ICacheDataStore;
@@ -1173,9 +1174,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
         //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
         //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
-        log.debug("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
-        log.debug(searchLOBNotification.getCMSEntry());
-        log.debug(searchLOBNotification.getTimecardEntry());
+        log.warn("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+        log.warn(searchLOBNotification.getCMSEntry());
+        log.warn(searchLOBNotification.getTimecardEntry());
 
         List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
 
@@ -1188,13 +1189,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
 
             if (notification != null) {
-                syncAgentService.systemDeleteObject(notification, null, true);
-                log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+                boolean deleteStatus = syncAgentService.systemDeleteObject(notification, null, true);
+                log.warn("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED [ " + deleteStatus +" ] XXXXXXXXX");
             } else {
-                log.debug("No Notification found for ID: " + classIdPairLobNotif);
+                log.warn("No Notification found for ID: " + iPerceroObject.getID());
             }
         }
-        log.debug("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+        log.warn("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
     }
 
     private void deleteTimecardEntryOrphanedNotifications(LOBConfigurationNotification lOBNotification) throws Exception {
@@ -1481,21 +1482,26 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             if (timecardEntry != null) {
                                 log.warn("inside handleTimecardUpdate method  calling insertRecToUpdateTable with param TimecardEntries - " + timecardEntry.getID());
 
-                                for (LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
+                                LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+                                findLOBConfigurationNotificaiton.setTimecardEntry(timecardEntry);
 
-                                    log.warn(" inside handleTimecardUpdate method calling scanning LOB Notification ID : " + lobConfigurationNotification.getID());
-
-                                    LOBConfigurationNotification notificationToDelete = syncAgentService.systemGetByObject(lobConfigurationNotification);
-
-                                    if (notificationToDelete != null) {
-                                        log.warn(" inside handleTimecardUpdate method calling systemDeleteObject with param - " + lobConfigurationNotification.getID());
-                                        syncAgentService.systemDeleteObject(notificationToDelete, null, true);
-                                    }
-                                    else{
-                                        log.warn("inside handleTimecardUpdate method OOPS : notificationToDelete (ID : "+lobConfigurationNotification.getID() + "  ) Cound not retrieve");
-                                    }
-
-                                }
+                                deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+//
+//                                for (LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
+//
+//                                    log.warn(" inside handleTimecardUpdate method calling scanning LOB Notification ID : " + lobConfigurationNotification.getID());
+//
+//                                    LOBConfigurationNotification notificationToDelete = syncAgentService.systemGetByObject(lobConfigurationNotification);
+//
+//                                    if (notificationToDelete != null) {
+//                                        log.warn(" inside handleTimecardUpdate method calling systemDeleteObject with param - " + lobConfigurationNotification.getID());
+//                                        syncAgentService.systemDeleteObject(notificationToDelete, null, true);
+//                                    }
+//                                    else{
+//                                        log.warn("inside handleTimecardUpdate method OOPS : notificationToDelete (ID : "+lobConfigurationNotification.getID() + "  ) Cound not retrieve");
+//                                    }
+//
+//                                }
                             }
                             else{
 
@@ -1503,7 +1509,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                             }
 
-//                            insertRecToUpdateTable(timecardEntry.getID()); //Commented out this since I believe that system will take care of if.
+                            insertRecToUpdateTable(timecardEntryId);
 
 //                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
 //                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
