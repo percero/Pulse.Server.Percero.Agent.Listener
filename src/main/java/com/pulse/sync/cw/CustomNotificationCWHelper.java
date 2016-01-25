@@ -385,7 +385,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                                             Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, sortedTimecardEntries, timecardEntry,
                                                     timecarActivity.getCode(), consecutiveActivityList);
-                                            int activityCodeOccurrenceCount = getOccurrenceOfActivityCode(agent, sortedTimecardEntries,  timecardEntry,
+                                            int activityCodeOccurrenceCount = getOccurrenceOfActivityCode(agent, sortedTimecardEntries, timecardEntry,
                                                     timecarActivity.getCode());
 
                                             //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
@@ -1099,12 +1099,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         if (timecardEntryListOfActivityCode.size() > 0) {
             //Entries are in reverse order due to last loop
             TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
-            TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size()-1);
+            TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size() - 1);
 
-            activityTimeSpan = (double)calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
+            activityTimeSpan = (double) calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
 
             //Incase if there laps time in nagative this will cover it up
-            if (activityTimeSpan < 0){
+            if (activityTimeSpan < 0) {
                 activityTimeSpan *= -1;
             }
         }
@@ -1190,7 +1190,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
             if (notification != null) {
                 boolean deleteStatus = syncAgentService.systemDeleteObject(notification, null, true);
-                log.warn("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED [ " + deleteStatus +" ] XXXXXXXXX");
+                log.warn("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED [ " + deleteStatus + " ] XXXXXXXXX");
             } else {
                 log.warn("No Notification found for ID: " + iPerceroObject.getID());
             }
@@ -1474,7 +1474,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         while (itrTimecardEntries.hasNext()) {
                             TimecardEntry timecardEntry = itrTimecardEntries.next();
 
-                            String timecardEntryId =timecardEntry.getID();
+                            String timecardEntryId = timecardEntry.getID();
 
                             timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
 
@@ -1502,10 +1502,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                                    }
 //
 //                                }
-                            }
-                            else{
+                            } else {
 
-                                log.warn("inside handleTimecardUpdate method OOPS : TimecardEntry ( ID : "+timecardEntryId+" ) : Cound not retrieve");
+                                log.warn("inside handleTimecardUpdate method OOPS : TimecardEntry ( ID : " + timecardEntryId + " ) : Cound not retrieve");
 
                             }
 
@@ -1553,6 +1552,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
     }
+
     private void insertRecToUpdateTable(String timecardEntryId) {
 //        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
