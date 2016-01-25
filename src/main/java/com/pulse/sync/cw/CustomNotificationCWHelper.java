@@ -1182,11 +1182,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
 
+        if (listOfOrphanedNotifications.size() <= 0){
+            log.warn("No Notifications Found for TimecardEntry ID :  [ " + searchLOBNotification.getTimecardEntry().getID() + " ]");
+        }
         while (itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
             ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
 
             Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+            log.warn("Notification ID:  [ " + notification.getID() + "]");
 
             if (notification != null) {
                 boolean deleteStatus = syncAgentService.systemDeleteObject(notification, null, true);
@@ -1463,13 +1467,24 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
                 if (updatedObject != null && updatedObject instanceof Timecard && oldValue != null) {
-                    Timecard timecard = (Timecard) oldValue;
 
-                    timecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
+                    Timecard newTimecard = (Timecard) updatedObject;
 
-                    if (timecard != null) {
+                    for (TimecardEntry timecardEntry: newTimecard.getTimecardEntries()){
+                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+                    }
 
-                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
+                    Timecard oldTimecard = (Timecard) oldValue;
+
+                    oldTimecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
+
+                    if (oldTimecard != null) {
+
+                        for (TimecardEntry timecardEntry: oldTimecard.getTimecardEntries()){
+                            log.warn("Old Timecard ID : [ " + oldTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+                        }
+
+                        Iterator<TimecardEntry> itrTimecardEntries = oldTimecard.getTimecardEntries().iterator();
 
                         while (itrTimecardEntries.hasNext()) {
                             TimecardEntry timecardEntry = itrTimecardEntries.next();
