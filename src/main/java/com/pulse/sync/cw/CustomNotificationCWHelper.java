@@ -1477,7 +1477,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     Timecard oldTimecard = (Timecard) oldValue;
 
                     //Print list of timecard entries of Old Timecard
-                    getAndPrintTimecardEntries(oldTimecard.getID());
+                    getAndPrintTimecardEntries(updatedObject.getID());
 
                     oldTimecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
 
