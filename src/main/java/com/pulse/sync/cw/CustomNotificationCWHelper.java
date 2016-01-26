@@ -1496,7 +1496,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                             String timecardEntryId = timecardEntry.getID();
 
-                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+//                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
 
 
                             if (timecardEntry != null) {
