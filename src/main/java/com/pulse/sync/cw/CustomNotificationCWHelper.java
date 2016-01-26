@@ -1182,7 +1182,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
 
-        if (listOfOrphanedNotifications.size() <= 0){
+        if (listOfOrphanedNotifications.size() <= 0 && searchLOBNotification.getTimecardEntry() != null){
             log.warn("No Notifications Found for TimecardEntry ID :  [ " + searchLOBNotification.getTimecardEntry().getID() + " ]");
         }
         while (itrNotifications.hasNext()) {
@@ -1476,6 +1476,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     Timecard oldTimecard = (Timecard) oldValue;
 
+                    //Print list of timecard entries of Old Timecard
+                    getAndPrintTimecardEntries(oldTimecard.getID());
+
                     oldTimecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
 
                     if (oldTimecard != null) {
@@ -1564,10 +1567,60 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID(), e);
             return false;
         }
-
-
     }
 
+    private void getAndPrintTimecardEntries(String timecardId){
+
+        log.warn("Invoked getAndPrintTimecardEntries for Timecard ID : [ " + timecardId + " ] ");
+
+        final String selectSql = "SELECT ID, WORKED_ID FROM AGENT_TIME_ENTRY_VW WHERE ID = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+            conn = connectionFactory.getConnection();
+
+            pstmt = conn.prepareStatement(selectSql);
+            pstmt.setQueryTimeout(QUERY_TIMEOUT);
+            pstmt.setString(1, timecardId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs!=null){
+
+                String tcId = null;
+                String tceId = null;
+
+                while(rs.next()){
+
+                    tcId = rs.getString("ID");
+                    tceId = rs.getString("WORKED_ID");
+
+                    log.warn("Database state of Timecard ID [ " + tcId + " ] - TimecardEntry ID [ " + tceId + " ]");
+
+                }
+
+            }
+            else{
+                log.error("OOPS Resultset is NULL Timecard ID : " + timecardId );
+            }
+
+        } catch (Exception e) {
+            log.error("Unable to retrieveObjects\n" + selectSql, e);
+
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                log.error("Error closing database statement/connection", e);
+            }
+        }
+    }
     private void insertRecToUpdateTable(String timecardEntryId) {
 //        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
