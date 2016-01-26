@@ -419,7 +419,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                                     lobConfiguration, lobConfigurationEntry, activityCodeOccurrenceCount);
 
                                                             generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
+                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration, consecutiveActivityList);
 
                                                             generatePhoneTimeVarianceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
@@ -906,7 +906,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private void generateDurationToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
                                                        LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
-                                                       Double totalDuration) throws Exception {
+                                                       Double totalDuration, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
         Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
         Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
@@ -952,14 +952,20 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
+                //Since the list is in the reverse order with respect to time
+                Date startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size()-1).getSourceFromTime();
+                Date endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
+
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 //                durationToleranceNotification.setCreatedOn(new Date());
                 durationToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
                 durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + totalDuration);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
+//                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+//                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), totalDuration));
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), totalDuration));
+                        timecardActivity.getCode(), formatDate(startTimeOfActivity, DATE_TIME_FORMAT_12_HR), formatDate(endTimeOfActivity, DATE_TIME_FORMAT_12_HR), totalDuration));
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
@@ -1055,6 +1061,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                                 String activityCode, final List<TimecardEntry> timecardEntryListOfActivityCode) {
 
 //        Integer consecutiveAcitivityCount = 0;
+        boolean ignoreThisRecord = false;
         Double activityTimeSpan = 0.0;
 
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
@@ -1069,43 +1076,58 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
 
+        //This is a special condition added to avoid unnecessary notifications for consecutive group of activities having same activiyt code.
+        //This condition will avoide creation of notification for it self if its successor available.
+        if (sortedTimecardEntries.size() - 1 > indexOfWatchedEntry){ //If this condition fails means this is the last watched entry is the last record.
+            //Get the next entry
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(indexOfWatchedEntry+1));
+            //Get the activity code
+            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+            //Check the similarity
+            if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                ignoreThisRecord = true;
+            }
+        }
+
         //Assmuption is that it is the single entry having activity code at the position
 //        TimecardEntry endTimecardActivity = watchedTimecardEntry;
 //        TimecardEntry startTimecardActivity = watchedTimecardEntry;
 
         boolean processData = true;
 
-        //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
-        //Infact this logic is provided by CVG and they have assumption on this front
+        if (!ignoreThisRecord) {
+            //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
+            //Infact this logic is provided by CVG and they have assumption on this front
 //        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
-        for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
-            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
+            for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
+                TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
 
-            if (timecardEntry != null) {
+                if (timecardEntry != null) {
 
-                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+                    TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                //If code does not have consecutiveness then brk the loop
-                if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                    //If code does not have consecutiveness then brk the loop
+                    if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
 
 //                    activityTimeSpan += timecardEntry.getDuration();
-                    timecardEntryListOfActivityCode.add(timecardEntry);
-                } else {
-                    processData = false;
+                        timecardEntryListOfActivityCode.add(timecardEntry);
+                    } else {
+                        processData = false;
+                    }
                 }
             }
-        }
 
-        if (timecardEntryListOfActivityCode.size() > 0) {
-            //Entries are in reverse order due to last loop
-            TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
-            TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size() - 1);
+            if (timecardEntryListOfActivityCode.size() > 0) {
+                //Entries are in reverse order due to last loop
+                TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
+                TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size() - 1);
 
-            activityTimeSpan = (double) calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
+                activityTimeSpan = (double) calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
 
-            //Incase if there laps time in nagative this will cover it up
-            if (activityTimeSpan < 0) {
-                activityTimeSpan *= -1;
+                //Incase if there laps time in nagative this will cover it up
+                if (activityTimeSpan < 0) {
+                    activityTimeSpan *= -1;
+                }
             }
         }
         return activityTimeSpan;
@@ -1115,7 +1137,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                             String activityCode) {
 
 
+        boolean ignoreThisRecord = false;
+
         int activityCodeOccurrenceCount = 0;
+
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
 
         int indexOfWatchedEntry = 0;
@@ -1126,28 +1151,42 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         }
 
-        //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
-        //Infact this logic is provided by CVG and they have assumption on this front
-//        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
-        String previousActivityCode = "";
-        for (int cnt = indexOfWatchedEntry; cnt >= 0; cnt--) {
-            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
-
-            if (timecardEntry != null) {
-
-                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
-
-                //If code does not have consecutiveness then brk the loop
-                if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null
-                        && timecardActivity.getCode().equals(activityCode)
-                        && !previousActivityCode.equals(timecardActivity.getCode())) {
-                    activityCodeOccurrenceCount++;
-                }
-
-                previousActivityCode = timecardActivity.getCode();
+        //This is a special condition added to avoid unnecessary notifications for consecutive group of activities having same activiyt code.
+        //This condition will avoide creation of notification for it self if its successor available.
+        if (sortedTimecardEntries.size() - 1 > indexOfWatchedEntry){ //If this condition fails means this is the last watched entry is the last record.
+            //Get the next entry
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(indexOfWatchedEntry+1));
+            //Get the activity code
+            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+            //Check the similarity
+            if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                ignoreThisRecord = true;
             }
         }
 
+        if (!ignoreThisRecord) {
+            //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
+            //Infact this logic is provided by CVG and they have assumption on this front
+//        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
+            String previousActivityCode = "";
+            for (int cnt = indexOfWatchedEntry; cnt >= 0; cnt--) {
+                TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
+
+                if (timecardEntry != null) {
+
+                    TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+                    //If code does not have consecutiveness then brk the loop
+                    if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null
+                            && timecardActivity.getCode().equals(activityCode)
+                            && !previousActivityCode.equals(timecardActivity.getCode())) {
+                        activityCodeOccurrenceCount++;
+                    }
+
+                    previousActivityCode = timecardActivity.getCode();
+                }
+            }
+        }
 
         return activityCodeOccurrenceCount;
     }
@@ -1187,14 +1226,15 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
         while (itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
-            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
+//            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
 
-            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
-            log.warn("Notification ID:  [ " + notification.getID() + "]");
+            //Do not retrive object since the relationship might be broken due to removal of TimecardEntry and Timecard
+//            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+            log.warn("Notification ID:  [ " + iPerceroObject.getID() + "]");
 
-            if (notification != null) {
-                boolean deleteStatus = syncAgentService.systemDeleteObject(notification, null, true);
-                log.warn("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED [ " + deleteStatus + " ] XXXXXXXXX");
+            if (iPerceroObject != null) {
+                boolean deleteStatus = syncAgentService.systemDeleteObject(iPerceroObject, null, true);
+                log.warn("XXXXXXXXX Notification ID:  [ " + iPerceroObject.getID() + "] DELETED [ " + deleteStatus + " ] XXXXXXXXX");
             } else {
                 log.warn("No Notification found for ID: " + iPerceroObject.getID());
             }
@@ -1476,12 +1516,27 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     Timecard oldTimecard = (Timecard) oldValue;
 
+                    boolean ignoreTheUpdate = false;
+
+                    //Check that first TimecardEntry of old and new Timecard should not be same
+                    if (newTimecard.getTimecardEntries().size() > 0 && oldTimecard.getTimecardEntries().size() > 0){
+                        TimecardEntry newTimecardEntry = newTimecard.getTimecardEntries().get(0);
+                        TimecardEntry oldTimecardEntry = oldTimecard.getTimecardEntries().get(0);
+
+                        if (newTimecardEntry.getID().equalsIgnoreCase(oldTimecardEntry.getID())){
+                            //Do not process futher
+                            ignoreTheUpdate = true;
+                        }
+                    }
+
+
                     //Print list of timecard entries of Old Timecard
 //                    getAndPrintTimecardEntries(updatedObject.getID());
 
 //                    oldTimecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
 
-                    if (oldTimecard != null) {
+//                    if (oldTimecard != null) {
+                    if (!ignoreTheUpdate) {
 
                         //TODO: Check to see if old timecard entry ids are still on on new timecard value. If they are do not process
 
@@ -1546,6 +1601,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         }
 
 
+                    }
+                    else{
+                        log.warn("handleTimecardUpdate Ignored : Timecard ID : [  " + newTimecard.getID() + " ] : Old Timecard ID : [ "  + oldTimecard.getID() + " ] ");
                     }
 
 
