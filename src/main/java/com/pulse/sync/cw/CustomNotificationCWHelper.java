@@ -52,7 +52,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
     private static final int MS_IN_MIN = 60 * 1000;
     //CMSEntry based Notifications Messages
-    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
+    private static final String WORK_MODE_DURATION_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} for the total duration of {4} has exceeded the duration tolerance of {5}.";
     private static final String WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected a CMS aux code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
 
 
@@ -60,7 +60,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4}  has exceeded the duration tolerance.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4} has exceeded the duration tolerance.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
 
 
@@ -562,7 +562,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
 
@@ -572,7 +572,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), intDuration)); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), String.valueOf(intDuration), DURATION_MAX)); //xxx
 
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
@@ -664,7 +664,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                workModeOccurrenceNotification.setCreatedOn(new Date());
 
                 workModeOccurrenceNotification.setCreatedOn(cmsEntry.getFromTime());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode() + " - " + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
@@ -740,7 +740,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                invalidActivityCodeNotification.setCreatedOn(new Date());
 
                 invalidActivityCodeNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardActivity.getCode());
+                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + " - " + timecardActivity.getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
@@ -809,7 +809,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                nonBillableActivityNotification.setCreatedOn(new Date());
 
                 nonBillableActivityNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardActivity.getCode());
+                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + " - " + timecardActivity.getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
@@ -884,7 +884,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                occurrenceToleranceNotification.setCreatedOn(new Date());
 
                 occurrenceToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + activityCodeOccurrenceCount);
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + " - " + timecardActivity.getCode() + " - " + activityCodeOccurrenceCount);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -952,14 +952,19 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                //Since the list is in the reverse order with respect to time
-                Date startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size()-1).getSourceFromTime();
-                Date endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
+                Date startTimeOfActivity = timecardEntry.getSourceFromTime();
+                Date endTimeOfActivity = timecardEntry.getSourceToTime();
+
+                if (consecutiveActivityList.size() > 0 ) {
+                    //Since the list is in the reverse order with respect to time
+                     startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getSourceFromTime();
+                     endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
+                }
 
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 //                durationToleranceNotification.setCreatedOn(new Date());
                 durationToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardActivity.getCode() + "-" + totalDuration);
+                durationToleranceNotification.setName("Duration Tolerance Notification" + " - " + timecardActivity.getCode() + " - " + totalDuration);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
 //                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
@@ -1058,7 +1063,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     }
 
     private Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
-                                                                String activityCode, final List<TimecardEntry> timecardEntryListOfActivityCode) {
+                                                                String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
 
 //        Integer consecutiveAcitivityCount = 0;
         boolean ignoreThisRecord = false;
@@ -1317,7 +1322,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 //                durationMismatchNotification.setCreatedOn(new Date());
                 durationMismatchNotification.setCreatedOn(timecardEntry.getSourceFromTime());
-                durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardActivity.getCode() + "-" + duration);
+                durationMismatchNotification.setName("Duration Mismatch Notification" + " - " + timecardActivity.getCode() + " - "  + duration);
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
                 durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
