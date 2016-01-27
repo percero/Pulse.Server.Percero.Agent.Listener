@@ -60,7 +60,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private static final String INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Invalid Activity Code | {0} : System has detected an invalid activity code {1} starting at {2} and ending at {3}";
     private static final String NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE = "Non-billable Activity | {0} : System has detected a non-billable activity code {1} starting at {2} and ending at {3}";
     private static final String OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE = "Occurrence Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} has occurred more times than the tolerance of {4}.";
-    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4} has exceeded the duration tolerance.";
+    private static final String DURATION_TOLERANCE_NOTIIFCATION_MESSAGE = "Duration Tolerance | {0} : System has detected an eStart activity code {1} starting at {2} and ending at {3} for the total duration of {4} has exceeded the duration tolerance of {5}.";
     private static final String DURATION_MISMATCH_NOTIFICATION_MESSAGE = "Phone Time Variance | {0} : System has detected eStart activity code {1} starting at {2} and ending at {3} does not match CMS duration.";
 
 
@@ -418,8 +418,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                                             generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, activityCodeOccurrenceCount);
 
-                                                            generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration, consecutiveActivityList);
+                                                            if (consecutiveActivityList.size() > 0) {
+                                                                generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                        lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration, consecutiveActivityList);
+                                                            }
 
                                                             generatePhoneTimeVarianceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
@@ -952,14 +954,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                Date startTimeOfActivity = timecardEntry.getSourceFromTime();
-                Date endTimeOfActivity = timecardEntry.getSourceToTime();
-
-                if (consecutiveActivityList.size() > 0 ) {
+//                Date startTimeOfActivity = timecardEntry.getSourceFromTime();
+//                Date endTimeOfActivity = timecardEntry.getSourceToTime();
+//
+//                if (consecutiveActivityList.size() > 0 ) {
                     //Since the list is in the reverse order with respect to time
-                     startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getSourceFromTime();
-                     endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
-                }
+                     Date startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getSourceFromTime();
+                     Date endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
+//                }
 
                 TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 //                durationToleranceNotification.setCreatedOn(new Date());
@@ -970,7 +972,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
 //                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), totalDuration));
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardActivity.getCode(), formatDate(startTimeOfActivity, DATE_TIME_FORMAT_12_HR), formatDate(endTimeOfActivity, DATE_TIME_FORMAT_12_HR), totalDuration));
+                        timecardActivity.getCode(), formatDate(startTimeOfActivity, DATE_TIME_FORMAT_12_HR), formatDate(endTimeOfActivity, DATE_TIME_FORMAT_12_HR), totalDuration, DURATION_MAX));
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
