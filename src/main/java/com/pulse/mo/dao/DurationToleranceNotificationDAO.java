@@ -49,7 +49,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"DURATION_TOLERANCE_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"CREATED_ON\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"DURATION_TOLERANCE_NOTIF\".\"WORKED_ID\",\"DURATION_TOLERANCE_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"DURATION_TOLERANCE_NOTIF\".\"TYPE\",\"DURATION_TOLERANCE_NOTIF\".\"CREATED_ON\",\"DURATION_TOLERANCE_NOTIF\".\"MESSAGE\",\"DURATION_TOLERANCE_NOTIF\".\"NAME\",\"DURATION_TOLERANCE_NOTIF\".\"AGENT_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"DURATION_TOLERANCE_NOTIF\".\"WORKED_ID\",\"DURATION_TOLERANCE_NOTIF\".\"IS_READ\",\"DURATION_TOLERANCE_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"DURATION_TOLERANCE_NOTIF\" \"DURATION_TOLERANCE_NOTIF\"";
     private String whereClause = "  WHERE \"DURATION_TOLERANCE_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -166,7 +166,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
-
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
             nextResult.setName(rs.getString("NAME"));
 
@@ -258,6 +258,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
         }
 
         pstmt.setBoolean(11, perceroObject.getIsRead());
+        pstmt.setString(12, perceroObject.getTimecardId());
 
     }
 
@@ -373,6 +374,19 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -478,7 +492,7 @@ public class DurationToleranceNotificationDAO extends SqlDataAccessProcObject<Du
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_DURATION_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

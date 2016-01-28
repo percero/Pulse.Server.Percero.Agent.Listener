@@ -2,12 +2,21 @@ package com.pulse.amqp;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.percero.agents.sync.access.IAccessManager;
+import com.percero.agents.sync.access.RedisKeyUtils;
 import com.percero.agents.sync.helpers.PostPutHelper;
+import com.percero.agents.sync.metadata.IMappedClassManager;
+import com.percero.agents.sync.metadata.MappedClass;
+import com.percero.agents.sync.metadata.MappedClassManagerFactory;
+import com.percero.agents.sync.metadata.MappedField;
+import com.percero.agents.sync.services.IDataProvider;
+import com.percero.agents.sync.vo.ObjectModJournal;
 import com.percero.framework.vo.IPerceroObject;
 import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
@@ -42,7 +51,8 @@ import com.pulse.mo.*;
  * @author Percero
  */
 public class Main {
-    private static Logger logger = Logger.getLogger(Main.class);
+    private static final Logger log = Logger.getLogger(Main.class);
+
 
     public static final String CONNECTION_FACTORY_NAME = "estart";
     public static long LONG_RUNNING_QUERY_TIME = 2000;
@@ -69,6 +79,9 @@ public class Main {
 
     protected static ISyncAgentService syncAgentService;
 
+    @Autowired
+    protected static  IAccessManager accessManager;
+
     /**
      * Main function for starting the process
      */
@@ -81,16 +94,35 @@ public class Main {
         if (args.length > 0)
             config = args[0];
 
-        logger.info("Using config: " + config);
+        log.info("Using config: " + config);
         ApplicationContext context =
                 new ClassPathXmlApplicationContext(new String[]{config, "spring/*.xml"});
-        logger.debug(context.toString());
+        log.debug(context.toString());
 
-        logger.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
+        log.info("\n\n****************************************\nApplication Started\n****************************************\n\n");
 
 //        getNotificationFromTimecardEntry(context);
 //        doUnitTestsOnMain(context);
 //        testNewNotificationsUnReads(context);
+//        try {
+//            ghostDeletionByTimecardId(context);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private static void ghostDeletionByTimecardId(ApplicationContext context) throws Exception {
+
+//        223598983
+
+        syncAgentService = context.getBean(ISyncAgentService.class);
+        accessManager = context.getBean(IAccessManager.class);
+
+        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+        findLOBConfigurationNotificaiton.setTimecardId("223598983");
+
+        deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+
     }
 
     private static void doUnitTestsOnMain(ApplicationContext context) {
@@ -100,9 +132,10 @@ public class Main {
 
     private static void testNewNotificationsUnReads(ApplicationContext context){
         syncAgentService = context.getBean(ISyncAgentService.class);
+        accessManager = context.getBean(IAccessManager.class);
 
         TeamLeader teamLeader = new TeamLeader();
-        teamLeader.setID("100691874");//100139921
+        teamLeader.setID("100500731");//100139921
 //        teamLeader.setID("100544696");
         try {
             teamLeader = (TeamLeader) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(teamLeader));
@@ -141,7 +174,7 @@ public class Main {
             while (itrNotifications.hasNext()) {
                 Notification notification = syncAgentService.systemGetByObject(itrNotifications.next());
 
-                System.out.println(notification);
+                System.out.println(notification.getCreatedOn());
             }
 //
             System.out.println("done");
@@ -323,17 +356,17 @@ public class Main {
 
                 Iterator<Timecard> itrTimecard = nextAgent.getTimecards().iterator();
 
-                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
-                while (itrCMSEntries.hasNext()) {
-                    CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
-
-//                        System.out.println("timecard start date : " + timecard.getStartDate());
-                    //9th dec entry process
-                    if (cmsEntry != null) { //&& timecard.getStartDate().getDay() == 9 && timecard.getStartDate().getMonth()==11){
-
-                        handleCmsEntryNotification(cmsEntry);
-                    }
-                }
+//                Iterator<CMSEntry> itrCMSEntries = nextAgent.getCMSEntries().iterator();
+//                while (itrCMSEntries.hasNext()) {
+//                    CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCMSEntries.next());
+//
+////                        System.out.println("timecard start date : " + timecard.getStartDate());
+//                    //9th dec entry process
+//                    if (cmsEntry != null) { //&& timecard.getStartDate().getDay() == 9 && timecard.getStartDate().getMonth()==11){
+//
+//                        handleCmsEntryNotification(cmsEntry);
+//                    }
+//                }
 
                 while (itrTimecard.hasNext()) {
                     Timecard timecard = syncAgentService.systemGetByObject(itrTimecard.next());
@@ -367,301 +400,339 @@ public class Main {
     }
 
 
-    private static void handleCmsEntryNotification(CMSEntry updatedObject) throws Exception {
+    private void handleCmsEntryNotification(CMSEntry updatedObject) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
         try {
 
 
-            if (updatedObject != null && updatedObject instanceof CMSEntry) {
-                CMSEntry cmsEntry = (CMSEntry) updatedObject;
-                Agent agent = null;
-                TeamLeader teamLeader = null;
 
-                if (cmsEntry != null) {
-                    //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                if (updatedObject != null && updatedObject instanceof CMSEntry) {
+                    CMSEntry cmsEntry = (CMSEntry) updatedObject;
+                    Agent agent = null;
+                    TeamLeader teamLeader = null;
 
-                    // 1. Check for Work Mode DURATION Tolerance
+                    if (cmsEntry != null) {
+                        //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
-                    //Work Mode Duration
-                    //For the watched CMSEntry,
-                    //Use the AuxCode in the Entry and look into the configuration.
-                    //Use min and max value associated with it to check the duration is within the allowed range.
-                    //In condition fails, generate notification
-                    //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
+                        // 1. Check for Work Mode DURATION Tolerance
+
+                        //Work Mode Duration
+                        //For the watched CMSEntry,
+                        //Use the AuxCode in the Entry and look into the configuration.
+                        //Use min and max value associated with it to check the duration is within the allowed range.
+                        //In condition fails, generate notification
+                        //For now AuxCode look-up is assumed and possible retrived min/max is hard-coded in the logic.
 
 //                        cmsEntry.getCMSAuxMode()
-                    if (agent == null) {
-                        agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
-                    }
+                        if (agent == null) {
+                            agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
+                        }
 
-                    if (agent != null) {
+                        if (agent != null) {
 
-                        //TODO:Test Data : Remove once LOB done
-                        LOB tlob = new LOB();
-                        tlob.setID("13573");
+                            //TODO:Test Data : Remove once LOB done
+                            LOB tlob = new LOB();
+                            tlob.setID("13573");
 
-                        AgentLOB agentLOB = new AgentLOB();
-                        agentLOB.setID(agent.getID() + "-" + tlob.getID());
-                        agentLOB.setLOB(tlob);
-                        agentLOB.setAgent(agent);
+                            AgentLOB agentLOB = new AgentLOB();
+                            agentLOB.setID(agent.getID() + "-" +tlob.getID());
+                            agentLOB.setLOB(tlob);
+                            agentLOB.setAgent(agent);
 
-                        agent.getAgentLOBs().add(agentLOB);
+                            agent.getAgentLOBs().add(agentLOB);
 
-                        if (agent.getAgentLOBs().size() == 1) {
+                            if (agent.getAgentLOBs().size() == 1) {
 
-                            //Valid scenario for notification
-//                            AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
+                                //Valid scenario for notification
+//                                AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
 
-                            if (agentLOB != null) {
+                                if (agentLOB != null) {
 
-                                LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+                                    LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
 
-                                if (lob != null) {
+                                    if (lob != null) {
 
-                                    List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+                                        List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
 
-                                    if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
+                                        if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
 
-                                        LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
-                                        Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+                                            LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+                                            Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
 
-                                        while (itrLobConfigurationEntry.hasNext()) {
+                                            while (itrLobConfigurationEntry.hasNext()) {
 
-                                            LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+                                                LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
 
-                                            if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
-                                                if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
-                                                        (lobConfigurationEntry.getCMSAuxCode() != null &&
-                                                                cmsEntry.getCMSAuxMode() != null &&
-                                                                lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
-                                                    //valid logic
-                                                    //Logically there will be only one entry per AuxCode so this condition will be invoked only once
-                                                    //This implies that only one notiifcation of each type can be generated.
-                                                    generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
-                                                    generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                                if ("CMS_AUX_CODE".equals(lobConfigurationEntry.getType())) {
+                                                    if ((lobConfigurationEntry.getCMSAuxCode() == null && cmsEntry.getCMSAuxMode() == null) ||
+                                                            (lobConfigurationEntry.getCMSAuxCode() != null &&
+                                                                    cmsEntry.getCMSAuxMode() != null &&
+                                                                    lobConfigurationEntry.getCMSAuxCode().equals(cmsEntry.getCMSAuxMode()))) {
+                                                        //valid logic
+                                                        //Logically there will be only one entry per AuxCode so this condition will be invoked only once
+                                                        //This implies that only one notiifcation of each type can be generated.
+                                                        generateWorkDurationNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+                                                        generateWorkModeOccurrenceNotification(cmsEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry);
+
+                                                    }
 
                                                 }
-
                                             }
-                                        }
 
+                                        }
                                     }
                                 }
                             }
-                        }
 //                            else {
 //                                //Not a Valid scenario for notification
 //                                // Do not send notification
-//                                System.out.println("****** CMS Entry based notification is not generated due to following configuration ******");
-//                                System.out.println("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                                log.debug("****** CMS Entry based notification is not generated due to following configuration ******");
+//                                log.debug("Agent : " + agent.getID() + " : CMSEntry : " + cmsEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
+                        }
                     }
-                }
 
-                // 2.
-
-
-                // 3.
+                    // 2.
 
 
-                // 4.
+                    // 3.
 
-            } else {
-                //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                //This is a situation where we need to clean the orphaned notifications associated with deleted entry
 
-                CMSEntry criteriaCMSEntry = new CMSEntry();
-                criteriaCMSEntry.setID(updatedObject.getID());
+                    // 4.
 
-                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where CMSEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
 
-                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+                    CMSEntry criteriaCMSEntry = new CMSEntry();
+                    criteriaCMSEntry.setID(updatedObject.getID());
+
+                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+                    searchAndDeleteLOBNotification.setCMSEntry(criteriaCMSEntry);
+
+                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+
+
+
 
 
             }
-
-
         } catch (Exception e) {
             // Handle exception
-            System.out.println("Error in LOB Notification" + e);
+            log.error("Error in LOB Notification", e);
         }
     }
-
 
     private static void handleTimecardEntryNotification(TimecardEntry updatedObject) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
         try {
 
 
-            if (updatedObject != null && updatedObject instanceof TimecardEntry) {
-                TimecardEntry timecardEntry = (TimecardEntry) updatedObject;
-                Agent agent = null;
-                TeamLeader teamLeader = null;
+                if (updatedObject != null && updatedObject instanceof TimecardEntry) {
+                    TimecardEntry timecardEntry = (TimecardEntry) updatedObject;
+                    Agent agent = null;
+                    TeamLeader teamLeader = null;
 
-                // DO NOT CHANGE THE CONDITION, THIS WILL MAKE SYSTEM CRAZY SINCE THERE ARE LOTS OF SYSTEM GENERATED TIMECARD ENTRIES HAVING EStartProjectName = 'IEX'
-                // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX"
-                // means the entry is genertaed by system not the one entered by Agent, hence there is no need to process it.
-                // No notification on system generated Entries.
-                if (timecardEntry != null && !timecardEntry.getEStartProjectName().equalsIgnoreCase("IEX")) {
-                    //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    // DO NOT CHANGE THE CONDITION, THIS WILL MAKE SYSTEM CRAZY SINCE THERE ARE LOTS OF SYSTEM GENERATED TIMECARD ENTRIES HAVING EStartProjectName = 'IEX'
+                    // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX"
+                    // means the entry is genertaed by system not the one entered by Agent, hence there is no need to process it.
+                    // No notification on system generated Entries.
+                    if (timecardEntry != null && !timecardEntry.getEStartProjectName().equalsIgnoreCase("IEX")) {
+                        //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
-                    // 1. eStart InValid Activity code
+                        // 1. eStart InValid Activity code
 
-                    //For the watched TimecardEntry,
-                    //Use the ActivityCode in the Entry and look into the configuration Along with key for "NON-BILLABLE" (Still need to be decided for the key).
-                    //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
-                    //In condition fails, generate notification
+                        //For the watched TimecardEntry,
+                        //Use the ActivityCode in the Entry and look into the configuration Along with key for "NON-BILLABLE" (Still need to be decided for the key).
+                        //If timecardEntry.getTimecardActivity().getCode() is in the list of activitycode retrived from LOBConfig, it is nonbillable activity code
+                        //In condition fails, generate notification
 
-                    if (agent == null) {
-                        agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
-                    }
-                    LOB tlob = new LOB();
-                    tlob.setID("13573");
+                        if (agent == null) {
+                            agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
+                        }
+                        LOB tlob = new LOB();
+                        tlob.setID("13573");
 
-                    AgentLOB agentLOB = new AgentLOB();
-                    agentLOB.setID(agent.getID() + "-" + tlob.getID());
-                    agentLOB.setLOB(tlob);
-                    agentLOB.setAgent(agent);
+                        AgentLOB agentLOB = new AgentLOB();
+                        agentLOB.setID(agent.getID() + "-" +tlob.getID());
+                        agentLOB.setLOB(tlob);
+                        agentLOB.setAgent(agent);
 
-                    agent.getAgentLOBs().add(agentLOB);
+                        agent.getAgentLOBs().add(agentLOB);
 
-                    if (agent != null) {
-                        if (agent.getAgentLOBs().size() == 1) {
+                        if (agent != null) {
+                            if (agent.getAgentLOBs().size() == 1) {
 
 
-                            //Valid scenario for notification
-                            //Pick up the first AgentLOB because it is assumed that if Agent has other than 1 AgentLOB it is invalid scenario for Notification
+                                //Valid scenario for notification
+                                //Pick up the first AgentLOB because it is assumed that if Agent has other than 1 AgentLOB it is invalid scenario for Notification
 //                                AgentLOB agentLOB = syncAgentService.systemGetByObject(agent.getAgentLOBs().get(0));
 
-                            if (agentLOB != null) {
+                                if (agentLOB != null) {
 
-                                LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
+                                    LOB lob = syncAgentService.systemGetByObject(agentLOB.getLOB());
 
-                                if (lob != null) {
+                                    if (lob != null) {
 
-                                    List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
+                                        List<LOBConfiguration> lobConfigurationList = lob.getLOBConfigurations();
 
-                                    if (lobConfigurationList != null & lobConfigurationList.size() > 0) {
+                                        if (lobConfigurationList != null && lobConfigurationList.size() > 0) {
 
-                                        //Preloading objects inorder do code duplication in subsequent calls.
-                                        //Not passing them due to avoid long signatures. This will not make performance impact because rest
-                                        //is in memory operations
-                                        Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
-                                        TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+                                            //Preloading objects inorder do code duplication in subsequent calls.
+                                            //Not passing them due to avoid long signatures. This will not make performance impact because rest
+                                            //is in memory operations
+                                            Timecard timecard = syncAgentService.systemGetByObject(timecardEntry.getTimecard());
+                                            TimecardActivity timecarActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                                        List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
-
-                                        Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, timecardEntry, timecarActivity.getCode(), consecutiveActivityList);
-
-                                        //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
-                                        // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
-                                        // the first record.
-                                        // TODO: TO BE CONFIRMED WITH RICHARD.
-                                        LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
-
-                                        List<String> validActivityCodeList = new ArrayList<String>();
-                                        List<String> nonBillableActivityCodeList = new ArrayList<String>();
-
-                                        Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
-
-                                        while (itrLobConfigurationEntry.hasNext()) {
-
-                                            LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
-
-                                            if (lobConfigurationEntry != null && lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
-
-                                                if ("VALID_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
+                                            List<TimecardEntry> sortedTimecardEntries = getSortedTimecardEntries(timecard.getTimecardEntries());
+                                            List<TimecardEntry> consecutiveActivityList = new ArrayList<TimecardEntry>();
 
 
-                                                    validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+                                            Double consecutiveActivityDuration = getConsecutiveActivityCodeDetailFromTimecard(agent, sortedTimecardEntries, timecardEntry,
+                                                    timecarActivity.getCode(), consecutiveActivityList);
+                                            int activityCodeOccurrenceCount = getOccurrenceOfActivityCode(agent, sortedTimecardEntries, timecardEntry,
+                                                    timecarActivity.getCode());
+
+                                            //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
+                                            // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
+                                            // the first record.
+                                            // TODO: TO BE CONFIRMED WITH RICHARD.
+                                            LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
+
+                                            List<String> validActivityCodeList = new ArrayList<String>();
+                                            List<String> nonBillableActivityCodeList = new ArrayList<String>();
+
+                                            Iterator<LOBConfigurationEntry> itrLobConfigurationEntry = lobConfiguration.getLOBConfigurationEntries().iterator();
+
+                                            while (itrLobConfigurationEntry.hasNext()) {
+
+                                                LOBConfigurationEntry lobConfigurationEntry = syncAgentService.systemGetByObject(itrLobConfigurationEntry.next());
+
+                                                if (lobConfigurationEntry != null && lobConfigurationEntry.getType() != null && lobConfigurationEntry.getESTARTActivityCode() != null) {
+
+                                                    if ("VALID_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
 
 
-                                                    if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
-                                                            (lobConfigurationEntry.getESTARTActivityCode() != null && timecarActivity.getCode() != null &&
-                                                                    lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
+                                                        validActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+
+
+                                                        if ((lobConfigurationEntry.getESTARTActivityCode() == null && timecarActivity.getCode() == null) ||
+                                                                (lobConfigurationEntry.getESTARTActivityCode() != null && timecarActivity.getCode() != null &&
+                                                                        lobConfigurationEntry.getESTARTActivityCode().equals(timecarActivity.getCode()))) {
 
                                                             generateOccurrenceToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
+                                                                    lobConfiguration, lobConfigurationEntry, activityCodeOccurrenceCount);
 
-                                                            generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
-                                                                    lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration);
+                                                            if (consecutiveActivityList.size() > 0) {
+                                                                generateDurationToleranceNotification(timecardEntry, agent, teamLeader,
+                                                                        lobConfiguration, lobConfigurationEntry, consecutiveActivityDuration, consecutiveActivityList);
+                                                            }
 
                                                             generatePhoneTimeVarianceNotification(timecardEntry, agent, teamLeader,
                                                                     lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
 
+                                                        }
+                                                    } else if ("NONBILLABLE_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
+
+
+                                                        nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
+
                                                     }
-                                                } else if ("NONBILLABLE_ACTIVITY_CODE".equals(lobConfigurationEntry.getType())) {
-
-
-                                                    nonBillableActivityCodeList.add(lobConfigurationEntry.getESTARTActivityCode());
-
                                                 }
                                             }
+
+
+                                            //Generate Invalid Activity Code Notification if TimecardEntry Activity's activity code is not in the list of valid code
+                                            generateInvalidActivityCodeNotification(timecardEntry, agent, teamLeader, validActivityCodeList, lobConfiguration);
+
+                                            //Generate NonBillable Activity Code Notification if TimecardEntry Activity's activity code is in the list of NonBillable code
+                                            generateNonBillableActivityCodeNotification(timecardEntry, agent, teamLeader, nonBillableActivityCodeList, lobConfiguration);
+
+
                                         }
 
-
-                                        //Generate Invalid Activity Code Notification if TimecardEntry Activity's activity code is not in the list of valid code
-                                        generateInvalidActivityCodeNotification(timecardEntry, agent, teamLeader, validActivityCodeList, lobConfiguration);
-
-                                        //Generate NonBillable Activity Code Notification if TimecardEntry Activity's activity code is in the list of NonBillable code
-                                        generateNonBillableActivityCodeNotification(timecardEntry, agent, teamLeader, nonBillableActivityCodeList, lobConfiguration);
-
-
                                     }
-
                                 }
                             }
-                        }
 //                            else {
 //
 //                                //Not a Valid scenario for notification
 //                                // Do not send notification
-//                                System.out.println("****** TimeCard Entry based notification is not generated due to following configuration ******");
-//                                System.out.println("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
+//                                log.debug("****** TimeCard Entry based notification is not generated due to following configuration ******");
+//                                log.debug("Agent : " + agent.getID() + " : TimecardEntry : " + timecardEntry.getID() + " having AgentLOB Count (" + agent.getAgentLOBs().size() + ") - But only ONE AgentLOB expected");
 //                            }
+                        }
                     }
+
+                    // 3.
+
+
+                    // 4.
+
+                } else {
+                    //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
+                    //This is a special case where TimecardEntry is deleted but watched by Watcher since there is change in the Entry/Object.
+                    //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
+                    //This is a situation where we need to clean the orphaned notifications associated with deleted entry
+
+                    //This code moved to delete Timecard Entry logic
+//                    TimecardEntry criteriaTimecardEntry = new TimecardEntry();
+//                    criteriaTimecardEntry.setID(classId);
+//
+//                    LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+//                    searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
+//
+//                    deleteOrphanedNotifications(searchAndDeleteLOBNotification);
                 }
-
-                // 3.
-
-
-                // 4.
-
-            } else {
-                //Entry DELETED and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
-                //This is a special case where TimecardEntry is deleted but watched by Watcher since there is change in the Entry/Object.
-                //When try to rerieve using SyncEngine syncAgentService it returns NULL because the object is deleted.
-                //This is a situation where we need to clean the orphaned notifications associated with deleted entry
-                TimecardEntry criteriaTimecardEntry = new TimecardEntry();
-                criteriaTimecardEntry.setID(updatedObject.getID());
-
-                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
-                searchAndDeleteLOBNotification.setTimecardEntry(criteriaTimecardEntry);
-
-                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
-            }
 
 
         } catch (Exception e) {
             // Handle exception
-            System.out.println("Error in LOB Notification" + e);
+            log.error("Error in LOB Notification", e);
         }
     }
 
-    private static void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
-                                                         LOBConfigurationEntry lobConfigurationEntry) throws Exception {
+    private void generateWorkDurationNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
+                                                  LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
         Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMin());
         Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.valueOf(lobConfigurationEntry.getMax());
 
-        Double duration = cmsEntry.getDuration();
+        Collection<String> fieldsToWatch = new HashSet<String>();
+        ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
+        accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
+        //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
+        String timeZone = agent.getTimeZone();
+        Date fromDate = null;
+        Date toDate = null;
+        try {
+            DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+            if (dateTimeZone != null) {
+                //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+                // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+                // Do not change the code here. Following is the best approach
+                int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+
+                fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
+                toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
+            } else {
+                log.warn("Invalid time zone " + timeZone);
+            }
+        } catch (Exception e) {
+            // Invalid time zone.
+            log.error("Invalid time zone " + timeZone, e);
+        }
+
+        //Instead of using cmsEntry duration calc from from/to date
+//        Double duration = cmsEntry.getDuration();
+        int intDuration = calLapsMin(fromDate, toDate);
         // If the duration is > DURATION_MAX, then create the notification.
         //Assumption duration can not be nagative since it is different of two time it will be always 0 or greater than 0.
         //this lobConfigurationEntry.getMax()==null is there to support specific situation where if min/max is null means no all values in duration is valid.
-        if (duration != null && lobConfigurationEntry.getMax() != null && (duration.compareTo(DURATION_MIN) < 0 || duration.compareTo(DURATION_MAX) > 0)) {
+
+        if (lobConfigurationEntry.getMax() != null && (intDuration < DURATION_MIN || intDuration > DURATION_MAX)) {
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(cmsEntry.getAgent());
             }
@@ -672,6 +743,7 @@ public class Main {
             if (agent != null && teamLeader != null) {
                 WorkDurationNotification workDurationNotification = null;
                 boolean isExistingNotif = false;
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -693,62 +765,40 @@ public class Main {
                     workDurationNotification.setTeamLeader(teamLeader);
                 }
 
-                Collection<String> fieldsToWatch = new HashSet<String>();
-                ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
-//                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
-                //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
-                String timeZone = agent.getTimeZone();
-                Date fromDate = null;
-                Date toDate = null;
-                try {
-                    DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
-                    if (dateTimeZone != null) {
-                        //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
-                        // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
-                        // Do not change the code here. Following is the best approach
-                        int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
 
-                        fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
-                        toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
-                    } else {
-                        System.out.println("Invalid time zone " + timeZone);
-                    }
-                } catch (Exception e) {
-                    // Invalid time zone.
-                    System.out.println("Invalid time zone " + timeZone + e);
-                }
+//                workDurationNotification.setCreatedOn(new Date());
+                workDurationNotification.setCreatedOn(cmsEntry.getFromTime());
 
 
-                workDurationNotification.setCreatedOn(new Date());
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
-                workDurationNotification.setName("Work Duration Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode());
+                workDurationNotification.setName("Work Duration Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setType("WorkDurationNotification");
 
 
                 //Do not use the duration property of the CMSEntry, since it has decimal value. Customer do not want round half up either hence followed a patterned
                 // which was implemented on UI for calculating duration
-                int intDuration = calLapsMin(fromDate, toDate);
+//                int intDuration = calLapsMin(fromDate, toDate);
 //                workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
 //                        cmsEntry.getFromTime(), cmsEntry.getToTime(), duration)); //xxx
                 workDurationNotification.setMessage(MessageFormat.format(WORK_MODE_DURATION_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
-                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), intDuration)); //xxx
+                        formatDate(fromDate, DATE_TIME_FORMAT_12_HR), formatDate(toDate, DATE_TIME_FORMAT_12_HR), String.valueOf(intDuration), DURATION_MAX)); //xxx
 
                 workDurationNotification.setLOBConfiguration(lobConfiguration); //xxx
                 workDurationNotification.setLOBConfigurationEntry(lobConfigurationEntry);//xxx
                 workDurationNotification.setCMSEntry(cmsEntry);
                 workDurationNotification.setIsRead(false);
 
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(workDurationNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(workDurationNotification, null);
-                }
+//                if (isExistingNotif) {
+//                    syncAgentService.systemPutObject(workDurationNotification, null, null, null, true);
+//                } else {
+//                    syncAgentService.systemCreateObject(workDurationNotification, null);
+//                }
             }
         }
     }
 
-    private static void generateWorkModeOccurrenceNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
-                                                               LOBConfigurationEntry lobConfigurationEntry) throws Exception {
+    private void generateWorkModeOccurrenceNotification(CMSEntry cmsEntry, Agent agent, TeamLeader teamLeader, LOBConfiguration lobConfiguration,
+                                                        LOBConfigurationEntry lobConfigurationEntry) throws Exception {
 
         Integer OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
@@ -771,8 +821,9 @@ public class Main {
             if (agent != null && teamLeader != null) {
 
                 WorkModeOccurrenceNotification workModeOccurrenceNotification = null;
-
+                Collection<String> fieldsToWatch = new HashSet<String>();
                 boolean isExistingNotif = false;
+                accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "notifications", fieldsToWatch);
                 Iterator<LOBConfigurationNotification> itrNotifications = cmsEntry.getNotifications().iterator();
                 while (itrNotifications.hasNext()) {
                     LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
@@ -794,9 +845,9 @@ public class Main {
                     workModeOccurrenceNotification.setTeamLeader(teamLeader);
                 }
 
-                Collection<String> fieldsToWatch = new HashSet<String>();
+
                 ClassIDPair agentPair = BaseDataObject.toClassIdPair(agent);
-//                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
+                accessManager.addWatcherField(agentPair, "timeZone", fieldsToWatch);
                 //Using this property which extract the timezone string from AgentTimeZone object. Following the general pattern followed in the project
                 String timeZone = agent.getTimeZone();
                 Date fromDate = null;
@@ -812,15 +863,17 @@ public class Main {
                         fromDate = new DateTime(beginDate.getTime() + offsetInMs).toDate();
                         toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
                     } else {
-                        System.out.println("Invalid time zone " + timeZone);
+                        log.warn("Invalid time zone " + timeZone);
                     }
                 } catch (Exception e) {
                     // Invalid time zone.
-                    System.out.println("Invalid time zone " + timeZone + e);
+                    log.error("Invalid time zone " + timeZone, e);
                 }
 
-                workModeOccurrenceNotification.setCreatedOn(new Date());
-                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + "-" + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + "-" + cmsEntry.getCMSAuxMode() + "-" + cmsEntryList.size());
+//                workModeOccurrenceNotification.setCreatedOn(new Date());
+
+                workModeOccurrenceNotification.setCreatedOn(cmsEntry.getFromTime());
+                workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode() + " - " + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
                 workModeOccurrenceNotification.setMessage(MessageFormat.format(WORK_MODE_OCCURRENCE_NOTIIFCATION_MESSAGE, agent.getFullName(), cmsEntry.getCMSAuxMode(),
@@ -829,11 +882,11 @@ public class Main {
                 workModeOccurrenceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 workModeOccurrenceNotification.setCMSEntry(cmsEntry);
                 workModeOccurrenceNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(workModeOccurrenceNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
-                }
+//                if (isExistingNotif) {
+//                    syncAgentService.systemPutObject(workModeOccurrenceNotification, null, null, null, true);
+//                } else {
+//                    syncAgentService.systemCreateObject(workModeOccurrenceNotification, null);
+//                }
 
             }
         }
@@ -851,7 +904,9 @@ public class Main {
                                                                 LOBConfiguration lobConfiguration) throws Exception {
 
 
-        if (!validActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+        TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+        if (!validActivityCodeList.contains(timecardActivity.getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
@@ -863,19 +918,24 @@ public class Main {
             if (agent != null && teamLeader != null) {
                 InvalidActivityCodeNotification invalidActivityCodeNotification = null;
 
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("InvalidActivityCodeNotification".equals(notification.getType())) {
-                        invalidActivityCodeNotification = (InvalidActivityCodeNotification) notification;
-//                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
-//                        invalidActivityCodeNotification.setID(notification.getID());
-//                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
-//                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+//                boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("InvalidActivityCodeNotification".equals(notification.getType())) {
+//                        invalidActivityCodeNotification = (InvalidActivityCodeNotification) notification;
+////                        invalidActivityCodeNotification = new InvalidActivityCodeNotification();
+////                        invalidActivityCodeNotification.setID(notification.getID());
+////                        invalidActivityCodeNotification.setAgent(notification.getAgent()); //xxxx
+////                        invalidActivityCodeNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (invalidActivityCodeNotification == null) {
@@ -885,20 +945,26 @@ public class Main {
                     invalidActivityCodeNotification.setTeamLeader(teamLeader);
                 }
 
-                invalidActivityCodeNotification.setCreatedOn(new Date());
-                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+
+//                invalidActivityCodeNotification.setCreatedOn(new Date());
+
+                invalidActivityCodeNotification.setCreatedOn(timecardEntry.getSourceFromTime());
+                invalidActivityCodeNotification.setName("Invalid Activity Code Notification" + " - " + timecardActivity.getCode());
                 invalidActivityCodeNotification.setType("InvalidActivityCodeNotification");
                 invalidActivityCodeNotification.setMessage(MessageFormat.format(INVALID_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
                 invalidActivityCodeNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
-                }
+
+//                if (isExistingNotif) {
+//                    //Update notification
+//                    syncAgentService.systemPutObject(invalidActivityCodeNotification, null, null, null, true);
+//                } else {
+//                  //Create notification
+//                syncAgentService.systemCreateObject(invalidActivityCodeNotification, null);
+//                }
             }
         }
     }
@@ -907,7 +973,9 @@ public class Main {
                                                                     LOBConfiguration lobConfiguration) throws Exception {
 
 
-        if (!nonBillableActivityCodeList.contains(timecardEntry.getTimecardActivity().getCode())) {
+        TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+        if (nonBillableActivityCodeList.contains(timecardActivity.getCode())) {
 
             if (agent == null) {
                 agent = syncAgentService.systemGetByObject(timecardEntry.getAgent());
@@ -919,19 +987,24 @@ public class Main {
             if (agent != null && teamLeader != null) {
                 NonBillableActivityNotification nonBillableActivityNotification = null;
 
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("NonBillableActivityNotification".equals(notification.getType())) {
-                        nonBillableActivityNotification = (NonBillableActivityNotification) notification;
-//                        nonBillableActivityNotification = new NonBillableActivityNotification();
-//                        nonBillableActivityNotification.setID(notification.getID());
-//                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
-//                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+//                boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("NonBillableActivityNotification".equals(notification.getType())) {
+//                        nonBillableActivityNotification = (NonBillableActivityNotification) notification;
+////                        nonBillableActivityNotification = new NonBillableActivityNotification();
+////                        nonBillableActivityNotification.setID(notification.getID());
+////                        nonBillableActivityNotification.setAgent(notification.getAgent()); //xxxx
+////                        nonBillableActivityNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (nonBillableActivityNotification == null) {
@@ -941,33 +1014,40 @@ public class Main {
                     nonBillableActivityNotification.setTeamLeader(teamLeader);
                 }
 
-                nonBillableActivityNotification.setCreatedOn(new Date());
-                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + "-" + timecardEntry.getTimecardActivity().getCode());
+
+//                nonBillableActivityNotification.setCreatedOn(new Date());
+
+                nonBillableActivityNotification.setCreatedOn(timecardEntry.getSourceFromTime());
+                nonBillableActivityNotification.setName("Non-Billable Activity Notification" + " - " + timecardActivity.getCode());
                 nonBillableActivityNotification.setType("NonBillableActivityNotification");
                 nonBillableActivityNotification.setTimecardActivity(timecardEntry.getTimecardActivity());
 
                 nonBillableActivityNotification.setMessage(MessageFormat.format(NONBILLABLE_ACTIVITY_CODE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
                 nonBillableActivityNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
-                }
+
+//                if (isExistingNotif) {
+//                   //update notification
+//                    syncAgentService.systemPutObject(nonBillableActivityNotification, null, null, null, true);
+//                } else {
+//                  //create notification
+//                syncAgentService.systemCreateObject(nonBillableActivityNotification, null);
+//                }
             }
         }
     }
 
     private static void generateOccurrenceToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
-                                                                LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
+                                                                LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
+                                                                int activityCodeOccurrenceCount) throws Exception {
 
 
         int OCCURRENCE_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
 
-        if (lobConfigurationEntry.getOccurrence() != null && consecutiveActivityList.size() > OCCURRENCE_MAX) {
+        if (lobConfigurationEntry.getOccurrence() != null && activityCodeOccurrenceCount > OCCURRENCE_MAX) {
 
 
             if (agent == null) {
@@ -980,20 +1060,26 @@ public class Main {
             if (agent != null && teamLeader != null) {
                 OccurrenceToleranceNotification occurrenceToleranceNotification = null;
 
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
 
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("OccurrenceToleranceNotification".equals(notification.getType())) {
-                        occurrenceToleranceNotification = (OccurrenceToleranceNotification) notification;
-//                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
-//                        occurrenceToleranceNotification.setID(notification.getID());
-//                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
-//                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+//                boolean isExistingNotif = false;
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("OccurrenceToleranceNotification".equals(notification.getType())) {
+//                        occurrenceToleranceNotification = (OccurrenceToleranceNotification) notification;
+////                        occurrenceToleranceNotification = new OccurrenceToleranceNotification();
+////                        occurrenceToleranceNotification.setID(notification.getID());
+////                        occurrenceToleranceNotification.setAgent(notification.getAgent()); //xxxx
+////                        occurrenceToleranceNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (occurrenceToleranceNotification == null) {
@@ -1003,28 +1089,33 @@ public class Main {
                     occurrenceToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                occurrenceToleranceNotification.setCreatedOn(new Date());
-                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + OCCURRENCE_MAX);
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+//                occurrenceToleranceNotification.setCreatedOn(new Date());
+
+                occurrenceToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
+                occurrenceToleranceNotification.setName("Occurrence Tolerance Notification" + " - " + timecardActivity.getCode() + " - " + activityCodeOccurrenceCount);
                 occurrenceToleranceNotification.setType("OccurrenceToleranceNotification");
 
                 occurrenceToleranceNotification.setMessage(MessageFormat.format(OCCURRENCE_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), OCCURRENCE_MAX));
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
                 occurrenceToleranceNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
-                }
+//                if (isExistingNotif) {
+//                    Notification already exists hence call update
+//                    syncAgentService.systemPutObject(occurrenceToleranceNotification, null, null, null, true);
+//                } else {
+//                      Create notification
+//                syncAgentService.systemCreateObject(occurrenceToleranceNotification, null);
+//                }
             }
         }
     }
 
     private static void generateDurationToleranceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
                                                               LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry,
-                                                              Double totalDuration) throws Exception {
+                                                              Double totalDuration, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
         Double DURATION_MIN = lobConfigurationEntry.getMin() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMin());
         Double DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0.0 : Double.parseDouble(lobConfigurationEntry.getMax());
@@ -1040,19 +1131,27 @@ public class Main {
 
             if (agent != null && teamLeader != null) {
                 DurationToleranceNotification durationToleranceNotification = null;
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("DurationToleranceNotification".equals(notification.getType())) {
-                        durationToleranceNotification = (DurationToleranceNotification) notification;
-//                        durationToleranceNotification = new DurationToleranceNotification();
-//                        durationToleranceNotification.setID(notification.getID());
-//                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
-//                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+
+//                boolean isExistingNotif = false;
+
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("DurationToleranceNotification".equals(notification.getType())) {
+//                        durationToleranceNotification = (DurationToleranceNotification) notification;
+////                        durationToleranceNotification = new DurationToleranceNotification();
+////                        durationToleranceNotification.setID(notification.getID());
+////                        durationToleranceNotification.setAgent(notification.getAgent()); //xxxx
+////                        durationToleranceNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (durationToleranceNotification == null) {
@@ -1062,44 +1161,64 @@ public class Main {
                     durationToleranceNotification.setTeamLeader(teamLeader);
                 }
 
-                durationToleranceNotification.setCreatedOn(new Date());
-                durationToleranceNotification.setName("Duration Tolerance Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+//                Date startTimeOfActivity = timecardEntry.getSourceFromTime();
+//                Date endTimeOfActivity = timecardEntry.getSourceToTime();
+//
+//                if (consecutiveActivityList.size() > 0 ) {
+                //Since the list is in the reverse order with respect to time
+                Date startTimeOfActivity = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getSourceFromTime();
+                Date endTimeOfActivity = consecutiveActivityList.get(0).getSourceToTime();
+//                }
+
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+//                durationToleranceNotification.setCreatedOn(new Date());
+                durationToleranceNotification.setCreatedOn(timecardEntry.getSourceFromTime());
+                durationToleranceNotification.setName("Duration Tolerance Notification" + " - " + timecardActivity.getCode() + " - " + totalDuration);
                 durationToleranceNotification.setType("DurationToleranceNotification");
 
+//                durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
+//                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR), totalDuration));
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR), DURATION_MAX));
+                        timecardActivity.getCode(), formatDate(startTimeOfActivity, DATE_TIME_FORMAT_12_HR), formatDate(endTimeOfActivity, DATE_TIME_FORMAT_12_HR), totalDuration, DURATION_MAX));
+                durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
-                durationToleranceNotification.setTimecardEntry(timecardEntry);
                 durationToleranceNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(durationToleranceNotification, null);
-                }
+//                if (isExistingNotif) {
+//                 // update notification
+//                    syncAgentService.systemPutObject(durationToleranceNotification, null, null, null, true);
+//                } else {
+//                 // create notification
+//                syncAgentService.systemCreateObject(durationToleranceNotification, null);
+//                }
             }
         }
     }
 
 
     //Utility methods specific to the notifications
-    private static Date getCurrentShiftCMSEntries(Agent agent, final List<CMSEntry> cmsEntriesOfTheShift, CMSEntry watchedCMSEntry) {
+    private Date getCurrentShiftCMSEntries(Agent agent, final List<CMSEntry> cmsEntriesOfTheShift, CMSEntry watchedCMSEntry) {
 
 //        List<CMSEntry> cmsEntriesOfTheShift = new ArrayList<CMSEntry>();
 
         Date beginDate = watchedCMSEntry.getFromTime();
 
-        List<CMSEntry> rawList = agent.getCMSEntries();
+//        List<CMSEntry> rawList = agent.getCMSEntries();
+//
+//
+//        ;;;;;;;;;;;;;==========
+//
+//        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+//
+//        for (int index=0 ; index < rawList.size() ; index++ ) {
+//
+//            CMSEntry cmsEntry = syncAgentService.systemGetByObject(rawList.get(index));
+//            sortedList.add(cmsEntry);
+//        }
 
-        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+        List<CMSEntry> sortedList = getSortedCMSEntries(agent.getCMSEntries());
 
-        for (int index = 0; index < rawList.size(); index++) {
-
-            CMSEntry cmsEntry = syncAgentService.systemGetByObject(rawList.get(index));
-            sortedList.add(cmsEntry);
-        }
-
-        Collections.sort(sortedList, new CMSEntryDateComparator());
+//        Collections.sort(sortedList, new CMSEntryDateComparator());
 
         //Iterator<CMSEntry> itrCMSEntry = agent.getCMSEntries().iterator();
         Date shiftDate = new Date(watchedCMSEntry.getFromTime().getTime());
@@ -1152,44 +1271,141 @@ public class Main {
         return beginDate;
     }
 
-    private static Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, TimecardEntry watchedTimecardEntry, String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
+    private static Double getConsecutiveActivityCodeDetailFromTimecard(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
+                                                                       String activityCode, List<TimecardEntry> timecardEntryListOfActivityCode) {
 
 //        Integer consecutiveAcitivityCount = 0;
+        boolean ignoreThisRecord = false;
         Double activityTimeSpan = 0.0;
 
         Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
 
-        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
+//        List<TimecardEntry> timecardEntryList = timecard.getTimecardEntries();
 
-        int indexOfWatchedEntry = timecardEntryList.indexOf(watchedTimecardEntry);
+        int indexOfWatchedEntry = 0;
+
+        for (int cnt = 0; cnt < sortedTimecardEntries.size(); cnt++) {
+            if (sortedTimecardEntries.get(cnt).getID().equals(watchedTimecardEntry.getID())) {
+                indexOfWatchedEntry = cnt;
+            }
+        }
+
+        //This is a special condition added to avoid unnecessary notifications for consecutive group of activities having same activiyt code.
+        //This condition will avoide creation of notification for it self if its successor available.
+        if (sortedTimecardEntries.size() - 1 > indexOfWatchedEntry){ //If this condition fails means this is the last watched entry is the last record.
+            //Get the next entry
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(indexOfWatchedEntry+1));
+            //Get the activity code
+            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+            //Check the similarity
+            if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                ignoreThisRecord = true;
+            }
+        }
+
+        //Assmuption is that it is the single entry having activity code at the position
+//        TimecardEntry endTimecardActivity = watchedTimecardEntry;
+//        TimecardEntry startTimecardActivity = watchedTimecardEntry;
 
         boolean processData = true;
 
-        //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
-        //Infact this logic is provided by CVG and they have assumption on this front
+        if (!ignoreThisRecord) {
+            //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
+            //Infact this logic is provided by CVG and they have assumption on this front
 //        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
-        for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
-            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(timecardEntryList.get(cnt));
+            for (int cnt = indexOfWatchedEntry; cnt >= 0 && processData; cnt--) {
+                TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
 
-            if (timecardEntry != null) {
+                if (timecardEntry != null) {
 
-                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+                    TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                //If code does not have consecutiveness then brk the loop
-                if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                    //If code does not have consecutiveness then brk the loop
+                    if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
 
-                    activityTimeSpan += timecardEntry.getDuration();
-                    timecardEntryListOfActivityCode.add(timecardEntry);
-                } else {
-                    processData = false;
+//                    activityTimeSpan += timecardEntry.getDuration();
+                        timecardEntryListOfActivityCode.add(timecardEntry);
+                    } else {
+                        processData = false;
+                    }
+                }
+            }
+
+            if (timecardEntryListOfActivityCode.size() > 0) {
+                //Entries are in reverse order due to last loop
+                TimecardEntry endTimecardActivity = timecardEntryListOfActivityCode.get(0);
+                TimecardEntry startTimecardActivity = timecardEntryListOfActivityCode.get(timecardEntryListOfActivityCode.size() - 1);
+
+                activityTimeSpan = (double) calLapsMin(startTimecardActivity.getSourceFromTime(), endTimecardActivity.getSourceToTime());
+
+                //Incase if there laps time in nagative this will cover it up
+                if (activityTimeSpan < 0) {
+                    activityTimeSpan *= -1;
+                }
+            }
+        }
+        return activityTimeSpan;
+    }
+
+    private static int getOccurrenceOfActivityCode(Agent agent, List<TimecardEntry> sortedTimecardEntries, TimecardEntry watchedTimecardEntry,
+                                                   String activityCode) {
+
+
+        boolean ignoreThisRecord = false;
+
+        int activityCodeOccurrenceCount = 0;
+
+        Timecard timecard = syncAgentService.systemGetByObject(watchedTimecardEntry.getTimecard());
+
+        int indexOfWatchedEntry = 0;
+
+        for (int cnt = 0; cnt < sortedTimecardEntries.size(); cnt++) {
+            if (sortedTimecardEntries.get(cnt).getID().equals(watchedTimecardEntry.getID())) {
+                indexOfWatchedEntry = cnt;
+            }
+        }
+
+        //This is a special condition added to avoid unnecessary notifications for consecutive group of activities having same activiyt code.
+        //This condition will avoide creation of notification for it self if its successor available.
+        if (sortedTimecardEntries.size() - 1 > indexOfWatchedEntry){ //If this condition fails means this is the last watched entry is the last record.
+            //Get the next entry
+            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(indexOfWatchedEntry+1));
+            //Get the activity code
+            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+            //Check the similarity
+            if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null && timecardActivity.getCode().equals(activityCode)) {
+                ignoreThisRecord = true;
+            }
+        }
+
+        if (!ignoreThisRecord) {
+            //Here the assumption is the TimecardEntres are sorted based on the time. If not this logic may not work/
+            //Infact this logic is provided by CVG and they have assumption on this front
+//        for (int cnt = timecardEntryList.size() ; cnt >= 0 && processData; cnt--) {
+            String previousActivityCode = "";
+            for (int cnt = indexOfWatchedEntry; cnt >= 0; cnt--) {
+                TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(cnt));
+
+                if (timecardEntry != null) {
+
+                    TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+                    //If code does not have consecutiveness then brk the loop
+                    if (timecardActivity != null && activityCode != null && timecardActivity.getCode() != null
+                            && timecardActivity.getCode().equals(activityCode)
+                            && !previousActivityCode.equals(timecardActivity.getCode())) {
+                        activityCodeOccurrenceCount++;
+                    }
+
+                    previousActivityCode = timecardActivity.getCode();
                 }
             }
         }
 
-        return activityTimeSpan;
+        return activityCodeOccurrenceCount;
     }
 
-    private static boolean compareDates(Date sourceDate, Date targetDate) {
+    private boolean compareDates(Date sourceDate, Date targetDate) {
 
         sourceDate.setHours(0);
         sourceDate.setMinutes(0);
@@ -1211,36 +1427,61 @@ public class Main {
     private static void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
         //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
         //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
-        System.out.println("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
-        System.out.println(searchLOBNotification.getCMSEntry());
-        System.out.println(searchLOBNotification.getTimecardEntry());
+        log.warn("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+        log.warn(searchLOBNotification.getCMSEntry());
+        log.warn(searchLOBNotification.getTimecardEntry());
 
         List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
 
         Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
 
+        if (listOfOrphanedNotifications.size() <= 0 && searchLOBNotification.getTimecardEntry() != null){
+            log.warn("No Notifications Found for TimecardEntry ID :  [ " + searchLOBNotification.getTimecardEntry().getID() + " ]");
+        }
+
         while (itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
-            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
+//            ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(iPerceroObject);
 
-            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+            //Do not retrive object since the relationship might be broken due to removal of TimecardEntry and Timecard
+//            Notification notification = (Notification) syncAgentService.systemGetById(classIdPairLobNotif);
+            log.warn("Notification ID:  [ " + iPerceroObject.getID() + "]");
 
-            if (notification != null) {
-
-                syncAgentService.systemDeleteObject(notification, null, true);
-                System.out.println("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+            if (iPerceroObject != null) {
+                boolean deleteStatus = syncAgentService.systemDeleteObject(iPerceroObject, null, true);
+                log.warn("XXXXXXXXX Notification ID:  [ " + iPerceroObject.getID() + "] DELETED [ " + deleteStatus + " ] XXXXXXXXX");
             } else {
-                System.out.println("No Notification found for ID: " + classIdPairLobNotif);
+                log.warn("No Notification found for ID: " + iPerceroObject.getID());
             }
         }
-        System.out.println("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+        log.warn("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+    }
+
+    private static void deleteTimecardEntryOrphanedNotifications(LOBConfigurationNotification lOBNotification) throws Exception {
+        //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
+        //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
+        log.debug("********************************** TimecardEntry Orphaned Notification Clean Process [Starts] **********************************:");
+
+
+//        ClassIDPair classIdPairLobNotif = BaseDataObject.toClassIdPair(lOBNotification);
+
+        LOBConfigurationNotification notification = (LOBConfigurationNotification) syncAgentService.systemGetByObject(lOBNotification);
+
+        if (notification != null) {
+            syncAgentService.systemDeleteObject(notification, null, true);
+            log.debug("XXXXXXXXX Notification ID:  [ " + notification.getID() + "] DELETED XXXXXXXXX");
+        } else {
+            log.debug("No Notification found for ID: " + lOBNotification.getID());
+        }
+
+        log.debug("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
     }
 
     private static void generatePhoneTimeVarianceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
                                                               LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
 
-        int DURATION_MAX = lobConfigurationEntry.getOccurrence() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getOccurrence());
+        int DURATION_MAX = lobConfigurationEntry.getMax() == null ? 0 : Integer.parseInt(lobConfigurationEntry.getMax());
 
         Double duration = getDurationOfAccociatedCMSEntries(timecardEntry, agent, teamLeader, lobConfiguration, lobConfigurationEntry, consecutiveActivityList);
 
@@ -1259,20 +1500,26 @@ public class Main {
 
                 DurationMismatchNotification durationMismatchNotification = null;
 
-                boolean isExistingNotif = false;
-                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//                boolean isExistingNotif = false;
 
-                while (itrNotifications.hasNext()) {
-                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
-                    if ("DurationMismatchNotification".equals(notification.getType())) {
-                        durationMismatchNotification = (DurationMismatchNotification) notification;
-//                        durationMismatchNotification = new DurationMismatchNotification();
-//                        durationMismatchNotification.setID(notification.getID());
-//                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
-//                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
-                        isExistingNotif = true;
-                    }
-                }
+                timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+//                Logic to get timecardEntry based notifications and check the this type already exists. If exists --> update else create.
+//                Collection<String> fieldsToWatch = new HashSet<String>();
+//                accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "notifications", fieldsToWatch);
+//                Iterator<LOBConfigurationNotification> itrNotifications = timecardEntry.getNotifications().iterator();
+//
+//                while (itrNotifications.hasNext()) {
+//                    LOBConfigurationNotification notification = syncAgentService.systemGetByObject(itrNotifications.next());
+//                    if ("DurationMismatchNotification".equals(notification.getType())) {
+//                        durationMismatchNotification = (DurationMismatchNotification) notification;
+////                        durationMismatchNotification = new DurationMismatchNotification();
+////                        durationMismatchNotification.setID(notification.getID());
+////                        durationMismatchNotification.setAgent(notification.getAgent()); //xxxx
+////                        durationMismatchNotification.setTeamLeader(notification.getTeamLeader());
+//                        isExistingNotif = true;
+//                    }
+//                }
 
 
                 if (durationMismatchNotification == null) {
@@ -1281,41 +1528,45 @@ public class Main {
                     durationMismatchNotification.setAgent(agent);
                     durationMismatchNotification.setTeamLeader(teamLeader);
                 }
+                TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
 
-                durationMismatchNotification.setCreatedOn(new Date());
-                durationMismatchNotification.setName("Duration Mismatch Notification" + "-" + timecardEntry.getTimecardActivity().getCode() + "-" + DURATION_MAX);
+//                durationMismatchNotification.setCreatedOn(new Date());
+                durationMismatchNotification.setCreatedOn(timecardEntry.getSourceFromTime());
+                durationMismatchNotification.setName("Duration Mismatch Notification" + " - " + timecardActivity.getCode() + " - "  + duration);
                 durationMismatchNotification.setType("DurationMismatchNotification");
 
                 durationMismatchNotification.setMessage(MessageFormat.format(DURATION_MISMATCH_NOTIFICATION_MESSAGE, agent.getFullName(),
-                        timecardEntry.getTimecardActivity().getCode(), formatDate(timecardEntry.getFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getToTime(), DATE_TIME_FORMAT_12_HR)));
+                        timecardActivity.getCode(), formatDate(timecardEntry.getSourceFromTime(), DATE_TIME_FORMAT_12_HR), formatDate(timecardEntry.getSourceToTime(), DATE_TIME_FORMAT_12_HR)));
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
                 durationMismatchNotification.setIsRead(false);
-                if (isExistingNotif) {
-                    //syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
-                } else {
-                    //syncAgentService.systemCreateObject(durationMismatchNotification, null);
-                }
+//                if (isExistingNotif) {
+//                    //Update Notification
+//                    syncAgentService.systemPutObject(durationMismatchNotification, null, null, null, true);
+//                } else {
+//                   //Create Notification
+//                syncAgentService.systemCreateObject(durationMismatchNotification, null);
+//                }
             }
         }
     }
 
 
     private static Double getDurationOfAccociatedCMSEntries(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
-                                                            LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
+                                                     LOBConfiguration lobConfiguration, LOBConfigurationEntry lobConfigurationEntry, List<TimecardEntry> consecutiveActivityList) throws Exception {
 
         Double duration = 0.0;
 
-        if (consecutiveActivityList.size() < 1) {
+        if (consecutiveActivityList.size() <= 0) {
             return duration;
         }
 
         List<CMSEntry> associatedCMSEntries = new ArrayList<CMSEntry>();
 
         //The consecutiveActivityList gets list of TimecardEntries in reverse order so first is last entry and last is first entry.
-        Date timecardEntryEndTime = consecutiveActivityList.get(0).getToTime();
-        Date timecardEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getFromTime();
+        Date timecardEntryStartTime = consecutiveActivityList.get(consecutiveActivityList.size() - 1).getToTime();
+        Date timecardEntryEndTime = consecutiveActivityList.get(0).getFromTime();
 
 
         List<String> auxCodesForActivity = new ArrayList<String>();
@@ -1328,7 +1579,7 @@ public class Main {
 
 
 //        lobConfigurationEntry.getMappedCMSAuxCode()
-        List<CMSEntry> agentCMSEntries = agent.getCMSEntries();
+        List<CMSEntry> agentCMSEntries = getSortedCMSEntries(agent.getCMSEntries());
 
         int firstClosestCMSEntryIndex = 0;
         int lastClosestCMSEntryIndex = 0;
@@ -1338,24 +1589,37 @@ public class Main {
 
         for (int index = 0; index < agentCMSEntries.size(); index++) {
 
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+            //Do not load data again since sorting function already did it
+//            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
 
-            if (getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime()) <= startTimeDiff) {
+            CMSEntry cMSEntry = agentCMSEntries.get(index);
+
+            if (getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime()) < startTimeDiff) {
+                startTimeDiff = getTimeDiff(timecardEntryStartTime, cMSEntry.getFromTime());
                 firstClosestCMSEntryIndex = index;
             }
 
-            if (getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime()) <= endTimeDiff) {
+            if (getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime()) < endTimeDiff) {
+                endTimeDiff = getTimeDiff(timecardEntryEndTime, cMSEntry.getToTime());
                 lastClosestCMSEntryIndex = index;
             }
         }
 
-        for (int index = 0; index < agentCMSEntries.size(); index++) {
-            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
-            if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
-                duration += cMSEntry.getDuration();
+//        for (int index = 0; index < agentCMSEntries.size(); index++) {
+//            CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+//            if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
+//                duration += cMSEntry.getDuration();
+//            }
+//        }
+        if (agentCMSEntries.size() > 0) {
+
+            for (int index = firstClosestCMSEntryIndex; index <= lastClosestCMSEntryIndex; index++) {
+                CMSEntry cMSEntry = syncAgentService.systemGetByObject(agentCMSEntries.get(index));
+                if (auxCodesForActivity.contains(cMSEntry.getCMSAuxMode())) {
+                    duration += cMSEntry.getDuration();
+                }
             }
         }
-
         return duration;
     }
 
@@ -1405,6 +1669,45 @@ public class Main {
         }
     }
 
+    static class TimecardEntryDateComparator implements Comparator<TimecardEntry> {
+
+        @Override
+        public int compare(TimecardEntry entry1, TimecardEntry entry2) {
+            return entry1.getSourceFromTime().compareTo(entry2.getSourceFromTime());
+        }
+    }
+
+    private static List<CMSEntry> getSortedCMSEntries(List<CMSEntry> cmsEntries) {
+        List<CMSEntry> sortedList = new ArrayList<CMSEntry>();
+
+        for (int index = 0; index < cmsEntries.size(); index++) {
+
+            CMSEntry cmsEntry = syncAgentService.systemGetByObject(cmsEntries.get(index));
+            sortedList.add(cmsEntry);
+        }
+
+        Collections.sort(sortedList, new CMSEntryDateComparator());
+
+        return sortedList;
+    }
+
+    private static List<TimecardEntry> getSortedTimecardEntries(List<TimecardEntry> entryList) {
+        List<TimecardEntry> sortedList = new ArrayList<TimecardEntry>();
+        Collection<String> fieldsToWatch = new HashSet<String>();
+        for (TimecardEntry timecardEntry : entryList) {
+            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+            //watch derived fields
+//            accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "sourceFromTime", fieldsToWatch);
+//            accessManager.addWatcherField(BaseDataObject.toClassIdPair(timecardEntry), "sourceToTime", fieldsToWatch);
+            sortedList.add(timecardEntry);
+        }
+
+        Collections.sort(sortedList, new TimecardEntryDateComparator());
+
+        return sortedList;
+
+    }
+
     private static void handleTimecardUpdate(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
         //
@@ -1417,18 +1720,105 @@ public class Main {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
+
                 if (updatedObject != null && updatedObject instanceof Timecard && oldValue != null) {
-                    Timecard timecard = (Timecard) updatedObject;
 
-                    if (timecard != null) {
+                    Timecard newTimecard = (Timecard) updatedObject;
 
-                        Iterator<TimecardEntry> itrTimecardEntries = timecard.getTimecardEntries().iterator();
+                    for (TimecardEntry timecardEntry: newTimecard.getTimecardEntries()){
+                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+                    }
+
+                    Timecard oldTimecard = (Timecard) oldValue;
+
+                    boolean ignoreTheUpdate = false;
+
+                    //Check that first TimecardEntry of old and new Timecard should not be same
+                    if (newTimecard.getTimecardEntries().size() > 0 && oldTimecard.getTimecardEntries().size() > 0){
+                        TimecardEntry newTimecardEntry = newTimecard.getTimecardEntries().get(0);
+                        TimecardEntry oldTimecardEntry = oldTimecard.getTimecardEntries().get(0);
+
+                        if (newTimecardEntry.getID().equalsIgnoreCase(oldTimecardEntry.getID())){
+                            //Do not process futher
+                            ignoreTheUpdate = true;
+                        }
+                    }
+
+
+                    //Print list of timecard entries of Old Timecard
+//                    getAndPrintTimecardEntries(updatedObject.getID());
+
+//                    oldTimecard = (Timecard) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(oldValue));
+
+//                    if (oldTimecard != null) {
+                    if (!ignoreTheUpdate) {
+
+                        //TODO: Check to see if old timecard entry ids are still on on new timecard value. If they are do not process
+
+                        for (TimecardEntry timecardEntry: oldTimecard.getTimecardEntries()){
+                            log.warn("Old Timecard ID : [ " + oldTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+                        }
+
+                        Iterator<TimecardEntry> itrTimecardEntries = oldTimecard.getTimecardEntries().iterator();
 
                         while (itrTimecardEntries.hasNext()) {
-                            insertRecToUpdateTable(itrTimecardEntries.next().getID());
+                            TimecardEntry timecardEntry = itrTimecardEntries.next();
+
+                            String timecardEntryId = timecardEntry.getID();
+
+//                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+
+
+                            if (timecardEntry != null) {
+                                log.warn("Inside HandleTimecardUpdate Method Calling InsertRecToUpdateTable With Param TimecardEntries - " + timecardEntry.getID());
+
+                                LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+                                findLOBConfigurationNotificaiton.setTimecardEntry(timecardEntry);
+
+                                deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+//
+//                                for (LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
+//
+//                                    log.warn(" inside handleTimecardUpdate method calling scanning LOB Notification ID : " + lobConfigurationNotification.getID());
+//
+//                                    LOBConfigurationNotification notificationToDelete = syncAgentService.systemGetByObject(lobConfigurationNotification);
+//
+//                                    if (notificationToDelete != null) {
+//                                        log.warn(" inside handleTimecardUpdate method calling systemDeleteObject with param - " + lobConfigurationNotification.getID());
+//                                        syncAgentService.systemDeleteObject(notificationToDelete, null, true);
+//                                    }
+//                                    else{
+//                                        log.warn("inside handleTimecardUpdate method OOPS : notificationToDelete (ID : "+lobConfigurationNotification.getID() + "  ) Cound not retrieve");
+//                                    }
+//
+//                                }
+                            } else {
+
+                                log.warn("inside handleTimecardUpdate method OOPS : TimecardEntry ( ID : " + timecardEntryId + " ) : Cound not retrieve");
+
+                            }
+
+                            insertRecToUpdateTable(timecardEntryId);
+
+//                            TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
+//                            if (timecardEntry != null && deleteTimecardEntry(timecardEntry)) {
+//
+//                                Iterator<LOBConfigurationNotification> itrLobConfigurationNotif = timecardEntry.getNotifications().iterator();
+//                                while (itrLobConfigurationNotif.hasNext()) {
+//
+//                                    deleteTimecardEntryOrphanedNotifications(itrLobConfigurationNotif.next());
+//                                }
+////                                LOBConfigurationNotification searchAndDeleteLOBNotification = new LOBConfigurationNotification();
+////                                searchAndDeleteLOBNotification.setTimecardEntry(timecardEntry);
+////
+////                                deleteOrphanedNotifications(searchAndDeleteLOBNotification);
+//                            }
                         }
 
 
+                    }
+                    else{
+                        log.warn("handleTimecardUpdate Ignored : Timecard ID : [  " + newTimecard.getID() + " ] : Old Timecard ID : [ "  + oldTimecard.getID() + " ] ");
                     }
 
 
@@ -1438,10 +1828,74 @@ public class Main {
             }
         } catch (Exception e) {
             // Handle exception
-            System.out.println("Error in LOB Notification" + e);
+            log.error("Error in LOB Notification", e);
         }
     }
 
+    private boolean deleteTimecardEntry(TimecardEntry timecardEntry) {
+
+        try {
+            //Delete the object and communicate back to user that the object is deleted.
+            return syncAgentService.systemDeleteObject(timecardEntry, null, true);
+            //return systemDeleteObject(timecardEntry, null, true);
+        } catch (Exception e) {
+            log.error("Error while deleting Timecard Entry ID : " + timecardEntry.getID(), e);
+            return false;
+        }
+    }
+
+    private void getAndPrintTimecardEntries(String timecardId){
+
+        log.warn("Invoked getAndPrintTimecardEntries for Timecard ID : [ " + timecardId + " ] ");
+
+        final String selectSql = "SELECT ID, WORKED_ID FROM AGENT_TIME_ENTRY_VW WHERE ID = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
+            conn = connectionFactory.getConnection();
+
+            pstmt = conn.prepareStatement(selectSql);
+            pstmt.setQueryTimeout(QUERY_TIMEOUT);
+            pstmt.setString(1, timecardId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs!=null){
+
+                String tcId = null;
+                String tceId = null;
+
+                while(rs.next()){
+
+                    tcId = rs.getString("ID");
+                    tceId = rs.getString("WORKED_ID");
+
+                    log.warn("Database state of Timecard ID [ " + tcId + " ] - TimecardEntry ID [ " + tceId + " ]");
+
+                }
+
+            }
+            else{
+                log.error("OOPS Resultset is NULL Timecard ID : " + timecardId );
+            }
+
+        } catch (Exception e) {
+            log.error("Unable to retrieveObjects\n" + selectSql, e);
+
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                log.error("Error closing database statement/connection", e);
+            }
+        }
+    }
     private static void insertRecToUpdateTable(String timecardEntryId) {
 //        String selectQueryString = "SELECT MAX(ID) AS ID FROM UPDATE_TABLE";
 
@@ -1454,14 +1908,7 @@ public class Main {
         try {
             IConnectionFactory connectionFactory = getConnectionRegistry().getConnectionFactory(CONNECTION_FACTORY_NAME);
             conn = connectionFactory.getConnection();
-//            pstmt = conn.prepareStatement(selectQueryString);
-//            ResultSet rs = pstmt.executeQuery();
-//
-//            if (rs.next()){
-//                updateTableId = rs.getInt("ID");
-//            }
-//
-//            pstmt.close();
+
 
             //Insert record
             pstmt = conn.prepareStatement(insertQueryString);
@@ -1475,7 +1922,7 @@ public class Main {
 
 
         } catch (Exception e) {
-            System.out.println("Unable to retrieveObjects\n" + insertQueryString + e);
+            log.error("Unable to retrieveObjects\n" + insertQueryString, e);
 
         } finally {
             try {
@@ -1486,12 +1933,36 @@ public class Main {
                     conn.close();
                 }
             } catch (Exception e) {
-                System.out.println("Error closing database statement/connection" + e);
+                log.error("Error closing database statement/connection", e);
             }
         }
     }
 
-    private static PulseDataConnectionRegistry connectionRegistry;
+//    private Date getCreatedOnInAgentTimezone(Agent agent){
+//        String timeZone = agent.getTimeZone();
+//        Date createdOn = null;
+//
+//        try {
+//            DateTimeZone dateTimeZone = DateTimeZone.forID(timeZone);
+//            if (dateTimeZone != null) {
+//                //This is requried since the dateTimeZine.getOffset(long time) has dependancy to local time. 
+//                // ActiveStack server running on CST not in UTC. But the source time in UTC so this will not work.
+//                // Do not change the code here. Following is the best approach
+//                int offsetInMs = dateTimeZone.toTimeZone().getRawOffset();
+//
+//                createdOn = new DateTime((new Date()).getTime() + offsetInMs).toDate();
+//
+//            } else {
+//                log.warn("Invalid time zone " + timeZone);
+//            }
+//        } catch (Exception e) {
+//            // Invalid time zone.
+//            log.error("Invalid time zone " + timeZone, e);
+//        }
+//        return createdOn;
+//    }
+
+    static PulseDataConnectionRegistry connectionRegistry;
 
     public static PulseDataConnectionRegistry getConnectionRegistry() {
         if (connectionRegistry == null) {

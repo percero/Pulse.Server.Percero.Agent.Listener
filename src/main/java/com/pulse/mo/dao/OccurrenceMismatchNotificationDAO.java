@@ -49,7 +49,7 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"OCCURRENCE_MISMATCH_NOTIF\".\"TYPE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"MESSAGE\",\"OCCURRENCE_MISMATCH_NOTIF\".\"NAME\",\"OCCURRENCE_MISMATCH_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"IS_READ\",,\"OCCURRENCE_MISMATCH_NOTIF\".\"WORKED_ID\",\"OCCURRENCE_MISMATCH_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"OCCURRENCE_MISMATCH_NOTIF\" \"OCCURRENCE_MISMATCH_NOTIF\"";
     private String whereClause = "  WHERE \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -169,6 +169,7 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
 
             nextResult.setName(rs.getString("NAME"));
@@ -205,6 +206,13 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
                 TimecardActivity timecardactivity = new TimecardActivity();
                 timecardactivity.setID(timecardactivityID);
                 nextResult.setTimecardActivity(timecardactivity);
+            }
+
+            String timecardEntryId = rs.getString("WORKED_ID");
+            if (StringUtils.hasText(timecardEntryId) && !"null".equalsIgnoreCase(timecardEntryId)) {
+                TimecardEntry timecardEntry = new TimecardEntry();
+                timecardEntry.setID(timecardEntryId);
+                nextResult.setTimecardEntry(timecardEntry);
             }
 
 
@@ -249,7 +257,16 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
         } else {
             pstmt.setString(10, perceroObject.getTimecardActivity().getID());
         }
+
         pstmt.setBoolean(11, perceroObject.getIsRead());
+
+        if (perceroObject.getTimecardEntry() == null) {
+            pstmt.setString(12, null);
+        } else {
+            pstmt.setString(12, perceroObject.getTimecardEntry().getID());
+        }
+
+        pstmt.setString(13, perceroObject.getTimecardId());
     }
 
     @Override
@@ -305,6 +322,13 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
         }
 
         pstmt.setBoolean(11, perceroObject.getIsRead());
+
+        if (perceroObject.getTimecardEntry() == null) {
+            pstmt.setString(12, null);
+        } else {
+            pstmt.setString(12, perceroObject.getTimecardEntry().getID());
+        }
+
     }
 
 
@@ -375,6 +399,19 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -440,6 +477,19 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
             propertyCounter++;
         }
 
+        boolean useTimecardEntryId = theQueryObject.getTimecardEntry() != null && (excludeProperties == null || !excludeProperties.contains("timecardEntry"));
+
+        if (useTimecardEntryId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"WORKED_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardEntry().getID());
+            propertyCounter++;
+        }
+
         boolean useIsRead = theQueryObject.getIsRead() != null && (excludeProperties == null || !excludeProperties.contains("isRead"));
 
         if (useIsRead) {
@@ -462,12 +512,12 @@ public class OccurrenceMismatchNotificationDAO extends SqlDataAccessProcObject<O
 
     @Override
     protected String getUpdateCallableStatementSql() {
-        return "{call UPDATE_OCCUR_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call UPDATE_OCCUR_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_OCCUR_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_OCCUR_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

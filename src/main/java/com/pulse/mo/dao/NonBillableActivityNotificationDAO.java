@@ -49,7 +49,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"CREATED_ON\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"WORKED_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TYPE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"CREATED_ON\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"MESSAGE\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"NAME\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"AGENT_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"LOB_CONFIGURATION_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TEAM_LEADER_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"WORKED_ID\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"IS_READ\",\"NON_BILLABLE_ACTVTY_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"NON_BILLABLE_ACTVTY_NOTIF\" \"NON_BILLABLE_ACTVTY_NOTIF\"";
     private String whereClause = "  WHERE \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"NON_BILLABLE_ACTVTY_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -169,6 +169,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
 
             nextResult.setName(rs.getString("NAME"));
@@ -262,6 +263,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
         }
 
         pstmt.setBoolean(12, perceroObject.getIsRead());
+        pstmt.setString(13, perceroObject.getTimecardId());
     }
 
     @Override
@@ -393,6 +395,19 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -498,7 +513,7 @@ public class NonBillableActivityNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_NON_BILLABLE_ACT_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_NON_BILLABLE_ACT_NOTI(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

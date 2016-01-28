@@ -49,7 +49,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"WORKED_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TYPE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"CREATED_ON\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"MESSAGE\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"NAME\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"AGENT_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TEAM_LEADER_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"WORKED_ID\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"IS_READ\",\"OCCURRENCE_TOLERANCE_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"OCCURRENCE_TOLERANCE_NOTIF\" \"OCCURRENCE_TOLERANCE_NOTIF\"";
     private String whereClause = "  WHERE \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"OCCURRENCE_TOLERANCE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -166,6 +166,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
 
             nextResult.setName(rs.getString("NAME"));
@@ -256,6 +257,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
             pstmt.setString(10, perceroObject.getTimecardEntry().getID());
         }
         pstmt.setBoolean(11, perceroObject.getIsRead());
+        pstmt.setString(12, perceroObject.getTimecardId());
 
     }
 
@@ -372,6 +374,19 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -478,7 +493,7 @@ public class OccurrenceToleranceNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_OCCUR_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_OCCUR_TOLERANCE_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

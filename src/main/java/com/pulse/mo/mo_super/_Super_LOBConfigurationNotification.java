@@ -158,6 +158,15 @@ public void setLOBConfiguration(LOBConfiguration value) {
 		this.timecardEntry = value;
 	}
 
+
+	@Column
+	@com.percero.agents.sync.metadata.annotations.Externalize
+	private String timecardId;
+	public String getTimecardId(){ return this.timecardId ; }
+
+	public void setTimecardId(String timecardId){
+		this.timecardId = timecardId;
+	}
 	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
 	// JSON
@@ -166,6 +175,26 @@ public void setLOBConfiguration(LOBConfiguration value) {
 	public String retrieveJson(ObjectMapper objectMapper) {
 		String objectJson = super.retrieveJson(objectMapper);
 
+		objectJson += ",\"timecardId\":";
+
+		if (getTimecardId() == null)
+			objectJson += "null";
+		else {
+			if (objectMapper == null)
+				objectMapper = new ObjectMapper();
+			try {
+				objectJson += objectMapper.writeValueAsString(getTimecardId());
+			} catch (JsonGenerationException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			} catch (IOException e) {
+				objectJson += "null";
+				e.printStackTrace();
+			}
+		}
 		// Properties		
 		//Retrieve value of the Message property
 		objectJson += ",\"message\":";
@@ -253,7 +282,7 @@ objectJson += ",\"lOBConfiguration\":";
 		// Properties
 		//From value of the Message property
 		setMessage(JsonUtils.getJsonString(jsonObject, "message"));
-
+		setTimecardId(JsonUtils.getJsonString(jsonObject, "timecardId"));
 		
 		// Source Relationships
 		this.agent = (Agent) JsonUtils.getJsonPerceroObject(jsonObject, "agent");

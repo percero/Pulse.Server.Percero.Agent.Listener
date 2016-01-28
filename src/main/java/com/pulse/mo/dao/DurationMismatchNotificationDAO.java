@@ -49,7 +49,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"DURATION_MISMATCH_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"DURATION_MISMATCH_NOTIF\".\"IS_READ\",\"DURATION_MISMATCH_NOTIF\".\"WORKED_ID\"";
+    public static final String SQL_VIEW = ",\"DURATION_MISMATCH_NOTIF\".\"TYPE\",\"DURATION_MISMATCH_NOTIF\".\"CREATED_ON\",\"DURATION_MISMATCH_NOTIF\".\"END_TIME\",\"DURATION_MISMATCH_NOTIF\".\"DURATION\",\"DURATION_MISMATCH_NOTIF\".\"AUX_CODE_ENTRY_NAME\",\"DURATION_MISMATCH_NOTIF\".\"MESSAGE\",\"DURATION_MISMATCH_NOTIF\".\"NAME\",\"DURATION_MISMATCH_NOTIF\".\"AGENT_ID\",\"DURATION_MISMATCH_NOTIF\".\"LOB_CONFIGURATION_ID\",\"DURATION_MISMATCH_NOTIF\".\"TEAM_LEADER_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ACTIVITY_ID\",\"DURATION_MISMATCH_NOTIF\".\"IS_READ\",\"DURATION_MISMATCH_NOTIF\".\"WORKED_ID\",\"DURATION_MISMATCH_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"DURATION_MISMATCH_NOTIF\" \"DURATION_MISMATCH_NOTIF\"";
     private String whereClause = "  WHERE \"DURATION_MISMATCH_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"DURATION_MISMATCH_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -175,6 +175,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
 
             nextResult.setName(rs.getString("NAME"));
@@ -268,6 +269,8 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
         } else {
             pstmt.setString(12, perceroObject.getTimecardEntry().getID());
         }
+
+        pstmt.setString(13, perceroObject.getTimecardId());
 
     }
 
@@ -419,6 +422,19 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -524,7 +540,7 @@ public class DurationMismatchNotificationDAO extends SqlDataAccessProcObject<Dur
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_DURATION_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_DURATION_MISMATCH_NOTI(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

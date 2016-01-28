@@ -49,7 +49,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"INV_ACTVTY_CODE_NOTIF\".\"ID\"";
-    public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"WORKED_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"INV_ACTVTY_CODE_NOTIF\".\"TYPE\",\"INV_ACTVTY_CODE_NOTIF\".\"CREATED_ON\",\"INV_ACTVTY_CODE_NOTIF\".\"MESSAGE\",\"INV_ACTVTY_CODE_NOTIF\".\"NAME\",\"INV_ACTVTY_CODE_NOTIF\".\"AGENT_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"TEAM_LEADER_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"LOB_CONFIGURATION_ENTRY_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"WORKED_ID\",\"INV_ACTVTY_CODE_NOTIF\".\"IS_READ\",\"INV_ACTVTY_CODE_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"INV_ACTVTY_CODE_NOTIF\" \"INV_ACTVTY_CODE_NOTIF\"";
     private String whereClause = "  WHERE \"INV_ACTVTY_CODE_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"INV_ACTVTY_CODE_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -166,6 +166,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
 
             nextResult.setName(rs.getString("NAME"));
@@ -256,6 +257,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
             pstmt.setString(10, perceroObject.getTimecardEntry().getID());
         }
         pstmt.setBoolean(11, perceroObject.getIsRead());
+        pstmt.setString(12, perceroObject.getTimecardId());
     }
 
     @Override
@@ -370,6 +372,19 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
             propertyCounter++;
         }
 
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
+            propertyCounter++;
+        }
+
         boolean useName = StringUtils.hasText(theQueryObject.getName()) && (excludeProperties == null || !excludeProperties.contains("name"));
 
         if (useName) {
@@ -475,7 +490,7 @@ public class InvalidActivityCodeNotificationDAO extends SqlDataAccessProcObject<
 
     @Override
     protected String getInsertCallableStatementSql() {
-        return "{call CREATE_INV_ACTVTY_CODE_NOTI(?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call CREATE_INV_ACTVTY_CODE_NOTI(?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     @Override

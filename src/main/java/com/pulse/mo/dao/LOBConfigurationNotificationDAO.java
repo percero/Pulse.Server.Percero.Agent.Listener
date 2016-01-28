@@ -49,7 +49,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
     public static final String CONNECTION_FACTORY_NAME = "default";
 
     public static final String SHELL_ONLY_SELECT = "\"LOB_CONFIGURATION_NOTIF\".\"ID\",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\"";
-    public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"CREATED_ON\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_NOTIF\".\"CMS_ENTRY_ID\",\"LOB_CONFIGURATION_NOTIF\".\"WORKED_ID\",\"LOB_CONFIGURATION_NOTIF\".\"IS_READ\"";
+    public static final String SQL_VIEW = ",\"LOB_CONFIGURATION_NOTIF\".\"TYPE\",\"LOB_CONFIGURATION_NOTIF\".\"CREATED_ON\",\"LOB_CONFIGURATION_NOTIF\".\"MESSAGE\",\"LOB_CONFIGURATION_NOTIF\".\"NAME\",\"LOB_CONFIGURATION_NOTIF\".\"AGENT_ID\",\"LOB_CONFIGURATION_NOTIF\".\"LOB_CONFIGURATION_ID\",\"LOB_CONFIGURATION_NOTIF\".\"TEAM_LEADER_ID\",\"LOB_CONFIGURATION_NOTIF\".\"CMS_ENTRY_ID\",\"LOB_CONFIGURATION_NOTIF\".\"WORKED_ID\",\"LOB_CONFIGURATION_NOTIF\".\"IS_READ\",\"LOB_CONFIGURATION_NOTIF\".\"TIMECARD_ID\"";
     private String selectFromStatementTableName = " FROM \"LOB_CONFIGURATION_NOTIF\" \"LOB_CONFIGURATION_NOTIF\"";
     private String whereClause = "  WHERE \"LOB_CONFIGURATION_NOTIF\".\"ID\"=?";
     private String whereInClause = "  join table(sys.dbms_debug_vc2coll(?)) SQLLIST on \"LOB_CONFIGURATION_NOTIF\".\"ID\"= SQLLIST.column_value";
@@ -178,7 +178,7 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
 
 
             nextResult.setMessage(rs.getString("MESSAGE"));
-
+            nextResult.setTimecardId(rs.getString("TIMECARD_ID"));
 
             nextResult.setName(rs.getString("NAME"));
 
@@ -361,6 +361,19 @@ public class LOBConfigurationNotificationDAO extends SqlDataAccessProcObject<LOB
             }
             sql += " \"MESSAGE\" =? ";
             paramValues.add(theQueryObject.getMessage());
+            propertyCounter++;
+        }
+
+        boolean useTimecardId = StringUtils.hasText(theQueryObject.getTimecardId()) && (excludeProperties == null || !excludeProperties.contains("timecardId"));
+
+        if (useTimecardId) {
+            if (propertyCounter > 0) {
+                sql += " AND ";
+            } else {
+                sql += " WHERE ";
+            }
+            sql += " \"TIMECARD_ID\" =? ";
+            paramValues.add(theQueryObject.getTimecardId());
             propertyCounter++;
         }
 

@@ -749,6 +749,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 invalidActivityCodeNotification.setLOBConfiguration(lobConfiguration);
 //                invalidActivityCodeNotification.setLOBConfigurationEntry();
                 invalidActivityCodeNotification.setTimecardEntry(timecardEntry);
+                invalidActivityCodeNotification.setTimecardId(timecardEntry.getTimecard().getID());
+
                 invalidActivityCodeNotification.setIsRead(false);
 
 //                if (isExistingNotif) {
@@ -820,6 +822,8 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 nonBillableActivityNotification.setLOBConfiguration(lobConfiguration);
 //                nonBillableActivityNotification.setLOBConfigurationEntry();
                 nonBillableActivityNotification.setTimecardEntry(timecardEntry);
+                nonBillableActivityNotification.setTimecardId(timecardEntry.getTimecard().getID());
+
                 nonBillableActivityNotification.setIsRead(false);
 
 //                if (isExistingNotif) {
@@ -894,6 +898,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 occurrenceToleranceNotification.setLOBConfiguration(lobConfiguration);
                 occurrenceToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 occurrenceToleranceNotification.setTimecardEntry(timecardEntry);
+                occurrenceToleranceNotification.setTimecardId(timecardEntry.getTimecard().getID());
                 occurrenceToleranceNotification.setIsRead(false);
 //                if (isExistingNotif) {
 //                    Notification already exists hence call update
@@ -974,6 +979,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationToleranceNotification.setMessage(MessageFormat.format(DURATION_TOLERANCE_NOTIIFCATION_MESSAGE, agent.getFullName(),
                         timecardActivity.getCode(), formatDate(startTimeOfActivity, DATE_TIME_FORMAT_12_HR), formatDate(endTimeOfActivity, DATE_TIME_FORMAT_12_HR), totalDuration, DURATION_MAX));
                 durationToleranceNotification.setTimecardEntry(timecardEntry);
+                durationToleranceNotification.setTimecardId(timecardEntry.getTimecard().getID());
                 durationToleranceNotification.setLOBConfiguration(lobConfiguration);
                 durationToleranceNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationToleranceNotification.setIsRead(false);
@@ -1223,6 +1229,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         log.warn("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
         log.warn(searchLOBNotification.getCMSEntry());
         log.warn(searchLOBNotification.getTimecardEntry());
+        log.warn("TimecardId : " + searchLOBNotification.getTimecardId());
 
         List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
 
@@ -1332,6 +1339,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 durationMismatchNotification.setLOBConfiguration(lobConfiguration);
 //                durationMismatchNotification.setLOBConfigurationEntry(lobConfigurationEntry);
                 durationMismatchNotification.setTimecardEntry(timecardEntry);
+                durationMismatchNotification.setTimecardId(timecardEntry.getTimecard().getID());
                 durationMismatchNotification.setIsRead(false);
 //                if (isExistingNotif) {
 //                    //Update Notification
@@ -1545,6 +1553,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 //                    if (oldTimecard != null) {
                     if (!ignoreTheUpdate) {
 
+                        //With respect to new design deleting Notification using timecard id instead of timecard entry id
+                        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+                        findLOBConfigurationNotificaiton.setTimecardId(newTimecard.getID());
+
+                        deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+
                         //TODO: Check to see if old timecard entry ids are still on on new timecard value. If they are do not process
 
                         for (TimecardEntry timecardEntry: oldTimecard.getTimecardEntries()){
@@ -1560,14 +1574,13 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 //                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
 
-
                             if (timecardEntry != null) {
                                 log.warn("Inside HandleTimecardUpdate Method Calling InsertRecToUpdateTable With Param TimecardEntries - " + timecardEntry.getID());
 
-                                LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
-                                findLOBConfigurationNotificaiton.setTimecardEntry(timecardEntry);
-
-                                deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+//                                LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+//                                findLOBConfigurationNotificaiton.setTimecardEntry(timecardEntry);
+//
+//                                deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
 //
 //                                for (LOBConfigurationNotification lobConfigurationNotification : timecardEntry.getNotifications()) {
 //
