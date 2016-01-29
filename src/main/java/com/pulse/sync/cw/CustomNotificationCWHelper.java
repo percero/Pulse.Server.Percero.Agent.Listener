@@ -308,9 +308,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
         agent = syncAgentService.systemGetByObject(timecard.getAgent());
 
-        TeamLeader teamLeader = agent.getTeamLeader();
-
         if (agent != null) {
+
+            TeamLeader teamLeader = agent.getTeamLeader();
 
 //            LOB tlob = new LOB();
 //            tlob.setID("13573");
@@ -535,9 +535,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 }
 
 
-//                workDurationNotification.setCreatedOn(new Date());
-                workDurationNotification.setCreatedOn(cmsEntry.getFromTime());
-
+                workDurationNotification.setCreatedOn(fromDate);
 
 //                workDurationNotification.setName("Work Duration Notification" + "-" + cmsEntry.getFromTime() + "-" + cmsEntry.getCMSAuxMode());
                 workDurationNotification.setName("Work Duration Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode());
@@ -632,7 +630,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     log.error("Invalid time zone " + timeZone, e);
                 }
 
-                workModeOccurrenceNotification.setCreatedOn(cmsEntry.getFromTime());
+                workModeOccurrenceNotification.setCreatedOn(fromDate);
                 workModeOccurrenceNotification.setName("Work Mode Occurrence Notification" + " - " + formatDate(fromDate, DATE_TIME_FORMAT_12_HR) + " - " + cmsEntry.getCMSAuxMode() + " - " + cmsEntryList.size());
                 workModeOccurrenceNotification.setType("WorkModeOccurrenceNotification");
 
