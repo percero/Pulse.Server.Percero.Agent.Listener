@@ -301,7 +301,18 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-    private void processTimecard(Timecard timecard) {
+    public void processTimecard(Timecard timecard) {
+
+        //First delete old notifications
+        //With respect to new design deleting Notification using timecard id instead of timecard entry id
+        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+        findLOBConfigurationNotificaiton.setTimecardId(timecard.getID());
+
+        try {
+            deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+        } catch (Exception e) {
+            log.error("Exception during deletion of orphaned notifications : " , e);
+        }
 
 
         Agent agent = timecard.getAgent();
@@ -1320,12 +1331,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     if (!ignoreTheUpdate) {     //When the old and new timecard are same ingore this condition
 
-                        //First delete old notifications
-                        //With respect to new design deleting Notification using timecard id instead of timecard entry id
-                        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
-                        findLOBConfigurationNotificaiton.setTimecardId(newTimecard.getID());
-
-                        deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
 
                         //Process all the notifications again
                         processTimecard(newTimecard);

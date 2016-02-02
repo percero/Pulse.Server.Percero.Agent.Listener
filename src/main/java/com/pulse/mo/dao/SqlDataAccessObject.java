@@ -296,6 +296,10 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 		List<T> results = executeSelectById(sql, classIdPair.getID(), shellOnly);
 		if (results != null && !results.isEmpty()) {
 			result = results.get(0);
+
+			if (result instanceof  BaseDataObject){
+				((BaseDataObject)result).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+			}
 		}
 
 		return result;
@@ -344,6 +348,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				if (nextResult instanceof  BaseDataObject){
+					((BaseDataObject)nextResult).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+				}
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
@@ -422,6 +429,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	        ResultSet rs = stmt.executeQuery(selectQueryString);
 	        while (rs.next()) {
 	        	T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				if (nextResult instanceof  BaseDataObject){
+					((BaseDataObject)nextResult).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+				}
     			results.add(nextResult);
 	        }
 		} catch(Exception e) {
@@ -477,6 +487,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				if (nextResult instanceof  BaseDataObject){
+					((BaseDataObject)nextResult).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+				}
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
@@ -528,6 +541,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				if (nextResult instanceof  BaseDataObject){
+					((BaseDataObject)nextResult).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+				}
 				results.add(nextResult);
 			}
 		} catch(Exception e) {
@@ -616,6 +632,9 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				T nextResult = extractObjectFromResultSet(rs, shellOnly);
+				if (nextResult instanceof  BaseDataObject){
+					((BaseDataObject)nextResult).setDataSource(BaseDataObject.DATA_SOURCE_DATA_STORE);
+				}
 				objects.add(nextResult);
 			}
 		} catch(Exception e) {
@@ -675,6 +694,7 @@ public abstract class SqlDataAccessObject<T extends IPerceroObject> implements I
 	        ResultSet rs = stmt.executeQuery(sql);
 	        if (rs.next()) {
 	        	result = rs.getInt(1);
+
 	        }
 		} catch(Exception e) {
 			log.error("Unable to executeSelectCount\n" + sql, e);

@@ -2,6 +2,8 @@ package com.pulse.sync.cw;
 
 import javax.annotation.PostConstruct;
 
+import com.pulse.mo.Timecard;
+import com.pulse.sync.cw.task.TimecardPostGetTask;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,6 +55,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	
 	@Autowired
 	ShiftStatusNotificationDAO shiftStatusNotificationDAO;
+
+	@Autowired
+	CustomNotificationCWHelper customNotificationCWHelper;
 	
 	@PostConstruct
 	public void initialize() {
@@ -79,6 +84,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		if (TeamLeader.class.getCanonicalName().equalsIgnoreCase(className)) {
 			return handleTeamLeader(new ClassIDPair(classId, className), params);
 		}
+		else if (Timecard.class.getCanonicalName().equalsIgnoreCase(className)) {
+			return handleTimecard(new ClassIDPair(classId, className), params);
+		}
 
 		return null;
 	}
@@ -94,4 +102,13 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		return null;
 	}
 
+	private IPerceroObject handleTimecard(ClassIDPair classIdPair, String[] params) {
+		try {
+			taskExecutor.execute(new TimecardPostGetTask(syncAgentService, customNotificationCWHelper, classIdPair));
+		} catch(Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return null;
+	}
 }
