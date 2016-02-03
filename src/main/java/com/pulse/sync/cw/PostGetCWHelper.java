@@ -2,6 +2,7 @@ package com.pulse.sync.cw;
 
 import javax.annotation.PostConstruct;
 
+import com.percero.agents.sync.datastore.ICacheDataStore;
 import com.pulse.mo.Timecard;
 import com.pulse.sync.cw.task.TimecardPostGetTask;
 import org.apache.log4j.Logger;
@@ -58,7 +59,10 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 
 	@Autowired
 	CustomNotificationCWHelper customNotificationCWHelper;
-	
+
+	@Autowired
+	ICacheDataStore cacheDataStore;
+
 	@PostConstruct
 	public void initialize() {
 		ChangeWatcherHelperFactory.getInstance().registerChangeWatcherHelper(CATEGORY, this);
@@ -104,11 +108,22 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 
 	private IPerceroObject handleTimecard(ClassIDPair classIdPair, String[] params) {
 		try {
-			taskExecutor.execute(new TimecardPostGetTask(syncAgentService, customNotificationCWHelper, classIdPair));
+			final String redisKey = composeTimecardProcessRedisKey(classIdPair.getID());
+			final String jsonObjectString = (String) cacheDataStore.getValue(redisKey);
+			//If the Timecard is not processed ever with the given redisKey do this proessing else competely ignore
+			if (jsonObjectString == null) {
+				taskExecutor.execute(new TimecardPostGetTask(syncAgentService, customNotificationCWHelper, classIdPair));
+			}
+
+
 		} catch(Exception e) {
 			log.error(e.getMessage(), e);
 		}
 
 		return null;
+	}
+
+	private static String composeTimecardProcessRedisKey(final String objectId) {
+		return (new StringBuilder("pulse.timecard.process:").append(objectId)).toString();
 	}
 }

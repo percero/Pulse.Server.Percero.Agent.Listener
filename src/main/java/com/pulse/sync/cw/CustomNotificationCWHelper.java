@@ -1286,17 +1286,20 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
                     // Loging for new timecard entries
-                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
-                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
-                    }
+//                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
+//                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+//                    }
+
 
                     boolean ignoreTheUpdate = false;
 
+                    log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID());
                     // Attempt to retrieve the last processed Timecard from redis.
                     Timecard lastProcessedTimecard = null;
                     final String redisKey = composeTimecardProcessRedisKey(classId);
                     final String jsonObjectString = (String) cacheDataStore.getValue(redisKey);
                     if (jsonObjectString != null) {
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " found in Redis" );
                     	try {
                     		// Create a new Timecard object
                     		lastProcessedTimecard = new Timecard();
@@ -1307,15 +1310,17 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     		lastProcessedTimecard = null;
                     	}
                     }
-                    
+                    else{
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " did not find in Redis" );
+                    }
                     // If there is a last processed Timecard, then check to see if it is different than newTimecard.
                     if (lastProcessedTimecard != null) {
 
                         // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
                         // Log old timecard entries
-                        for (TimecardEntry timecardEntry : lastProcessedTimecard.getTimecardEntries()) {
-                            log.warn("Last Processed Timecard ID : [ " + lastProcessedTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
-                        }
+//                        for (TimecardEntry timecardEntry : lastProcessedTimecard.getTimecardEntries()) {
+//                            log.warn("Last Processed Timecard ID : [ " + lastProcessedTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+//                        }
 
                         // Not sure if this is the correct logic for determining the type of difference we are looking for?
                         // Check that first TimecardEntry of old and new Timecard should not be same
@@ -1331,6 +1336,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                         if (!ignoreTheUpdate) { //When the old and new timecard are same ignore this condition
 
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : FALSE" );
                             Iterator<TimecardEntry> itrTimecardEntries = lastProcessedTimecard.getTimecardEntries().iterator();
 
                             while (itrTimecardEntries.hasNext()) {
@@ -1343,6 +1349,9 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                                 insertRecToUpdateTable(timecardEntryId);
                             }
 
+                        }
+                        else{
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : TRUE" );
                         }
 
                     } else {
