@@ -2,6 +2,9 @@ package com.pulse.sync.cw;
 
 import javax.annotation.PostConstruct;
 
+import com.percero.agents.sync.datastore.ICacheDataStore;
+import com.pulse.mo.Timecard;
+import com.pulse.sync.cw.task.TimecardPostGetTask;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +56,13 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 	
 	@Autowired
 	ShiftStatusNotificationDAO shiftStatusNotificationDAO;
-	
+
+	@Autowired
+	CustomNotificationCWHelper customNotificationCWHelper;
+
+	@Autowired
+	ICacheDataStore cacheDataStore;
+
 	@PostConstruct
 	public void initialize() {
 		ChangeWatcherHelperFactory.getInstance().registerChangeWatcherHelper(CATEGORY, this);
@@ -79,6 +88,9 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		if (TeamLeader.class.getCanonicalName().equalsIgnoreCase(className)) {
 			return handleTeamLeader(new ClassIDPair(classId, className), params);
 		}
+		else if (Timecard.class.getCanonicalName().equalsIgnoreCase(className)) {
+			return handleTimecard(new ClassIDPair(classId, className), params);
+		}
 
 		return null;
 	}
@@ -94,4 +106,24 @@ public class PostGetCWHelper extends ChangeWatcherHelper {
 		return null;
 	}
 
+	private IPerceroObject handleTimecard(ClassIDPair classIdPair, String[] params) {
+		try {
+			final String redisKey = composeTimecardProcessRedisKey(classIdPair.getID());
+			final String jsonObjectString = (String) cacheDataStore.getValue(redisKey);
+			//If the Timecard is not processed ever with the given redisKey do this proessing else competely ignore
+			if (jsonObjectString == null) {
+				taskExecutor.execute(new TimecardPostGetTask(syncAgentService, customNotificationCWHelper, classIdPair));
+			}
+
+
+		} catch(Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return null;
+	}
+
+	private static String composeTimecardProcessRedisKey(final String objectId) {
+		return (new StringBuilder("pulse.timecard.process:").append(objectId)).toString();
+	}
 }

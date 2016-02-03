@@ -301,7 +301,18 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         }
     }
 
-    private void processTimecard(Timecard timecard) {
+    public void processTimecard(Timecard timecard) {
+
+        //First delete old notifications
+        //With respect to new design deleting Notification using timecard id instead of timecard entry id
+        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
+        findLOBConfigurationNotificaiton.setTimecardId(timecard.getID());
+
+        try {
+            deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
+        } catch (Exception e) {
+            log.error("Exception during deletion of orphaned notifications : " , e);
+        }
 
 
         Agent agent = timecard.getAgent();
@@ -1252,6 +1263,10 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return sortedList;
 
     }
+    
+    private static String composeTimecardProcessRedisKey(final String objectId) {
+    	return (new StringBuilder("pulse.timecard.process:").append(objectId)).toString();
+    }
 
     private void handleTimecardUpdate(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
@@ -1265,42 +1280,64 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
 
-
                 if (updatedObject != null && updatedObject instanceof Timecard) {
 
                     Timecard newTimecard = (Timecard) updatedObject;
 
-                    ///Loging for new timecard entries
-                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
-                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
-                    }
+                    // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
+                    // Loging for new timecard entries
+//                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
+//                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+//                    }
+
 
                     boolean ignoreTheUpdate = false;
 
-                    //Check existance of old timecard
-                    if (oldValue != null) {
-                        Timecard oldTimecard = (Timecard) oldValue;
+                    log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID());
+                    // Attempt to retrieve the last processed Timecard from redis.
+                    Timecard lastProcessedTimecard = null;
+                    final String redisKey = composeTimecardProcessRedisKey(classId);
+                    final String jsonObjectString = (String) cacheDataStore.getValue(redisKey);
+                    if (jsonObjectString != null) {
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " found in Redis" );
+                    	try {
+                    		// Create a new Timecard object
+                    		lastProcessedTimecard = new Timecard();
+                    		// Overwrite its contents with the JSON object String.
+                    		lastProcessedTimecard.fromJson(jsonObjectString);
+                    	} catch(Exception e) {
+                    		// Catch any exception in de-serializing from JSON into TimecardEntry.
+                    		lastProcessedTimecard = null;
+                    	}
+                    }
+                    else{
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " did not find in Redis" );
+                    }
+                    // If there is a last processed Timecard, then check to see if it is different than newTimecard.
+                    if (lastProcessedTimecard != null) {
 
-                        //Log old timecard entreis
-                        for (TimecardEntry timecardEntry : oldTimecard.getTimecardEntries()) {
-                            log.warn("Old Timecard ID : [ " + oldTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
-                        }
+                        // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
+                        // Log old timecard entries
+//                        for (TimecardEntry timecardEntry : lastProcessedTimecard.getTimecardEntries()) {
+//                            log.warn("Last Processed Timecard ID : [ " + lastProcessedTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+//                        }
 
-
-                        //Check that first TimecardEntry of old and new Timecard should not be same
-                        if (newTimecard.getTimecardEntries().size() > 0 && oldTimecard.getTimecardEntries().size() > 0) {
+                        // Not sure if this is the correct logic for determining the type of difference we are looking for?
+                        // Check that first TimecardEntry of old and new Timecard should not be same
+                        if (newTimecard.getTimecardEntries().size() > 0 && lastProcessedTimecard.getTimecardEntries().size() > 0) {
                             TimecardEntry newTimecardEntry = newTimecard.getTimecardEntries().get(0);
-                            TimecardEntry oldTimecardEntry = oldTimecard.getTimecardEntries().get(0);
+                            TimecardEntry oldTimecardEntry = lastProcessedTimecard.getTimecardEntries().get(0);
 
                             if (newTimecardEntry.getID().equalsIgnoreCase(oldTimecardEntry.getID())) {
-                                //Do not process futher  if old and new timecard are the same
+                                //Do not process further  if old and new timecard are the same
                                 ignoreTheUpdate = true;
                             }
                         }
 
-                        if (!ignoreTheUpdate) { //When the old and new timecard are same ingore this condition
+                        if (!ignoreTheUpdate) { //When the old and new timecard are same ignore this condition
 
-                            Iterator<TimecardEntry> itrTimecardEntries = oldTimecard.getTimecardEntries().iterator();
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : FALSE" );
+                            Iterator<TimecardEntry> itrTimecardEntries = lastProcessedTimecard.getTimecardEntries().iterator();
 
                             while (itrTimecardEntries.hasNext()) {
                                 TimecardEntry timecardEntry = itrTimecardEntries.next();
@@ -1313,22 +1350,22 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             }
 
                         }
+                        else{
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : TRUE" );
+                        }
 
                     } else {
-                        log.warn("Update Timecard ID : [ " + newTimecard.getID() + " ] - Old Timecard ID : NULL ");
+                        log.warn("Update Timecard ID : [ " + newTimecard.getID() + " ] - Last Processed Timecard ID : NULL ");
                     }
 
                     if (!ignoreTheUpdate) {     //When the old and new timecard are same ingore this condition
 
-                        //First delete old notifications
-                        //With respect to new design deleting Notification using timecard id instead of timecard entry id
-                        LOBConfigurationNotification findLOBConfigurationNotificaiton = new LOBConfigurationNotification();
-                        findLOBConfigurationNotificaiton.setTimecardId(newTimecard.getID());
-
-                        deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
 
                         //Process all the notifications again
                         processTimecard(newTimecard);
+                        
+                        // Now that the process has been completed, store the newTimecard in redis
+                        cacheDataStore.setValue(redisKey, newTimecard.toJson());
 
                         //TODO: Check to see if old timecard entry ids are still on on new timecard value. If they are do not process
 

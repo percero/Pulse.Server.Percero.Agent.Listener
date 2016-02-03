@@ -1,10 +1,13 @@
 package com.pulse.sync.cw.task;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import com.percero.agents.sync.vo.BaseDataObject;
+import com.pulse.mo.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -16,12 +19,6 @@ import org.springframework.util.StringUtils;
 import com.percero.agents.sync.exceptions.SyncException;
 import com.percero.agents.sync.services.ISyncAgentService;
 import com.percero.agents.sync.vo.ClassIDPair;
-import com.pulse.mo.AgentTimeZone;
-import com.pulse.mo.CoachingNotification;
-import com.pulse.mo.Notification;
-import com.pulse.mo.Scorecard;
-import com.pulse.mo.ShiftStatusNotification;
-import com.pulse.mo.TeamLeader;
 import com.pulse.mo.dao.AgentScorecardDAO;
 import com.pulse.mo.dao.CoachingNotificationDAO;
 import com.pulse.mo.dao.ShiftStatusNotificationDAO;
@@ -48,10 +45,36 @@ public class TeamLeaderPostGetTask implements Runnable {
 		try {
 			checkForOrCreateCoachingNotification(classIdPair);
 			checkForOrCreateShiftStatusNotification(classIdPair);
+//			preloadTopFourTimecardForTeamleader(classIdPair);
 		} catch(Exception e) {
 			log.error("Error running process", e);
 		}
 	}
+
+	/**
+	 * This method triggers PostGetCWHelper allthe agents on this Teamleader for top 4 time cards of each Agent
+	 * @param classIdPair
+	 * @throws Exception
+     */
+	private void preloadTopFourTimecardForTeamleader(ClassIDPair classIdPair) throws Exception {
+		TeamLeader host = (TeamLeader) syncAgentService.systemGetById(classIdPair);
+
+		Iterator<Agent> itrAgents = host.getAgents().iterator();
+
+		while(itrAgents.hasNext()){
+			Agent agent = (Agent) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(itrAgents.next()));
+
+			int cnt = 0;
+			for(int index = agent.getTimecards().size()-1;index >=0 && cnt < 4; index--){
+
+				Timecard timecard = (Timecard) syncAgentService.findById(BaseDataObject.toClassIdPair(agent.getTimecards().get(index)), null);
+
+				cnt++;
+			}
+		}
+
+	}
+
 
 	/**
 	 * Grabbing the Week Dates of the AgentScorecards for the last 30 days (@see
