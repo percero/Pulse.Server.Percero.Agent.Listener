@@ -177,7 +177,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
                         // Check to see if fromTime is the same date as the passed in date.
                         if (fromDateTime.toLocalDate().equals(localDate)) { // Both Date coverted to UTC before comparision
                             // The date matched, so we add this CMSEntry to our set of results.
-                            results.add(new ClassIDPair(host.getID(), host.getClass().getCanonicalName()));
+                            results.add(new ClassIDPair(cmsEntry.getID(), cmsEntry.getClass().getCanonicalName()));
                         }
                     }
                 }
@@ -243,7 +243,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
                         // Check to see if fromTime is the same date as the passed in date.
                         if (fromDateTime.toLocalDate().equals(localDate)) {
                             // The date matched, so we add this CMSEntry to our set of results.
-                            result = new ClassIDPair(host.getID(), host.getClass().getCanonicalName());
+                            result = new ClassIDPair(timecard.getID(), timecard.getClass().getCanonicalName());
                         }
                     }
                 }
@@ -300,7 +300,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
             while (itrTimecardEntries.hasNext()) {
                 TimecardEntry timecardEntry = syncAgentService.systemGetByObject(itrTimecardEntries.next());
                 if (timecardEntry != null) {
-                    results.add(new ClassIDPair(host.getID(), host.getClass().getCanonicalName()));
+                    results.add(new ClassIDPair(timecardEntry.getID(), timecardEntry.getClass().getCanonicalName()));
                 }
             }
 
@@ -363,7 +363,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
                         // Check to see if fromTime is the same date as the passed in date.
                         if (fromDateTime.toLocalDate().equals(localDate)) {//Both time in UTC
                             // The date matched, so we add this CMSEntry to our set of results.
-                            result = new ClassIDPair(host.getID(), host.getClass().getCanonicalName());
+                            result = new ClassIDPair(schedule.getID(), schedule.getClass().getCanonicalName());
                         }
                     }
                 }
@@ -420,7 +420,7 @@ public class AgentCWHelper extends DerivedValueChangeWatcherHelper {
             while (itrScheduleEntries.hasNext()) {
                 ScheduleEntry scheduleEntry = syncAgentService.systemGetByObject(itrScheduleEntries.next());
                 if (scheduleEntry != null) {
-                    results.add(new ClassIDPair(host.getID(), host.getClass().getCanonicalName()));
+                    results.add(new ClassIDPair(scheduleEntry.getID(), scheduleEntry.getClass().getCanonicalName()));
                 }
             }
 
