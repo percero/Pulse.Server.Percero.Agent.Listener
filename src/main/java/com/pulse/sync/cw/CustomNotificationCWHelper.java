@@ -28,6 +28,7 @@ import com.pulse.dataprovider.IConnectionFactory;
 import com.pulse.dataprovider.PulseDataConnectionRegistry;
 import com.pulse.mo.*;
 import com.pulse.mo.dao.LOBConfigurationNotificationDAO;
+import com.pulse.sync.enums.TimecardStatus;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -179,11 +180,12 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
      */
     private void handleCmsEntryNotification(String category, String subCategory, String fieldName, String[] params) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
+        String classId = "NULL";
         try {
 
             if (params != null && params.length >= 2) {
                 String className = params[0];
-                String classId = params[1];
+                classId = params[1];
 
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
@@ -297,7 +299,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             }
         } catch (Exception e) {
             // Handle exception
-            log.error("Error in LOB Notification", e);
+            log.error("CustomNotificationCWHelper : CMSEntry ID : " + classId + " - Error in LOB Notification", e);
         }
     }
 
@@ -311,7 +313,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         try {
             deleteOrphanedNotifications(findLOBConfigurationNotificaiton);
         } catch (Exception e) {
-            log.error("Exception during deletion of orphaned notifications : " , e);
+            log.error("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Exception During Deletion Of Orphaned Notifications ", e);
         }
 
 
@@ -354,25 +356,50 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
                             // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
                             // the first record.
-                            // TODO: TO BE CONFIRMED WITH RICHARD.
                             LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0));
 
                             List<TimecardEntry> sortedTimecardEntries = getSortedTimecardEntries(timecard.getTimecardEntries());
 
+                            if (sortedTimecardEntries.size() <= 0 ){
+                                log.warn("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - No Sorted TimecardEntries");
+                            }
+
                             for (int index = 0; index < sortedTimecardEntries.size(); index++) {
-                                TimecardEntry timecardEntry = syncAgentService.systemGetByObject(sortedTimecardEntries.get(index));
+                                String timecardEntryId = sortedTimecardEntries.get(index).getID();
+                                TimecardEntry timecardEntry = (TimecardEntry) syncAgentService.systemGetById(BaseDataObject.toClassIdPair(sortedTimecardEntries.get(index)));
 
                                 try {
-                                    processTimecardEntryForNotification(teamLeader, agent, sortedTimecardEntries, timecardEntry, lobConfiguration);
+                                    if(timecardEntry!=null) {
+                                        log.warn("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - TimecardEntry ID : [ " + timecardEntryId + " ] - Processing TimecardEntry");
+                                        processTimecardEntryForNotification(teamLeader, agent, sortedTimecardEntries, timecardEntry, lobConfiguration);
+                                    }
+                                    else {
+                                        log.warn("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - TimecardEntry ID : [ " + timecardEntryId + " ] - TimecardEntry Is NULL");
+                                    }
                                 } catch (Exception e) {
-                                    log.error("Unable to process notifications for TimecardEntry ID : [ " + timecardEntry.getID() + " ]");
+                                    log.error("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Unable To Process Notifications", e);
                                 }
                             }
                         }
+                        else{
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Notification Processing Skipped - LOB [ " + lob.getID() + " ] - No LOB Configuration - Related To Timecard");
+                        }
 
                     }
+                    else{
+                        log.error("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Notification Processing Failed - LOB [ " + agentLOB.getLOB().getID() + " ] Object Is NULL - Related To Timecard");
+                    }
+
+                }
+                else{
+                    log.error("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Notification Processing Failed - Agent LOB [ " + agent.getAgentLOBs().get(0) + " ] Object Is NULL - Related To Timecard");
                 }
             }
+            else{
+                log.warn("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Notification Processing Skipped - Agent LOB Size : " + agent.getAgentLOBs().size() + " - Related To Timecard");
+            }
+        } else {
+            log.error("CustomNotificationCWHelper : Timecard ID " + timecard.getID() + " - Notification Processing Failed - Could NOT Find Agent [ " + timecard.getAgent().getID() + " ] - Related To Timecard");
         }
     }
 
@@ -386,7 +413,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
             // This is explicit condition other than NULL timecard, if the timecardEntry's EStartProjectName is "IEX"
             // means the entry is genertaed by system not the one entered by Agent, hence there is no need to process it.
             // No notification on system generated Entries.
-            if (timecardEntry != null && !timecardEntry.getEStartProjectName().equalsIgnoreCase("IEX")) {
+            if (!timecardEntry.getEStartProjectName().equalsIgnoreCase("IEX")) {
                 //Entry Inserted/Updated and Watcher invoked by ActiveStack when UpdateTableProcessor processed it and updated Redis Cache
 
                 // 1. eStart InValid Activity code
@@ -414,8 +441,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 //Since the AgentLOB is associative entity between Agent and LOB it is always one to one relation.
                 // LobConfiguration has lob Id which support the 1 to 1 relationship hence it is assumed to have only one recode and always pick
                 // the first record.
-                // TODO: TO BE CONFIRMED WITH RICHARD.
-//                                    LOBConfiguration lobConfiguration = syncAgentService.systemGetByObject(lobConfigurationList.get(0))
 
                 List<String> validActivityCodeList = new ArrayList<String>();
 
@@ -469,11 +494,14 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
 
             }
+            else {
+                log.warn("CustomNotificationCWHelper : Timecard ID " + timecardEntry.getTimecard().getID() + " - TimecardEntry ID : [ " + timecardEntry.getID() + " ] - Skipped IEX TimecardEntry");
+            }
 
 
         } catch (Exception e) {
             // Handle exception
-            log.error("Error in LOB Notification", e);
+            log.warn("CustomNotificationCWHelper : Timecard ID " + timecardEntry.getTimecard().getID() + " - TimecardEntry ID : [ " + timecardEntry.getID() + " ] - Error Processing TimecardEntry", e);
         }
     }
 
@@ -501,11 +529,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                 fromDate = new DateTime(cmsEntry.getFromTime().getTime() + offsetInMs).toDate();
                 toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
             } else {
-                log.warn("Invalid time zone " + timeZone);
+                log.warn("CMSEntry Invalid time zone " + timeZone);
             }
         } catch (Exception e) {
             // Invalid time zone.
-            log.error("Invalid time zone " + timeZone, e);
+            log.error("CMSEntry Invalid time zone " + timeZone, e);
         }
 
         //Instead of using cmsEntry duration calc from from/to date
@@ -634,11 +662,11 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                         fromDate = new DateTime(beginDate.getTime() + offsetInMs).toDate();
                         toDate = new DateTime(cmsEntry.getToTime().getTime() + offsetInMs).toDate();
                     } else {
-                        log.warn("Invalid time zone " + timeZone);
+                        log.warn("CMSEntry Invalid time zone " + timeZone);
                     }
                 } catch (Exception e) {
                     // Invalid time zone.
-                    log.error("Invalid time zone " + timeZone, e);
+                    log.error("CMSEntry Invalid time zone " + timeZone, e);
                 }
 
                 workModeOccurrenceNotification.setCreatedOn(fromDate);
@@ -696,7 +724,6 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     invalidActivityCodeNotification.setAgent(agent);
                     invalidActivityCodeNotification.setTeamLeader(teamLeader);
                 }
-
 
 
                 invalidActivityCodeNotification.setCreatedOn(timecardEntry.getSourceFromTime());
@@ -1039,31 +1066,32 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
     private void deleteOrphanedNotifications(LOBConfigurationNotification searchLOBNotification) throws Exception {
         //Get list of LOBConfigurationNotification based on deleted CMSEntry ID
         //TODO:Clean this logs if not required. This is frequent operation and may consume resouces unnecessarily
-        log.warn("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
-        log.warn(searchLOBNotification.getCMSEntry());
-        log.warn(searchLOBNotification.getTimecardEntry());
-        log.warn("TimecardId : " + searchLOBNotification.getTimecardId());
+//        log.warn("********************************** Orphaned Notification Clean Process [Starts] **********************************:");
+//        log.warn(searchLOBNotification.getCMSEntry());
+//        log.warn(searchLOBNotification.getTimecardEntry());
+//        log.warn("TimecardId : " + searchLOBNotification.getTimecardId());
 
         List<IPerceroObject> listOfOrphanedNotifications = syncAgentService.systemFindByExample(searchLOBNotification, null);
 
         Iterator<IPerceroObject> itrNotifications = listOfOrphanedNotifications.iterator();
 
         if (listOfOrphanedNotifications.size() <= 0 && searchLOBNotification.getTimecardEntry() != null) {
-            log.warn("No Notifications Found for TimecardEntry ID :  [ " + searchLOBNotification.getTimecardEntry().getID() + " ]");
+            log.warn("CustomNotificationCWHelper : Timecard ID " + searchLOBNotification.getTimecardId() + " - No Notifications Found");
         }
         while (itrNotifications.hasNext()) {
             IPerceroObject iPerceroObject = itrNotifications.next();
             //Do not retrive object since the relationship might be broken due to removal of TimecardEntry and Timecard
-            log.warn("Notification ID:  [ " + iPerceroObject.getID() + "]");
+            log.warn("CustomNotificationCWHelper : Timecard ID " + searchLOBNotification.getTimecardId() + " - Notification ID:  [ " + iPerceroObject.getID() + " ]");
 
             if (iPerceroObject != null) {
                 boolean deleteStatus = syncAgentService.systemDeleteObject(iPerceroObject, null, true);
-                log.warn("XXXXXXXXX Notification ID:  [ " + iPerceroObject.getID() + "] DELETED [ " + deleteStatus + " ] XXXXXXXXX");
+                log.warn("CustomNotificationCWHelper : Timecard ID " + searchLOBNotification.getTimecardId() + " - Notification ID:  [ " + iPerceroObject.getID() + " ] - Delete");
+
             } else {
-                log.warn("No Notification found for ID: " + iPerceroObject.getID());
+                log.warn("CustomNotificationCWHelper : Timecard ID " + searchLOBNotification.getTimecardId() + " - Did NOT Delete - Notification Not Found");
             }
         }
-        log.warn("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
+//        log.warn("********************************** Orphaned Notification Clean Process [Ends] **********************************:");
     }
 
     private void generatePhoneTimeVarianceNotification(TimecardEntry timecardEntry, Agent agent, TeamLeader teamLeader,
@@ -1263,19 +1291,22 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
         return sortedList;
 
     }
-    
+
     private static String composeTimecardProcessRedisKey(final String objectId) {
-    	return (new StringBuilder("pulse.timecard.process:").append(objectId)).toString();
+        return (new StringBuilder("pulse.timecard.process:").append(objectId)).toString();
     }
 
     private void handleTimecardUpdate(String category, String subCategory, String fieldName, String[] params, IPerceroObject oldValue) throws Exception {
         // This is where the logic would go to create a Notification based on when the data requested above changes.
         //
+        String classId = "NULL";
         try {
 
             if (params != null && params.length >= 2) {
                 String className = params[0];
-                String classId = params[1];
+                classId = params[1];
+
+                log.warn("CustomNotificationCWHelper : Timecard ID " + classId + " - Processing Started");
 
                 ClassIDPair classIdPair = new ClassIDPair(classId, className);
                 IPerceroObject updatedObject = syncAgentService.systemGetById(classIdPair);
@@ -1286,44 +1317,53 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
                     // Loging for new timecard entries
-//                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
+                    for (TimecardEntry timecardEntry : newTimecard.getTimecardEntries()) {
 //                        log.warn("Updated Timecard ID : [ " + updatedObject.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
-//                    }
 
+                        timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+                        TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Entry ID: [ "
+                                + timecardEntry.getID() + " ] - Activity Code : " + timecardActivity.getCode()
+                                + " From Time : " + timecardEntry.getFromTime() + " - To Time : " + timecardEntry.getToTime());
+                    }
 
                     boolean ignoreTheUpdate = false;
 
-                    log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID());
                     // Attempt to retrieve the last processed Timecard from redis.
                     Timecard lastProcessedTimecard = null;
                     final String redisKey = composeTimecardProcessRedisKey(classId);
                     final String jsonObjectString = (String) cacheDataStore.getValue(redisKey);
                     if (jsonObjectString != null) {
-                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " found in Redis" );
-                    	try {
-                    		// Create a new Timecard object
-                    		lastProcessedTimecard = new Timecard();
-                    		// Overwrite its contents with the JSON object String.
-                    		lastProcessedTimecard.fromJson(jsonObjectString);
-                    	} catch(Exception e) {
-                    		// Catch any exception in de-serializing from JSON into TimecardEntry.
-                    		lastProcessedTimecard = null;
-                    	}
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Found Last Processed Timecard");
+                        try {
+                            // Create a new Timecard object
+                            lastProcessedTimecard = new Timecard();
+                            // Overwrite its contents with the JSON object String.
+                            lastProcessedTimecard.fromJson(jsonObjectString);
+                        } catch (Exception e) {
+                            // Catch any exception in de-serializing from JSON into TimecardEntry.
+                            lastProcessedTimecard = null;
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Unable To Serialise Last Processed Timecard");
+                        }
+                    } else {
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Did Not Find Last Processed Timecard");
                     }
-                    else{
-                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " did not find in Redis" );
-                    }
+
                     // If there is a last processed Timecard, then check to see if it is different than newTimecard.
                     if (lastProcessedTimecard != null) {
 
                         // This may produce a good amount of overhead in logging. May want to move this elsewhere if it is still needed?
                         // Log old timecard entries
 //                        for (TimecardEntry timecardEntry : lastProcessedTimecard.getTimecardEntries()) {
-//                            log.warn("Last Processed Timecard ID : [ " + lastProcessedTimecard.getID() + " ] - TimecardEntry ID: [ " + timecardEntry.getID() + " ]");
+//                            timecardEntry = syncAgentService.systemGetByObject(timecardEntry);
+//                            TimecardActivity timecardActivity = syncAgentService.systemGetByObject(timecardEntry.getTimecardActivity());
+//
+//                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Entry ID: [ "
+//                                    + timecardEntry.getID() + " ] - Activity Code : "+ timecardActivity.getCode()
+//                                    +" From Time : " + timecardEntry.getFromTime() + " - To Time : " + timecardEntry.getToTime() );
 //                        }
 
-                        // Not sure if this is the correct logic for determining the type of difference we are looking for?
-                        // Check that first TimecardEntry of old and new Timecard should not be same
                         if (newTimecard.getTimecardEntries().size() > 0 && lastProcessedTimecard.getTimecardEntries().size() > 0) {
                             TimecardEntry newTimecardEntry = newTimecard.getTimecardEntries().get(0);
                             TimecardEntry oldTimecardEntry = lastProcessedTimecard.getTimecardEntries().get(0);
@@ -1331,57 +1371,59 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                             if (newTimecardEntry.getID().equalsIgnoreCase(oldTimecardEntry.getID())) {
                                 //Do not process further  if old and new timecard are the same
                                 ignoreTheUpdate = true;
+                                log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Previously Processed Timecard Does NOT Have Different Entry IDs");
+                            } else {
+                                log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Previously Processed Timecard Has Different Entry IDs");
                             }
-                        }
-
-                        if (!ignoreTheUpdate) { //When the old and new timecard are same ignore this condition
-
-                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : FALSE" );
-                            Iterator<TimecardEntry> itrTimecardEntries = lastProcessedTimecard.getTimecardEntries().iterator();
-
-                            while (itrTimecardEntries.hasNext()) {
-                                TimecardEntry timecardEntry = itrTimecardEntries.next();
-
-                                String timecardEntryId = timecardEntry.getID();
-
-                                log.warn("Insert into UPDATE_TABLE : TimecardEntry ID [ " + timecardEntryId + " ] For to delete entry");
-
-                                insertRecToUpdateTable(timecardEntryId);
-                            }
-
-                        }
-                        else{
-                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " ignoreTheUpdate : TRUE" );
                         }
 
                     } else {
-                        log.warn("Update Timecard ID : [ " + newTimecard.getID() + " ] - Last Processed Timecard ID : NULL ");
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Could NOT Find A Previously Processed Timecard");
                     }
 
+                    Collection<String> fieldsToWatch = new HashSet<String>();
+
+                    accessManager.addWatcherField(BaseDataObject.toClassIdPair(newTimecard), "currentStatus", fieldsToWatch);
+
+                    if (!ignoreTheUpdate && !newTimecard.getCurrentStatus().equalsIgnoreCase(TimecardStatus.APPROVED.getValue())) {
+                        ignoreTheUpdate = true;
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Is Approved");
+                    } else {
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Is NOT Approved");
+                    }
                     if (!ignoreTheUpdate) {     //When the old and new timecard are same ingore this condition
 
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Processing Timecard");
+                        Iterator<TimecardEntry> itrTimecardEntries = lastProcessedTimecard.getTimecardEntries().iterator();
+
+                        while (itrTimecardEntries.hasNext()) {
+                            TimecardEntry timecardEntry = itrTimecardEntries.next();
+
+                            String timecardEntryId = timecardEntry.getID();
+
+                            log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - TimecardEntry ID [ " + timecardEntryId + " ] - Add To Update Table For Removal");
+                            insertRecToUpdateTable(timecardEntryId);
+                        }
 
                         //Process all the notifications again
                         processTimecard(newTimecard);
-                        
+
                         // Now that the process has been completed, store the newTimecard in redis
                         cacheDataStore.setValue(redisKey, newTimecard.toJson());
 
-                        //TODO: Check to see if old timecard entry ids are still on on new timecard value. If they are do not process
-
-
                     } else {
-                        log.warn("handleTimecardUpdate Ignored : Timecard ID : [  " + newTimecard.getID() + " ] due to Old and new Timecard is same");
+//                        log.warn("handleTimecardUpdate Ignored : Timecard ID : [  " + newTimecard.getID() + " ] due to Old and new Timecard is same");
+                        log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Processing Skipped");
                     }
-
-
                 }
 
+                log.warn("CustomNotificationCWHelper : Timecard ID " + classId + " - Processing Complete");
 
             }
+
         } catch (Exception e) {
             // Handle exception
-            log.error("Error in LOB Notification", e);
+            log.error("CustomNotificationCWHelper : Timecard ID : " + classId + " - Error in LOB Notification", e);
         }
     }
 
