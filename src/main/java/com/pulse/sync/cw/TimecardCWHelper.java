@@ -4,10 +4,7 @@ import java.util.*;
 
 import com.pulse.mo.*;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
+import org.joda.time.*;
 import org.springframework.stereotype.Component;
 
 import com.percero.agents.sync.cw.DerivedValueChangeWatcherHelper;
@@ -28,6 +25,8 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
     public static final String ENDDATE = "endDate";
     public static final String AGENT_TIME_ZONE = "agentTimeZone";
     public static final String TIME_ZONE = "agenttTimeZone";
+    public static final String RELATED_SCHEDULE = "relatedSchedule";
+    public static final String RELATED_CMS_ENTRIES = "relatedCMSEntries";
 
 
     @Override
@@ -92,6 +91,20 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
                 postCalculate(fieldName, pair, params, result, oldValue);
             } catch (Exception e) {
                 log.error("Unable to calculate " + ENDDATE, e);
+            }
+        } else if (fieldName.equalsIgnoreCase(RELATED_CMS_ENTRIES)) {
+            try {
+                result = calc_relatedCMSEntries(pair, fieldName);
+                postCalculate(fieldName, pair, params, result, oldValue);
+            } catch (Exception e) {
+                log.error("Unable to calculate " + RELATED_CMS_ENTRIES, e);
+            }
+        } else if (fieldName.equalsIgnoreCase(RELATED_SCHEDULE)) {
+            try {
+                result = calc_relatedSchedule(pair, fieldName);
+                postCalculate(fieldName, pair, params, result, oldValue);
+            } catch (Exception e) {
+                log.error("Unable to calculate " + RELATED_SCHEDULE, e);
             }
         } else {
             result = super.calculate(fieldName, pair, params);
@@ -199,11 +212,11 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
 
                         TimecardEntry timecardEntry = null;
 
-                        if (host.getTimecardEntries().size()> 0) {
+                        if (host.getTimecardEntries().size() > 0) {
                             timecardEntry = syncAgentService.systemGetByObject(host.getTimecardEntries().get(0));
                         }
 
-                        if (timecardEntry!=null && "UA".equalsIgnoreCase(timecardEntry.getActionCode())) {
+                        if (timecardEntry != null && "UA".equalsIgnoreCase(timecardEntry.getActionCode())) {
                             result = TimecardStatus.NOT_STARTED.getValue();
                         } else {
                             result = TimecardStatus.NO_SHIFT.getValue();
@@ -516,5 +529,158 @@ public class TimecardCWHelper extends DerivedValueChangeWatcherHelper {
         return result;
     }
 
+    private List<ClassIDPair> calc_relatedCMSEntries(ClassIDPair pair, String derivedValueName) {
+        List<ClassIDPair> results = new ArrayList<ClassIDPair>();
+        // Setup fieldsToWatch.
+        Collection<String> fieldsToWatch = new HashSet<String>();
+
+        try {
+            Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+            if (host == null) {
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
+                return results;
+            }
+
+            // Setup params array. If nothing else, this is used to uniquely
+            // identify this ChangeWatcher.
+//            String[] params = new String[1];
+//            params[0] = theDate;
+
+            Timecard timecard = (Timecard)syncAgentService.systemGetById(pair);
+            //Derived property in UTC
+            accessManager.addWatcherField(pair, "sourceStartDate", fieldsToWatch);
+            accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+
+            Date timecardStartDateInUTC = timecard.getSourceStartDate();
+            Agent agent = timecard.getAgent();
+
+            // Convert the date String. Since the date string format is completely up to
+            // the developer, the build int `parseDateTime` function may or may not be
+            // applicable. The point here is to accurately convert the passed in String
+            // into a Date object (including its time zone).
+//            DateTime theDateTime = parseDateTime(theDate);
+            DateTime theDateTime = new DateTime(timecardStartDateInUTC);
+            LocalDate localDate = theDateTime.toLocalDate(); //Get UTC date for the param date
+
+
+            accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "cmsEntries", fieldsToWatch);
+
+            Iterator<CMSEntry> itrCmsEntries = agent.getCMSEntries().iterator();
+            while (itrCmsEntries.hasNext()) {
+                CMSEntry cmsEntry = syncAgentService.systemGetByObject(itrCmsEntries.next());
+                if (cmsEntry != null) {
+                    // We want to re-trigger this change watcher when CMSEntry.FromTime changes.
+                    accessManager.addWatcherField(BaseDataObject.toClassIdPair(cmsEntry), "fromTime", fieldsToWatch);
+
+                    Date fromTime = cmsEntry.getFromTime();
+                    if (fromTime != null) {
+                        // Convert the fromTime to the same time zone as the date that was passed in.
+                        DateTime fromDateTime = new DateTime(fromTime);
+
+//                        fromDateTime = fromDateTime.withZone(theDateTime.getZone());
+
+                        // Check to see if fromTime is the same date as the passed in date.
+                        if (fromDateTime.toLocalDate().equals(localDate)) { // Both Date coverted to UTC before comparision
+                            // The date matched, so we add this CMSEntry to our set of results.
+                            results.add(new ClassIDPair(cmsEntry.getID(), cmsEntry.getClass().getCanonicalName()));
+                        }
+                    }
+                }
+            }
+
+            // Register all the fields to watch for this ChangeWatcher. Whenever
+            // ANY of these fields change, this ChangeWatcher will get re-run
+            // Don't forget to include the params array here, since that is part of what
+            // uniquely identifies this ChangeWatcher.
+            accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+            // Store the result for caching, and also for comparing new results to see
+            // if there has been a change.
+            // Don't forget to include the params array here, since that is part of what
+            // uniquely identifies this ChangeWatcher.
+            accessManager.saveChangeWatcherResult(pair, derivedValueName, results);
+        } catch (Exception e) {
+            log.error("Unable to calculate " + derivedValueName, e);
+        }
+
+        return results;
+    }
+
+    private ClassIDPair calc_relatedSchedule(ClassIDPair pair, String derivedValueName) {
+        ClassIDPair result = null;
+        // Setup fieldsToWatch.
+        Collection<String> fieldsToWatch = new HashSet<String>();
+
+        try {
+            Timecard host = (Timecard) syncAgentService.systemGetById(pair);
+            if (host == null) {
+                log.warn("Unable to calculate " + derivedValueName + ": Invalid objectId " + pair.getClassName() + "::" + pair.getID());
+                return result;
+            }
+
+            // Setup params array. If nothing else, this is used to uniquely
+            // identify this ChangeWatcher.
+//            String[] params = new String[1];
+//            params[0] = theDate;
+
+            Timecard timecard = (Timecard)syncAgentService.systemGetById(pair);
+            //Derived property in UTC
+            accessManager.addWatcherField(pair, "sourceStartDate", fieldsToWatch);
+            accessManager.addWatcherField(pair, "agent", fieldsToWatch);
+
+            Date timecardStartDateInUTC = timecard.getSourceStartDate();
+            Agent agent = timecard.getAgent();
+
+            // Convert the date String. Since the date string format is completely up to
+            // the developer, the build int `parseDateTime` function may or may not be
+            // applicable. The point here is to accurately convert the passed in String
+            // into a Date object (including its time zone).
+//            DateTime theDateTime = parseDateTime(theDate);
+            DateTime theDateTime = new DateTime(timecardStartDateInUTC);
+            LocalDate localDate = theDateTime.toLocalDate(); //Get UTC date for the param date
+
+
+            accessManager.addWatcherField(BaseDataObject.toClassIdPair(agent), "schedules", fieldsToWatch);
+
+            Iterator<Schedule> itrSchedules = agent.getSchedules().iterator();
+            while (itrSchedules.hasNext()) {
+                Schedule schedule = syncAgentService.systemGetByObject(itrSchedules.next());
+                if (schedule != null) {
+                    // We want to re-trigger this change watcher when CMSEntry.FromTime changes.
+                    accessManager.addWatcherField(BaseDataObject.toClassIdPair(schedule), "sourceStartTime", fieldsToWatch);
+
+                    Date fromTime = schedule.getSourceStartTime();
+                    if (fromTime != null) {
+                        // Convert the fromTime to the same time zone as the date that was passed in.
+                        DateTime fromDateTime = new DateTime(fromTime);
+
+//                        fromDateTime = fromDateTime.withZone(theDateTime.getZone());
+
+                        // Check to see if fromTime is the same date as the passed in date.
+                        if (fromDateTime.toLocalDate().equals(localDate)) { // Both Date coverted to UTC before comparision
+                            // The date matched, so we add this CMSEntry to our set of results.
+                            result = new ClassIDPair(schedule.getID(), schedule.getClass().getCanonicalName());
+                        }
+                    }
+                }
+            }
+
+            // Register all the fields to watch for this ChangeWatcher. Whenever
+            // ANY of these fields change, this ChangeWatcher will get re-run
+            // Don't forget to include the params array here, since that is part of what
+            // uniquely identifies this ChangeWatcher.
+            accessManager.updateWatcherFields(pair, derivedValueName, fieldsToWatch);
+
+            // Store the result for caching, and also for comparing new results to see
+            // if there has been a change.
+            // Don't forget to include the params array here, since that is part of what
+            // uniquely identifies this ChangeWatcher.
+            accessManager.saveChangeWatcherResult(pair, derivedValueName, result);
+        } catch (Exception e) {
+            log.error("Unable to calculate " + derivedValueName, e);
+        }
+
+        return result;
+    }
 
 }

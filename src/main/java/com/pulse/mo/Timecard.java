@@ -2,7 +2,10 @@
 
 package com.pulse.mo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -15,7 +18,9 @@ import com.percero.agents.sync.metadata.MappedClassManagerFactory;
 import com.percero.agents.sync.services.IDataProvider;
 import com.percero.agents.sync.vo.ClassIDPair;
 import com.pulse.mo.mo_super._Super_Timecard;
+import com.pulse.sync.cw.AgentCWHelper;
 import com.pulse.sync.cw.TimecardCWHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Entity(name = "Timecard")
 public class Timecard extends _Super_Timecard {
@@ -77,6 +82,59 @@ public class Timecard extends _Super_Timecard {
 		String result = (String) cwh.get(TimecardCWHelper.TIME_ZONE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
 		return result;
 	}
-    
+
+    @SuppressWarnings("unchecked")
+    public List<CMSEntry> getRelatedCMSEntries() {
+        IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+        DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+        List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TimecardCWHelper.RELATED_CMS_ENTRIES, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+        List<CMSEntry> results = new ArrayList<CMSEntry>();
+        if (result != null)
+        {
+            IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+            Iterator<ClassIDPair> itrResult = result.iterator();
+            while(itrResult.hasNext()) {
+                ClassIDPair nextResult = itrResult.next();
+
+                MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+                IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+                results.add( (CMSEntry) dataProvider.findById(nextResult, null) );
+            }
+        }
+
+        return results;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Schedule> getRelatedSchedule() {
+        IChangeWatcherHelperFactory cwhf = ChangeWatcherHelperFactory.getInstance();
+
+        DerivedValueChangeWatcherHelper cwh = (DerivedValueChangeWatcherHelper) cwhf.getHelper(getClass().getCanonicalName());
+
+        List<ClassIDPair> result = (List<ClassIDPair>) cwh.get(TimecardCWHelper.RELATED_SCHEDULE, new ClassIDPair(this.getID(), this.getClass().getCanonicalName()));
+
+        List<Schedule> results = new ArrayList<Schedule>();
+        if (result != null)
+        {
+            IMappedClassManager mcm = MappedClassManagerFactory.getMappedClassManager();
+
+            Iterator<ClassIDPair> itrResult = result.iterator();
+            while(itrResult.hasNext()) {
+                ClassIDPair nextResult = itrResult.next();
+
+                MappedClass mappedClass = mcm.getMappedClassByClassName(nextResult.getClassName());
+                IDataProvider dataProvider = cwh.getDataProviderManager().getDataProviderByName(mappedClass.dataProviderName);
+                results.add( (Schedule) dataProvider.findById(nextResult, null) );
+            }
+        }
+
+        return results;
+    }
+
+
 }
 
