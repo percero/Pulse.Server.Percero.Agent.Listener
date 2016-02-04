@@ -1385,7 +1385,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
 
                     accessManager.addWatcherField(BaseDataObject.toClassIdPair(newTimecard), "currentStatus", fieldsToWatch);
 
-                    if (!ignoreTheUpdate && !newTimecard.getCurrentStatus().equalsIgnoreCase(TimecardStatus.APPROVED.getValue())) {
+                    if (!ignoreTheUpdate && newTimecard.getCurrentStatus().equalsIgnoreCase(TimecardStatus.APPROVED.getValue())) {
                         ignoreTheUpdate = true;
                         log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Is Approved");
                     } else {
