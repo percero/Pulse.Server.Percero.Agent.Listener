@@ -1391,7 +1391,7 @@ public class CustomNotificationCWHelper extends ChangeWatcherHelper {
                     } else {
                         log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Timecard Is NOT Approved");
                     }
-                    if (!ignoreTheUpdate) {     //When the old and new timecard are same ingore this condition
+                    if (!ignoreTheUpdate && lastProcessedTimecard!=null) {     //When the old and new timecard are same ingore this condition
 
                         log.warn("CustomNotificationCWHelper : Timecard ID " + updatedObject.getID() + " - Processing Timecard");
                         Iterator<TimecardEntry> itrTimecardEntries = lastProcessedTimecard.getTimecardEntries().iterator();
